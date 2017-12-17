@@ -6,9 +6,9 @@ This is personal and I don't give any support
 
 ## ScreenShots
 
-<img src="illustrations/color.png" alt="Packaging status" align="right">
-<img src="illustrations/destop.png" alt="Packaging status" align="right">
-<img src="illustrations/fzf.png" alt="Packaging status" align="right">
+<img src="illustrations/color.png" alt="Packaging status" align="left">
+<img src="illustrations/destop.png" alt="Packaging status" align="left">
+<img src="illustrations/fzf.png" alt="Packaging status" align="left">
 
 
 
