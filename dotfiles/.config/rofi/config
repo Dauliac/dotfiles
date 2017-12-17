@@ -1,0 +1,20 @@
+! ========================
+! ROFI Color theme
+! ========================
+
+rofi.fullscreen:        true
+rofi.color-enabled: true
+rofi.color-window: argb:f21d1f21, #969896, #cc6666
+rofi.color-normal: argb:31000000, #969896, argb:96404552, #81a2be, #ecebec
+rofi.color-active: argb:21000000, #b5bd68, argb:e41d1f21, #778900, #ecebec
+rofi.color-urgent: argb:21000000, #cc6666, argb:e5494949, #912226, #ecebec
+
+rofi.font: Monoid 13
+rofi.eh: 1
+rofi.line-margin: 20
+rofi.separator-style: solid
+rofi.hide-scrollbar: true
+rofi.lines: 3
+rofi.width: 100
+rofi.padding: 220
+rofi.bw: 0

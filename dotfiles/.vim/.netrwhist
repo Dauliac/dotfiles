@@ -1,0 +1,7 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =5
+let g:netrw_dirhist_1='/home/dauliac/.config/polybar'
+let g:netrw_dirhist_2='/home/dauliac/dotfiles/.config/polybar'
+let g:netrw_dirhist_3='/home/dauliac/Scripts'
+let g:netrw_dirhist_4='/home/dauliac/Workspace/Angular'
+let g:netrw_dirhist_5='/home/dauliac/.config/dunst'
