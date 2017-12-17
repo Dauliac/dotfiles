@@ -4,6 +4,14 @@ My Arch-Linux Fresh install configuration. Maybe one day I will buil a 'Makefile
 
 This is personal and I don't give any support
 
+## ScreenShots
+
+<img src="illustrations/color.png" alt="Packaging status" align="right">
+<img src="illustrations/destop.png" alt="Packaging status" align="right">
+<img src="illustrations/fzf.png" alt="Packaging status" align="right">
+
+
+
 ## Table of Contents
 
 * [Getting started](#getting-started)
@@ -13,7 +21,6 @@ This is personal and I don't give any support
   * [Desktop](#desktop)
   * [Configuration](#configuration)
 * [To Do](#todo)
-
 
 ## Getting started
 
@@ -29,7 +36,7 @@ Use the last version of **Arch-Anywhere**
 - **Patitioning** :
 		gpt
 		boot/efi : 512 Mib fat32
-		/ : 70Gib minimum ext4https://github.com/archlinuxfr/yaourt
+		/ : 70Gib minimum ext4
 		/home : Maximum ext4
 		swap : 16 Gib linuxswap
 		/var ext4 on DD if you can for ram
@@ -56,12 +63,11 @@ Use the last version of **Arch-Anywhere**
 
 ### Tools
 
-- **Terminal :** termite
+- **Terminal :** urxvt
 - **Task manager :** htop & stacer
 - **Web Browser :** vivaldi snapshot ffmpeg codecs
 - **Git GUI :** gitkraken
 - **git :** git
-- **
 - **Music :** Spotify
 - **Multimedia :** vlc
 - **Partition manager :** Gparted
@@ -102,6 +108,12 @@ Use the last version of **Arch-Anywhere**
 
 	icon theme paper
 
+	notification : dunst
+
+	terminal : zsh
+
+	trminal search : fzf
+
 
 
 ### Configuration
@@ -123,12 +135,11 @@ color : <a href="https://github.com/chriskempson/tomorrow-theme" >tomorrow</a>
 	#81a2be Blue
 	#b294bb Purple
 ~~~
+<img src="illustrations/colo.png" alt="Packaging status" align="left">
 
 import intellij/datagrip/phpstorm settings from settings.jar
 
 fonts : 'ttf-google-fonts-git' **source code pro**
-
-link between /srv dans ~/Dev : 'ln ~/Dev/ /srv/http'
 
 yaourt physic cache : '.yaourtrc'
 
