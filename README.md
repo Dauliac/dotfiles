@@ -9,6 +9,7 @@ This is personal and I don't give any support
 <img src="illustrations/color.png" alt="Packaging status" align="left">
 <img src="illustrations/destop.png" alt="Packaging status" align="left">
 <img src="illustrations/fzf.png" alt="Packaging status" align="left">
+![Preview of Setup](illustrations/fzf.png)
 
 
 
