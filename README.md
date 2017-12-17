@@ -6,12 +6,16 @@ This is personal and I don't give any support
 
 ## ScreenShots
 
-<img src="illustrations/color.png" alt="Packaging status" align="left">
-<img src="illustrations/destop.png" alt="Packaging status" align="left">
-<img src="illustrations/fzf.png" alt="Packaging status" align="left">
-![Preview of Setup](illustrations/fzf.png)
+Desktop with htop, ranger, vim, dunst.
+<img src="illustrations/desktop2.png" alt="Packaging status" >
 
+Empty desktop.
+<img src="illustrations/desktop.png" alt="Packaging status" >
 
+.Xressources color
+<img src="illustrations/color.png" alt="Packaging status">
+Search zsh history with fzf.
+<img src="illustrations/fzf.png" alt="Packaging status" >
 
 ## Table of Contents
 
