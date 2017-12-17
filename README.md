@@ -119,10 +119,6 @@ Use the last version of **Arch-Anywhere**
 
 	notification : dunst
 
-	terminal : zsh
-
-	trminal search : fzf
-
 
 
 ### Configuration
