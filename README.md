@@ -5,17 +5,21 @@ My Arch-Linux Fresh install configuration. Maybe one day I will buil a 'Makefile
 This is personal and I don't give any support
 
 ## ScreenShots
+- Desktop with htop, ranger, vim, dunst.
 
-Desktop with htop, ranger, vim, dunst.
-<img src="illustrations/desktop2.png" alt="Packaging status" >
+	![desktop](https://github.com/Dauliac/Spectre/blob/master/illustrations/desktop2.png)
+	
+- Empty desktop.
 
-Empty desktop.
-<img src="illustrations/desktop.png" alt="Packaging status" >
+	![desktop](https://github.com/Dauliac/Spectre/blob/master/illustrations/desktop.png)
 
-.Xressources color
-<img src="illustrations/color.png" alt="Packaging status">
-Search zsh history with fzf.
-<img src="illustrations/fzf.png" alt="Packaging status" >
+- .Xressources colors.
+
+	![color](https://github.com/Dauliac/Spectre/blob/master/illustrations/color.png)
+	
+- Search zsh history with fzf.
+
+	![fzf](https://github.com/Dauliac/Spectre/blob/master/illustrations/fzf.png)
 
 ## Table of Contents
 
