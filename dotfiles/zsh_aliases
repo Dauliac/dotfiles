@@ -1,0 +1,34 @@
+######################################################
+#
+#    ,-.          .      ,.  .
+#    |  )         |     /  \ | o
+#    |-<  ,-: ,-. |-.   |--| | . ,-: ,-. ,-. ,-.
+#    |  ) | | `-. | |   |  | | | | | `-. |-' `-.
+#    `-'  `-` `-' ' '   '  ' ' ' `-` `-' `-' `-'
+#
+######################################################
+
+alias ..='cd ..'
+alias google='googler'
+alias ...='cd ../../'
+alias ....='cd ../../../'
+#grep color
+alias grep="grep --color=auto"
+#complete list
+alias ll="ls -al"      
+alias cpall='cp -Rvfi'
+alias rmall='rm -Rvfi'
+alias ls="ls --color=always --classify --group-directories-first --human-readable"
+alias swapvoid="swapoff -a && swapon -a"
+alias localhost="/srv/http/"
+alias scaner="echo $USER "
+alias work="~/Workspace/"
+alias nano="vim"
+alias youtube='youtube-dl --extract-audio --audio-format mp3'
+alias ghost='ssh $GHOST_USER@$GHOST_DNS -p $GHOST_PORT'
+# protect
+alias rm='$HOME/Script/trash.sh'
+alias mv='mv -i'
+alias cp='cp -i'
+alias tma="tmux attach"
+alias clip="xclip -selection c"

@@ -1,0 +1,279 @@
+################################################################################# 
+# 
+#        ::::::::::: ::::::::   :::       ::: ::::    ::::  
+#             :+:    :+:    :+:  :+:       :+: +:+:+: :+:+:+ 
+#             +:+           +:+  +:+       +:+ +:+ +:+:+ +:+ 
+#             +#+        +#++:   +#+  +:+  +#+ +#+  +:+  +#+ 
+#             +#+           +#+  +#+ +#+#+ +#+ +#+       +#+ 
+#             #+#    #+#    #+#   #+#+# #+#+#  #+#       #+# 
+#        ########### ########     ###   ###   ###       ###                                     #  
+#
+# Auteur: Dauliac 
+# Date: 24.07.2017 
+# version: last-arch
+# File: config 
+# Last modification date: 12.12.2017
+# Last modificatio user: Dauliac <juliendauliac@gmail.com>
+# Path: $ HOME / .config / i3 / config
+# 
+################################################################################# 
+
+
+
+set $mod Mod4
+set $alt Mod1
+
+###############################
+#          APPARENCE          #
+###############################
+
+#font
+font pango:Monoid : 8
+
+#Launcher
+bindsym $mod+d exec rofi -show run
+
+#Borders
+gaps inner 5
+smart_borders on
+smart_gaps on
+for_window [class="^.*"] border pixel 2
+
+#import .Xressource colors
+set_from_resource $c_foreground foreground
+set_from_resource $c_background background
+set_from_resource $c_black_d color0
+set_from_resource $c_black_l color8
+set_from_resource $c_red_d color1
+set_from_resource $c_red_l color9
+set_from_resource $c_green_d color2
+set_from_resource $c_green_l color10
+set_from_resource $c_yellow_d color3
+set_from_resource $c_yellow_l color11
+set_from_resource $c_blue_d color4
+set_from_resource $c_blue_l color12
+set_from_resource $c_magenta_d color5
+set_from_resource $c_magenta_l color13
+set_from_resource $c_cyan_d color6
+set_from_resource $c_cyan_l color14
+set_from_resource $c_white_d color7
+set_from_resource $c_white_l color15
+ 
+#Colors Apply
+#class                  background    border        text          split
+client.focused          $c_red_l      $c_red_l      $c_white_d    $c_blue_l
+client.focused_inactive $c_yellow_l   $c_yellow_l   $c_yellow_l   $c_yellow_l  
+client.unfocused        $c_yellow_l   $c_yellow_l   $c_yellow_l   $c_yellow_l
+client.urgent           $c_red_d      $c_red_d      $c_red_d      $c_red_d
+client.background       $c_background
+
+
+###############################
+#         KEYBINDING          #
+###############################
+
+floating_modifier $mod
+
+# start a terminal
+bindsym $mod+Return exec termite
+
+# start vivaldi
+bindsym $mod+F1 exec vivaldi-stable
+# start code
+bindsym $mod+F2 exec code
+bindsym $mod+ctrl+l exec lock
+
+# kill focused window
+bindsym $mod+Shift+q kill
+bindsym $alt+F4 kill
+
+# change focus
+bindsym $mod+j focus left
+bindsym $mod+k focus down
+bindsym $mod+l focus up
+bindsym $mod+m focus right
+
+# alternatively, you can use the cursor keys:
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# move focused window
+bindsym $mod+Shift+j move left
+bindsym $mod+Shift+k move down
+bindsym $mod+Shift+l move up
+bindsym $mod+Shift+m move right
+
+# alternatively, you can use the cursor keys:
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# split in horizontal orientation
+bindsym $mod+h split h
+
+# split in vertical orientation
+bindsym $mod+v split v
+
+# enter fullscreen mode for the focused container
+bindsym $mod+f fullscreen toggle
+
+# stick windows
+bindsym $mod+s sticky toggle
+
+# change container layout (stacked, tabbed, toggle split)
+# bindsym $mod+s layout stacking
+# bindsym $mod+z layout tabbed
+# bindsym $mod+e layout toggle split
+
+# toggle tiling / floating
+bindsym $mod+Shift+space floating toggle
+
+# change focus between tiling / floating windows
+bindsym $mod+space focus mode_toggle
+
+# focus the parent container
+bindsym $mod+q focus parent
+
+# focus the child container
+#OLD bindsym $mod+d focus child
+
+# reload the configuration file
+bindsym $mod+Shift+c reload
+# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+bindsym $mod+Shift+r restart
+# exit i3 (logs you out of your X session)
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+
+mode "resize" {
+        # These bindings trigger as soon as you enter the resize mode
+
+        # Pressing left will shrink the window’s width.
+        # Pressing right will grow the window’s width.
+        # Pressing up will shrink the window’s height.
+        # Pressing down will grow the window’s height.
+        bindsym j resize shrink width 5 px or 5 ppt
+        bindsym k resize grow height 5 px or 5 ppt
+        bindsym l resize shrink height 5 px or 5 ppt
+        bindsym m resize grow width 5 px or 5 ppt
+
+      # same bindings, but for the arrow keys
+        bindsym Left resize shrink width 5 px or 5 ppt
+        bindsym Down resize grow height 5 px or 5 ppt
+        bindsym Up resize shrink height 5 px or 5 ppt
+        bindsym Right resize grow width 5 px or 5 ppt
+
+        # back to normal: Enter or Escape
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+
+bindsym $mod+r mode "resize"
+
+
+# Audio
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle # mute sound
+# Play / Pause Spotify
+bindsym XF86AudioPlay exec dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause
+bindsym XF86AudioPause exec dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause
+bindsym XF86AudioNext exec dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next
+bindsym XF86AudioPrev exec dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous
+# Capture d'écran
+bindsym Print exec xfce4-screenshooter
+
+
+###############################
+#         WORKSPACES          #
+###############################
+
+set $ws1 "1"
+set $ws2 "2"
+set $ws3 "3"
+set $ws4 "4"
+set $ws5 "5"
+set $ws6 "6"
+set $ws7 "7"
+set $ws8 "8"
+set $ws9 "9"
+set $ws10 "10"
+
+
+# switch to workspace
+bindsym $mod+ampersand workspace $ws1
+bindsym $mod+eacute workspace $ws2
+bindsym $mod+quotedbl workspace $ws3
+bindsym $mod+apostrophe workspace $ws4
+bindsym $mod+parenleft workspace $ws5
+bindsym $mod+minus workspace $ws6
+bindsym $mod+egrave workspace $ws7
+bindsym $mod+underscore workspace $ws8
+bindsym $mod+ccedilla workspace $ws9
+bindsym $mod+agrave workspace $ws10
+
+# move focused container to workspace
+bindsym $mod+Shift+ampersand move container to workspace $ws1; workspace $ws1
+bindsym $mod+Shift+eacute move container to workspace $ws2; workspace $ws2
+bindsym $mod+Shift+quotedbl move container to workspace $ws3; workspace $ws3
+bindsym $mod+Shift+apostrophe move container to workspace $ws5; workspace $ws4
+bindsym $mod+Shift+5 move container to workspace $ws5; workspace $ws5
+bindsym $mod+Shift+minus move container to workspace $ws6; workspace $ws6
+bindsym $mod+Shift+egrave move container to workspace $ws7; workspace $ws7
+bindsym $mod+Shift+8 move container to workspace $ws8; workspace $ws8
+bindsym $mod+Shift+ccedilla move container to workspace $ws9; workspace $ws9
+bindsym $mod+Shift+agrave move container to workspace $ws10; workspace $ws10
+
+# Force certaines apps à des wokspaces dédiés
+# Workspace 1 (Web) : 
+assign [class="Google-chrome|Vivaldi-snapshot|Vivaldi"]                 $ws1
+for_window [class="Google-chrome|Vivaldi-snapshot|Vivaldi"]             move to workspace $ws1
+
+# Workspace 2 (Code) : 
+assign [class="Code"]                                                   $ws2
+assign [class="phpstorm"]                                               $ws2
+assign [class="atom"]                                                   $ws2
+# Workspace 3 (Code Tools) : 
+assign [class="GitKraken"]                                              $ws3
+
+# Workspace 6 (Chat) : 
+assign [class="discord-canary|discord|Teamspeak3|Gear"]                 $ws6
+for_window [class="discord-canary|discord|Teamspeak3|Geary"]            move to workspace $ws6
+
+# Workspace 7 (Music, KeeWeb) : 
+assign [class="Spotify|KeeWeb"]                                         $ws7
+for_window [class="Spotify"]                                            move to workspace $ws7
+
+# Workspace 8 (VM) : 
+assign [class="VirtualBox"]                                             $ws8
+
+# Float
+for_window [class="pavucontrol|nm-connection-editor|Blueman-manager|blueman-manager|Pavucontrol"] floating enable
+
+###############################
+#     STARTUP APPLICATIONS    #
+###############################
+
+#compton: windows styler
+exec --no-startup-id compton
+
+#Wallpaper
+exec_always --no-startup-id feh --bg-scale ~/Pictures/wallpaper/wave.jpg
+
+
+#Launch xfce4 and system programs
+exec --no-startup-id startxfce4
+exec --no-startup-id NetworkManager --no-daemon
+exec --no-startup-id blueman-applet
+exec --no-startup-id compton
+#Launch startup programs
+# exec --no-startup-id discord-canary
+exec --no-startup-id KeeWeb
+exec --no-startup-id geary
+exec xscreensaver -nosplash
+#lock system
+exec --no-startup-id lock
+
+exec_always --no-startup-id "killall polybar;polybar -r default"

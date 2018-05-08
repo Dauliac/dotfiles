@@ -1,0 +1,94 @@
+ ################################################################################# 
+ # 
+ # ██████╗ ██╗ ██╗ ██╗ ███████╗ ████████╗ ██████╗ █████ █╗ 
+ # ██╔══██╗ ██║ ██║ ██║ ██╔════╝ ╚══██╔══╝ ██╔══██╗ ██ ╔════╝ 
+ # ██║ ██║ ██║ ██╔██╗ ███████╗ ██║ ██║ ██████╔╝ ██║ 
+ # ██║ ██║ ██║ ██║╚██╗██║ ╚════██║ ██║ ██╔══██╗ ██║ 
+ # ██████╔╝ ╚██████╔╝ ██║ ███████║ ██║ ██║ ██║ ╚█████ █╗ 
+ # ╚═════╝ ╚═════╝ ╚═╝ ╚══════╝ ╚═╝ ╚═╝ ╚═╝ ╚═════╝ 
+ # 
+ # Auteur: Dauliac 
+ # Date: 24.07.2017 
+ # version: last-arch
+ # File: dunstrc 
+ # Last modification date: 12.12.2017 
+ # Last modificatio user: Dauliac <juliendauliac@gmail.com>
+ # Path: $ HOME / .config / dunst / dunstrc 
+ # 
+ ################################################################################# 
+
+[global]
+    font = pango Monoid 9
+    allow_markup = yes
+    format = "<b>%s</b>\n%b"
+    sort = yes
+    indicate_hidden = yes
+    alignment = left
+    bounce_freq = 0
+    show_age_threshold = 60
+    word_wrap = yes
+    ignore_newline = no
+    geometry = "300x5-7+40"
+    shrink = no
+    transparency = 0
+    idle_threshold = 120
+    monitor = 0
+    follow = mouse
+    sticky_history = yes
+    history_length = 20
+    show_indicators = yes
+    line_height = 4
+    separator_height = 2
+    padding = 8
+    horizontal_padding = 8
+    separator_color = #ebdbb2
+    startup_notification = false
+    dmenu = /usr/bin/dmenu -p dunst:
+    browser = /usr/bin/firefox -new-tab
+    icon_position = left
+   icon_folders = /usr/share/icons/Notifications/
+[frame]
+    width = 1
+    color = "#ffffff"
+
+[shortcuts]
+    close = ctrl+space
+    close_all = ctrl+shift+space
+    history = ctrl+grave
+    context = ctrl+shift+p
+
+[urgency_low]
+    frame_color = "#83a598"
+    foreground ="#ebdbb2"
+    background = "#458588"
+    timeout = 2
+
+[urgency_normal]
+    frame_color = "#b8bb26"
+    foreground = "#ebdbb2"
+    background = "#98971a"
+    timeout = 2
+
+[urgency_critical]
+    frame_color = "#fb4934"
+    foreground = "#ebdbb2"
+    background = "#cc241d"
+    timeout = 4
+
+[Go For It!]
+appname=Go For It!
+format = "<b>%s</b>\n%b"
+timeout =50
+new_icon=Mocp
+
+#[VLC media player]
+#appname = VLC media player
+#format = "<b>Now Playing:</b>\n%s\n%b"
+#new_icon = Mocp
+#timeout = 10
+
+[Spotify]
+appname= Spotify
+format = "<b>Now Playing:</b>\n%s\n%b"
+ new_icon = Spotify
+timeout = 10
