@@ -21,17 +21,14 @@ export HISTIGNORE='ls -l:pwd:history:exit'
 export HISTCONTROL=ignoredups
 PATH=$PATH:~/Scripts
 
-################################
-#   SSH
-################################
-#export SSH_AUTH_SOCK=/tmp/ssh-E3Iw5ONXPyIA/agent.14660
-#export SSH_AGENT_PID=14661
+if [ -d "$HOME/bin" ] ; then
+  PATH="$PATH:$HOME/bin"
+fi
 #################################
 #	NOT PUBLIC    
 #################################  
 
 source "$HOME/.userrc"
-source "$HOME/.workrc"
 
 # work variable
 
@@ -70,7 +67,13 @@ ZSH_THEME="spaceship"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git)
+plugins=(git zsh-completions) #zsh-autosuggestions)
+
+
+#################################
+#     FUNCTIONS
+#################################
+source ~/.zsh_functions
 
 #################################
 #     ALIASES
@@ -117,7 +120,7 @@ setopt correct                  # spelling correction for commands
 #################################
 
 #Launch arch logo
-archey3
+neofetch
 if [[ ! -d $ZSH_CACHE_DIR ]]; then
   mkdir $ZSH_CACHE_DIR
 fi
@@ -137,6 +140,7 @@ stty stop ''
 stty start ''
 stty -ixon
 stty -ixoff
+
 #################################
 #     MAN
 #################################
@@ -147,4 +151,3 @@ export LESS_TERMCAP_se=$'\e[0m'
 export LESS_TERMCAP_so=$'\e[01;33m'
 export LESS_TERMCAP_ue=$'\e[0m'
 export LESS_TERMCAP_us=$'\e[1;4;31m'
-

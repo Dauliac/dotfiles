@@ -1,9 +1,10 @@
 #!/bin/bash
-pac=$(checkupdates | wc -l)
-aur=$(cower -u | wc -l)
+yay -S
+aur=$(yay -Pn)
 
-check=$((pac + aur))
-if [[ "$check" != "0" ]]
+if [[ "$aur" != "0" ]]
 then
-    echo "$pac %{F#5b5b5b}%{F-} $aur"
-fi
+    echo "%{F#5b5b5b}%{F-} $aur"
+else
+    echo ""
+fi;

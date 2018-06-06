@@ -1,5 +1,5 @@
 ################################################################################# 
-# 
+#
 #        ::::::::::: ::::::::   :::       ::: ::::    ::::  
 #             :+:    :+:    :+:  :+:       :+: +:+:+: :+:+:+ 
 #             +:+           +:+  +:+       +:+ +:+ +:+:+ +:+ 
@@ -15,10 +15,6 @@
 # Last modification date: 12.12.2017
 # Last modificatio user: Dauliac <juliendauliac@gmail.com>
 # Path: $ HOME / .config / i3 / config
-# 
-################################################################################# 
-
-
 
 set $mod Mod4
 set $alt Mod1
@@ -32,9 +28,10 @@ font pango:Monoid : 8
 
 #Launcher
 bindsym $mod+d exec rofi -show run
-
+#Web search
+bindsym $mod+v exec echo "" | rofi -dmenu | xargs -I{} xdg-open https://duckduckgo.com/\?q\=\{\}
 #Borders
-gaps inner 5
+gaps inner 0
 smart_borders on
 smart_gaps on
 for_window [class="^.*"] border pixel 2
@@ -67,7 +64,6 @@ client.unfocused        $c_yellow_l   $c_yellow_l   $c_yellow_l   $c_yellow_l
 client.urgent           $c_red_d      $c_red_d      $c_red_d      $c_red_d
 client.background       $c_background
 
-
 ###############################
 #         KEYBINDING          #
 ###############################
@@ -88,45 +84,34 @@ bindsym $mod+Shift+q kill
 bindsym $alt+F4 kill
 
 # change focus
-bindsym $mod+j focus left
-bindsym $mod+k focus down
-bindsym $mod+l focus up
-bindsym $mod+m focus right
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
 
 # alternatively, you can use the cursor keys:
-bindsym $mod+Left focus left
-bindsym $mod+Down focus down
-bindsym $mod+Up focus up
-bindsym $mod+Right focus right
+# bindsym $mod+Left focus left
+# bindsym $mod+Down focus down
+# bindsym $mod+Up focus up
+# bindsym $mod+Right focus right
 
 # move focused window
-bindsym $mod+Shift+j move left
-bindsym $mod+Shift+k move down
-bindsym $mod+Shift+l move up
-bindsym $mod+Shift+m move right
-
-# alternatively, you can use the cursor keys:
-bindsym $mod+Shift+Left move left
-bindsym $mod+Shift+Down move down
-bindsym $mod+Shift+Up move up
-bindsym $mod+Shift+Right move right
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
 
 # split in horizontal orientation
-bindsym $mod+h split h
+bindsym $mod+u split h
 
 # split in vertical orientation
-bindsym $mod+v split v
+bindsym $mod+i split v
 
 # enter fullscreen mode for the focused container
 bindsym $mod+f fullscreen toggle
 
 # stick windows
 bindsym $mod+s sticky toggle
-
-# change container layout (stacked, tabbed, toggle split)
-# bindsym $mod+s layout stacking
-# bindsym $mod+z layout tabbed
-# bindsym $mod+e layout toggle split
 
 # toggle tiling / floating
 bindsym $mod+Shift+space floating toggle
@@ -136,9 +121,6 @@ bindsym $mod+space focus mode_toggle
 
 # focus the parent container
 bindsym $mod+q focus parent
-
-# focus the child container
-#OLD bindsym $mod+d focus child
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
@@ -154,10 +136,10 @@ mode "resize" {
         # Pressing right will grow the window’s width.
         # Pressing up will shrink the window’s height.
         # Pressing down will grow the window’s height.
-        bindsym j resize shrink width 5 px or 5 ppt
-        bindsym k resize grow height 5 px or 5 ppt
-        bindsym l resize shrink height 5 px or 5 ppt
-        bindsym m resize grow width 5 px or 5 ppt
+        bindsym h resize grow width 10 px or 10 ppt
+        bindsym j resize shrink height 10 px or 10 ppt
+        bindsym k resize grow height 10 px or 10 ppt
+        bindsym l resize shrink width 10 px or 10 ppt
 
       # same bindings, but for the arrow keys
         bindsym Left resize shrink width 5 px or 5 ppt
@@ -200,7 +182,25 @@ set $ws7 "7"
 set $ws8 "8"
 set $ws9 "9"
 set $ws10 "10"
+set $ws11 "11"
+set $ws12 "12"
 
+set $monitorDefault eDP1
+set $monitorTwo     DP2
+
+# Monitor
+workspace $ws1 output $monitorDefault
+workspace $ws2 output $monitorDefault
+workspace $ws3 output $monitorDefault
+workspace $ws4 output $monitorDefault
+workspace $ws5 output $monitorDefault
+workspace $ws6 output $monitorDefault
+workspace $ws7 output $monitorDefault
+workspace $ws8 output $monitorDefault
+workspace $ws9 output $monitorDefault
+workspace $ws10 output $monitorDefault
+workspace $ws11 output $monitorTwo
+workspace $ws12 output $monitorTwo
 
 # switch to workspace
 bindsym $mod+ampersand workspace $ws1
@@ -213,18 +213,22 @@ bindsym $mod+egrave workspace $ws7
 bindsym $mod+underscore workspace $ws8
 bindsym $mod+ccedilla workspace $ws9
 bindsym $mod+agrave workspace $ws10
+bindsym $mod+parenright workspace $ws11
+bindsym $mod+equal workspace $ws12
 
 # move focused container to workspace
 bindsym $mod+Shift+ampersand move container to workspace $ws1; workspace $ws1
 bindsym $mod+Shift+eacute move container to workspace $ws2; workspace $ws2
 bindsym $mod+Shift+quotedbl move container to workspace $ws3; workspace $ws3
-bindsym $mod+Shift+apostrophe move container to workspace $ws5; workspace $ws4
+bindsym $mod+Shift+apostrophe move container to workspace $ws4; workspace $ws4
 bindsym $mod+Shift+5 move container to workspace $ws5; workspace $ws5
 bindsym $mod+Shift+minus move container to workspace $ws6; workspace $ws6
 bindsym $mod+Shift+egrave move container to workspace $ws7; workspace $ws7
 bindsym $mod+Shift+8 move container to workspace $ws8; workspace $ws8
 bindsym $mod+Shift+ccedilla move container to workspace $ws9; workspace $ws9
 bindsym $mod+Shift+agrave move container to workspace $ws10; workspace $ws10
+bindsym $mod+Shift+parenright move container to workspace $ws11; workspace $ws11
+bindsym $mod+Shift+equal move container to workspace $ws12; workspace $ws12
 
 # Force certaines apps à des wokspaces dédiés
 # Workspace 1 (Web) : 
@@ -256,11 +260,15 @@ for_window [class="pavucontrol|nm-connection-editor|Blueman-manager|blueman-mana
 #     STARTUP APPLICATIONS    #
 ###############################
 
+#lock system
+exec --no-startup-id footlocker -p /home/dauliac/Pictures/wallpaper/wave.png -t 'Hello boy !'
+
 #compton: windows styler
 exec --no-startup-id compton
 
 #Wallpaper
-exec_always --no-startup-id feh --bg-scale ~/Pictures/wallpaper/wave.jpg
+exec_always --no-startup-id DISPLAY=:0.0 feh --bg-scale ~/Pictures/wallpaper/wave.png
+exec_always --no-startup-id DISPLAY=:0.1 feh --bg-scale ~/Pictures/wallpaper/load.png
 
 
 #Launch xfce4 and system programs
@@ -273,7 +281,4 @@ exec --no-startup-id compton
 exec --no-startup-id KeeWeb
 exec --no-startup-id geary
 exec xscreensaver -nosplash
-#lock system
-exec --no-startup-id lock
-
-exec_always --no-startup-id "killall polybar;polybar -r default"
+exec_always --no-startup-id "killall polybar;polybar -r one"

@@ -72,12 +72,27 @@ module-margin-right = 2
 font-0 = Monoid:pixelsize=9
 font-1 = FontAwesome:size=10
 font-2 = Material Icons:size=12
-modules-left = powermenu i3 pkg
+offset-y = 0
+
+
+[bar/one]
+inherit = bar/default
+
+monitor = eDP1
+
+tray-position = right
+modules-left = powermenu i3 pkg ssh docker vm
 modules-center = spotify
 modules-right = volume temperature memory cpu date
 
-offset-y = 0
-tray-position = right
+
+[bar/two]
+inherit = bar/default
+monitor = DP2
+modules-left = i3
+modules-center = prez
+modules-right = date docker ssh vmaa
+
 
 [module/i3]
 type = internal/i3
@@ -119,7 +134,8 @@ ws-icon-6 = 7;
 ws-icon-7 = 8;
 ws-icon-8 = 9;
 ws-icon-9 = 10;
-ws-icon-10 = 11;
+ws-icon-10 = 11;
+ws-icon-11 = 12;
 
 [module/xbacklight]
 type = internal/xbacklight
@@ -144,11 +160,6 @@ inherit = module/xbacklight
 type = internal/backlight
 card = intel_backlight
 
-[module/redshift]
-type = custom/script
-interval = 5
-
-exec = ~/.config/polybar/redshift.sh
 
 [module/cpu]
 type = internal/cpu
@@ -176,6 +187,36 @@ ramp-coreload-6-foreground = ${colors.red}
 ramp-coreload-7 = █
 ramp-coreload-7-foreground = ${colors.red}
 
+[module/ssh]
+type = custom/script
+exec = ~/.config/polybar/ssh.sh
+interval = 5
+format-underline = ${colors.yellow}
+format-foreground = ${colors.yellow}
+format-cyan-l = ${colors.cyan}
+
+[module/prez]
+type = custom/script
+exec = ~/.config/polybar/prez.sh
+format-underline = ${colors.white}
+format-foreground = ${colors.white}
+format-cyan-l = ${colors.cyan}
+
+[module/docker]
+type = custom/script
+exec = ~/.config/polybar/docker.sh
+interval = 15
+format-underline = ${colors.blue}
+format-foreground = ${colors.blue}
+format-cyan-l = ${colors.cyan}
+
+[module/vm]
+type = custom/script
+exec = ~/.config/polybar/vm.sh
+interval = 20
+format-underline = ${colors.cyan}
+format-foreground = ${colors.cyan}
+format-cyan-l = ${colors.cyan}
 
 [module/memory]
 type = internal/memory
@@ -184,6 +225,11 @@ format-prefix = " "
 format-underline = ${colors.yellow-l}
 format-prefix-foreground = ${colors.yellow-l}
 label = %percentage_used%%
+
+[module/news]
+type = custom/script
+exec = ~/.config/polybar/news.py
+interval = 600
 
 [module/wlan]
 type = internal/network
@@ -368,7 +414,7 @@ menu-0-2-padding = 3
 menu-1-0 = 
 menu-1-0-foreground = ${colors.white-l}
 menu-1-0-background = ${colors.green}
-menu-1-0-exec = lock
+menu-1-0-exec = footlocker
 menu-1-0-padding = 3
 
 menu-2-0 = 
@@ -389,7 +435,7 @@ exec-if = ~/.config/polybar/spotify.sh --isPlaying
 exec = ~/.config/polybar/spotify.sh --title
 click-left = i3-msg workspace 7
 interval = 5
-format=   <label> 
+format=   <label>
 format-foreground= ${colors.spotify_text}
 
 label = %output%
@@ -399,7 +445,7 @@ type = custom/script
 interval = 1200
 format = <label>
 format-underline = ${colors.red}
-click-left = urxvt -e yaourt -Syyua
+click-left = termite -e "yay -Syyu"
 label = "%output:0:30%"
 exec = .config/polybar/pkg.sh
 exec-if = "ping -q -w 2 -c 1 176.34.135.167 > /dev/null"
