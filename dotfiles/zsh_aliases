@@ -1,0 +1,45 @@
+######################################################
+#
+#    ,-.          .      ,.  .
+#    |  )         |     /  \ | o
+#    |-<  ,-: ,-. |-.   |--| | . ,-: ,-. ,-. ,-.
+#    |  ) | | `-. | |   |  | | | | | `-. |-' `-.
+#    `-'  `-` `-' ' '   '  ' ' ' `-` `-' `-' `-'
+#
+######################################################
+
+# Real commands
+alias grep="grep --color=auto"
+alias ll="ls -al"      
+alias cpall='cp -Rvfi'
+alias rmall='rm -Rvfi'
+alias ls="ls --color=always --classify --group-directories-first --human-readable"
+
+# Folders
+alias localhost="/srv/http/"
+alias work="~/Workspace/"
+alias ..='cd ..'
+alias ...='cd ../../'
+alias ....='cd ../../../'
+
+# Protections
+alias rm='$HOME/bin/trash'
+alias mv='mv -i'
+alias cp='cp -i'
+
+# Tools
+alias youtube='youtube-dl --extract-audio --audio-format mp3'
+alias swapvoid="swapoff -a && swapon -a"
+alias ghost='ssh $GHOST_USER@$GHOST_DNS -p $GHOST_PORT'
+alias ghostbuster='ssh $GHOST_BUSTER_USER@$GHOST_BUSTER_DNS -p $GHOST_BUSTER_PORT'
+alias clip="xclip -selection c"
+
+#tmux
+alias tma="tmux attach"
+alias tls="tmux list-session"
+
+# OneChar
+alias v="vim"
+alias u="yay -Syyu"
+alias d="docker"
+alias c="clear"
