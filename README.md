@@ -1,4 +1,4 @@
-#My rice dotfile
+# My rice dotfile
 
 ## Install
 '''bash
