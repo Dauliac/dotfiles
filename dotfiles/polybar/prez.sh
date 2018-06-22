@@ -1,4 +1,4 @@
-PREZ_TOPIC="PFR"
-PREZ_USERS="Paul Michel Garzaro - Raphael Beghin - Arsène Bascop - Julien Dauliac"
+PREZ_TOPIC="Open-pantoufle"
+PREZ_USERS="Paul Michel Garzaro Raphael Beghin Julien Dauliac"
 
 echo "  ${PREZ_USERS} : ${PREZ_TOPIC} "
