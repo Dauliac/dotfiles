@@ -73,11 +73,11 @@ floating_modifier $mod
 # start a terminal
 bindsym $mod+Return exec termite
 
+# lockscreen
+bindsym $mod+Control+l exec footlocker
+
 # start vivaldi
 bindsym $mod+F1 exec vivaldi-stable
-# start code
-bindsym $mod+F2 exec code
-bindsym $mod+ctrl+l exec lock
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -88,6 +88,9 @@ bindsym $mod+h focus left
 bindsym $mod+j focus down
 bindsym $mod+k focus up
 bindsym $mod+l focus right
+
+# scratchpad
+bindsym $mod+Shift+Return [instance="dropdown"] scratchpad show
 
 # alternatively, you can use the cursor keys:
 # bindsym $mod+Left focus left
@@ -168,6 +171,11 @@ bindsym XF86AudioPrev exec dbus-send --print-reply --dest=org.mpris.MediaPlayer2
 bindsym Print exec xfce4-screenshooter
 
 
+###############################
+#         SCRATCHPADS         #
+###############################
+for_window [instance="dropdown"] floating enable;
+for_window [instance="dropdown"] move scratchpad; [instance="dropdown"] scratchpad show; move scratchpad
 ###############################
 #         WORKSPACES          #
 ###############################
@@ -276,6 +284,8 @@ exec --no-startup-id startxfce4
 exec --no-startup-id NetworkManager --no-daemon
 exec --no-startup-id blueman-applet
 exec --no-startup-id compton
+exec --no-startup-id termite --name=dropdown -e tmux
+
 #Launch startup programs
 # exec --no-startup-id discord-canary
 exec --no-startup-id KeeWeb
