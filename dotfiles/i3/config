@@ -24,12 +24,10 @@ set $alt Mod1
 ###############################
 
 #font
-font pango:Monoid : 8
+font InconsolataGo Nerd Font:8
 
 #Launcher
 bindsym $mod+d exec rofi -show run
-#Web search
-bindsym $mod+v exec echo "" | rofi -dmenu | xargs -I{} xdg-open https://duckduckgo.com/\?q\=\{\}
 #Borders
 gaps inner 0
 smart_borders on
@@ -71,13 +69,19 @@ client.background       $c_background
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec termite
+bindsym $mod+Return exec st
 
 # lockscreen
 bindsym $mod+Control+l exec footlocker
 
 # start vivaldi
 bindsym $mod+F1 exec vivaldi-stable
+
+# start a vim
+bindsym $mod+F2 exec st -e vim
+
+# start a ranger
+bindsym $mod+F3 exec st -e ranger
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -176,6 +180,8 @@ bindsym Print exec xfce4-screenshooter
 ###############################
 for_window [instance="dropdown"] floating enable;
 for_window [instance="dropdown"] move scratchpad; [instance="dropdown"] scratchpad show; move scratchpad
+for_window [instance="dropdown"] resize set 625 400
+for_window [instance="dropdown"] border pixel 5
 ###############################
 #         WORKSPACES          #
 ###############################
@@ -284,7 +290,7 @@ exec --no-startup-id startxfce4
 exec --no-startup-id NetworkManager --no-daemon
 exec --no-startup-id blueman-applet
 exec --no-startup-id compton
-exec --no-startup-id termite --name=dropdown -e tmux
+exec --no-startup-id st -n dropdown -e tmux
 
 #Launch startup programs
 # exec --no-startup-id discord-canary

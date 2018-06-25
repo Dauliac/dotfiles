@@ -2,15 +2,15 @@
 !       urxvt
 ! ===================
 
-URxvt*scrollBar:	    false
-URxvt*letterSpace:  	0.7
+URxvt*scrollBar: false
+URxvt*letterSpace: 0.7
 URxvt.internalBorder: 10
-URxvt*font: 		      xft:Monoid:retina:size=9, xft:PowerlineSymbols:medium:size=9
-URxvt*boldFont:		    xft:Monoid:bold:ize=9
-URxvt*cursorBlink:    true
-URxvt.iso14755:		    false
-URxvt*utf8:			      true
-URxvt.keysym.C-equal:      resize-font:bigger
+URxvt*font: xft:NotoMonoNerd:normal:size=9
+URxvt*boldFont: xft:Monoid:bold:ize=9
+URxvt*cursorBlink: true
+URxvt.iso14755: false
+URxvt*utf8: true
+URxvt.keysym.C-equal: resize-font:bigger
 URxvt.keysym.C-parenright: resize-font:smaller
 URxvt.depth: 32
 URxvt.background: [85]#282828

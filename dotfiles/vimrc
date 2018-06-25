@@ -40,12 +40,12 @@ set ttimeoutlen=10    " unnoticeable small value
 set number
 "color-----
 syntax on
-let g:gruvbox_contrast_dark='hard'
 colorscheme gruvbox
-set termguicolors
+let g:gruvbox_contrast_dark='medium'
+let g:gruvbox_contrast_light='soft'
 set background=dark
 let g:gruvbox_italic=1
-let g:gruvbox_termcolors=16
+let g:gruvbox_termcolors=256
 hi Normal guibg=NONE ctermbg=NONE "Transparent background
 
 "indent----
@@ -64,8 +64,6 @@ set smartcase
 
 "tools----
 set cursorline                               "See cursor line
-set mouse=a                                  "Use the mouse like you expect
-set ttymouse=xterm2                          "Use the mouse too
 set clipboard^=unnamedplus                   "Use X clipboard
 set omnifunc=syntaxComplete#Complete         "Syntax completion
 autocmd BufReadPost *                        "Keep the cursor position afer close
@@ -93,6 +91,7 @@ let NERDTreeMinimalUI = 1
 
 "====================Airline====================
 let g:airline#extensions#tabline#enabled = 1
+let g:airline_powerline_fonts = 1
 let g:airline_theme='gruvbox'
 
 "=====================Shortcuts===================
