@@ -118,7 +118,7 @@ bindsym $mod+i split v
 bindsym $mod+f fullscreen toggle
 
 # stick windows
-bindsym $mod+s sticky toggle
+bindsym $mod+Shift+b floating toggle; sticky toggle; exec --no-startup-id ~/bin/bottomleft
 
 # toggle tiling / floating
 bindsym $mod+Shift+space floating toggle
@@ -260,8 +260,8 @@ assign [class="GitKraken"]                                              $ws3
 assign [class="discord-canary|discord|Teamspeak3|Gear"]                 $ws6
 for_window [class="discord-canary|discord|Teamspeak3|Geary"]            move to workspace $ws6
 
-# Workspace 7 (Music, KeeWeb) : 
-assign [class="Spotify|KeeWeb"]                                         $ws7
+# Workspace 7 (Music, Keepassxc) : 
+assign [class="Spotify|keepassxc"]                                         $ws7
 for_window [class="Spotify"]                                            move to workspace $ws7
 
 # Workspace 8 (VM) : 
@@ -290,11 +290,11 @@ exec --no-startup-id startxfce4
 exec --no-startup-id NetworkManager --no-daemon
 exec --no-startup-id blueman-applet
 exec --no-startup-id compton
-exec --no-startup-id st -n dropdown -e tmux
+exec --no-startup-id st -n dropdown -e tmux new -s dropdown
 
 #Launch startup programs
 # exec --no-startup-id discord-canary
-exec --no-startup-id KeeWeb
 exec --no-startup-id geary
 exec xscreensaver -nosplash
+exec --no-startup-id keepassxc
 exec_always --no-startup-id "killall polybar;polybar -r one"
