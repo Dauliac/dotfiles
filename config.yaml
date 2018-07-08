@@ -1,0 +1,119 @@
+actions:
+  pre:
+    vundle-install: test -e ~/.vim/bundle/Vundle.vim || (mkdir -p ~/.vim/bundle; git
+      clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim)
+  vundle: vim +VundleClean! +VundleInstall +VundleInstall! +qall
+config:
+  backup: true
+  banner: true
+  create: true
+  dotpath: dotfiles
+  keepdot: false
+  longkey: false
+dotfiles:
+  default_bin:
+    dst: ~/.config/bin
+    src: config/bin
+  default_breeze-dark.conf:
+    dst: ~/.config/qt5ct/colors/Breeze Dark.conf
+    src: config/qt5ct/colors/Breeze Dark.conf
+  default_compton:
+    dst: ~/.config/compton
+    src: config/compton
+  default_dunst:
+    dst: ~/.config/dunst
+    src: config/dunst
+  default_feh:
+    dst: ~/.config/feh
+    src: config/feh
+  default_gitconfig:
+    dst: ~/.gitconfig
+    src: gitconfig
+  default_gtkrc-2.0:
+    dst: ~/.gtkrc-2.0
+    src: gtkrc-2.0
+  default_i3:
+    dst: ~/.config/i3
+    src: config/i3
+  default_polybar:
+    dst: ~/.config/polybar
+    src: config/polybar
+  default_qt5ct.conf:
+    dst: ~/.config/qt5ct/qt5ct.conf
+    src: config/qt5ct/qt5ct.conf
+  default_ranger:
+    dst: ~/.config/ranger
+    src: config/ranger
+  default_rofi:
+    dst: ~/.config/rofi
+    src: config/rofi
+  default_ssh-agent.service:
+    dst: ~/.config/systemd/user/ssh-agent.service
+    src: config/systemd/user/ssh-agent.service
+  default_tmux.conf:
+    dst: ~/.tmux.conf
+    src: tmux.conf
+  default_vimrc:
+    actions:
+    - vundle-install
+    - vundle
+    dst: ~/.vimrc
+    src: vimrc
+  default_yay:
+    dst: ~/.config/yay
+    src: config/yay
+  default_zprofile:
+    dst: ~/.zprofile
+    src: zprofile
+  default_zsh_aliases:
+    dst: ~/.zsh_aliases
+    src: zsh_aliases
+  default_zsh_functions:
+    dst: ~/.zsh_functions
+    src: zsh_functions
+  default_zshrc:
+    dst: ~/.zshrc
+    src: zshrc
+  default_wave.png:
+    dst: ~/Pictures/wallpaper/wave.png
+    src: Pictures/wallpaper/wave.png
+  default_xinitrc:
+    dst: ~/.xinitrc
+    src: xinitrc
+  default_xresources:
+    dst: ~/.Xresources
+    src: Xresources
+  default_zshenv:
+    dst: ~/.zshenv
+    src: zshenv
+    trans:
+      - gpg
+trans:
+  gpg: gpg2 -q --for-your-eyes-only --no-tty -d {0} > {1}
+profiles:
+  spectre:
+    dotfiles:
+    - default_vimrc
+    - default_tmux.conf
+    - default_zprofile
+    - default_gtkrc-2.0
+    - default_zsh_aliases
+    - default_zsh_functions
+    - default_zshrc
+    - default_compton
+    - default_bin
+    - default_breeze-dark.conf
+    - default_qt5ct.conf
+    - default_dunst
+    - default_i3
+    - default_feh
+    - default_rofi
+    - default_polybar
+    - default_ranger
+    - default_yay
+    - default_ssh-agent.service
+    - default_gitconfig
+    - default_wave.png
+    - default_xresources
+    - default_xinitrc
+    - default_zshenv

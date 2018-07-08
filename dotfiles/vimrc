@@ -21,7 +21,7 @@ Plugin 'lilydjwg/colorizer'                    "Hilight color
 Plugin 'Yggdroot/indentLine'                   "vertical indent symbol
 Plugin 'majutsushi/tagbar'                     "right bar with fuctions
 Plugin 'christoomey/vim-tmux-navigator'        "Tmux integration in vim
-Plugin 'junegunn/fzf'                          "Fzf integration and completion 
+Plugin 'junegunn/fzf'                          "Fzf integration and completion
 Plugin 'junegunn/fzf.vim'                      "Fzf integration and completion
 
 call vundle#end()
@@ -38,6 +38,8 @@ set ttimeout          " for key codes
 set ttimeoutlen=10    " unnoticeable small value
 "====================Style====================
 set number
+set relativenumber
+
 "color-----
 syntax on
 colorscheme gruvbox
@@ -95,38 +97,39 @@ let g:airline_powerline_fonts = 1
 let g:airline_theme='gruvbox'
 
 "=====================Shortcuts===================
-nmap <C-left> :bp<CR>
-nmap <C-right> :bn<CR>
+nmap <C-SHiftTab> :bp<CR>
+nmap <C-r> :bn<CR>
 "nmap <C-S-o> :TagbarToggle<CR>
 "Copy to the clipboard -- need +xterm-clipboard
  nmap <Leader>y "+y<CR>
 "Permet de couper du code avec d sans écraser le contenu du registre
 nmap <Leader>d "_d<CR>
-"Saving
-nnoremap <c-s> :w<CR>
-vnoremap <c-s> <Esc><c-s>gv
-inoremap <c-s> <Esc><c-s>
-nnoremap <c-q> :qa<CR>
-nnoremap qq :q<CR>
-vnoremap <c-s> <Esc><c-s>gv
-inoremap <c-s> <Esc><c-s>
-nnoremap <c-q> :qa<CR>
-nnoremap qq :q<CR>
-"Close buffer
-nnoremap <C-x> :bd<CR>
-"Yank
-vnoremap <C-c> "+y
-inoremap <C-v> <ESC>"+pA
-nnoremap <C-v> "+p
-nnoremap ++ "+y$
-nnoremap +0 0"+y$
-nnoremap +w "+yw
-nnoremap +d "+d$
 
+"Saving
+nnoremap <C-s> :w<CR>
+vnoremap <C-s> <Esc>:w<CR><C-s>gv
+inoremap <C-s> <Esc>:w<CR><i>
+"Exit
+nnoremap <C-q> :qa<CR>
+"Close buffer
+nnoremap <C-x> :q<CR>
+
+" Move
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-h> <C-w>h
 nnoremap <C-l> <C-w>l
+
+" Splits open at the bottom and right, which is non-retarded, unlike vim defaults.
+set splitbelow
+set splitright
+
+" Replace all is aliased to S.
+noremap S :%s//g<Left><Left>
+
+" Automatically deletes all tralling whitespace on save.
+autocmd BufWritePre * %s/\s\+$//e
+
 "=====================FZF===================
 nnoremap <C-f> :Files<CR>
 nnoremap <C-g> :GFiles<CR>
