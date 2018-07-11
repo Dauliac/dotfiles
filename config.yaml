@@ -13,83 +13,113 @@ config:
 dotfiles:
   default_bin:
     dst: ~/.config/bin
+    link: true
     src: config/bin
   default_breeze-dark.conf:
     dst: ~/.config/qt5ct/colors/Breeze Dark.conf
+    link: true
     src: config/qt5ct/colors/Breeze Dark.conf
   default_compton:
     dst: ~/.config/compton
+    link: true
     src: config/compton
   default_dunst:
     dst: ~/.config/dunst
+    link: true
     src: config/dunst
   default_feh:
     dst: ~/.config/feh
+    link: true
     src: config/feh
   default_gitconfig:
     dst: ~/.gitconfig
+    link: true
     src: gitconfig
   default_gtkrc-2.0:
     dst: ~/.gtkrc-2.0
+    link: true
     src: gtkrc-2.0
   default_i3:
     dst: ~/.config/i3
+    link: true
     src: config/i3
   default_polybar:
     dst: ~/.config/polybar
+    link: true
     src: config/polybar
   default_qt5ct.conf:
     dst: ~/.config/qt5ct/qt5ct.conf
+    link: true
     src: config/qt5ct/qt5ct.conf
   default_ranger:
     dst: ~/.config/ranger
+    link: true
     src: config/ranger
   default_rofi:
     dst: ~/.config/rofi
+    link: true
     src: config/rofi
   default_ssh-agent.service:
     dst: ~/.config/systemd/user/ssh-agent.service
+    link: true
     src: config/systemd/user/ssh-agent.service
   default_tmux.conf:
     dst: ~/.tmux.conf
+    link: true
     src: tmux.conf
   default_vimrc:
     actions:
     - vundle-install
     - vundle
     dst: ~/.vimrc
+    link: true
     src: vimrc
-  default_yay:
-    dst: ~/.config/yay
-    src: config/yay
-  default_zprofile:
-    dst: ~/.zprofile
-    src: zprofile
-  default_zsh_aliases:
-    dst: ~/.zsh_aliases
-    src: zsh_aliases
-  default_zsh_functions:
-    dst: ~/.zsh_functions
-    src: zsh_functions
-  default_zshrc:
-    dst: ~/.zshrc
-    src: zshrc
   default_wave.png:
     dst: ~/Pictures/wallpaper/wave.png
+    link: true
     src: Pictures/wallpaper/wave.png
   default_xinitrc:
     dst: ~/.xinitrc
+    link: true
     src: xinitrc
   default_xresources:
     dst: ~/.Xresources
+    link: true
     src: Xresources
+  default_yay:
+    dst: ~/.config/yay
+    link: true
+    src: config/yay
+  default_zprofile:
+    dst: ~/.zprofile
+    link: true
+    src: zprofile
+  default_zsh_aliases:
+    dst: ~/.zsh_aliases
+    link: true
+    src: zsh_aliases
+  default_zsh_functions:
+    dst: ~/.zsh_functions
+    link: true
+    src: zsh_functions
   default_zshenv:
     dst: ~/.zshenv
     src: zshenv
     trans:
-      - gpg
-trans:
-  gpg: gpg2 -q --for-your-eyes-only --no-tty -d {0} > {1}
+    - gpg
+  default_zshrc:
+    dst: ~/.zshrc
+    link: true
+    src: zshrc
+  default_bashrc_min:
+    dst: ~/.ssh/bashrc_min
+    src: ssh/bashrc_min
+    link: true
+  default_ssh_config:
+    dst: ~/.ssh/config
+    src: ssh/config
+    trans:
+    - gpg
 profiles:
   spectre:
     dotfiles:
@@ -117,3 +147,7 @@ profiles:
     - default_xresources
     - default_xinitrc
     - default_zshenv
+    - default_bashrc_min
+    - default_ssh_config
+trans:
+  gpg: gpg2 -q --for-your-eyes-only --no-tty -d {0} > {1}

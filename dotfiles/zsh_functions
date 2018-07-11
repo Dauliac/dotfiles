@@ -28,3 +28,7 @@ function dpa {
 function gfb {
     git checkout $(git branch | fzf | awk '{print $2}')
 }
+
+function sssh {
+
+}
