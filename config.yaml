@@ -2,6 +2,8 @@ actions:
   pre:
     vundle-install: test -e ~/.vim/bundle/Vundle.vim || (mkdir -p ~/.vim/bundle; git
       clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim)
+    footlocker-install: git clone https://github.com/Dauliac/footlocker.git /tmp && \
+        mv /tmp/footlocker/footlocker ~/.config/bin/
   vundle: vim +VundleClean! +VundleInstall +VundleInstall! +qall
 config:
   backup: true
