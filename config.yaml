@@ -1,8 +1,12 @@
 actions:
   pre:
     vundle-install: test -e ~/.vim/bundle/Vundle.vim || (mkdir -p ~/.vim/bundle; git
-      clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim)
+      clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+    oh-my-zsh_install: sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+    fzf_install: test -e ~/.fzf || git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf;
+      ~/.fzf/install --no-bash --key-bindings --completion --no-update-rc
   vundle: vim +VundleClean! +VundleInstall +VundleInstall! +qall
+  fzf:
 config:
   backup: true
   banner: true
@@ -69,8 +73,8 @@ dotfiles:
     src: tmux.conf
   default_vimrc:
     actions:
-    - vundle-install
-    - vundle
+      - vundle-install
+      - vundle
     dst: ~/.vimrc
     link: true
     src: vimrc
@@ -106,8 +110,11 @@ dotfiles:
     dst: ~/.zshenv
     src: zshenv
     trans:
-    - gpg
+      - gpg
   default_zshrc:
+    actions:
+      - oh-my-zsh_install
+      - fzf_install
     dst: ~/.zshrc
     link: true
     src: zshrc
@@ -119,7 +126,7 @@ dotfiles:
     dst: ~/.ssh/config
     src: ssh/config
     trans:
-    - gpg
+      - gpg
 profiles:
   spectre:
     dotfiles:

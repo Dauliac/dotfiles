@@ -14,7 +14,7 @@ alias ll="ls -al"
 alias cpall='cp -Rvfi'
 alias rmall='rm -Rvfi'
 alias ls="ls --color=always --classify --group-directories-first --human-readable"
-alias dotdrop='dotdrop --cfg=$DOTFILES -p $HOST'
+alias dotdrop='dotdrop --cfg=$DOTFILES'
 
 # Folders
 alias localhost="/srv/http/"

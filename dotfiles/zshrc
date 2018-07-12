@@ -11,7 +11,7 @@
 #################################
 #     SYSTEM
 #################################
-ZSH="/usr/share/oh-my-zsh"
+ZSH="$HOME/.oh-my-zsh"
 ZSH_CACHE_DIR=$HOME/.cache/oh-my-zsh
 DISABLE_AUTO_UPDATE="true"
 export EDITOR="vim"
@@ -111,8 +111,7 @@ source $ZSH/oh-my-zsh.sh
 #################################
 #     FZF
 #################################
-source /usr/share/fzf/key-bindings.zsh
-source /usr/share/fzf/completion.zsh
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 #################################
 #     DISABLE play/pause tty
 #################################
