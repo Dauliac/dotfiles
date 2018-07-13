@@ -4,7 +4,16 @@ actions:
       clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim)
     footlocker-install: git clone https://github.com/Dauliac/footlocker.git /tmp && \
         mv /tmp/footlocker/footlocker ~/.config/bin/
+    oh-my-zsh_install: git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh;
+    zsh_theme_install: ZSH_CUSTOM=$HOME/.oh-my-zsh/custom;
+        git clone https://github.com/denysdovhan/spaceship-prompt.git "$ZSH_CUSTOM/themes/spaceship-prompt" &&
+        ln -s "$ZSH_CUSTOM/themes/spaceship-prompt/spaceship.zsh-theme" "$ZSH_CUSTOM/themes/spaceship.zsh-theme"
+    fzf_install: test -e ~/.fzf || git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf &&
+      ~/.fzf/install --no-bash --key-bindings --completion --no-update-rc
+  zsh: chsh -s /bin/zsh;
+    source .zshrc
   vundle: vim +VundleClean! +VundleInstall +VundleInstall! +qall
+  fzf:
 config:
   backup: true
   banner: true
@@ -71,8 +80,8 @@ dotfiles:
     src: tmux.conf
   default_vimrc:
     actions:
-    - vundle-install
-    - vundle
+      - vundle-install
+      - vundle
     dst: ~/.vimrc
     link: true
     src: vimrc
@@ -108,8 +117,13 @@ dotfiles:
     dst: ~/.zshenv
     src: zshenv
     trans:
-    - gpg
+      - gpg
   default_zshrc:
+    actions:
+      - oh-my-zsh_install
+      - fzf_install
+      - zsh
+      - zsh_theme_install
     dst: ~/.zshrc
     link: true
     src: zshrc
@@ -121,7 +135,7 @@ dotfiles:
     dst: ~/.ssh/config
     src: ssh/config
     trans:
-    - gpg
+      - gpg
 profiles:
   spectre:
     dotfiles:

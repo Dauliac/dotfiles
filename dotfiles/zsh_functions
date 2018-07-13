@@ -40,7 +40,3 @@ function gfb {
             --ansi --preview="git log -200 --pretty=format:%s $(echo {+2..} |  sed 's/$/../' )" ) || return
       git checkout $(echo "$target" | awk '{print $2}')
 }
-
-function sssh {
-    # TODO (function to backup all ssh commands to the local side host)
-}
