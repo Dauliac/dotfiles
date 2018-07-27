@@ -24,7 +24,6 @@ config:
 dotfiles:
   default_bin:
     dst: ~/.config/bin
-    link: true
     src: config/bin
   default_breeze-dark.conf:
     dst: ~/.config/qt5ct/colors/Breeze Dark.conf
@@ -85,10 +84,6 @@ dotfiles:
     dst: ~/.vimrc
     link: true
     src: vimrc
-  default_wave.png:
-    dst: ~/Pictures/wallpaper/wave.png
-    link: true
-    src: Pictures/wallpaper/wave.png
   default_xinitrc:
     dst: ~/.xinitrc
     link: true
@@ -136,6 +131,19 @@ dotfiles:
     src: ssh/config
     trans:
       - gpg
+  media_freetube_settings:
+    dst: ~/.config/FreeTube/settings.db
+    src: config/freetube/settings.db
+    link: true
+  media_freetube_subscriptions:
+    dst: ~/.config/FreeTube/subscriptions.db
+    src: config/freetube/subscriptions.db
+    link: true
+  media_wave.png:
+    dst: ~/Pictures/wallpaper/wave.png
+    link: true
+    src: Pictures/wallpaper/wave.png
+
 profiles:
   spectre:
     dotfiles:
@@ -159,11 +167,14 @@ profiles:
     - default_yay
     - default_ssh-agent.service
     - default_gitconfig
-    - default_wave.png
+    - media_wave.png
     - default_xresources
     - default_xinitrc
     - default_zshenv
     - default_bashrc_min
     - default_ssh_config
+    - media_freetube_subscriptions
+    - media_freetube_settings
+
 trans:
   gpg: gpg2 -q --for-your-eyes-only --no-tty -d {0} > {1}

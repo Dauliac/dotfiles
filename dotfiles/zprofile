@@ -6,7 +6,8 @@ export npm_config_prefix=~/.node_modules
 
 export QT_AUTO_SCREEN_SCALE_FACTOR=0
 
-export TERM="st"
+export TERM="st-256color"
+export TERM_BIN="st"
 if [ -d "$HOME/.config/bin" ]; then
     export PATH="$HOME/.config/bin:$PATH"
 fi

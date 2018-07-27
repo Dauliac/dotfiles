@@ -15,8 +15,8 @@ newsize=$(xdotool getwindowgeometry $(xdotool getwindowfocus) | grep Geometry | 
 newsizeheight=$( echo $newsize | awk '{print $3}')
 newsizewidth=$(echo $newsize | awk '{print $2}')
 
-height=$(($(xdotool getdisplaygeometry | awk '{print $2}') - newsizeheight))
-width=$(($(xdotool getdisplaygeometry | awk '{print $1}') - newsizewidth))
+height=$(($(xdotool getdisplaygeometry | awk '{print $2}') - newsizeheight - 2))
+width=$(($(xdotool getdisplaygeometry | awk '{print $1}') - newsizewidth - 2))
 
 xdotool windowmove $current $width $height
 

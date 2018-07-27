@@ -74,7 +74,7 @@ client.background       $c_background
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec $TERM
+bindsym $mod+Return exec $TERM_BIN
 
 # lockscreen
 bindsym $mod+Control+l exec footlocker
@@ -83,10 +83,10 @@ bindsym $mod+Control+l exec footlocker
 bindsym $mod+F1 exec vivaldi-stable
 
 # start a vim
-bindsym $mod+F2 exec $TERM -e vim
+bindsym $mod+F2 exec $TERM_BIN -e vim
 
 # start a ranger
-bindsym $mod+F3 exec $TERM -e ranger
+bindsym $mod+F3 exec $TERM_BIN -e ranger
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -99,7 +99,7 @@ bindsym $mod+k focus up
 bindsym $mod+l focus right
 
 # screenshot
-bindsym Print exec "scrot -e 'mv $f /tmp/ && xclip -selection clipboard -t image/png -i < /tmp/$f'"
+bindsym Print exec "scrot -e 'mv $f /tmp/ && xclip -selection clipboard -t image/png -i < /tmp/$f' && sleep 0.5 && notify-send screenshot -u low"
 
 # scratchpad
 bindsym $mod+Shift+Return [instance="dropdown"] scratchpad show
@@ -125,8 +125,6 @@ bindsym $mod+i split v
 # enter fullscreen mode for the focused container
 bindsym $mod+f fullscreen toggle
 
-# stick windows
-bindsym $mod+Shift+b floating toggle; exec --no-startup-id bottomleft; sticky toggle
 
 # toggle tiling / floating
 bindsym $mod+Shift+space floating toggle
@@ -179,7 +177,6 @@ bindsym XF86AudioPlay exec dbus-send --print-reply --dest=org.mpris.MediaPlayer2
 bindsym XF86AudioPause exec dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause
 bindsym XF86AudioNext exec dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next
 bindsym XF86AudioPrev exec dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous
-# Capture d'écran
 
 ###############################
 #         SCRATCHPADS         #
@@ -255,31 +252,31 @@ bindsym $mod+Shift+agrave move container to workspace $ws10; workspace $ws10
 bindsym $mod+Shift+parenright move container to workspace $ws11; workspace $ws11
 bindsym $mod+Shift+equal move container to workspace $ws12; workspace $ws12
 
-# Force certaines apps à des wokspaces dédiés
-# Workspace 1 (Web) : 
+# Workspace 1 (Web) :
 assign [class="Google-chrome|Vivaldi-snapshot|Vivaldi"]                 $ws1
 for_window [class="Google-chrome|Vivaldi-snapshot|Vivaldi"]             move to workspace $ws1
 
-# Workspace 2 (Code) : 
-assign [class="Code"]                                                   $ws2
-assign [class="phpstorm"]                                               $ws2
-assign [class="atom"]                                                   $ws2
-# Workspace 3 (Code Tools) : 
-assign [class="GitKraken"]                                              $ws3
+# Workspace 5
+assign [class="freetube|FreeTube"]                                     $ws5
+for_window [class="freetube|Freetube"]                                 move to workspace $ws5
 
-# Workspace 6 (Chat) : 
+# Workspace 6 (Chat) :
 assign [class="discord-canary|discord|Teamspeak3|Gear"]                 $ws6
 for_window [class="discord-canary|discord|Teamspeak3|Geary"]            move to workspace $ws6
 
-# Workspace 7 (Music, Keepassxc) : 
-assign [class="Spotify|keepassxc"]                                         $ws7
+# Workspace 7 (Music, Keepassxc) :
+assign [class="Spotify|keepassxc"]                                      $ws7
 for_window [class="Spotify"]                                            move to workspace $ws7
 
-# Workspace 8 (VM) : 
+# Workspace 8 (VM) :
 assign [class="VirtualBox"]                                             $ws8
 
 # Float
 for_window [class="pavucontrol|nm-connection-editor|Blueman-manager|blueman-manager|Pavucontrol"] floating enable
+
+# Mini-Player
+for_window [title="Freetube Mini-Player"] floating toggle; exec --no-startup-id bottomleft; sticky toggle
+bindsym $mod+Shift+b floating toggle; exec --no-startup-id bottomleft; sticky toggle
 
 ###############################
 #     STARTUP APPLICATIONS    #
@@ -297,7 +294,7 @@ exec --no-startup-id NetworkManager --no-daemon
 exec --no-startup-id nm-applet
 exec --no-startup-id blueman-applet
 exec --no-startup-id compton
-exec --no-startup-id $TERM -n dropdown -e tmux new -s dropdown
+exec --no-startup-id $TERM_BIN -n dropdown -e tmux new -s dropdown
 exec --no-startup-id dunst
 
 #Launch startup programs
