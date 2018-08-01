@@ -98,12 +98,10 @@ let g:airline_powerline_fonts = 1
 let g:airline_theme='gruvbox'
 
 "=====================Shortcuts===================
-nmap <C-SHiftTab> :bp<CR>
-nmap <C-r> :bn<CR>
-"nmap <C-S-o> :TagbarToggle<CR>
 "Copy to the clipboard -- need +xterm-clipboard
  nmap <Leader>y "+y<CR>
-"Permet de couper du code avec d sans écraser le contenu du registre
+
+ " Cut code witout buffer
 nmap <Leader>d "_d<CR>
 
 "Saving
@@ -113,7 +111,7 @@ inoremap <C-s> <Esc>:w<CR><i>
 "Exit
 nnoremap <C-q> :qa<CR>
 "Close buffer
-nnoremap <C-x> :q<CR>
+nnoremap <C-x> :bd<CR>
 
 " Move
 nnoremap <C-j> <C-w>j

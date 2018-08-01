@@ -100,8 +100,7 @@ setopt complete_in_word         # allow completion from within a word/phrase
 #     OTHER
 #################################
 
-#Launch arch logo
-neofetch
+# Zsh cache
 if [[ ! -d $ZSH_CACHE_DIR ]]; then
   mkdir $ZSH_CACHE_DIR
 fi

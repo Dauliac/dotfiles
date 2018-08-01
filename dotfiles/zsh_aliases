@@ -11,8 +11,7 @@
 # Real commands
 alias grep="grep --color=auto"
 alias ll="ls -al"
-alias cpall='cp -Rvfi'
-alias rmall='rm -Rvfi'
+alias cpa='cp -Rvfi'
 alias ls="ls --color=always --classify --group-directories-first --human-readable"
 alias dotdrop='dotdrop --cfg=$DOTFILES'
 
@@ -24,9 +23,12 @@ alias ...='cd ../../'
 alias ....='cd ../../../'
 
 # Protections
-alias rm='trash'
 alias mv='mv -i'
 alias cp='cp -i'
+
+# Trash
+alias rm='trash-put '
+alias restore='trash-restore'
 
 # Tools
 alias youtube='youtube-dl --extract-audio --audio-format mp3'

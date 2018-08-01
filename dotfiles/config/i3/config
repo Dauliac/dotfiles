@@ -259,6 +259,7 @@ for_window [class="Google-chrome|Vivaldi-snapshot|Vivaldi"]             move to 
 # Workspace 5
 assign [class="freetube|FreeTube"]                                     $ws5
 for_window [class="freetube|Freetube"]                                 move to workspace $ws5
+for_window [title="Popcorn Time CE"]                                    move to workspace $ws5
 
 # Workspace 6 (Chat) :
 assign [class="discord-canary|discord|Teamspeak3|Gear"]                 $ws6

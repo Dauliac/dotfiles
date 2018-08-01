@@ -13,7 +13,6 @@ actions:
   zsh: chsh -s /bin/zsh;
     source .zshrc
   vundle: vim +VundleClean! +VundleInstall +VundleInstall! +qall
-  fzf:
 config:
   backup: true
   banner: true
@@ -134,15 +133,13 @@ dotfiles:
   media_freetube_settings:
     dst: ~/.config/FreeTube/settings.db
     src: config/freetube/settings.db
-    link: true
   media_freetube_subscriptions:
     dst: ~/.config/FreeTube/subscriptions.db
     src: config/freetube/subscriptions.db
-    link: true
   media_wave.png:
     dst: ~/Pictures/wallpaper/wave.png
-    link: true
     src: Pictures/wallpaper/wave.png
+    link: true
 
 profiles:
   spectre:
@@ -173,8 +170,6 @@ profiles:
     - default_zshenv
     - default_bashrc_min
     - default_ssh_config
-    - media_freetube_subscriptions
-    - media_freetube_settings
 
 trans:
   gpg: gpg2 -q --for-your-eyes-only --no-tty -d {0} > {1}
