@@ -1,0 +1,82 @@
+"==================== Vundle ==================
+set nocompatible
+filetype off
+
+" Change leader key
+let mapleader = ','
+
+filetype plugin indent on
+
+"==================== TimeOut=============
+set timeout           " for mappings
+set timeoutlen=1000   " default value
+set ttimeout          " for key codes
+set ttimeoutlen=10    " unnoticeable small value
+"====================Style====================
+set number
+set relativenumber
+
+"indent----
+let g:indentLine_setColors = 0
+let g:indentLine_char = '┆'
+set tabstop=4
+set shiftwidth=4
+set expandtab
+set smartindent
+set autoindent
+set backspace=indent,eol,start
+
+"Search----
+set ignorecase
+set smartcase
+
+"tools----
+set cursorline                               "See cursor line
+set clipboard^=unnamedplus                   "Use X clipboard
+set omnifunc=syntaxComplete#Complete         "Syntax completion
+autocmd BufReadPost *                        "Keep the cursor position afer close
+    \ if line("'\"") > 1 && line("'\"") <= line("$") |
+    \   execute "normal! g`\"" |
+    \ endif
+set autoread
+
+" Smart search----
+set ignorecase
+set smartcase
+filetype plugin on
+filetype plugin indent on
+
+"listchars----
+set list listchars=tab:▶-,trail:·,precedes:←,extends:→,eol:¬,nbsp:␣
+
+"=====================Shortcuts===================
+"Copy to the clipboard -- need +xterm-clipboard
+ nmap <Leader>y "+y<CR>
+
+ " Cut code witout buffer
+nmap <Leader>d "_d<CR>
+
+"Saving
+nnoremap <C-s> :w<CR>
+vnoremap <C-s> <Esc>:w<CR><C-s>gv
+inoremap <C-s> <Esc>:w<CR><i>
+"Exit
+nnoremap <C-q> :qa<CR>
+"Close buffer
+nnoremap <C-x> :bd<CR>
+
+" Move
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-h> <C-w>h
+nnoremap <C-l> <C-w>l
+
+" Splits open at the bottom and right, which is non-retarded, unlike vim defaults.
+set splitbelow
+set splitright
+
+" Replace all is aliased to S.
+noremap S :%s//g<Left><Left>
+
+" Automatically deletes all tralling whitespace on save.
+autocmd BufWritePre * %s/\s\+$//e
