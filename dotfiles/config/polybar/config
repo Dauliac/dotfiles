@@ -448,10 +448,9 @@ menu-3-0-padding = 3
 
 [module/spotify]
 type = custom/script
-exec-if = ~/.config/polybar/spotify.sh --isPlaying
 exec = ~/.config/polybar/spotify.sh --title
-click-left = i3-msg workspace 7
-interval = 5
+click-left =  ~/.config/polybar/spotify.sh --togglePlay
+interval = 2.5
 format=   <label>
 format-foreground= ${colors.spotify_text}
 

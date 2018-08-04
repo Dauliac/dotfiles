@@ -4,17 +4,21 @@ path="/org/mpris/MediaPlayer2"
 cmd="org.freedesktop.DBus.Properties.Get"
 
 getTitle() {
-  if ! pgrep -x spotify >/dev/null; then
-    echo ""; exit
-  fi
+    meta=$(dbus-send --print-reply --dest=${domain}.spotify ${path} ${cmd} string:${domain}.Player string:Metadata)
 
-  meta=$(dbus-send --print-reply --dest=${domain}.spotify ${path} ${cmd} string:${domain}.Player string:Metadata)
-  
-  artist=$(echo "$meta" | sed -nr '/xesam:artist"/,+2s/^ +string "(.*)"$/\1/p' | tail -1)
-  album=$(echo "$meta" | sed -nr '/xesam:album"/,+2s/^ +variant +string "(.*)"$/\1/p' | tail -1)
-  title=$(echo "$meta" | sed -nr '/xesam:title"/,+2s/^ +variant +string "(.*)"$/\1/p' | tail -1)
+    artist=$(echo "$meta" | sed -nr '/xesam:artist"/,+2s/^ +string "(.*)"$/\1/p' | tail -1)
+    album=$(echo "$meta" | sed -nr '/xesam:album"/,+2s/^ +variant +string "(.*)"$/\1/p' | tail -1)
+    title=$(echo "$meta" | sed -nr '/xesam:title"/,+2s/^ +variant +string "(.*)"$/\1/p' | tail -1)
 
-  echo "${*:-%artist% - %title%}" | sed "s/%artist%/$artist/g;s/%title%/$title/g;s/%album%/$album/g"i | sed 's/&/\\&/g'
+    if isPlaying; then
+      if ! pgrep -x spotify >/dev/null; then
+        echo ""; exit
+      fi
+
+            echo "$title: $artist - $album"
+    else
+      echo "  - $title: $artist - $album"
+    fi
 }
 
 isPlaying() {
@@ -22,9 +26,9 @@ isPlaying() {
     | tail -1 \
     | sed 's/^.*"\(.*\)".*/\1/')
   if [ "${status}" = "Paused" ]; then
-    exit 1
+    return 1
   fi
-  echo $status; exit
+  return 0
 }
 
 togglePlay() {

@@ -284,19 +284,21 @@ bindsym $mod+Shift+b floating toggle; exec --no-startup-id bottomleft; sticky to
 ###############################
 
 #compton: windows styler
-exec --no-startup-id compton
+exec_always --no-startup-id compton
 
 #Wallpaper
 exec_always --no-startup-id DISPLAY=:0.0 feh --bg-scale ~/Pictures/wallpaper/wave.png
 exec_always --no-startup-id DISPLAY=:0.1 feh --bg-scale ~/Pictures/wallpaper/load.png
 
-#Launch xfce4 and system programs
+#Launch system programs
+exec_always --no-startup-id compton
+exec_always --no-startup-id dunst
+exec_always --no-startup-id unclutter
+
+exec --no-startup-id $TERM_BIN -n dropdown -e tmux new -s dropdown
 exec --no-startup-id NetworkManager --no-daemon
 exec --no-startup-id nm-applet
 exec --no-startup-id blueman-applet
-exec --no-startup-id compton
-exec --no-startup-id $TERM_BIN -n dropdown -e tmux new -s dropdown
-exec --no-startup-id dunst
 
 #Launch startup programs
 # exec --no-startup-id discord-canary
