@@ -3,6 +3,128 @@ shopt -s autocd #Allows you to cd into directory merely by typing the directory 
 
 # Setting Bash prompt. Capitalizes username and host if root user (my root user uses this same config file).
 if [ "$EUID" -ne 0 ]
-	then export PS1="\[$(tput bold)\]\[$(tput setaf 1)\][\[$(tput setaf 3)\]\u\[$(tput setaf 2)\]@\[$(tput setaf 4)\]\h \[$(tput setaf 5)\]\W\[$(tput setaf 1)\]]\[$(tput setaf 7)\]\\$ \[$(tput sgr0)\]"
-	else export PS1="\[$(tput bold)\]\[$(tput setaf 1)\][\[$(tput setaf 3)\]ROOT\[$(tput setaf 2)\]@\[$(tput setaf 4)\]$(hostname | awk '{print toupper($0)}') \[$(tput setaf 5)\]\W\[$(tput setaf 1)\]]\[$(tput setaf 7)\]\\$ \[$(tput sgr0)\]"
+    then export PS1="\[$(tput bold)\]\[$(tput setaf 1)\][\[$(tput setaf 3)\]\u\[$(tput setaf 2)\]@\[$(tput setaf 4)\]\h \[$(tput setaf 5)\]\W\[$(tput setaf 1)\]]\[$(tput setaf 7)\]\\$ \[$(tput sgr0)\]"
+    else export PS1="\[$(tput bold)\]\[$(tput setaf 1)\][\[$(tput setaf 3)\]ROOT\[$(tput setaf 2)\]@\[$(tput setaf 4)\]$(hostname | awk '{print toupper($0)}') \[$(tput setaf 5)\]\W\[$(tput setaf 1)\]]\[$(tput setaf 7)\]\\$ \[$(tput sgr0)\]"
 fi
+
+#############
+# Tools
+#############
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+#############
+# Alias
+#############
+# Real commands
+alias grep="grep --color=auto"
+alias ll="ls -al"
+alias cpa='cp -Rvfi'
+alias ls="ls --color=always --classify --group-directories-first --human-readable"
+alias dotdrop='dotdrop --cfg=$DOTFILES'
+
+# Folders
+alias localhost="/srv/http/"
+alias cdw="~/Workspace/"
+alias ..='cd ..'
+alias ...='cd ../../'
+alias ....='cd ../../../'
+
+# Protections
+alias mv='mv -i'
+alias cp='cp -i'
+
+# Trash
+alias rm='trash-put '
+alias restore='trash-restore'
+
+# Tools
+alias youtube='youtube-dl --extract-audio --audio-format mp3'
+alias swapvoid="swapoff -a && swapon -a"
+alias ghost='ssh $GHOST_USER@$GHOST_DNS -p $GHOST_PORT'
+alias ghostbuster='ssh $GHOST_BUSTER_USER@$GHOST_BUSTER_DNS -p $GHOST_BUSTER_PORT'
+alias clip="xclip -selection c"
+
+#tmux
+alias tma="tmux attach"
+alias tls="tmux list-session"
+
+# OneChar
+alias v="vim"
+alias u="yay -Syyu"
+alias d="docker"
+alias c="clear"
+
+# Git
+alias g="git"
+alias gcam="git commit -a -m"
+alias gp="git push"
+alias gc="git clone"
+
+#############
+# Functions
+#############
+# Global
+extract () {
+  if [ -f $1 ] ; then
+      case $1 in
+          *.tar.bz2)   tar xvjf $1    ;;
+          *.tar.gz)    tar xvzf $1    ;;
+          *.bz2)       bunzip2 $1     ;;
+          *.rar)       rar x $1       ;;
+          *.gz)        gunzip $1      ;;
+          *.tar)       tar xvf $1     ;;
+          *.tbz2)      tar xvjf $1    ;;
+          *.tgz)       tar xvzf $1    ;;
+          *.zip)       unzip $1       ;;
+          *.Z)         uncompress $1  ;;
+          *.7z)        7z x $1        ;;
+          *)           echo "don't know how to extract '$1'..." ;;
+      esac
+  else
+      echo "'$1' is not a valid file!"
+  fi
+}
+
+# Tmux
+function tns {
+    tmux new-session -d -s $1 && [[ -n "$TMUX" ]] \
+        && tmux switch-client -t $1 \
+        || tmux attach
+}
+# Docker
+#docker remove all
+function dra {
+    docker rm $(docker ps -aq)
+}
+#docker stop all
+function dsa {
+    docker stop $(docker ps -aq)
+}
+#docker prune all
+function dpa {
+    echo stop containers.k.
+    dsa
+    echo remove containers
+    dra
+    echo prune networks..
+    docker network prune -f
+    echo prune volumes..
+    docker volume prune -f
+}
+
+# Fzf
+function gfb {
+    # git checkout $(git branch | fzf | awk '{print $2}')
+    local tags branches target
+      tags=$(
+    git tag | awk '{print "\x1b[31;1mtag\x1b[m\t" $1}') || return
+      branches=$(
+    git branch --all | grep -v HEAD |
+    sed "s/.* //" | sed "s#remotes/[^/]*/##" |
+    sort -u | awk '{print "\x1b[34;1mbranch\x1b[m\t" $1}') || return
+      target=$(
+    (echo "$tags"; echo "$branches") |
+        fzf --no-hscroll --no-multi --delimiter="\t" -n 2 \
+            --ansi --preview="git log -200 --pretty=format:%s $(echo {+2..} |  sed 's/$/../' )" ) || return
+      git checkout $(echo "$target" | awk '{print $2}')
+}
