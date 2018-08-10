@@ -170,6 +170,19 @@ profiles:
     - default_zshenv
     - default_bashrc_min
     - default_ssh_config
+  ghost:
+    dotfiles:
+    - default_vimrc
+    - default_tmux.conf
+    - default_zprofile
+    - default_zsh_aliases
+    - default_zsh_functions
+    - default_zshrc
+    - default_bin
+    - default_ranger
+    - default_gitconfig
+    - default_xresources
+    - default_zshenv
 
 trans:
   gpg: gpg2 -q --for-your-eyes-only --no-tty -d {0} > {1}
