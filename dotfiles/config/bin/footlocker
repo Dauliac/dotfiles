@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/bash
 
 timeout="10000"
 dependencies="i3lock scrot convert"
@@ -112,12 +112,12 @@ if [[ "$NOLOCK" != true ]]; then
         else
             state=0
         fi
-        unactive=`expr $(date +%s) - $last_activity`
-        if [[ "$state" -eq 1 ]] && [[ "$unactive" -ge "$SUSPEND" ]]; then
-            state=2
-            systemctl suspend
-            echo suspend
-        fi
+        # unactive=`expr $(date +%s) - $last_activity`
+        # if [[ "$state" -eq 1 ]] && [[ "$unactive" -ge "$SUSPEND" ]]; then
+        #     state=2
+        #     systemctl suspend
+        #     echo suspend
+        # fi
 
         if [[ "$state" -eq 2 ]] && [[ "$unactive" -ge "$HIBERNATE+" ]] ; then
             state=3

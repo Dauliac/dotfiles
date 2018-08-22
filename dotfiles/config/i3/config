@@ -165,12 +165,15 @@ mode "resize" {
         bindsym Escape mode "default"
 }
 
+# Resize
 bindsym $mod+r mode "resize"
 
+# Dmenu
+bindsym $mod+Shift+d exec --no-startup-id dmenu_run
 
 # Audio
-bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
-bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +1%
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -1%
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle # mute sound
 # Play / Pause Spotify
 bindsym XF86AudioPlay exec dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause
@@ -293,7 +296,7 @@ exec_always --no-startup-id DISPLAY=:0.1 feh --bg-scale ~/Pictures/wallpaper/loa
 #Launch system programs
 exec_always --no-startup-id compton
 exec_always --no-startup-id dunst
-exec_always --no-startup-id unclutter
+exec_always --no-startup-id unclutter -grab
 
 exec --no-startup-id $TERM_BIN -n dropdown -e tmux new -s dropdown
 exec --no-startup-id NetworkManager --no-daemon

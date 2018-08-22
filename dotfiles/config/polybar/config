@@ -11,8 +11,6 @@
 ; Date: 24.07.2017
 ; version: last-arch
 ; File: config
-; Last modification date: 12.12.2017
-; Last modificatio user: Dauliac <juliendauliac@gmail.com>
 ; Path: $ HOME / .config / polybar / config
 ;
 ;################################################################################
@@ -53,7 +51,7 @@ spotify_text = #63A579
 
 [bar/default]
 width = 100%
-height = 27
+height = 19
 
 fixed-center = false
 
@@ -69,9 +67,7 @@ padding-right = 2
 module-margin-left = 0
 module-margin-right = 2
 
-font-0 = InconsolataGo Nerd Font:pixelsize=9
-font-1 = FontAwesome:size=10
-font-2 = Material Icons:size=12
+font-0 = InconsolataGo Nerd Font:pixelsize=8
 offset-y = 0
 
 
@@ -81,9 +77,9 @@ inherit = bar/default
 monitor = eDP1
 
 tray-position = right
-modules-left = powermenu i3 pkg ssh docker vm
+modules-left = powermenu i3 pkg ssh togglelock docker vm
 modules-center = spotify
-modules-right = temperature memory cpu date battery
+modules-right = temperature memory cpu date battery volume
 
 
 [bar/two]
@@ -210,6 +206,15 @@ format-underline = ${colors.blue}
 format-foreground = ${colors.blue}
 format-cyan-l = ${colors.cyan}
 
+[module/togglelock]
+type = custom/script
+exec = ~/.config/polybar/togglelock.sh
+click-left = ~/.config/bin/togglelock --toggle
+interval = 1
+format-underline = ${colors.red}
+format-foreground = ${colors.red-l}
+format-cyan-l = ${colors.blue}
+
 [module/vm]
 type = custom/script
 exec = ~/.config/polybar/vm.sh
@@ -293,7 +298,7 @@ type = internal/volume
 format-volume = <ramp-volume> <label-volume>
 format-volume-underline = ${colors.cyan-l}
 label-volume-foreground = ${colors.cyan-l}
-click-left = pavucontrol
+click-right = pavucontrol
 
 label-muted = 
 label-muted-foreground = ${colors.cyan-l}
@@ -396,54 +401,55 @@ ramp-3-foreground = ${colors.red-l}
 [module/powermenu]
 type = custom/menu
 
-label-open =
+label-open = 
+
 label-open-foreground = ${colors.red-l}
 label-open-padding = 3
 label-open-background = ${colors.background}
 
-label-close = 
+label-close = 
 label-close-padding = 3
 label-close-foreground = ${colors.white-l}
 label-close-background = ${colors.background}
 label-close-padding-top = 100
 
 ;LOCK-MENU===================
-menu-0-0 = 
+menu-0-0 = 
 menu-0-0-foreground = ${colors.white-l}
 menu-0-0-background = ${colors.green}
 menu-0-0-exec = menu-open-1
 menu-0-0-padding = 3
 
 ;REBOOT-MENU==================
-menu-0-1 = 
+menu-0-1 = 
 menu-0-1-foreground = ${colors.white-l}
 menu-0-1-background = ${colors.yellow}
 menu-0-1-exec = menu-open-2
 menu-0-1-padding = 3
 
 ;SHUTDOWN-MENU===============
-menu-0-2 = 
+menu-0-2 = 
 menu-0-2-foreground = ${colors.foreground}
 menu-0-2-background = ${colors.red}
 menu-0-2-exec = menu-open-3
 menu-0-2-padding = 3
 
-menu-1-0 = 
+menu-1-0 = 
 menu-1-0-foreground = ${colors.white-l}
 menu-1-0-background = ${colors.green}
 menu-1-0-exec = footlocker
 menu-1-0-padding = 3
 
-menu-2-0 = 
+menu-2-0 = 
 menu-2-0-foreground = ${colors.white-l}
 menu-2-0-background = ${colors.yellow}
-menu-2-0-exec =  i3-nagbar -t warning -m 'Do you really want to reboot ?' -b 'Yes I want' 'systemctl reboot'
+menu-2-0-exec = ~/.config/bin/sreboot
 menu-2-0-padding = 3
 
-menu-3-0 = 
+menu-3-0 = 
 menu-3-0-foreground = ${colors.white-l}
 menu-3-0-background = ${colors.red}
-menu-3-0-exec = i3-nagbar -t warning -m 'Do you really want to shutdown ?' -b 'Yes I want' 'systemctl poweroff'
+menu-3-0-exec = ~/.config/bin/sshutdown
 menu-3-0-padding = 3
 
 [module/spotify]

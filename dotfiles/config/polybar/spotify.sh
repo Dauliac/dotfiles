@@ -4,7 +4,8 @@ path="/org/mpris/MediaPlayer2"
 cmd="org.freedesktop.DBus.Properties.Get"
 
 getTitle() {
-    meta=$(dbus-send --print-reply --dest=${domain}.spotify ${path} ${cmd} string:${domain}.Player string:Metadata)
+
+    meta=$(dbus-send --print-reply --dest=${domain}.spotify ${path} ${cmd} string:${domain}.Player string:Metadata || echo " " )
 
     artist=$(echo "$meta" | sed -nr '/xesam:artist"/,+2s/^ +string "(.*)"$/\1/p' | tail -1)
     album=$(echo "$meta" | sed -nr '/xesam:album"/,+2s/^ +variant +string "(.*)"$/\1/p' | tail -1)
