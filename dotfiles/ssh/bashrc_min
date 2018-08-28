@@ -12,9 +12,18 @@ fi
 #############
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
-#############
-# Alias
-#############
+# Open command in vim
+autoload -U edit-command-line
+# Emacs style
+zle -N edit-command-line
+bindkey '^xe' edit-command-line
+bindkey '^x^e' edit-command-line
+
+
+############
+# Aliases
+###########
+
 # Real commands
 alias grep="grep --color=auto"
 alias ll="ls -al"
@@ -53,7 +62,8 @@ alias v="vim"
 alias u="yay -Syyu"
 alias d="docker"
 alias c="clear"
-
+alias §="sudo"
+alias r="ranger"
 # Git
 alias g="git"
 alias gcam="git commit -a -m"

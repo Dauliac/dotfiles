@@ -24,6 +24,7 @@ Plugin 'christoomey/vim-tmux-navigator'        "Tmux integration in vim
 Plugin 'junegunn/fzf'                          "Fzf integration and completion
 Plugin 'junegunn/fzf.vim'                      "Fzf integration and completion
 Plugin 'ervandew/supertab'                     "Tab completion
+Plugin 'TonyChG/MagicTemplate'
 
 call vundle#end()
 filetype plugin indent on
@@ -160,4 +161,7 @@ let g:NERDTrimTrailingWhitespace = 1
 
 "=====================Tmux===================
 let g:tmux_navigator_save_on_switch = 2
+
+"=====================Tmux===================
+let g:templatesDirectory = $HOME."/Templates/"
 

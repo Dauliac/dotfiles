@@ -3,8 +3,15 @@ domain="org.mpris.MediaPlayer2"
 path="/org/mpris/MediaPlayer2"
 cmd="org.freedesktop.DBus.Properties.Get"
 
-getTitle() {
+isRunning(){
+    if "$(ps cax | grep spotify)"; then
+        running=0
+    else
+        running=1
+    fi
+}
 
+getTitle() {
     meta=$(dbus-send --print-reply --dest=${domain}.spotify ${path} ${cmd} string:${domain}.Player string:Metadata || echo " " )
 
     artist=$(echo "$meta" | sed -nr '/xesam:artist"/,+2s/^ +string "(.*)"$/\1/p' | tail -1)
@@ -36,7 +43,10 @@ togglePlay() {
   dbus-send --print-reply --dest=${domain}.spotify ${path} ${domain}.Player.PlayPause
 }
 
-case "$1" in
+isRunning
+
+if "$running" == "1"; then
+    case "$1" in
         --title)
                 getTitle
         ;;
@@ -47,3 +57,8 @@ case "$1" in
                 isPlaying
         ;;
 esac
+fi
+
+
+
+

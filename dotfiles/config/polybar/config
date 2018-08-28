@@ -51,7 +51,7 @@ spotify_text = #63A579
 
 [bar/default]
 width = 100%
-height = 19
+height = 20
 
 fixed-center = false
 
@@ -67,7 +67,7 @@ padding-right = 2
 module-margin-left = 0
 module-margin-right = 2
 
-font-0 = InconsolataGo Nerd Font:pixelsize=8
+font-0 = InconsolataGo Nerd Font:pixelsize=9
 offset-y = 0
 
 
@@ -300,13 +300,13 @@ format-volume-underline = ${colors.cyan-l}
 label-volume-foreground = ${colors.cyan-l}
 click-right = pavucontrol
 
-label-muted = 
+label-muted = 
 label-muted-foreground = ${colors.cyan-l}
 format-muted-underline = ${colors.cyan-l}
 
-ramp-volume-0 = 
-ramp-volume-1 = 
-ramp-volume-2 = 
+ramp-volume-0 =
+ramp-volume-1 = 
+ramp-volume-2 = 
 
 
 ramp-volume-0-foreground = ${colors.blue-l}

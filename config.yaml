@@ -24,10 +24,6 @@ dotfiles:
   default_bin:
     dst: ~/.config/bin
     src: config/bin
-  default_breeze-dark.conf:
-    dst: ~/.config/qt5ct/colors/Breeze Dark.conf
-    link: true
-    src: config/qt5ct/colors/Breeze Dark.conf
   default_compton:
     dst: ~/.config/compton
     link: true
@@ -56,10 +52,6 @@ dotfiles:
     dst: ~/.config/polybar
     link: true
     src: config/polybar
-  default_qt5ct.conf:
-    dst: ~/.config/qt5ct/qt5ct.conf
-    link: true
-    src: config/qt5ct/qt5ct.conf
   default_ranger:
     dst: ~/.config/ranger
     link: true
@@ -157,8 +149,6 @@ profiles:
     - default_zshrc
     - default_compton
     - default_bin
-    - default_breeze-dark.conf
-    - default_qt5ct.conf
     - default_dunst
     - default_i3
     - default_feh

@@ -77,6 +77,7 @@ unsetopt rm_star_silent         # ask for confirmation for `rm *' or `rm path/*'
 #     COMPLETION
 #################################
 autoload -U compinit
+autoload -U compinit && compinit
 
 zmodload -i zsh/complist
 setopt hash_list_all            # hash everything before completion
@@ -121,3 +122,5 @@ export LESS_TERMCAP_us=$'\e[1;4;31m'
 
 # pipenv completion
 eval "$(pipenv --completion)"
+
+

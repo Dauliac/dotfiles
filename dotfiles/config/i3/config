@@ -33,10 +33,6 @@ font InconsolataGo Nerd Font:8
 bindsym $mod+d exec rofi -show run
 # Windows movin flow
 bindsym $mod+Tab exec --no-startup-id rofi -show window
-#Borders
-gaps inner 0
-smart_borders on
-smart_gaps on
 for_window [class="^.*"] border pixel 2
 
 #import .Xressource colors
@@ -122,9 +118,12 @@ bindsym $mod+u split h
 # split in vertical orientation
 bindsym $mod+i split v
 
-# enter fullscreen mode for the focused container
+# Change mode
 bindsym $mod+f fullscreen toggle
-
+bindsym $mod+s layout stacking
+bindsym $mod+z layout tabbed
+bindsym $mod+x layout toggle split
+bindsym $mod+Shift+f floating toggle
 
 # toggle tiling / floating
 bindsym $mod+Shift+space floating toggle
@@ -180,6 +179,10 @@ bindsym XF86AudioPlay exec dbus-send --print-reply --dest=org.mpris.MediaPlayer2
 bindsym XF86AudioPause exec dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause
 bindsym XF86AudioNext exec dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next
 bindsym XF86AudioPrev exec dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous
+
+# Bright
+bindsym XF86MonBrightnessDown exec --no-startup-id xbacklight -dec 15
+bindsym XF86MonBrightnessUp exec --no-startup-id xbacklight -inc 15
 
 ###############################
 #         SCRATCHPADS         #
@@ -299,7 +302,6 @@ exec_always --no-startup-id dunst
 exec_always --no-startup-id unclutter -grab
 
 exec --no-startup-id $TERM_BIN -n dropdown -e tmux new -s dropdown
-exec --no-startup-id NetworkManager --no-daemon
 exec --no-startup-id nm-applet
 exec --no-startup-id blueman-applet
 
