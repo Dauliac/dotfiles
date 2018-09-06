@@ -1,10 +1,6 @@
 #!/usr/bin/bash
 
-timeout="10000"
 dependencies="i3lock scrot convert"
-HIBERNATE=600
-SUSPEND=300
-# NOLOCK=false
 
 check_integrity() {
     for requirement in ${dependencies} ; do
@@ -27,10 +23,10 @@ lock() {
     l_img="${tmp_bg_f}${tmp_bg}"
 
     if [ ! -d $tmp_bg_f ];then
-        mkdir "${tmp_bg_f}"
+        mkdir -p "${tmp_bg_f}"
     fi
     if [ -z $AUTOBG ]; then
-        scrot "${l_img}"
+        scrot -z "${l_img}"
     else
         cp -f $AUTOBG $l_img
     fi
@@ -39,32 +35,15 @@ lock() {
         BLUR="0x5"
     fi
 
-    if [ -z $TEXT ]; then
-        TEXT="Type password to unlock..."
-    fi
     convert "${l_img}" -blur $BLUR -fill black -colorize 15% "${l_img}"
-    i3lock \
-        -t -i "${l_img}" \
-        --timepos="110:h-70" \
-        --datepos="135:h-45" \
-        --clock --datestr "${TEXT}" \
-        --insidecolor=$background --ringcolor=$foreground --line-uses-inside \
-        --keyhlcolor=$letterEnteredColor --bshlcolor=$letterRemovedColor --separatorcolor=$background \
-        --insidevercolor=$passwordCorrect --insidewrongcolor=$passwordIncorrect \
-        --ringvercolor=$foreground --ringwrongcolor=$foreground --indpos="x+280:h-70" \
-        --radius=20 --ring-width=4 --veriftext="" --wrongtext="" \
-        --verifcolor="$foreground" --timecolor="$foreground" --datecolor="$foreground" \
-        --noinputtext="" \
-        --force-clock
+    i3lock -tb -i "${l_img}"
 }
 
 helpmenu() {
     echo "footlocker [param [options]] \n
     -t | --text <text>          : displayed text \n
     -b | --blur <0xN>           : blur effect, N is an int \n
-    -p | --picture <path>       : give picture to display \n
-    -s | --suspend <cooldown>   : cooldown to suspend in seconds since last activity \n
-    -h | --hibernate <cooldown> : cooldown to hibernate in seconds since suspend"
+    -p | --picture <path>       : give picture to display"
 }
 
 check_integrity
@@ -78,18 +57,6 @@ do
         --blur | -b)
             BLUR=$2
             ;;
-        --text | -t)
-            TEXT=$2
-            ;;
-        --suspend | -s)
-            SUSPEND=$2
-            ;;
-        --hibernate | -h)
-            HIBERNATE=$2
-            ;;
-        --nolock | -n)
-            NOLOCK=true
-            ;;
         --help)
             helpmenu
             exit
@@ -98,33 +65,3 @@ do
     shift
 done
 lock
-if [[ "$NOLOCK" != true ]]; then
-    HIBERNATE=$(( $SUSPEND + $HIBERNATE ))
-    last_activity=$(date +%s)
-    while [[ $(pgrep -x i3lock) ]]; do
-        if [[ $(xssstate -i) -gt $timeout ]]; then
-            if [[ $state -lt 1 ]]; then
-                last_activity=$(date +%s)
-                state=1
-                xset dpms force off
-                echo black screen
-            fi
-        else
-            state=0
-        fi
-        # unactive=`expr $(date +%s) - $last_activity`
-        # if [[ "$state" -eq 1 ]] && [[ "$unactive" -ge "$SUSPEND" ]]; then
-        #     state=2
-        #     systemctl suspend
-        #     echo suspend
-        # fi
-
-        if [[ "$state" -eq 2 ]] && [[ "$unactive" -ge "$HIBERNATE+" ]] ; then
-            state=3
-            systemctl hibernate
-            echo hibernate
-        fi
-        sleep 5
-    done
-fi
-exit

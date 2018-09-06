@@ -12,13 +12,12 @@
 # Date: 24.07.2017
 # version: last-arch
 # File: config
-# Last modification date: 12.12.2017
-# Last modificatio user: Dauliac <juliendauliac@gmail.com>
+# Last modification user: Dauliac <juliendauliac@gmail.com>
 # Path: $ HOME / .config / i3 / config
 
-# lock start
-exec --no-startup-id footlocker -p /home/dauliac/Pictures/wallpaper/wave.png -t 'Hello boy !' -n
-
+###############################
+#          MODIFIERS          #
+###############################
 set $mod Mod4
 set $alt Mod1
 
@@ -28,12 +27,6 @@ set $alt Mod1
 
 #font
 font InconsolataGo Nerd Font:8
-
-#Launcher
-bindsym $mod+d exec rofi -show run
-# Windows movin flow
-bindsym $mod+Tab exec --no-startup-id rofi -show window
-for_window [class="^.*"] border pixel 2
 
 #import .Xressource colors
 set_from_resource $c_foreground foreground
@@ -66,14 +59,18 @@ client.background       $c_background
 ###############################
 #         KEYBINDING          #
 ###############################
+# launcher
+bindsym $mod+d exec rofi -show run
 
-floating_modifier $mod
+# Windows movin flow
+bindsym $mod+Tab exec --no-startup-id rofi -show window
+for_window [class="^.*"] border pixel 2
 
 # start a terminal
 bindsym $mod+Return exec $TERM_BIN
 
 # lockscreen
-bindsym $mod+Control+l exec footlocker
+bindsym $mod+Control+l exec xautolock -locknow
 
 # start vivaldi
 bindsym $mod+F1 exec vivaldi-stable
@@ -83,6 +80,9 @@ bindsym $mod+F2 exec $TERM_BIN -e vim
 
 # start a ranger
 bindsym $mod+F3 exec $TERM_BIN -e ranger
+
+# start a neomutt
+bindsym $mod+F4 exec $TERM_BIN -e neomutt
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -97,7 +97,7 @@ bindsym $mod+l focus right
 # screenshot
 bindsym Print exec "scrot -e 'mv $f /tmp/ && xclip -selection clipboard -t image/png -i < /tmp/$f' && sleep 0.5 && notify-send screenshot -u low"
 
-# scratchpad
+# scratchpad basic
 bindsym $mod+Shift+Return [instance="dropdown"] scratchpad show
 
 # alternatively, you can use the cursor keys:
@@ -263,9 +263,8 @@ assign [class="Google-chrome|Vivaldi-snapshot|Vivaldi"]                 $ws1
 for_window [class="Google-chrome|Vivaldi-snapshot|Vivaldi"]             move to workspace $ws1
 
 # Workspace 5
-assign [class="freetube|FreeTube"]                                     $ws5
-for_window [class="freetube|Freetube"]                                 move to workspace $ws5
-for_window [title="Popcorn Time CE"]                                    move to workspace $ws5
+assign [class="freetube|FreeTube|Stremio"]                                      $ws5
+for_window [class="freetube|Freetube|Stremio"]                                  move to workspace $ws5
 
 # Workspace 6 (Chat) :
 assign [class="discord-canary|discord|Teamspeak3|Gear"]                 $ws6
@@ -279,7 +278,7 @@ for_window [class="Spotify"]                                            move to 
 assign [class="VirtualBox"]                                             $ws8
 
 # Float
-for_window [class="pavucontrol|nm-connection-editor|Blueman-manager|blueman-manager|Pavucontrol"] floating enable
+for_window [class="pavucontrol|nm-connection-editor|Blueman-manager|blueman-manager|Pavucontrol|Blueberry.py"] floating enable
 
 # Mini-Player
 for_window [title="Freetube Mini-Player"] floating toggle; exec --no-startup-id bottomleft; sticky toggle
@@ -299,11 +298,11 @@ exec_always --no-startup-id DISPLAY=:0.1 feh --bg-scale ~/Pictures/wallpaper/loa
 #Launch system programs
 exec_always --no-startup-id compton
 exec_always --no-startup-id dunst
-exec_always --no-startup-id unclutter -grab
 
 exec --no-startup-id $TERM_BIN -n dropdown -e tmux new -s dropdown
 exec --no-startup-id nm-applet
-exec --no-startup-id blueman-applet
+# exec --no-startup-id blueman-applet
+exec --no-startup-id blueberry-tray
 
 #Launch startup programs
 # exec --no-startup-id discord-canary
@@ -311,3 +310,4 @@ exec --no-startup-id geary
 exec xscreensaver -nosplash
 exec --no-startup-id keepassxc
 exec_always --no-startup-id "killall polybar;polybar -r one"
+exec_always --no-startup-id "killall xautolock;xautolock"

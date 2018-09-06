@@ -9,12 +9,10 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 
 " Change leader key
-let mapleader = ','
 
-"==================== My stuff =================
+"==================== Plugins =================
 Plugin 'vim-airline/vim-airline'               "Bottom bar
 Plugin 'scrooloose/nerdcommenter'              "simply commenter
-Plugin 'scrooloose/nerdtree'                   "simply commenter
 Plugin 'tristen/vim-sparkup'                   "Html
 Plugin 'morhetz/gruvbox'                       "Color
 Plugin 'lilydjwg/colorizer'                    "Hilight color
@@ -24,49 +22,33 @@ Plugin 'christoomey/vim-tmux-navigator'        "Tmux integration in vim
 Plugin 'junegunn/fzf'                          "Fzf integration and completion
 Plugin 'junegunn/fzf.vim'                      "Fzf integration and completion
 Plugin 'ervandew/supertab'                     "Tab completion
-Plugin 'TonyChG/MagicTemplate'
+Plugin 'tonychg/MagicTemplate'                 "Templates
+Plugin 'airblade/vim-gitgutter'                "Git display
 
 call vundle#end()
 filetype plugin indent on
-"==================== vim-powerline=============
-"alway see status line
-set laststatus=2
-"see unicode
+
+"====================Vanilla====================
+
 set encoding=utf-8
-"==================== TimeOut=============
-set timeout           " for mappings
-set timeoutlen=1000   " default value
-set ttimeout          " for key codes
-set ttimeoutlen=10    " unnoticeable small value
-"====================Style====================
-set number
-set relativenumber
+set splitbelow
+set splitright
 
-"color-----
-syntax on
-colorscheme gruvbox
-let g:gruvbox_contrast_dark='medium'
-let g:gruvbox_contrast_light='soft'
-set background=dark
-let g:gruvbox_italic=1
-let g:gruvbox_termcolors=256
-hi Normal guibg=NONE ctermbg=NONE "Transparent background
+set wildmenu
 
-"indent----
-let g:indentLine_setColors = 0
-let g:indentLine_char = '┆'
-set tabstop=4
-set shiftwidth=4
-set expandtab
-set smartindent
-set autoindent
-set backspace=indent,eol,start
+" timeout
+set timeout
+set timeoutlen=1000
+set ttimeout
+set ttimeoutlen=10
 
-"Search----
-set ignorecase
-set smartcase
+" automatically deletes all tralling whitespace on save.
+autocmd BufWritePre * %s/\s\+$//e
 
-"tools----
+" indentation "  " with yaml
+autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+
+" see cursor line
 set cursorline                               "See cursor line
 set clipboard^=unnamedplus                   "Use X clipboard
 set omnifunc=syntaxComplete#Complete         "Syntax completion
@@ -76,54 +58,129 @@ autocmd BufReadPost *                        "Keep the cursor position afer clos
     \ endif
 set autoread
 
-" Smart search----
+
+"====================Style====================
+" display positional numbers
+set number
+set relativenumber
+
+" listchars
+set list listchars=tab:▶-,trail:·,precedes:←,extends:→,eol:¬,nbsp:␣
+
+" color
+syntax on
+
+" indent
+let g:indentLine_setColors = 0
+let g:indentLine_char = '┆'
+set tabstop=4
+set shiftwidth=4
+set expandtab
+set smartindent
+set autoindent
+set backspace=indent,eol,start
+
+" smart search
 set ignorecase
 set smartcase
 filetype plugin on
 filetype plugin indent on
 
-"listchars----
-set list listchars=tab:▶-,trail:·,precedes:←,extends:→,eol:¬,nbsp:␣
+"====================Netrw====================
+" remove uggly banner
+let g:netrw_banner = 0
+" line height
+let g:netrw_liststyle = 1
+" 1 - open files in a new horizontal split
+" 2 - open files in a new vertical split
+" 3 - open files in a new tab
+" 4 - open in previous window
+let g:netrw_browse_split = 4
+let g:netrw_altv = 1
+let g:netrw_winsize = 13
 
-"====================NERDTree====================
-autocmd StdinReadPre * let s:std_in=1
-autocmd vimenter * NERDTree
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-map <C-n> :NERDTreeToggle<CR>
-let NERDTreeMinimalUI = 1
+" change directory to current buffer when open file
+set autochdir
+
+" Toggle Vexplore with Ctrl-E
+function! ToggleVExplorer()
+  if exists("t:expl_buf_num")
+      let expl_win_num = bufwinnr(t:expl_buf_num)
+      if expl_win_num != -1
+          let cur_win_nr = winnr()
+          exec expl_win_num . 'wincmd w'
+          close
+          exec cur_win_nr . 'wincmd w'
+          unlet t:expl_buf_num
+      else
+          unlet t:expl_buf_num
+      endif
+  else
+      exec '1wincmd w'
+      Vexplore
+      let t:expl_buf_num = bufnr("%")
+  endif
+endfunction
+map <silent> <C-E> :call ToggleVExplorer()<CR>
+
+"=====================Shortcuts===================
+" change leader
+let mapleader = ','
+
+" copy to the clipboard -- need +xterm-clipboard
+ nmap <Leader>y "+y<CR>
+
+" xut code witout buffer
+nmap <Leader>d "_d<CR>
+
+" saving
+nnoremap <C-s> :w<CR>
+vnoremap <C-s> <Esc>:w<CR><C-s>gv
+inoremap <C-s> <Esc>:w<CR><i>
+
+" exit
+nnoremap <C-q> :qa<CR>
+
+" close buffer
+nnoremap <C-x> :bd<CR>
+
+" save sudo
+command! W w !sudo tee %
+
+" moving remap
+nnoremap j gj
+nnoremap k gk
+nnoremap J )
+nnoremap K (
+nnoremap µ #
+nnoremap <C-o> :tabp<CR>
+nnoremap <C-p> :tabn<CR>
+
+" replace all is aliased to S.
+noremap S :%s//g<Left><Left>
+
+" do 'S' to search selected text
+vnoremap // y/\V<C-r>=escape(@",'/\')<CR><CR>
+
+command! E Vexplore
 
 "====================Airline====================
+"
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
 let g:airline_theme='gruvbox'
 
-"=====================Shortcuts===================
-"Copy to the clipboard -- need +xterm-clipboard
- nmap <Leader>y "+y<CR>
+"====================Gruvbox====================
+" my color scheme is a plugin
+colorscheme gruvbox
+let g:gruvbox_contrast_dark='medium'
+let g:gruvbox_contrast_light='soft'
+set background=dark
+let g:gruvbox_italic=1
+let g:gruvbox_termcolors=256
 
- " Cut code witout buffer
-nmap <Leader>d "_d<CR>
-
-"Saving
-nnoremap <C-s> :w<CR>
-vnoremap <C-s> <Esc>:w<CR><C-s>gv
-inoremap <C-s> <Esc>:w<CR><i>
-"Exit
-nnoremap <C-q> :qa<CR>
-"Close buffer
-nnoremap <C-x> :bd<CR>
-
-" Splits open at the bottom and right, which is non-retarded, unlike vim defaults.
-set splitbelow
-set splitright
-
-" Replace all is aliased to S.
-noremap S :%s//g<Left><Left>
-
-" Automatically deletes all tralling whitespace on save.
-autocmd BufWritePre * %s/\s\+$//e
+" transparent background
+hi Normal guibg=NONE ctermbg=NONE "Transparent background
 
 "=====================FZF===================
 nnoremap <C-f> :Files<CR>
@@ -162,6 +219,23 @@ let g:NERDTrimTrailingWhitespace = 1
 "=====================Tmux===================
 let g:tmux_navigator_save_on_switch = 2
 
-"=====================Tmux===================
+"=====================Template===================
 let g:templatesDirectory = $HOME."/Templates/"
 
+"=====================GitGutter===================
+" allow to change color
+let g:gitgutter_override_sign_column_highlight = 0
+" remove basic backgorund
+highlight SignColumn ctermbg=none
+" change 'add' symbol
+highlight GitGutterAdd ctermbg=none
+highlight GitGutterAdd ctermfg=Green
+" change 'change' symbol
+highlight GitGutterChange ctermbg=none
+highlight GitGutterChange ctermfg=Cyan
+" change 'delete' symbol
+highlight GitGutterDelete ctermbg=none
+highlight GitGutterDelete ctermfg=Red
+" change 'change-delete' symbol
+highlight GitGutterChangeDelete ctermbg=none
+highlight GitGutterChangeDelete ctermfg=Yellow

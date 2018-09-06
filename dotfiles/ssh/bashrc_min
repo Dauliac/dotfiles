@@ -1,5 +1,5 @@
-stty -ixon
 shopt -s autocd #Allows you to cd into directory merely by typing the directory name.
+export TERM=st-256color
 
 # Setting Bash prompt. Capitalizes username and host if root user (my root user uses this same config file).
 if [ "$EUID" -ne 0 ]
@@ -11,14 +11,6 @@ fi
 # Tools
 #############
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
-
-# Open command in vim
-autoload -U edit-command-line
-# Emacs style
-zle -N edit-command-line
-bindkey '^xe' edit-command-line
-bindkey '^x^e' edit-command-line
-
 
 ############
 # Aliases

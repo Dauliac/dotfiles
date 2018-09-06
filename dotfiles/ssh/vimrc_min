@@ -1,0 +1,140 @@
+"==================== Vundle ==================
+set nocompatible
+filetype off
+
+" Change leader key
+let mapleader = ','
+
+"see unicode
+set encoding=utf-8
+"==================== TimeOut=============
+set timeout           " for mappings
+set timeoutlen=1000   " default value
+set ttimeout          " for key codes
+set ttimeoutlen=10    " unnoticeable small value
+"====================Style====================
+set number
+set relativenumber
+
+"indent----
+let g:indentLine_setColors = 0
+let g:indentLine_char = '┆'
+set tabstop=4
+set shiftwidth=4
+set expandtab
+set smartindent
+set autoindent
+set backspace=indent,eol,start
+
+"tools----
+set cursorline                               "See cursor line
+set clipboard^=unnamedplus                   "Use X clipboard
+set omnifunc=syntaxComplete#Complete         "Syntax completion
+autocmd BufReadPost *                        "Keep the cursor position afer close
+    \ if line("'\"") > 1 && line("'\"") <= line("$") |
+    \   execute "normal! g`\"" |
+    \ endif
+set autoread
+
+"smart search----
+set ignorecase
+set smartcase
+filetype plugin on
+filetype plugin indent on
+" do // to search selected text
+vnoremap // y/\V<C-r>=escape(@",'/\')<CR><CR>
+
+"listchars----
+set list listchars=tab:▶-,trail:·,precedes:←,extends:→,eol:¬,nbsp:␣
+
+"=====================Shortcuts===================
+"Copy to the clipboard -- need +xterm-clipboard
+ nmap <Leader>y "+y<CR>
+
+ " Cut code witout buffer
+nmap <Leader>d "_d<CR>
+
+"Saving
+nnoremap <C-s> :w<CR>
+vnoremap <C-s> <Esc>:w<CR><C-s>gv
+inoremap <C-s> <Esc>:w<CR><i>
+"Exit
+nnoremap <C-q> :qa<CR>
+"Close buffer
+nnoremap <C-x> :bd<CR>
+
+" Splits open at the bottom and right, which is non-retarded, unlike vim defaults.
+set splitbelow
+set splitright
+
+" Replace all is aliased to S.
+noremap S :%s//g<Left><Left>
+
+" Automatically deletes all tralling whitespace on save.
+autocmd BufWritePre * %s/\s\+$//e
+
+let g:lightline = {
+      \ 'colorscheme': 'challenger_deep',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+      \ },
+      \ 'component_function': {
+      \   'gitbranch': 'fugitive#head'
+      \ },
+      \ }
+
+"=====================Tmux===================
+let g:tmux_navigator_save_on_switch = 2
+
+"=====================Comment===================
+let s:comment_map = {
+    \   "c": '\/\/',
+    \   "cpp": '\/\/',
+    \   "go": '\/\/',
+    \   "java": '\/\/',
+    \   "javascript": '\/\/',
+    \   "lua": '--',
+    \   "scala": '\/\/',
+    \   "php": '\/\/',
+    \   "python": '#',
+    \   "ruby": '#',
+    \   "rust": '\/\/',
+    \   "sh": '#',
+    \   "desktop": '#',
+    \   "fstab": '#',
+    \   "conf": '#',
+    \   "profile": '#',
+    \   "bashrc": '#',
+    \   "bash_profile": '#',
+    \   "mail": '>',
+    \   "eml": '>',
+    \   "bat": 'REM',
+    \   "ahk": ';',
+    \   "vim": '"',
+    \   "tex": '%',
+    \ }
+
+function! ToggleComment()
+    if has_key(s:comment_map, &filetype)
+        let comment_leader = s:comment_map[&filetype]
+        if getline('.') =~ "^\\s*" . comment_leader . " "
+            " Uncomment the line
+            execute "silent s/^\\(\\s*\\)" . comment_leader . " /\\1/"
+        else
+            if getline('.') =~ "^\\s*" . comment_leader
+                " Uncomment the line
+                execute "silent s/^\\(\\s*\\)" . comment_leader . "/\\1/"
+            else
+                " Comment the line
+                execute "silent s/^\\(\\s*\\)/\\1" . comment_leader . " /"
+            end
+        end
+    else
+        echo "No comment leader found for filetype"
+    end
+endfunction
+
+
+nnoremap <leader><Space> :call ToggleComment()<cr>
+vnoremap <leader><Space> :call ToggleComment()<cr>

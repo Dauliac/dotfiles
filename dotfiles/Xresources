@@ -1,12 +1,11 @@
 ! ===================
 !       urxvt
-! ===================
+!===================
 
 URxvt*scrollBar: false
 URxvt*letterSpace: 0.7
 URxvt.internalBorder: 10
-URxvt*font: xft:NotoMonoNerd:normal:size=9
-URxvt*boldFont: xft:Monoid:bold:ize=9
+URxvt*font: xft:InconsolataGo Nerd Font:size=14
 URxvt*cursorBlink: true
 URxvt.iso14755: false
 URxvt*utf8: true
@@ -48,9 +47,18 @@ URxvt.background: [85]#282828
 *color7:  #a89984
 *color15: #ebdbba
 
-
-![dmenu]
-!fn = -*-terminus-medium-*-*-*-16-*-*-*-*-*-*-*
-!dmenu_command = /usr/bin/rofi -width 30
-!rofi_highlight = True
-
+!========================
+! Xautolock
+! ========================
+! hinibit screen
+Xautolock.notify: 1
+Xautolock.notifier: xset dpms force off
+! do nothing if sleeped
+Xautolock.detectsleep: true
+! locker
+Xautolock.time: 1
+Xautolock.locker: footlocker
+! hibernate
+Xautolock.killtime: 10
+Xautolock.killer: systemctl hibernate
+Xautolock.noclose: true

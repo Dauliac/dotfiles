@@ -41,9 +41,11 @@ alias clip="xclip -selection c"
 alias tma="tmux attach"
 alias tls="tmux list-session"
 
-# OneChar
+# One char
 alias v="vim"
+alias e="exit"
 alias u="yay -Syyu"
+alias n="neomutt"
 alias d="docker"
 alias c="clear"
 alias §="sudo"

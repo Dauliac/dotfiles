@@ -3,30 +3,18 @@ domain="org.mpris.MediaPlayer2"
 path="/org/mpris/MediaPlayer2"
 cmd="org.freedesktop.DBus.Properties.Get"
 
-isRunning(){
-    if "$(ps cax | grep spotify)"; then
-        running=0
-    else
-        running=1
-    fi
-}
-
 getTitle() {
-    meta=$(dbus-send --print-reply --dest=${domain}.spotify ${path} ${cmd} string:${domain}.Player string:Metadata || echo " " )
+  if ! pgrep -x spotify >/dev/null; then
+    echo ""; exit
+  fi
 
-    artist=$(echo "$meta" | sed -nr '/xesam:artist"/,+2s/^ +string "(.*)"$/\1/p' | tail -1)
-    album=$(echo "$meta" | sed -nr '/xesam:album"/,+2s/^ +variant +string "(.*)"$/\1/p' | tail -1)
-    title=$(echo "$meta" | sed -nr '/xesam:title"/,+2s/^ +variant +string "(.*)"$/\1/p' | tail -1)
+  meta=$(dbus-send --print-reply --dest=${domain}.spotify ${path} ${cmd} string:${domain}.Player string:Metadata)
+  
+  artist=$(echo "$meta" | sed -nr '/xesam:artist"/,+2s/^ +string "(.*)"$/\1/p' | tail -1)
+  album=$(echo "$meta" | sed -nr '/xesam:album"/,+2s/^ +variant +string "(.*)"$/\1/p' | tail -1)
+  title=$(echo "$meta" | sed -nr '/xesam:title"/,+2s/^ +variant +string "(.*)"$/\1/p' | tail -1)
 
-    if isPlaying; then
-      if ! pgrep -x spotify >/dev/null; then
-        echo ""; exit
-      fi
-
-            echo "$title: $artist - $album"
-    else
-      echo "  - $title: $artist - $album"
-    fi
+  echo "${*:-%artist% - %title%}" | sed "s/%artist%/$artist/g;s/%title%/$title/g;s/%album%/$album/g"i | sed 's/&/\\&/g'
 }
 
 isPlaying() {
@@ -34,19 +22,16 @@ isPlaying() {
     | tail -1 \
     | sed 's/^.*"\(.*\)".*/\1/')
   if [ "${status}" = "Paused" ]; then
-    return 1
+    exit 1
   fi
-  return 0
+  echo $status; exit
 }
 
 togglePlay() {
   dbus-send --print-reply --dest=${domain}.spotify ${path} ${domain}.Player.PlayPause
 }
 
-isRunning
-
-if "$running" == "1"; then
-    case "$1" in
+case "$1" in
         --title)
                 getTitle
         ;;
@@ -57,8 +42,3 @@ if "$running" == "1"; then
                 isPlaying
         ;;
 esac
-fi
-
-
-
-

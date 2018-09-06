@@ -17,16 +17,13 @@ alias loadnvm='[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"'
 export ZSH="/home/dauliac/.oh-my-zsh"
 ZSH_CACHE_DIR=$HOME/.cache/oh-my-zsh
 DISABLE_AUTO_UPDATE="true"
-export EDITOR="vim"
 export LANG="en_US.utf8"export LANG="en_US.utf8"
 export HISTIGNORE='ls -l:pwd:history:exit'
 export HISTCONTROL=ignoredups
 
 # Open command in vim
 autoload -U edit-command-line
-# Emacs style
 zle -N edit-command-line
-bindkey '^xe' edit-command-line
 bindkey '^x^e' edit-command-line
 
 #################################

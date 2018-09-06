@@ -1,17 +1,10 @@
 actions:
   pre:
-    vundle-install: test -e ~/.vim/bundle/Vundle.vim || (mkdir -p ~/.vim/bundle; git
-      clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim)
-    footlocker-install: git clone https://github.com/Dauliac/footlocker.git /tmp && \
-        mv /tmp/footlocker/footlocker ~/.config/bin/
-    oh-my-zsh_install: git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh;
-    zsh_theme_install: ZSH_CUSTOM=$HOME/.oh-my-zsh/custom;
-        git clone https://github.com/denysdovhan/spaceship-prompt.git "$ZSH_CUSTOM/themes/spaceship-prompt" &&
-        ln -s "$ZSH_CUSTOM/themes/spaceship-prompt/spaceship.zsh-theme" "$ZSH_CUSTOM/themes/spaceship.zsh-theme"
-    fzf_install: test -e ~/.fzf || git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf &&
-      ~/.fzf/install --no-bash --key-bindings --completion --no-update-rc
-  zsh: chsh -s /bin/zsh;
-    source .zshrc
+    vundle-install: test -e ~/.vim/bundle/Vundle.vim || ( mkdir -p ~/.vim/bundle; git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim)
+    footlocker-install: test -e ~/.config/bin/footlocker || ( git clone https://github.com/Dauliac/footlocker.git /tmp && mv /tmp/footlocker/footlocker ~/.config/bin/ )
+    oh-my-zsh_install: test -e ~/.oh-my-zsh || ( git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh )
+    zsh_theme_install: ZSH_CUSTOM=$HOME/.oh-my-zsh/custom; test -e $ZSH_CUSTOM/themes/spaceship-prompt || ( git clone https://github.com/denysdovhan/spaceship-prompt.git "$ZSH_CUSTOM/themes/spaceship-prompt" && ln -s "$ZSH_CUSTOM/themes/spaceship-prompt/spaceship.zsh-theme" "$ZSH_CUSTOM/themes/spaceship.zsh-theme" )
+    fzf_install: test -e ~/.fzf || ( git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install --no-bash --key-bindings --completion --no-update-rc )
   vundle: vim +VundleClean! +VundleInstall +VundleInstall! +qall
 config:
   backup: true
@@ -60,10 +53,6 @@ dotfiles:
     dst: ~/.config/rofi
     link: true
     src: config/rofi
-  default_ssh-agent.service:
-    dst: ~/.config/systemd/user/ssh-agent.service
-    link: true
-    src: config/systemd/user/ssh-agent.service
   default_tmux.conf:
     dst: ~/.tmux.conf
     link: true
@@ -99,20 +88,18 @@ dotfiles:
     dst: ~/.zsh_functions
     link: true
     src: zsh_functions
-  default_zshenv:
-    dst: ~/.zshenv
-    src: zshenv
-    trans:
-      - gpg
   default_zshrc:
     actions:
       - oh-my-zsh_install
       - fzf_install
-      - zsh
       - zsh_theme_install
     dst: ~/.zshrc
     link: true
     src: zshrc
+  default_vimrc_min:
+    dst: ~/.ssh/vimrc_min
+    src: ssh/vimrc_min
+    link: true
   default_bashrc_min:
     dst: ~/.ssh/bashrc_min
     src: ssh/bashrc_min
@@ -126,12 +113,6 @@ dotfiles:
     src: ssh/config
     trans:
       - gpg
-  media_freetube_settings:
-    dst: ~/.config/FreeTube/settings.db
-    src: config/freetube/settings.db
-  media_freetube_subscriptions:
-    dst: ~/.config/FreeTube/subscriptions.db
-    src: config/freetube/subscriptions.db
   media_wave.png:
     dst: ~/Pictures/wallpaper/wave.png
     src: Pictures/wallpaper/wave.png
@@ -161,7 +142,10 @@ profiles:
     - media_wave.png
     - default_xresources
     - default_xinitrc
-    - default_zshenv
+    - default_bashrc_min
+    - default_vimrc_min
+  spectre_s:
+    dotfiles:
     - default_ssh_config
   ghostbuster:
     dotfiles:
@@ -175,3 +159,4 @@ profiles:
 
 trans:
   gpg: gpg2 -q --for-your-eyes-only --no-tty -d {0} > {1}
+
