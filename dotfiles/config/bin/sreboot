@@ -3,6 +3,6 @@
 pgrep -x dmenu && exit
 
 choice="$(printf "No\\nYes" | dmenu -i -p "Do you realy want to reboot dickhead ?" | awk '{print $1}')"
-[ -z "$choice" ] && exit 1
 
-[ $choice -eq "Yes"] && systemctl reboot
+[ -z "$choice" ] && exit 1
+[ $choice -eq "Yes" ] && reboot

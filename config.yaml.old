@@ -116,9 +116,11 @@ dotfiles:
   default_ssh-agent.service:
     dst: ~/.config/systemd/user/ssh-agent.service
     src: config/systemd/user/ssh-agent.service
+    link: true
   media_wave.png:
     dst: ~/Pictures/wallpaper/wave.png
     src: Pictures/wallpaper/wave.png
+    link: true
 
 profiles:
   spectre:

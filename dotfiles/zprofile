@@ -1,9 +1,14 @@
 ####################################
 #   BASE
 ####################################
+
+# Node exec
 PATH="$HOME/.node_modules/bin:$PATH"
+# Node local bin
+PATH="$HOME/.local/bin:$PATH"
 export npm_config_prefix=~/.node_modules
 
+# Qt update
 export QT_AUTO_SCREEN_SCALE_FACTOR=0
 
 # Qt use gtk-2 style

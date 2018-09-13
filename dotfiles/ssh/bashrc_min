@@ -130,3 +130,9 @@ function gfb {
             --ansi --preview="git log -200 --pretty=format:%s $(echo {+2..} |  sed 's/$/../' )" ) || return
       git checkout $(echo "$target" | awk '{print $2}')
 }
+
+function tns {
+    tmux new-session -d -s $1 && [[ -n "$TMUX" ]] \
+        && tmux switch-client -t $1 \
+        || tmux attach
+}

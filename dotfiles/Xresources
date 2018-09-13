@@ -50,14 +50,19 @@ URxvt.background: [85]#282828
 !========================
 ! Xautolock
 ! ========================
+! stop locking in left corner
+Xautolock.corners: -+00
+Xautolock.cornerdelay: 1
+Xautolock.cornerredelay: 2
 ! hinibit screen
-Xautolock.notify: 1
-Xautolock.notifier: xset dpms force off
+Xautolock.notify: 3
+Xautolock.notifier: notify-send -u low "2 minutes" "I Will lock bitch"
+
 ! do nothing if sleeped
 Xautolock.detectsleep: true
 ! locker
-Xautolock.time: 1
-Xautolock.locker: footlocker
+Xautolock.time: 5
+Xautolock.locker: xset dpms force off && footlocker
 ! hibernate
 Xautolock.killtime: 10
 Xautolock.killer: systemctl hibernate
