@@ -22,9 +22,6 @@ export HISTIGNORE='ls -l:pwd:history:exit'
 export HISTCONTROL=ignoredups
 
 # Open command in vim
-autoload -U edit-command-line
-zle -N edit-command-line
-bindkey '^x^e' edit-command-line
 
 #################################
 #     THEME
@@ -116,8 +113,4 @@ export LESS_TERMCAP_se=$'\e[0m'
 export LESS_TERMCAP_so=$'\e[01;33m'
 export LESS_TERMCAP_ue=$'\e[0m'
 export LESS_TERMCAP_us=$'\e[1;4;31m'
-
-# pipenv completion
-eval "$(pipenv --completion)"
-
 

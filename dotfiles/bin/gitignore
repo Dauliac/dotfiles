@@ -2,7 +2,7 @@
 # From: https://gist.github.com/phha/cb4f4bb07519dc494609792fb918e167
 
 # Create useful gitignore files
-# Usage: gi [param]
+# Usage: gitignore
 # param is a comma separated list of ignore profiles.
 # If param is ommited choose interactively.
 

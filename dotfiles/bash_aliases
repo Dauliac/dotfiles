@@ -43,10 +43,38 @@ alias tls="tmux list-session"
 
 # One char
 alias v="vim"
+alias g="git"
 alias e="exit"
 alias u="yay -Syyu"
 alias n="neomutt"
-alias d="docker"
 alias c="clear"
 alias §="sudo"
+alias s="systemctl"
 alias r="ranger"
+alias V="vagrant"
+alias D="docker"
+alias K="kubectl"
+alias R="rancher"
+
+# Systemctl
+alias sstop="sudo systemctl stop"
+alias sstart="sudo systemctl start"
+alias srestart="sudo systemctl restart"
+alias senable="sudo systemctl enable"
+alias sstatus="sudo systemctl status"
+
+# Virtualbox
+alias vms-list="vboxmanage list vms"
+
+# Watch
+alias w0="watch -n0"
+alias w1="watch -n1"
+alias w2="watch -n2"
+alias w2="watch -n2"
+
+# Vagrant
+alias Vssh="vagrant ssh"
+alias Vd="vagrant destroy"
+alias Vu="vagrant up"
+alias Vs="vagrant suspend"
+

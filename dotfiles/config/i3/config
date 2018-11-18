@@ -72,9 +72,8 @@ bindsym $mod+Return exec $TERM_BIN
 # lockscreen
 bindsym $mod+Control+l exec xautolock -locknow
 
-# start vivaldi
-bindsym $mod+F1 exec vivaldi-stable
-
+# start firefox
+bindsym $mod+F1 exec firefox
 # start a vim
 bindsym $mod+F2 exec $TERM_BIN -e vim
 
@@ -83,6 +82,12 @@ bindsym $mod+F3 exec $TERM_BIN -e ranger
 
 # start a neomutt
 bindsym $mod+F4 exec $TERM_BIN -e neomutt
+
+# start a weechat
+bindsym $mod+F5 exec $TERM_BIN -e weechat
+
+# Start emoji keyboard
+bindsym $mod+Shift+u exec dmenuunicode
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -95,7 +100,7 @@ bindsym $mod+k focus up
 bindsym $mod+l focus right
 
 # screenshot
-bindsym Print exec "scrot -e 'mv $f /tmp/ && xclip -selection clipboard -t image/png -i < /tmp/$f' && sleep 0.5 && notify-send screenshot -u low"
+bindsym Print exec "scrot -z -e 'mv $f /tmp/ && xclip -selection clipboard -t image/png -i < /tmp/$f' && sleep 0.5 && notify-send screenshot -u low"
 
 # scratchpad basic
 bindsym $mod+Shift+Return [instance="dropdown"] scratchpad show
@@ -259,15 +264,19 @@ bindsym $mod+Shift+parenright move container to workspace $ws11; workspace $ws11
 bindsym $mod+Shift+equal move container to workspace $ws12; workspace $ws12
 
 # Workspace 1 (Web) :
-assign [class="Google-chrome|Vivaldi-snapshot|Vivaldi"]                 $ws1
-for_window [class="Google-chrome|Vivaldi-snapshot|Vivaldi"]             move to workspace $ws1
+assign [class="Google-chrome|Vivaldi-snapshot|Vivaldi|firefox"]                 $ws1
+for_window [class="Google-chrome|Vivaldi-snapshot|Vivaldi|firefox"]             move to workspace $ws1
+
+# Workspace 5
+assign [class="Thunderbird"]                                      $ws4
+for_window [class="Thunderbird"]                                  move to workspace $ws4
 
 # Workspace 5
 assign [class="freetube|FreeTube|Stremio"]                                      $ws5
 for_window [class="freetube|Freetube|Stremio"]                                  move to workspace $ws5
 
 # Workspace 6 (Chat) :
-assign [class="discord-canary|discord|Teamspeak3|Gear"]                 $ws6
+assign [class="discord-canary|discord|Teamspeak3|Gear|Pidgin"]                 $ws6
 for_window [class="discord-canary|discord|Teamspeak3|Geary"]            move to workspace $ws6
 
 # Workspace 7 (Music, Keepassxc) :
@@ -299,15 +308,17 @@ exec_always --no-startup-id DISPLAY=:0.1 feh --bg-scale ~/Pictures/wallpaper/loa
 exec_always --no-startup-id compton
 exec_always --no-startup-id dunst
 
-exec --no-startup-id $TERM_BIN -n dropdown -e tmux new -s dropdown
+exec_always --no-startup-id $TERM_BIN -n dropdown -e tmux new -s dropdown
 exec --no-startup-id nm-applet
 # exec --no-startup-id blueman-applet
 exec --no-startup-id blueberry-tray
+exec --no-startup-id /usr/lib/geoclue-2.0/demos/agent
 
 #Launch startup programs
 # exec --no-startup-id discord-canary
 exec --no-startup-id geary
 exec xscreensaver -nosplash
 exec --no-startup-id keepassxc
+exec --no-startup-id "LANG=fr_FR.UTF-8; pidgin"
 exec_always --no-startup-id "killall polybar;polybar -r one"
 exec_always --no-startup-id "killall xautolock;xautolock"

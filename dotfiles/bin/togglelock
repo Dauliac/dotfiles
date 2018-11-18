@@ -1,0 +1,27 @@
+#!/usr/bin/bash
+# This file is to toggle screen locker, it's only working with footlocker
+# set XAUTOLOCK="enable" in env
+
+helpmenu() {
+    echo "togglelock [param [options]] \n
+    -t | --toggle   : enable or disable xautolock\n
+    -p | --polybar  : get polybar icon"
+}
+
+while [ ! $# -eq 0 ]
+do
+    case "$1" in
+        --toggle | -t)
+           [ ${XAUTOLOCK:-false} == false ] && echo "XAUTOLOCK=true" || "XAUTOLOCK=false"
+            ;;
+        --polybar | -p)
+            [ ${XAUTOLOCK:-false} == false ] && echo "" || " "
+            ;;
+        --help)
+            helpmenu
+            exit
+            ;;
+    esac
+    shift
+done
+

@@ -1,5 +1,0 @@
-#!/usr/bin/bash
-# This file is to toggle screen locker, it's only working with footlocker
-# You can use polybar plugin: TODO(my ploybar plugin)
-# 1 lock inibition is activaed: true
-# 0 lock inibition is disabled: false

@@ -56,6 +56,7 @@ alias d="docker"
 alias c="clear"
 alias §="sudo"
 alias r="ranger"
+
 # Git
 alias g="git"
 alias gcam="git commit -a -m"

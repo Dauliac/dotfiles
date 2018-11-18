@@ -1,9 +1,6 @@
 actions:
   pre:
     vundle-install: test -e ~/.vim/bundle/Vundle.vim || ( mkdir -p ~/.vim/bundle; git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim)
-    footlocker-install: test -e ~/.config/bin/footlocker || ( git clone https://github.com/Dauliac/footlocker.git /tmp && mv /tmp/footlocker/footlocker ~/.config/bin/ )
-    oh-my-zsh_install: test -e ~/.oh-my-zsh || ( git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh )
-    zsh_theme_install: ZSH_CUSTOM=$HOME/.oh-my-zsh/custom; test -e $ZSH_CUSTOM/themes/spaceship-prompt || ( git clone https://github.com/denysdovhan/spaceship-prompt.git "$ZSH_CUSTOM/themes/spaceship-prompt" && ln -s "$ZSH_CUSTOM/themes/spaceship-prompt/spaceship.zsh-theme" "$ZSH_CUSTOM/themes/spaceship.zsh-theme" )
     fzf_install: test -e ~/.fzf || ( git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install --no-bash --key-bindings --completion --no-update-rc )
   vundle: vim +VundleClean! +VundleInstall +VundleInstall! +qall
 config:
@@ -15,8 +12,8 @@ config:
   longkey: false
 dotfiles:
   default_bin:
-    dst: ~/.config/bin
-    src: config/bin
+    dst: ~/.local/bin
+    src: bin
   default_compton:
     dst: ~/.config/compton
     link: true
@@ -76,26 +73,24 @@ dotfiles:
     dst: ~/.config/yay
     link: true
     src: config/yay
-  default_zprofile:
-    dst: ~/.zprofile
+  default_profile:
+    dst: ~/.profile
     link: true
-    src: zprofile
-  default_zsh_aliases:
-    dst: ~/.zsh_aliases
+    src: profile
+  default_bash_aliases:
+    dst: ~/.bash_aliases
     link: true
-    src: zsh_aliases
-  default_zsh_functions:
-    dst: ~/.zsh_functions
+    src: bash_aliases
+  default_bash_functions:
+    dst: ~/.bash_functions
     link: true
-    src: zsh_functions
-  default_zshrc:
+    src: bash_functions
+  default_bashrc:
     actions:
-      - oh-my-zsh_install
       - fzf_install
-      - zsh_theme_install
-    dst: ~/.zshrc
+    dst: ~/.bashrc
     link: true
-    src: zshrc
+    src: bashrc
   default_vimrc_min:
     dst: ~/.ssh/vimrc_min
     src: ssh/vimrc_min
@@ -119,17 +114,21 @@ dotfiles:
   media_wave.png:
     dst: ~/Pictures/wallpaper/wave.png
     src: Pictures/wallpaper/wave.png
+  default_zathurarc:
+    link: true
+    dst: ~/.config/zathura/zathurarc
+    src: config/zathurarc
 
 profiles:
   spectre:
     dotfiles:
     - default_vimrc
     - default_tmux.conf
-    - default_zprofile
+    - default_profile
     - default_gtkrc-2.0
-    - default_zsh_aliases
-    - default_zsh_functions
-    - default_zshrc
+    - default_bash_aliases
+    - default_bash_functions
+    - default_bashrc
     - default_compton
     - default_bin
     - default_dunst
@@ -149,15 +148,6 @@ profiles:
   spectre_s:
     dotfiles:
     - default_ssh_config
-  ghostbuster:
-    dotfiles:
-    - default_vimrc
-    - default_tmux.conf
-    - default_bashrc
-    - default_bin
-    - default_ranger
-    - default_gitconfig
-    - default_xresources
 
 trans:
   gpg: gpg2 -q --for-your-eyes-only --no-tty -d {0} > {1}

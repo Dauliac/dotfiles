@@ -1,4 +1,8 @@
 #!/usr/bin/bash
+# Author: github.com/Dauliac
+# Description:
+#   This is my personnal i3lock script to lock with blur and dpms
+#   This is work fine with xautolock configs or anything else similar
 
 dependencies="i3lock scrot convert"
 
@@ -30,18 +34,28 @@ lock() {
     else
         cp -f $AUTOBG $l_img
     fi
-
     if [ -z $BLUR ]; then
         BLUR="0x5"
     fi
 
     convert "${l_img}" -blur $BLUR -fill black -colorize 15% "${l_img}"
-    i3lock -tb -i "${l_img}"
+
+    if [ -z $DPMS ]; then
+        i3lock -tbn -i "${l_img}"
+    else
+        revertDpms() {
+            xset dpms 0 0 0
+        }
+        trap revertDpms HUP INT TERM
+        xset +dpms dpms 5 5 5
+        i3lock -tbn -i "${l_img}"
+        revertDpms
+    fi
 }
 
 helpmenu() {
     echo "footlocker [param [options]] \n
-    -t | --text <text>          : displayed text \n
+    -d | --dpms                 : dpms screen after lock \n
     -b | --blur <0xN>           : blur effect, N is an int \n
     -p | --picture <path>       : give picture to display"
 }
@@ -54,6 +68,9 @@ do
         --picture | -p)
             AUTOBG=$2
             ;;
+        --dpms | -d)
+            DPMS=1
+            ;;
         --blur | -b)
             BLUR=$2
             ;;
@@ -65,3 +82,4 @@ do
     shift
 done
 lock
+
