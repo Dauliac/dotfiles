@@ -4,7 +4,6 @@
 
 # defautl #################################
 export EDITOR="vim"
-export TERM="st-256color"
 export TERM_BIN="st"
 export FILEMANAGER="$TERM_BIN -e ranger"
 export BROWSER="firefox"
@@ -38,7 +37,13 @@ if [ -d "$HOME/.config/bin" ]; then
 fi
 
 ####################################
-#   MOUNT
+#   BASH
+####################################
+
+[ -f ~/.bashrc ] && source ~/.bashrc
+
+####################################
+#   SSH-AGENT
 ####################################
 
 ####################################
@@ -47,3 +52,4 @@ fi
 if [[ ! $DISPLAY && $XDG_VTNR -eq 1 ]]; then
   exec startx
 fi
+

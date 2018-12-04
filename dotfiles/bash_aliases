@@ -78,3 +78,5 @@ alias Vd="vagrant destroy"
 alias Vu="vagrant up"
 alias Vs="vagrant suspend"
 
+# Functions
+alias sc="scratch"

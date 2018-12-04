@@ -1,7 +1,6 @@
 actions:
   pre:
     vundle-install: test -e ~/.vim/bundle/Vundle.vim || ( mkdir -p ~/.vim/bundle; git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim)
-    fzf_install: test -e ~/.fzf || ( git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install --no-bash --key-bindings --completion --no-update-rc )
   vundle: vim +VundleClean! +VundleInstall +VundleInstall! +qall
 config:
   backup: true
@@ -86,23 +85,9 @@ dotfiles:
     link: true
     src: bash_functions
   default_bashrc:
-    actions:
-      - fzf_install
-    dst: ~/.bashrc
     link: true
+    dst: ~/.bashrc
     src: bashrc
-  default_vimrc_min:
-    dst: ~/.ssh/vimrc_min
-    src: ssh/vimrc_min
-    link: true
-  default_bashrc_min:
-    dst: ~/.ssh/bashrc_min
-    src: ssh/bashrc_min
-    link: true
-  default_bashrc:
-    link: true
-    dst: ~/.bashrc
-    src: ssh/bashrc_min
   default_ssh_config:
     dst: ~/.ssh/config
     src: ssh/config
@@ -114,10 +99,18 @@ dotfiles:
   media_wave.png:
     dst: ~/Pictures/wallpaper/wave.png
     src: Pictures/wallpaper/wave.png
-  default_zathurarc:
+  default_zathura:
     link: true
     dst: ~/.config/zathura/zathurarc
     src: config/zathurarc
+  default_libvirt:
+    link: true
+    dst: ~/.config/libvirt/libvirt.conf
+    src: config/libvirt
+  default_emoji:
+    link: true
+    dst: ~/.emoji
+    src: emoji
 
 profiles:
   spectre:
@@ -142,9 +135,10 @@ profiles:
     - default_gitconfig
     - media_wave.png
     - default_xresources
+    - default_zathura
     - default_xinitrc
-    - default_bashrc_min
-    - default_vimrc_min
+    - default_libvirt
+    - default_emoji
   spectre_s:
     dotfiles:
     - default_ssh_config

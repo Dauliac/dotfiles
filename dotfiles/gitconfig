@@ -1,3 +1,28 @@
 [user]
-	email = juliendauliac@gmail.com
-	name = Dauliac
+    email = juliendauliac@gmail.com
+    name = Dauliac
+
+[alias]
+    st = status -sb
+    c = clone
+    ci = commit
+    br = branch -a
+    co = checkout
+    df = diff
+    dc = diff --cached
+    lg = log -p
+    lol = log --graph --decorate --pretty=oneline --abbrev-commit
+    ls = ls-files
+    lg = log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+    chs = !git checkout $1 $2 && git status &&
+
+    # Show files ignored by git:
+    publish = git push --set-upstream origin $(git rev-parse — abbrev-ref HEAD)
+    sync = !git fetch --all --prune && git rebase -p --autostash $1
+    ign = ls-files -o -i --exclude-standard
+    in = !git fetch && git log --oneline --graph ..@{u}
+    ready = !git add --all && git status -sb
+    unstage = reset --
+    leaderboard = shortlog -s -n
+    rollback = reset HEAD~
+    alias = config --get-regexp alias

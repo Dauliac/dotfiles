@@ -208,7 +208,7 @@ format-cyan-l = ${colors.cyan}
 
 [module/togglelock]
 type = custom/script
-exec = ~/.config/bin/togglelock -p
+exec = ~/.local/bin/togglelock -p
 click-left = eval $(~/.config/bin/togglelock -t)
 interval = 1
 format-underline = ${colors.red}

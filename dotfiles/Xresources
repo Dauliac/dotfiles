@@ -64,6 +64,6 @@ Xautolock.detectsleep: true
 Xautolock.time: 5
 Xautolock.locker: footlocker --dpms
 ! hibernate
-Xautolock.killtime: 15
-Xautolock.killer: footlocker --dpms && systemctl hibernate
+! Xautolock.killtime: 15
+! Xautolock.killer: footlocker --dpms && systemctl hibernate
 Xautolock.noclose: true

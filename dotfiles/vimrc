@@ -1,4 +1,5 @@
 "==================== Vundle ==================
+
 set nocompatible
 filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
@@ -13,7 +14,7 @@ Plugin 'VundleVim/Vundle.vim'
 "==================== Plugins =================
 Plugin 'vim-airline/vim-airline'               "Bottom bar
 Plugin 'scrooloose/nerdcommenter'              "simply commenter
-Plugin 'scrooloose/nerdtree'                   "simply commenter
+Plugin 'scrooloose/nerdtree'                   " Nerdtree
 Plugin 'tristen/vim-sparkup'                   "Html
 Plugin 'morhetz/gruvbox'                       "Color
 Plugin 'lilydjwg/colorizer'                    "Hilight color
@@ -21,7 +22,6 @@ Plugin 'Yggdroot/indentLine'                   "vertical indent symbol
 Plugin 'majutsushi/tagbar'                     "right bar with fuctions
 Plugin 'christoomey/vim-tmux-navigator'        "Tmux integration in vim
 Plugin 'junegunn/fzf'                          "Fzf integration and completion
-Plugin 'junegunn/fzf.vim'                      "Fzf integration and completion
 Plugin 'ervandew/supertab'                     "Tab completion
 Plugin 'tonychg/MagicTemplate'                 "Templates
 Plugin 'airblade/vim-gitgutter'                "Git display
@@ -46,8 +46,9 @@ set ttimeoutlen=10
 " automatically deletes all tralling whitespace on save.
 autocmd BufWritePre * %s/\s\+$//e
 
-" indentation "  " with yaml
+" indentation "  " with yaml, ruby
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+autocmd FileType ruby setlocal ts=2 sts=2 sw=2 expandtab
 
 " see cursor line
 set cursorline                               "See cursor line
@@ -58,6 +59,15 @@ autocmd BufReadPost *                        "Keep the cursor position afer clos
     \   execute "normal! g`\"" |
     \ endif
 set autoread
+
+let $BASH_ENV = "~/.bash_aliases"
+
+let $FZF_DEFAULT_COMMAND='ag -l
+            \ --ignore .git
+            \ --ignore venv
+            \ --ignore *.sw?
+            \ --ignore *Explore [0-9]?
+\ --hidden -g ""'
 
 
 "====================Style====================
@@ -76,9 +86,11 @@ let g:indentLine_setColors = 0
 let g:indentLine_char = '┆'
 set tabstop=4
 set shiftwidth=4
+set softtabstop=4
+set laststatus=2
 set expandtab
-set smartindent
 set autoindent
+set smartindent
 set backspace=indent,eol,start
 
 " smart search
@@ -86,43 +98,6 @@ set ignorecase
 set smartcase
 filetype plugin on
 filetype plugin indent on
-
-"====================Netrw====================
-" remove uggly banner
-let g:netrw_banner = 0
-" line height
-let g:netrw_liststyle = 1
-" 1 - open files in a new horizontal split
-" 2 - open files in a new vertical split
-" 3 - open files in a new tab
-" 4 - open in previous window
-let g:netrw_browse_split = 4
-let g:netrw_altv = 1
-let g:netrw_winsize = 13
-
-" change directory to current buffer when open file
-set autochdir
-
-" Toggle Vexplore with Ctrl-E
-function! ToggleVExplorer()
-  if exists("t:expl_buf_num")
-      let expl_win_num = bufwinnr(t:expl_buf_num)
-      if expl_win_num != -1
-          let cur_win_nr = winnr()
-          exec expl_win_num . 'wincmd w'
-          close
-          exec cur_win_nr . 'wincmd w'
-          unlet t:expl_buf_num
-      else
-          unlet t:expl_buf_num
-      endif
-  else
-      exec '1wincmd w'
-      Vexplore
-      let t:expl_buf_num = bufnr("%")
-  endif
-endfunction
-map <silent> <C-E> :call ToggleVExplorer()<CR>
 
 "=====================Shortcuts===================
 " change leader
@@ -133,11 +108,6 @@ let mapleader = ','
 
 " xut code witout buffer
 nmap <Leader>d "_d<CR>
-
-" saving
-nnoremap <C-s> :w<CR>
-vnoremap <C-s> <Esc>:w<CR><C-s>gv
-inoremap <C-s> <Esc>:w<CR><i>
 
 " exit
 nnoremap <C-q> :qa<CR>
@@ -154,19 +124,37 @@ nnoremap k gk
 nnoremap J )
 nnoremap K (
 nnoremap µ #
-nnoremap <C-o> :tabp<CR>
-nnoremap <C-p> :tabn<CR>
 
-" replace all is aliased to S.
+" Saving
+nnoremap <c-s> :w<CR>
+vnoremap <c-s> <Esc><c-s>gv
+inoremap <c-s> <Esc><c-s>
+
+" Quit
+nnoremap qq :bdelete<CR>
 noremap S :%s//g<Left><Left>
 
 " do 'S' to search selected text
 vnoremap // y/\V<C-r>=escape(@",'/\')<CR><CR>
 
-command! E Vexplore
+"====================FZF====================
+" command
+command! Buffers call fzf#run(fzf#wrap(
+    \ {'source': map(range(1, bufnr('$')), 'bufname(v:val)')}))
+
+" bind
+nnoremap <C-f> :FZF<CR>
+nnoremap <C-d> :!git diff<CR>
+nnoremap <C-g> :!clear
+            \ && echo -e "$(git status -b --show-stash)"
+            \ && echo -e "---------------------------------------------------------------"
+            \ && echo -e "$(git branch -va --color=always)"
+            \ && echo -e "---------------------------------------------------------------"
+            \ && echo -e "$(git log --reverse --color=always --decorate=short -n 5)"
+            \ <CR>
+nnoremap <C-b> :Buffers<CR>
 
 "====================Airline====================
-"
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
 let g:airline_theme='gruvbox'
@@ -189,9 +177,9 @@ nnoremap <C-g> :GFiles<CR>
 nnoremap <C-b> :Buffers<CR>
 nmap q: :echo<CR>
 imap q: :echo<CR>
-nmap <F1> :echo<CR>
-imap <F1> <C-o>:echo<CR>
-
+" nmap <F1> :echo<CR>
+" imap <F1> <C-o>:echo<CR>
+"
 let g:lightline = {
       \ 'colorscheme': 'challenger_deep',
       \ 'active': {
@@ -214,7 +202,7 @@ filetype plugin on
 let g:NERDSpaceDelims = 1
 let g:NERDCompactSexyComs = 1
 let g:NERDDefaultAlign = 'left'
-let g:NERDCommentEmptyLines = 1
+let g:NERDCommentEmptyLines = 0
 let g:NERDTrimTrailingWhitespace = 1
 
 "====================NERDTree====================
