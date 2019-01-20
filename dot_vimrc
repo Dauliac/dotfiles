@@ -1,0 +1,249 @@
+"==================== Vundle ==================
+
+set nocompatible
+filetype off
+set rtp+=~/.vim/bundle/Vundle.vim
+
+call vundle#begin()
+
+" let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
+
+" Change leader key
+
+"==================== Plugins =================
+Plugin 'vim-airline/vim-airline'               "Bottom bar
+Plugin 'scrooloose/nerdcommenter'              "simply commenter
+Plugin 'scrooloose/nerdtree'                   " Nerdtree
+" Plugin 'mcchrish/nnn.vim'                      "file
+Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}     "Html
+Plugin 'morhetz/gruvbox'                       "Color
+Plugin 'lilydjwg/colorizer'                    "Hilight color
+Plugin 'Yggdroot/indentLine'                   "vertical indent symbol
+Plugin 'majutsushi/tagbar'                     "right bar with fuctions
+Plugin 'christoomey/vim-tmux-navigator'        "Tmux integration in vim
+Plugin 'junegunn/fzf'                          "Fzf integration and completion
+Plugin 'ervandew/supertab'                     "Tab completion
+Plugin 'tonychg/MagicTemplate'                 "Templates
+Plugin 'airblade/vim-gitgutter'                "Git display
+Plugin 'fatih/vim-go'                          "Golang
+
+call vundle#end()
+filetype plugin indent on
+
+"====================Vanilla====================
+
+set encoding=utf-8
+set splitbelow
+set splitright
+
+set mouse=a
+
+set wildmenu
+
+" timeout
+set timeout
+set timeoutlen=1000
+set ttimeout
+set ttimeoutlen=10
+
+" automatically deletes all tralling whitespace on save.
+autocmd BufWritePre * %s/\s\+$//e
+
+" indentation
+autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+autocmd FileType ruby setlocal ts=2 sts=2 sw=2 expandtab
+autocmd FileType html setlocal ts=2 sts=2 sw=2 expandtab
+autocmd FileType css  setlocal ts=2 sts=2 sw=2 expandtab
+autocmd FileType go   setlocal noet ci pi sts=0 sw=4 ts=4
+autocmd FileType css  setlocal noet ci pi sts=0 sw=4 ts=4
+
+" see cursor line
+set cursorline                               "See cursor line
+set clipboard^=unnamedplus                   "Use X clipboard
+set omnifunc=syntaxComplete#Complete         "Syntax completion
+autocmd BufReadPost *                        "Keep the cursor position afer close
+    \ if line("'\"") > 1 && line("'\"") <= line("$") |
+    \   execute "normal! g`\"" |
+    \ endif
+set autoread
+
+let $BASH_ENV = "~/.bash_aliases"
+
+let $FZF_DEFAULT_COMMAND='ag -l
+            \ --ignore .git
+            \ --ignore venv
+            \ --ignore *.sw?
+            \ --ignore *Explore [0-9]?
+\ --hidden -g ""'
+
+
+"====================Style====================
+" display positional numbers
+set number
+set relativenumber
+
+" listchars
+set list listchars=tab:▶-,trail:·,precedes:←,extends:→,eol:¬,nbsp:␣
+
+" color
+syntax on
+
+" indent
+let g:indentLine_setColors = 0
+let g:indentLine_char = '┆'
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
+set laststatus=2
+set expandtab
+set autoindent
+set smartindent
+set backspace=indent,eol,start
+set cindent
+set cinoptions=(0,u0,U0
+
+" smart search
+set ignorecase
+set smartcase
+filetype plugin on
+filetype plugin indent on
+
+"=====================Shortcuts===================
+" change leader
+let mapleader = ','
+
+" copy to the clipboard -- need +xterm-clipboard
+ nmap <Leader>y "+y<CR>
+
+" xut code witout buffer
+nmap <Leader>d "_d<CR>
+
+" exit
+nnoremap <C-q> :qa<CR>
+
+" close buffer
+nnoremap <C-x> :bd<CR>
+
+" save sudo
+command! W w !sudo tee %
+
+" moving remap
+nnoremap j gj
+nnoremap k gk
+nnoremap J )
+nnoremap K (
+nnoremap µ #
+
+" Saving
+nnoremap <c-s> :w<CR>
+vnoremap <c-s> <Esc><c-s>gv
+inoremap <c-s> <Esc><c-s>
+
+" Quit
+nnoremap qq :bdelete<CR>
+noremap S :%s//g<Left><Left>
+
+" do 'S' to search selected text
+vnoremap // y/\V<C-r>=escape(@",'/\')<CR><CR>
+
+"====================FZF====================
+" command
+command! Buffers call fzf#run(fzf#wrap(
+    \ {'source': map(range(1, bufnr('$')), 'bufname(v:val)')}))
+
+" bind
+nnoremap <C-f> :FZF<CR>
+nnoremap <C-d> :!git diff<CR>
+nnoremap <C-g> :!clear
+            \ && echo -e "$(git status -b --show-stash)"
+            \ && echo -e "---------------------------------------------------------------"
+            \ && echo -e "$(git branch -va --color=always)"
+            \ && echo -e "---------------------------------------------------------------"
+            \ && echo -e "$(git log --reverse --color=always --decorate=short -n 5)"
+            \ <CR>
+nnoremap <C-b> :Buffers<CR>
+
+"====================Airline====================
+let g:airline#extensions#tabline#enabled = 1
+let g:airline_powerline_fonts = 1
+let g:airline_theme='gruvbox'
+
+"====================Gruvbox====================
+" my color scheme is a plugin
+colorscheme gruvbox
+let g:gruvbox_contrast_dark='medium'
+let g:gruvbox_contrast_light='soft'
+set background=dark
+let g:gruvbox_italic=1
+let g:gruvbox_termcolors=256
+
+" transparent background
+hi Normal guibg=NONE ctermbg=NONE "Transparent background
+
+"=====================FZF===================
+nnoremap <C-f> :Files<CR>
+nnoremap <C-g> :GFiles<CR>
+nnoremap <C-b> :Buffers<CR>
+nmap q: :echo<CR>
+imap q: :echo<CR>
+" nmap <F1> :echo<CR>
+" imap <F1> <C-o>:echo<CR>
+"
+let g:lightline = {
+      \ 'colorscheme': 'challenger_deep',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+      \ },
+      \ 'component_function': {
+      \   'gitbranch': 'fugitive#head'
+      \ },
+      \ }
+
+inoremap <expr> <C-p> fzf#vim#complete(fzf#wrap({
+  \ 'prefix': '^.*$',
+  \ 'source': 'rg -n ^ --color always',
+  \ 'options': '--ansi --delimiter : --nth 3..',
+  \ 'reducer': { lines -> join(split(lines[0], ':\zs')[2:], '') }}))
+
+"=====================NERDCommenter===================
+filetype plugin on
+let g:NERDSpaceDelims = 1
+let g:NERDCompactSexyComs = 1
+let g:NERDDefaultAlign = 'left'
+let g:NERDCommentEmptyLines = 0
+let g:NERDTrimTrailingWhitespace = 1
+
+"====================NERDTree====================
+autocmd StdinReadPre * let s:std_in=1
+autocmd vimenter * NERDTree
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+map <C-n> :NERDTreeToggle<CR>
+let NERDTreeMinimalUI = 1
+
+"=====================Tmux===================
+let g:tmux_navigator_save_on_switch = 2
+
+"=====================Template===================
+let g:templatesDirectory = $HOME."/Templates/"
+
+"=====================GitGutter===================
+" allow to change color
+let g:gitgutter_override_sign_column_highlight = 0
+" remove basic backgorund
+highlight SignColumn ctermbg=none
+" change 'add' symbol
+highlight GitGutterAdd ctermbg=none
+highlight GitGutterAdd ctermfg=Green
+" change 'change' symbol
+highlight GitGutterChange ctermbg=none
+highlight GitGutterChange ctermfg=Cyan
+" change 'delete' symbol
+highlight GitGutterDelete ctermbg=none
+highlight GitGutterDelete ctermfg=Red
+" change 'change-delete' symbol
+highlight GitGutterChangeDelete ctermbg=none
+highlight GitGutterChangeDelete ctermfg=Yellow

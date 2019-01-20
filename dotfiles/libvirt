@@ -1,7 +1,0 @@
-uri_default = "vbox:///system"
-
-#uri_aliases = [
-#  "hail=qemu+ssh://root@hail.cloud.example.com/system",
-#  "sleet=qemu+ssh://root@sleet.cloud.example.com/system",
-#]
-

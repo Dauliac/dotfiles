@@ -1,0 +1,50 @@
+shopt -s autocd #Allows you to cd into directory merely by typing the directory name.
+export TERM="xterm-256color"
+
+# Setting Bash prompt. Capitalizes username and host if root user (my root user uses this same config file).
+if [ "$EUID" -ne 0 ]
+    then export PS1="\[$(tput bold)\]\[$(tput setaf 1)\][\[$(tput setaf 3)\]\u\[$(tput setaf 2)\]@\[$(tput setaf 4)\]\h \[$(tput setaf 5)\]\W\[$(tput setaf 1)\]]\[$(tput setaf 7)\]\\$ \[$(tput sgr0)\]"
+    else export PS1="\[$(tput bold)\]\[$(tput setaf 1)\][\[$(tput setaf 3)\]ROOT\[$(tput setaf 2)\]@\[$(tput setaf 4)\]$(hostname | awk '{print toupper($0)}') \[$(tput setaf 5)\]\W\[$(tput setaf 1)\]]\[$(tput setaf 7)\]\\$ \[$(tput sgr0)\]"
+fi
+
+#############
+# Tools
+#############
+
+# [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+[ -f ~/.bash_aliases ] && source ~/.bash_aliases
+[ -f ~/.bash_functions ] && source ~/.bash_functions
+
+# History
+HISTSIZE=30000
+HISTFILESIZE=30000
+export HISTIGNORE='ls:ps:history:exit'
+export HISTCONTROL=ignorespace:erasedups:ignoreboth:ignoredups
+shopt -s histappend
+export PROMPT_COMMAND="${PROMPT_COMMAND}${PROMPT_COMMAND:+;}history -a; history -n"
+
+# check the window size after each command and, if necessary,
+# update the values of LINES and COLUMNS.
+shopt -s checkwinsize
+
+# better less with binnary files (see metadatas)
+[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+
+# enable programmable completion features (you don't need to enable
+# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
+# sources /etc/bash.bashrc).
+if ! shopt -oq posix; then
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+  elif [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+  fi
+fi
+
+####################################
+#   NNN
+####################################
+export NNN_USE_EDITOR=1
+export NNN_BMS='d:~/Documents;u:~/;D:~/Downloads;W:~/Workspace/;t:/tmp/'
+export NNN_COPIER="/home/dauliac/.config/nnn/copier.sh"
+export NNN_FALLBACK_OPENER=xdg-open

@@ -1,0 +1,468 @@
+;################################################################################
+;                       .-.        .-.
+;                       : :        : :
+;           .---.  .--. : :  .-..-.: `-.  .--.  .--.
+;           : .; `' .; :: :_ : :; :' .; :' .; ; : ..'
+;           : ._.'`.__.'`.__;`._. ;`.__.'`.__,_;:_;
+;           : :               .-. :
+;           :_;               `._.'
+;
+; Auteur: {{ .git.name }}
+;################################################################################
+
+[colors]
+background = ${xrdb:background}
+background-alt = ${xrdb:background}
+;foreground :
+foreground = ${xrdb:foreground}
+foreground-alt = ${xrdb:foreground}
+; black :
+black = ${xrdb:color0}
+black-l = ${xrdb:color8}
+; red :
+red = ${xrdb:color1}
+red-l = ${xrdb:color9}
+; green :
+green = ${xrdb:color2}
+green-l = ${xrdb:color10}
+; yellow :
+yellow = ${xrdb:color3}
+yellow-l = ${xrdb:color11}
+; blue :
+blue = ${xrdb:color4}
+blue-l = ${xrdb:color12}
+; magenta :
+magenta = ${xrdb:color5}
+magenta-l = ${xrdb:color13}
+; cyan :
+cyan = ${xrdb:color6}
+cyan-l = ${xrdb:color14}
+; white :
+white = ${xrdb:color7}
+white-l = ${xrdb:color15}
+; spotify :
+spotify = #23cf5f
+spotify_text = #63A579
+
+[bar/default]
+width = 100%
+height = 20
+fixed-center = false
+background = ${colors.black}
+foreground = ${colors.foreground}
+line-size = 3
+line-color = ${colors.cyan-l}
+padding-left = 0
+padding-right = 2
+module-margin-left = 0
+module-margin-right = 2
+font-0 = InconsolataGo Nerd Font:pixelsize=9
+offset-y = 0
+
+{{- if eq .chezmoi.hostname "spectre" }}
+[bar/one]
+inherit = bar/default
+monitor = {{ .monitors.one }}
+tray-position = right
+modules-left = powermenu i3  pkg ssh togglelock docker vm
+modules-center = spotify
+modules-right = redshift temperature memory cpu date battery volume
+
+[bar/two]
+inherit = bar/default
+monitor = {{ .monitors.two }}
+modules-left = i3
+modules-center = prez
+modules-right = date docker ssh vmaa
+{{- else if eq .chezmoi.hostname "simforhealth" }}
+
+{{- end }}
+
+[module/i3]
+type = internal/i3
+pin-workspaces = true
+index-sort = true
+enable-click = true
+enable-scroll = false
+wrapping-scroll = false
+reverse-scroll = false
+fuzzy-match = true
+format = <label-mode><label-state>
+label-mode-padding = 2
+label-focused = %index%  %icon%
+label-focused-padding = 2
+label-unfocused = %index%  %icon%
+label-unfocused-padding = 2
+label-visible = %index%  %icon%
+label-visible-padding = 2
+label-urgent = %index%  %icon%
+label-urgent-padding = 2
+label-focused-foreground = ${colors.background}
+label-focused-background = ${colors.green}
+label-focused-underline = ${colors.green}
+label-visible-foreground = ${colors.foreground}
+label-unfocused-foreground = ${colors.green}
+label-unfocused-underline = ${colors.green}
+label-unfocused-background = ${colors.background}
+label-urgent-foreground = ${colors.background}
+label-urgent-background = ${colors.yellow}
+label-urgent-underline = ${colors.yellow}
+
+ws-icon-0 = 1;
+ws-icon-1 = 2;
+ws-icon-2 = 3;
+ws-icon-3 = 4;
+ws-icon-4 = 5;
+ws-icon-5 = 6;
+ws-icon-6 = 7;
+ws-icon-7 = 8; 
+ws-icon-8 = 9;
+ws-icon-9 = 10;
+ws-icon-10 = 11;
+ws-icon-11 = 12;
+
+[module/xbacklight]
+type = internal/xbacklight
+
+format = <label> <bar>
+format-foreground = ${colors.yellow-l}
+label = ""
+
+bar-width = 10
+bar-indicator = |
+bar-indicator-foreground = ${colors.red}
+bar-indicator-font = 3
+bar-fill = ─
+bar-fill-font =3
+bar-fill-foreground = ${colors.yellow-l}
+bar-empty = ─
+bar-empty-font = 3
+bar-empty-foreground = ${colors.blue}
+
+[module/backlight-acpi]
+inherit = module/xbacklight
+type = internal/backlight
+card = intel_backlight
+
+
+[module/cpu]
+type = internal/cpu
+interval = 2
+format = <label> <ramp-coreload>
+format-underline = ${colors.blue-l}
+format-foreground = ${colors.blue-l}
+format-cyan-l = ${colors.cyan}
+label =  %percentage%%
+
+ramp-coreload-0 = ▁
+ramp-coreload-0-foreground = ${colors.blue-l}
+ramp-coreload-1 = ▂
+ramp-coreload-1-foreground = ${colors.green-l}
+ramp-coreload-2 = ▃
+ramp-coreload-2-foreground = ${colors.green}
+ramp-coreload-3 = ▄
+ramp-coreload-3-foreground = ${colors.yellow-l}
+ramp-coreload-4 = ▅
+ramp-coreload-4-foreground = ${colors.yellow}
+ramp-coreload-5 = ▆
+ramp-coreload-5-foreground = ${colors.red-l}
+ramp-coreload-6 = ▇
+ramp-coreload-6-foreground = ${colors.red}
+ramp-coreload-7 = █
+ramp-coreload-7-foreground = ${colors.red}
+
+[module/ssh]
+type = custom/script
+exec = ~/.config/polybar/ssh.sh
+interval = 5
+format-underline = ${colors.yellow}
+format-foreground = ${colors.yellow}
+format-cyan-l = ${colors.cyan}
+
+[module/prez]
+type = custom/script
+exec = ~/.config/polybar/prez.sh
+format-underline = ${colors.white}
+format-foreground = ${colors.white}
+format-cyan-l = ${colors.cyan}
+
+[module/docker]
+type = custom/script
+exec = ~/.config/polybar/docker.sh
+interval = 15
+format-underline = ${colors.blue}
+format-foreground = ${colors.blue}
+format-cyan-l = ${colors.cyan}
+
+[module/togglelock]
+type = custom/script
+exec = ~/.local/bin/togglelock -p
+click-left = eval $(~/.config/bin/togglelock -t)
+interval = 1
+format-underline = ${colors.red}
+format-foreground = ${colors.red-l}
+format-cyan-l = ${colors.blue}
+
+[module/vm]
+type = custom/script
+exec = ~/.config/polybar/vm.sh
+interval = 20
+format-underline = ${colors.cyan}
+format-foreground = ${colors.cyan}
+format-cyan-l = ${colors.cyan}
+
+[module/memory]
+type = internal/memory
+interval = 2
+format-prefix = " "
+format-underline = ${colors.yellow-l}
+format-prefix-foreground = ${colors.yellow-l}
+label = %percentage_used%%
+
+[module/news]
+type = custom/script
+exec = ~/.config/polybar/news.py
+interval = 600
+
+[module/wlan]
+type = internal/network
+interface = wlo1
+interval = 3.0
+format-connected-underline = ${colors.green}
+
+format-connected = <ramp-signal> <label-connected>
+format-connected-foreground = ${colors.green}
+label-connected = %essid%
+label-connected-foreground = ${colors.green}
+
+format-disconnected = "⚬"
+format-disconnected-underline = ${colors.yellow-l}
+
+ramp-signal-0 = ▁
+ramp-signal-0-foreground = ${colors.red}
+ramp-signal-1 = ▁▂
+ramp-signal-1-foreground = ${colors.red-l}
+ramp-signal-2 = ▁▂▃
+ramp-signal-2-foreground = ${colors.yellow}
+ramp-signal-3 = ▁▂▃▅
+ramp-signal-3-foreground = ${colors.yellow-l}
+ramp-signal-4 = ▁▂▃▅▇
+ramp-signal-4-foreground = ${colors.green-l}
+${colors.yellow-l}
+
+[module/eth]
+type = internal/network
+interface = net0
+interval = 3.0
+
+format-connected-foreground = ${colors.green}
+format-connected-prefix = "🖧"
+format-connected-prefix-foreground = ${colors.green}
+label-connected = %local_ip%
+
+format-disconnected = <label-disconnected>
+format-diconnected-prefix = "⚬"
+format-disconnected-foreground = ${colors.yellow-l}
+label-disconnected = %ifname% disconnected
+
+[module/date]
+type = internal/date
+interval = 5
+
+date =
+date-alt = " %d-%m-%Y"
+
+time = %H:%M
+time-alt = %H:%M:%S
+
+format-prefix = 
+format-underline = ${colors.white}
+format-foreground = ${colors.white}
+
+label = %date% %time%
+
+[module/volume]
+type = internal/volume
+format-volume = <ramp-volume> <label-volume>
+format-volume-underline = ${colors.cyan-l}
+label-volume-foreground = ${colors.cyan-l}
+click-right = pavucontrol
+
+label-muted = 
+label-muted-foreground = ${colors.cyan-l}
+format-muted-underline = ${colors.cyan-l}
+
+ramp-volume-0 =
+ramp-volume-1 = 
+ramp-volume-2 = 
+
+
+ramp-volume-0-foreground = ${colors.blue-l}
+ramp-volume-1-foreground = ${colors.blue}
+ramp-volume-2-foreground = ${colors.green-l}
+ramp-volume-3-foreground = ${colors.green}
+ramp-volume-4-foreground = ${colors.red}
+
+ramp-headphones-0 = 
+ramp-headphones-0-foreground = ${colors.cyan-l}
+ramp-headphones-1 = 
+ramp-headphones-1-foreground = ${colors.cyan-l}
+
+
+[module/pulseaudio]
+type = internal/pulseaudio
+
+sink = alsa_output.pci-0000_12_00.3.analog-stereo
+
+use-ui-max = true
+
+format-volume = <ramp-volume> <label-volume>
+label-muted = 🔇 muted
+label-muted-foreground = #666
+
+; Only applies if <ramp-volume> is used
+ramp-volume-0 = 🔈
+ramp-volume-1 = 🔉
+ramp-volume-2 = 🔊
+
+[module/battery]
+type = internal/battery
+battery = BAT1
+adapter = ACAD
+full-at = 98
+
+format-charging = <animation-charging> +<label-charging>
+
+format-discharging = <ramp-capacity> <label-discharging>
+
+format-full-prefix = ""
+format-full-prefix-foreground = ${colors.green}
+format-full-cyan-l = ${self.format-charging-cyan-l}
+
+ramp-capacity-0 = 
+ramp-capacity-0-foreground = ${colors.red}
+ramp-capacity-1 = 
+ramp-capacity-1-foreground = ${colors.yellow}
+ramp-capacity-2 = 
+ramp-capacity-2-foreground = ${colors.yellow-l}
+ramp-capacity-3 = 
+ramp-capacity-3-foreground = ${colors.green}
+ramp-capacity-4 = 
+ramp-capacity-4-foreground = ${colors.green}
+
+animation-charging-0 = 
+animation-charging-0-foreground = ${colors.yellow}
+animation-charging-1 = 
+animation-charging-1-foreground = ${colors.yellow-l}
+animation-charging-2 = 
+animation-charging-2-foreground = ${colors.green-l}
+animation-charging-3 = 
+animation-charging-3-foreground = ${colors.green}
+
+animation-charging-foreground = ${colors.foreground-alt}
+animation-charging-framerate = 750
+
+[module/temperature]
+type = internal/temperature
+thermal-zone = 0
+warn-temperature = 60
+
+format = <ramp> <label>
+format-underline = ${colors.magenta}
+label-foreground = ${colors.magenta}
+label = %temperature%
+
+format-warn = <ramp> <label-warn>
+label-warn = %temperature%
+label-warn-foreground = ${colors.red-l}
+format-warn-underline = ${colors.red-l}
+
+ramp-0 = 
+ramp-0-foreground = ${colors.magenta}
+ramp-1 = 
+ramp-1-foreground = ${colors.magenta}
+ramp-2 = 
+ramp-2-foreground = ${colors.yellow}
+ramp-3 = 
+ramp-3-foreground = ${colors.red-l}
+
+[module/powermenu]
+type = custom/menu
+
+label-open = 
+
+label-open-foreground = ${colors.red-l}
+label-open-padding = 3
+label-open-background = ${colors.background}
+
+label-close = 
+label-close-padding = 3
+label-close-foreground = ${colors.white-l}
+label-close-background = ${colors.background}
+label-close-padding-top = 100
+
+;LOCK-MENU===================
+menu-0-0 = 
+menu-0-0-foreground = ${colors.white-l}
+menu-0-0-background = ${colors.green}
+menu-0-0-exec = menu-open-1
+menu-0-0-padding = 3
+
+;REBOOT-MENU==================
+menu-0-1 = 
+menu-0-1-foreground = ${colors.white-l}
+menu-0-1-background = ${colors.yellow}
+menu-0-1-exec = menu-open-2
+menu-0-1-padding = 3
+
+;SHUTDOWN-MENU===============
+menu-0-2 = 
+menu-0-2-foreground = ${colors.foreground}
+menu-0-2-background = ${colors.red}
+menu-0-2-exec = menu-open-3
+menu-0-2-padding = 3
+
+menu-1-0 = 
+menu-1-0-foreground = ${colors.white-l}
+menu-1-0-background = ${colors.green}
+menu-1-0-exec = xautolock -locknow
+menu-1-0-padding = 3
+
+menu-2-0 = 
+menu-2-0-foreground = ${colors.white-l}
+menu-2-0-background = ${colors.yellow}
+menu-2-0-exec = sreboot
+menu-2-0-padding = 3
+
+menu-3-0 = 
+menu-3-0-foreground = ${colors.white-l}
+menu-3-0-background = ${colors.red}
+menu-3-0-exec = sshutdown
+menu-3-0-padding = 3
+
+[module/spotify]
+type = custom/script
+exec = ~/.config/polybar/spotify.sh --title
+click-left =  ~/.config/polybar/spotify.sh --togglePlay
+interval = 2.5
+format=   <label>
+format-foreground= ${colors.spotify_text}
+
+label = %output%
+
+[module/pkg]
+type = custom/script
+interval = 1200
+format = <label>
+format-underline = ${colors.red}
+label = "%output:0:30%"
+exec = .config/polybar/pkg.sh
+exec-if = "ping -q -w 2 -c 1 176.34.135.167 > /dev/null"
+
+[module/redshift]
+type = custom/script
+exec = ~/.config/polybar/redshift.sh
+interval = 5
+
+[settings]
+screenchange-reload = true
