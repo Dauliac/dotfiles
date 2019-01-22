@@ -12,40 +12,39 @@ URxvt*utf8: true
 URxvt.keysym.C-equal: resize-font:bigger
 URxvt.keysym.C-parenright: resize-font:smaller
 URxvt.depth: 32
-URxvt.background: [85]#282828
+URxvt.background: [85]{{ colors.background }}
 
 !========================
 ! Colors
 ! ========================
-! hard contrast: *background: #1d2021
-*background: #282828
-! soft contrast: *background: #32302f
-*foreground: #ebdbb2
+! hard contrast: *background: {{ colors.hard_background }}
+*background: {{ colors.background }}
+! soft contrast: *background: {{ colors.soft_background }}
+*foreground: {{ colors.foreground }}
 ! Black + DarkGrey
-*color0:  #282828
-*color8: #ebdbb2
-!*color8:  #928374
+*color0:  {{ colors.black }}
+*color8: {{ colors.foreground }}
 ! DarkRed + Red
-*color1:  #cc241d
-*color9:  #fb4934
+*color1:  {{ colors.red }}
+*color9:  {{ color9.light_red }}
 ! DarkGreen + Green
-*color2:  #98971a
-*color10: #b8bb26
+*color2:  {{ colors.dark_green }}
+*color10: {{ colors. green }}
 ! DarkYellow + Yellow
-*color3:  #d79921
-*color11: #fabd2f
+*color3: {{ colors.dark_yellow }}
+*color11: {{ colors.yellow }}
 ! DarkBlue + Blue
-*color4:  #458588
-*color12: #83a598
+*color4:{{ colors.dark_blue }}
+*color12: {{ colors.blue }}
 ! DarkMagenta + Magenta
-*color5:  #b16286
-*color13: #d3869b
+*color5: {{ colors.dark_magenta }}
+*color13: {{ colors.magenta }}
 ! DarkCyan + Cyan
-*color6:  #689d6a
-*color14: #8ec07c
+*color6:  {{ colors.dark_cyan }}
+*color14: {{ colors.cyan }}
 ! LightGrey + White
-*color7:  #a89984
-*color15: #ebdbba
+*color7:  {{ colors.light_grey }}
+*color15: {{ colors.dark_white }}
 
 !========================
 ! Xautolock
