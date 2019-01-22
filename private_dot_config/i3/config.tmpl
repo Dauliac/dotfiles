@@ -8,12 +8,7 @@
 #             #+#    #+#    #+#   #+#+# #+#+#  #+#       #+#
 #        ########### ########     ###   ###   ###       ###                                     #
 #
-# Auteur: Dauliac
-# Date: 24.07.2017
-# version: last-arch
-# File: config
-# Last modification user: Dauliac <juliendauliac@gmail.com>
-# Path: $ HOME / .config / i3 / config
+# Auteur: {{ .git.name }}
 
 ###############################
 #          MODIFIERS          #
@@ -88,6 +83,10 @@ bindsym $mod+F5 exec $TERM_BIN -e weechat
 
 # Start emoji keyboard
 bindsym $mod+Shift+u exec dmenuunicode
+
+# Mount - Umount
+bindsym $mod+Shift+m exec dmenumount
+bindsym $mod+Control+m exec dmenuumount
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -322,3 +321,4 @@ exec --no-startup-id keepassxc
 exec --no-startup-id "LANG=fr_FR.UTF-8; pidgin"
 exec_always --no-startup-id "killall polybar;polybar -r one"
 exec_always --no-startup-id "killall xautolock;xautolock"
+
