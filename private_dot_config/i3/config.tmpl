@@ -217,10 +217,11 @@ set $ws10 "10"
 set $ws11 "11"
 set $ws12 "12"
 
-set $monitorDefault eDP1
-set $monitorTwo     DP2
-
 # Monitor
+set $monitorDefault {{ .monitors.one }}
+set $monitorTwo     {{ .monitors.two }}
+
+{{- if eq .chezmoi.hostname "spectre" }}
 workspace $ws1 output $monitorDefault
 workspace $ws2 output $monitorDefault
 workspace $ws3 output $monitorDefault
@@ -233,6 +234,23 @@ workspace $ws9 output $monitorDefault
 workspace $ws10 output $monitorDefault
 workspace $ws11 output $monitorTwo
 workspace $ws12 output $monitorTwo
+
+{{- else if eq .chezmoi.hostname "simforhealth" }}
+workspace $ws1 output $monitorDefault
+workspace $ws2 output $monitorDefault
+workspace $ws3 output $monitorDefault
+workspace $ws4 output $monitorDefault
+workspace $ws5 output $monitorDefault
+workspace $ws6 output $monitorDefault
+workspace $ws7 output $monitorTwo
+workspace $ws8 output $monitorTwo
+workspace $ws9 output $monitorTwo
+workspace $ws10 output $monitorTwo
+workspace $ws11 output $monitorTwo
+workspace $ws12 output $monitorTwo
+
+{{- end }}
+
 
 # switch to workspace
 bindsym $mod+ampersand workspace $ws1
@@ -283,7 +301,7 @@ assign [class="Spotify|keepassxc"]                                      $ws7
 for_window [class="Spotify"]                                            move to workspace $ws7
 
 # Workspace 8 (VM) :
-assign [class="VirtualBox"]                                             $ws8
+assign [class="VirtualBox|Rambox"]                                             $ws8
 
 # Float
 for_window [class="pavucontrol|nm-connection-editor|Blueman-manager|blueman-manager|Pavucontrol|Blueberry.py"] floating enable
@@ -300,8 +318,16 @@ bindsym $mod+Shift+b floating toggle; exec --no-startup-id bottomleft; sticky to
 exec_always --no-startup-id compton
 
 #Wallpaper
+{{- if eq .chezmoi.hostname "spectre" }}
 exec_always --no-startup-id DISPLAY=:0.0 feh --bg-scale ~/Pictures/wallpaper/wave.png
 exec_always --no-startup-id DISPLAY=:0.1 feh --bg-scale ~/Pictures/wallpaper/load.png
+
+{{- else if eq .chezmoi.hostname "simforhealth" }}
+exec_always --no-startup-id DISPLAY=:0.0 feh --bg-scale ~/Pictures/wallpaper/portail-shinto.jpg
+exec_always --no-startup-id DISPLAY=:1.1 feh --bg-scale ~/Pictures/wallpaper/portail-shinto.jpg
+
+{{- end }}
+
 
 #Launch system programs
 exec_always --no-startup-id compton
@@ -309,16 +335,26 @@ exec_always --no-startup-id dunst
 
 exec_always --no-startup-id $TERM_BIN -n dropdown -e tmux new -s dropdown
 exec --no-startup-id nm-applet
+
+# exec xscreensaver -nosplash
 # exec --no-startup-id blueman-applet
-exec --no-startup-id blueberry-tray
-exec --no-startup-id /usr/lib/geoclue-2.0/demos/agent
+# exec --no-startup-id /usr/lib/geoclue-2.0/demos/agent
 
 #Launch startup programs
 # exec --no-startup-id discord-canary
 exec --no-startup-id geary
-exec xscreensaver -nosplash
 exec --no-startup-id keepassxc
-exec --no-startup-id "LANG=fr_FR.UTF-8; pidgin"
+
 exec_always --no-startup-id "killall polybar;polybar -r one"
+
+{{- if eq .chezmoi.hostname "spectre" }}
+exec --no-startup-id blueberry-tray
+
+{{- else if eq .chezmoi.hostname "simforhealth" }}
+exec_always --no-startup-id "killall polybar;polybar -r two"
+
+{{- end }}
+
+exec --no-startup-id "LANG=fr_FR.UTF-8; pidgin"
 exec_always --no-startup-id "killall xautolock;xautolock"
 
