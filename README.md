@@ -7,7 +7,7 @@ My rices dotfiles: now with [`chezmoi`](https://github.com/twpayne/chezmoi)
 git clone git@github.com:Dauliac/dotfiles.git ~/.local/share/chezmoi
 ```
 
-Install `chezoi`:
+Install `chezmoi`:
 ```bash
 cd ~/.local/share/chezmoi
 make install
@@ -52,12 +52,7 @@ data:
     white: "#fff"
 ```
 
-To conclue modifications:
-```bash
-chezmoi apply -v
-```
-
-Deploy `chezoi` configs:
+Deploy `chezmoi` configs:
 ```bash
 make update
 ```
