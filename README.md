@@ -7,6 +7,12 @@ My rices dotfiles: now with [`chezmoi`](https://github.com/twpayne/chezmoi)
 git clone git@github.com:Dauliac/dotfiles.git ~/.local/share/chezmoi
 ```
 
+Install `chezoi`:
+```bash
+cd ~/.local/share/chezmoi
+make install
+```
+
 Create a `./config/chezmoi/chezmoi.yaml` with:
 ```bash
 chezmoi edit-config
@@ -49,4 +55,9 @@ data:
 To conclue modifications:
 ```bash
 chezmoi apply -v
+```
+
+Deploy `chezoi` configs:
+```bash
+make update
 ```
