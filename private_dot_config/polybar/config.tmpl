@@ -59,6 +59,7 @@ module-margin-right = 2
 font-0 = InconsolataGo Nerd Font:pixelsize=9
 offset-y = 0
 
+
 {{- if eq .chezmoi.hostname "spectre" }}
 [bar/one]
 inherit = bar/default
@@ -74,8 +75,24 @@ monitor = {{ .monitors.two }}
 modules-left = i3
 modules-center = prez
 modules-right = date docker ssh vmaa
-{{- else if eq .chezmoi.hostname "simforhealth" }}
 
+
+{{- else if eq .chezmoi.hostname "simforhealth" }}
+[bar/one]
+inherit = bar/default
+monitor = {{ .monitors.one }}
+tray-position = right
+modules-left = powermenu i3  ssh togglelock docker
+modules-center = spotify
+modules-right = redshift temperature memory cpu date battery volume
+
+[bar/two]
+inherit = bar/default
+monitor = {{ .monitors.two }}
+modules-left = i3
+tray-position = right
+modules-center = date
+modules-right = docker ssh
 {{- end }}
 
 [module/i3]
