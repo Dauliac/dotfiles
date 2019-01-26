@@ -352,6 +352,7 @@ exec_always --no-startup-id "killall polybar;polybar -r one"
 
 {{- if eq .chezmoi.hostname "spectre" }}
 exec --no-startup-id blueberry-tray
+exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 
 {{- else if eq .chezmoi.hostname "simforhealth" }}
 exec_always --no-startup-id "killall polybar;polybar -r two"
