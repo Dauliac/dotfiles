@@ -336,7 +336,7 @@ exec_always --no-startup-id DISPLAY=:1.1 feh --bg-scale ~/Pictures/wallpaper/por
 exec_always --no-startup-id compton
 exec_always --no-startup-id dunst
 
-exec_always --no-startup-id $TERM_BIN -n dropdown -e tmux new -s dropdown
+exec_always --no-startup-id $TERM_BIN --class dropdown -t dropdown -e tmux new -s dropdown
 exec --no-startup-id nm-applet
 
 # exec xscreensaver -nosplash

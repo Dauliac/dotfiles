@@ -1,0 +1,55 @@
+####################################
+#   BASE
+####################################
+
+# defautl #################################
+export EDITOR="vim"
+export TERM_BIN="st"
+export FILEMANAGER="$TERM_BIN -e ranger"
+export BROWSER="firefox"
+export READER="zathura"
+export WORKSPACE="$HOME/Workspace"
+export TEMPLATES="$HOME/Templates"
+
+# env #################################
+# Qt update
+export QT_AUTO_SCREEN_SCALE_FACTOR=0
+# Qt use gtk-2 style
+export QT_STYLE_OVERRIDE=gtk2
+# Dotdrop
+export DOTFILES=~/Dotfiles/config.yaml
+# X resources
+export XDG_CONFIG_HOME="$HOME/.config"
+
+# bin #################################
+# Node exec
+PATH="$HOME/.node_modules/bin:$PATH"
+# Node local bin
+PATH="$HOME/.local/bin:$PATH"
+export npm_config_prefix=~/.node_modules
+# Go local bin
+export  GOPATH="$WORKSPACE/go"
+PATH="$GOPATH/bin:$PATH"
+
+# Local bin
+if [ -d "$HOME/.config/bin" ]; then
+    export PATH="$HOME/.config/bin:$PATH"
+fi
+
+####################################
+#   BASH
+####################################
+
+[ -f ~/.bashrc ] && source ~/.bashrc
+
+####################################
+#   SSH-AGENT
+####################################
+
+####################################
+#   STARTX
+####################################
+if [[ ! $DISPLAY && $XDG_VTNR -eq 1 ]]; then
+  exec startx
+fi
+
