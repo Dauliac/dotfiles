@@ -42,9 +42,15 @@ if ! shopt -oq posix; then
 fi
 
 ####################################
-#   NNN
+#   Nnn
 ####################################
 export NNN_USE_EDITOR=1
 export NNN_BMS='d:~/Documents;u:~/;D:~/Downloads;W:~/Workspace/;t:/tmp/'
 export NNN_COPIER="/home/dauliac/.config/nnn/copier.sh"
 export NNN_FALLBACK_OPENER=xdg-open
+
+####################################
+#   Completion
+####################################
+#kubectl
+source <(kubectl completion bash)

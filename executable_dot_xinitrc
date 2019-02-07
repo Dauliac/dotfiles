@@ -1,7 +1,7 @@
 # Gnome-keyering daemon
 dbus-update-activation-environment --systemd DISPLAY
 eval $(/usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets)
-eval $(ssh-agent)
+# eval $(ssh-agent)
 # export SSH_AUTH_SOCK
 
 # load Xressouces

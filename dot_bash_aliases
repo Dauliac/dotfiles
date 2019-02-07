@@ -56,6 +56,9 @@ alias k="kubectl"
 alias G="gcloud"
 alias r="ranger"
 
+# Two char
+alias kp="kube-prompt"
+
 # Systemctl
 alias sstop="sudo systemctl stop"
 alias sstart="sudo systemctl start"

@@ -52,9 +52,11 @@ autocmd BufWritePre * %s/\s\+$//e
 
 " indentation
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+autocmd FileType tf   setlocal ts=2 sts=2 sw=2 expandtab
 autocmd FileType ruby setlocal ts=2 sts=2 sw=2 expandtab
 autocmd FileType html setlocal ts=2 sts=2 sw=2 expandtab
 autocmd FileType css  setlocal ts=2 sts=2 sw=2 expandtab
+autocmd FileType tf   setlocal ts=2 sts=2 sw=2 expandtab
 autocmd FileType go   setlocal noet ci pi sts=0 sw=4 ts=4
 autocmd FileType css  setlocal noet ci pi sts=0 sw=4 ts=4
 
@@ -128,8 +130,6 @@ nnoremap <C-x> :bd<CR>
 " save sudo
 command! W w !sudo tee %
 
-" moving remap
-nnoremap j gj
 nnoremap k gk
 nnoremap J )
 nnoremap K (
