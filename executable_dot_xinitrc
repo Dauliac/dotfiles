@@ -13,5 +13,5 @@ exec /usr/bin/i3
 exec /usr/bin/NetworkManager --no-daemon
 
 # mount nextcloud
-mount /home/dauliac/Nextcloud
+# mount /home/dauliac/Nextcloud
 

@@ -356,6 +356,7 @@ exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 
 {{- else if eq .chezmoi.hostname "simforhealth" }}
 exec_always --no-startup-id "polybar -r two"
+exec_always --no-startup-id "rambox"
 
 {{- end }}
 
