@@ -41,7 +41,7 @@
     separator_height = 2
     padding = 8
     horizontal_padding = 8
-    separator_color = #ebdbb2 {{ .colors.foreground }}
+    separator_color = "#{{ .colors.foreground }}"
     startup_notification = false
     dmenu = /usr/bin/dmenu -p dunst:
     browser = /usr/bin/firefox -new-tab
@@ -59,21 +59,21 @@
     context = ctrl+shift+p
 
 [urgency_low]
-frame_color = "{{ .colors.cyan }}"
-foreground ="{{ .colors.dark_gray }}"
-background = "{{ .colors.dark_blue }}"
+frame_color = "#{{ .colors.blue }}"
+foreground = "#{{ .colors.dark_white }}"
+background = "#{{ .colors.dark_blue }}"
     timeout = 2
 
 [urgency_normal]
-frame_color = "{{ .colors.green }}"
-foreground = "{{ .colors.dark_white }}"
-background = "{{ .colors.dark_green }}"
+frame_color = "#{{ .colors.green }}"
+foreground = "#{{ .colors.dark_white }}"
+background = "#{{ .colors.dark_green }}"
     timeout = 2
 
 [urgency_critical]
-frame_color = "{{ .colors.light_red }}"
-foreground = "{{ .colors.dark_white }}"
-background = "{{ .colors.red }}"
+frame_color = "#{{ .colors.red }}"
+foreground = "#{{ .colors.dark_white }}"
+background = "#{{ .colors.dark_red }}"
     timeout = 4
 
 [Go For It!]

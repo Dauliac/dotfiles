@@ -15,7 +15,7 @@ Plugin 'VundleVim/Vundle.vim'
 Plugin 'vim-airline/vim-airline'               "Bottom bar
 Plugin 'scrooloose/nerdcommenter'              "simply commenter
 Plugin 'scrooloose/nerdtree'                   " Nerdtree
-" Plugin 'mcchrish/nnn.vim'                      "file
+" Plugin 'mcchrish/nnn.vim'                    "file
 Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}     "Html
 Plugin 'morhetz/gruvbox'                       "Color
 Plugin 'lilydjwg/colorizer'                    "Hilight color
@@ -27,6 +27,7 @@ Plugin 'ervandew/supertab'                     "Tab completion
 Plugin 'tonychg/MagicTemplate'                 "Templates
 Plugin 'airblade/vim-gitgutter'                "Git display
 Plugin 'fatih/vim-go'                          "Golang
+Plugin 'lervag/vimtex'                         " Latex
 
 call vundle#end()
 filetype plugin indent on
@@ -46,6 +47,9 @@ set timeout
 set timeoutlen=1000
 set ttimeout
 set ttimeoutlen=10
+
+" Minimal update time on lateX
+autocmd Filetype tex setl updatetime=1
 
 " automatically deletes all tralling whitespace on save.
 autocmd BufWritePre * %s/\s\+$//e
@@ -247,3 +251,4 @@ highlight GitGutterDelete ctermfg=Red
 " change 'change-delete' symbol
 highlight GitGutterChangeDelete ctermbg=none
 highlight GitGutterChangeDelete ctermfg=Yellow
+
