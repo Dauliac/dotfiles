@@ -73,7 +73,7 @@ bindsym $mod+F1 exec firefox
 bindsym $mod+F2 exec $TERM_BIN -e vim
 
 # start a ranger
-bindsym $mod+F3 exec $TERM_BIN -e ranger
+bindsym $mod+F3 exec $TERM_BIN -e nnn
 
 # start a neomutt
 bindsym $mod+F4 exec $TERM_BIN -e neomutt
@@ -88,8 +88,11 @@ bindsym $mod+Shift+u exec dmenuunicode
 bindsym $mod+Shift+m exec dmenumount
 bindsym $mod+Control+m exec dmenuumount
 
+# Dmenu
+bindsym $mod+Shift+d exec --no-startup-id dmenu_run
+
 # Wifi
-bindsym $mod+n exec /path/to/nmcli-rofi
+bindsym $mod+Shift+n exec /path/to/nmcli-rofi
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -173,9 +176,6 @@ mode "resize" {
 
 # Resize
 bindsym $mod+r mode "resize"
-
-# Dmenu
-bindsym $mod+Shift+d exec --no-startup-id dmenu_run
 
 # Audio
 bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +1%
@@ -348,7 +348,7 @@ exec --no-startup-id nm-applet
 exec --no-startup-id geary
 exec --no-startup-id keepassxc
 
-exec_always --no-startup-id "killall polybar;polybar -r one"
+exec_always --no-startup-id "killall polybar;polybar -r one;polybar -r two"
 
 {{- if eq .chezmoi.hostname "spectre" }}
 exec --no-startup-id blueberry-tray
