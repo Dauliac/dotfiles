@@ -82,14 +82,14 @@ bindsym $mod+F4 exec $TERM_BIN -e neomutt
 bindsym $mod+F5 exec $TERM_BIN -e weechat
 
 # Start emoji keyboard
-bindsym $mod+Shift+u exec dmenuunicode
+bindsym $mod+Control+u exec dmenuunicode
 
 # Mount - Umount
 bindsym $mod+Shift+m exec dmenumount
 bindsym $mod+Control+m exec dmenuumount
 
 # Wifi
-bindsym $mod+n exec /path/to/nmcli-rofi
+bindsym $mod+Control+n exec networkmanager_dmenu
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -288,16 +288,16 @@ assign [class="Google-chrome|Vivaldi-snapshot|Vivaldi|firefox"]                 
 for_window [class="Google-chrome|Vivaldi-snapshot|Vivaldi|firefox"]             move to workspace $ws1
 
 # Workspace 5
-assign [class="Thunderbird"]                                      $ws4
-for_window [class="Thunderbird"]                                  move to workspace $ws4
+assign [class="Thunderbird|Geary"]                                      $ws4
+for_window [class="Thunderbird|Geary"]                                  move to workspace $ws4
 
 # Workspace 5
 assign [class="freetube|FreeTube|Stremio"]                                      $ws5
 for_window [class="freetube|Freetube|Stremio"]                                  move to workspace $ws5
 
 # Workspace 6 (Chat) :
-assign [class="discord-canary|discord|Teamspeak3|Gear|Pidgin"]                 $ws6
-for_window [class="discord-canary|discord|Teamspeak3|Geary"]            move to workspace $ws6
+assign [class="discord-canary|discord|Teamspeak3|Pidgin"]                 $ws6
+for_window [class="discord-canary|discord|Teamspeak3"]            move to workspace $ws6
 
 # Workspace 7 (Music, Keepassxc) :
 assign [class="Spotify|keepassxc"]                                      $ws7
