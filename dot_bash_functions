@@ -23,8 +23,9 @@ extract () {
 
 # Tmux
 function tns {
-    tmux new-session -d -s $1 && [[ -n "$TMUX" ]] \
-        && tmux switch-client -t $1 \
+    label=$PWD
+    tmux new-session -d -s $label && [[ -n "$TMUX" ]] \
+        && tmux switch-client -t $label \
         || tmux attach
 }
 # Docker

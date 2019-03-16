@@ -13,8 +13,7 @@ alias grep="grep --color=auto"
 alias ll="ls -al"
 alias cpa='cp -Rvfi'
 alias ls="ls --color=always --classify --group-directories-first --human-readable"
-alias dotdrop='dotdrop --cfg=$DOTFILES'
-
+alias less="less -F"
 # Folders
 alias localhost="/srv/http/"
 alias cdw="~/Workspace/"

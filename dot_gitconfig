@@ -11,8 +11,7 @@
     df = diff
     dc = diff --cached
     lg = log -p
-    lol = log --graph --decorate --pretty=oneline --abbrev-commit
-    l = log --oneline --decorate --graph
+    l = log --graph --decorate --pretty=oneline --abbrev-commit
 
     ls = ls-files
     lg = log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
