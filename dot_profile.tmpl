@@ -3,11 +3,10 @@
 ####################################
 
 # defautl #################################
-export EDITOR="vim"
-export TERM_BIN="alacritty"
-export FILEMANAGER="$TERM_BIN -e ranger"
-export BROWSER="firefox"
-export READER="zathura"
+export EDITOR="{{ .defaults.text }}"
+export TERM_BIN="{{ .defaults.term }}"
+export BROWSER="{{ .defaults.browser }}"
+export READER="{{ .defaults.pdf }}"
 export WORKSPACE="$HOME/Workspace"
 export TEMPLATES="$HOME/Templates"
 

@@ -16,8 +16,8 @@ fi
 [ -f ~/.bash_functions ] && source ~/.bash_functions
 
 # History
-HISTSIZE=30000
-HISTFILESIZE=30000
+HISTSIZE=50000
+HISTFILESIZE=50000
 export HISTIGNORE='ls:ps:history:exit'
 export HISTCONTROL=ignorespace:erasedups:ignoreboth:ignoredups
 shopt -s histappend
