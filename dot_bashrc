@@ -47,7 +47,10 @@ fi
 export NNN_USE_EDITOR=1
 export NNN_BMS='d:~/Documents;u:~/;D:~/Downloads;W:~/Workspace/;t:/tmp/'
 export NNN_COPIER="/home/dauliac/.config/nnn/copier.sh"
+NNN_OPENER=mimeopen
+NNN_TRASH=1
 export NNN_FALLBACK_OPENER=xdg-open
+NNN_OPENER_DETACH=1
 
 ####################################
 #   Completion
