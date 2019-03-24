@@ -23,7 +23,7 @@ extract () {
 
 # Tmux
 function tns {
-    label=$PWD
+    label=$(basename $PWD)
     tmux new-session -d -s $label && [[ -n "$TMUX" ]] \
         && tmux switch-client -t $label \
         || tmux attach
