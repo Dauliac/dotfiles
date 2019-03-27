@@ -62,7 +62,7 @@ bindsym $mod+Tab exec --no-startup-id rofi -show window
 for_window [class="^.*"] border pixel 2
 
 # start a terminal
-bindsym $mod+Return exec $TERM_BIN
+bindsym $mod+Return exec {{ .defaults.term }}
 
 # lockscreen
 bindsym $mod+Control+l exec xautolock -locknow
@@ -70,16 +70,16 @@ bindsym $mod+Control+l exec xautolock -locknow
 # start firefox
 bindsym $mod+F1 exec firefox
 # start a vim
-bindsym $mod+F2 exec $TERM_BIN -e vim
+bindsym $mod+F2 exec {{ .defaults.term }} -e vim
 
 # start a ranger
-bindsym $mod+F3 exec $TERM_BIN -e nnn
+bindsym $mod+F3 exec {{ .defaults.term }} -e nnn
 
 # start a neomutt
-bindsym $mod+F4 exec $TERM_BIN -e neomutt
+bindsym $mod+F4 exec {{ .defaults.term }} -e neomutt
 
 # start a weechat
-bindsym $mod+F5 exec $TERM_BIN -e weechat
+bindsym $mod+F5 exec {{ .defaults.term }} -e weechat
 
 # Start emoji keyboard
 bindsym $mod+Control+u exec dmenuunicode
@@ -336,7 +336,7 @@ exec_always --no-startup-id DISPLAY=:1.1 feh --bg-scale ~/Pictures/wallpaper/por
 exec_always --no-startup-id compton
 exec_always --no-startup-id dunst
 
-exec_always --no-startup-id $TERM_BIN --class dropdown -t dropdown -e tmux new -s dropdown
+exec_always --no-startup-id {{ .defaults.term }} --class dropdown -t dropdown -e tmux new -s dropdown
 exec --no-startup-id nm-applet
 
 # exec xscreensaver -nosplash
