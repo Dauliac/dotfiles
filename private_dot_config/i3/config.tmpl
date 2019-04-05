@@ -304,7 +304,7 @@ assign [class="Spotify|keepassxc"]                                      $ws7
 for_window [class="Spotify"]                                            move to workspace $ws7
 
 # Workspace 8 (VM) :
-assign [class="VirtualBox|Rambox"]                                             $ws8
+assign [class="VirtualBox|Rambox|Franz|virt-manager"]                                             $ws8
 
 # Float
 for_window [class="pavucontrol|nm-connection-editor|Blueman-manager|blueman-manager|Pavucontrol|Blueberry.py"] floating enable
@@ -356,7 +356,7 @@ exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 
 {{- else if eq .chezmoi.hostname "simforhealth" }}
 exec_always --no-startup-id "polybar -r two"
-exec_always --no-startup-id "rambox"
+exec_always --no-startup-id "franz"
 
 {{- end }}
 

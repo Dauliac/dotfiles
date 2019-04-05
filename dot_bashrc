@@ -53,6 +53,11 @@ export NNN_FALLBACK_OPENER=xdg-open
 NNN_OPENER_DETACH=1
 
 ####################################
+#   Vagrant
+####################################
+export VAGRANT_DEFAULT_PROVIDER='libvirt'
+
+####################################
 #   Completion
 ####################################
 #kubectl
