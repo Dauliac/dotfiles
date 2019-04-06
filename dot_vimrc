@@ -14,8 +14,6 @@ Plugin 'VundleVim/Vundle.vim'
 "==================== Plugins =================
 Plugin 'vim-airline/vim-airline'               "Bottom bar
 Plugin 'scrooloose/nerdcommenter'              "simply commenter
-Plugin 'scrooloose/nerdtree'                   " Nerdtree
-" Plugin 'mcchrish/nnn.vim'                    "file
 Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}     "Html
 Plugin 'morhetz/gruvbox'                       "Color
 Plugin 'lilydjwg/colorizer'                    "Hilight color
@@ -27,7 +25,8 @@ Plugin 'ervandew/supertab'                     "Tab completion
 Plugin 'tonychg/MagicTemplate'                 "Templates
 Plugin 'airblade/vim-gitgutter'                "Git display
 Plugin 'fatih/vim-go'                          "Golang
-Plugin 'lervag/vimtex'                         " Latex
+Plugin 'lervag/vimtex'                         "Latex
+Plugin 'google/vim-jsonnet'                    "Jsonnet
 
 call vundle#end()
 filetype plugin indent on
@@ -54,6 +53,9 @@ autocmd Filetype tex setl updatetime=1
 " automatically deletes all tralling whitespace on save.
 autocmd BufWritePre * %s/\s\+$//e
 
+" automatically change directory
+set autochdir
+
 " indentation
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
 autocmd FileType tf   setlocal ts=2 sts=2 sw=2 expandtab
@@ -63,6 +65,7 @@ autocmd FileType css  setlocal ts=2 sts=2 sw=2 expandtab
 autocmd FileType tf   setlocal ts=2 sts=2 sw=2 expandtab
 autocmd FileType go   setlocal noet ci pi sts=0 sw=4 ts=4
 autocmd FileType css  setlocal noet ci pi sts=0 sw=4 ts=4
+autocmd FileType jsonnet setlocal ts=2 sts=2 sw=2 expandtab
 
 " see cursor line
 set cursorline                               "See cursor line
@@ -218,15 +221,6 @@ let g:NERDCompactSexyComs = 1
 let g:NERDDefaultAlign = 'left'
 let g:NERDCommentEmptyLines = 0
 let g:NERDTrimTrailingWhitespace = 1
-
-"====================NERDTree====================
-autocmd StdinReadPre * let s:std_in=1
-autocmd vimenter * NERDTree
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-map <C-n> :NERDTreeToggle<CR>
-let NERDTreeMinimalUI = 1
 
 "=====================Tmux===================
 let g:tmux_navigator_save_on_switch = 2
