@@ -1,6 +1,11 @@
 [user]
     email = juliendauliac@gmail.com
     name = Dauliac
+[merge]
+    tool = vimdiff
+
+[diff]
+    tool = vimdiff
 
 [alias]
     st = status -sb
