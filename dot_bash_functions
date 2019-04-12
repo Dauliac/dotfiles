@@ -24,6 +24,9 @@ extract () {
 # Tmux
 function tns {
     label=$(basename $PWD)
+    if [ ! -z $1 ]; then
+        label=$1
+    fi
     tmux new-session -d -s $label && [[ -n "$TMUX" ]] \
         && tmux switch-client -t $label \
         || tmux attach

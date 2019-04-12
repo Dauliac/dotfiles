@@ -82,3 +82,7 @@ alias Vs="vagrant suspend"
 
 # Functions
 alias sc="scratch"
+
+# Containers
+# alias kapitan="docker run -t --rm -u $(id -u) -v $(pwd):/src:delegated deepmind/kapitan"
+

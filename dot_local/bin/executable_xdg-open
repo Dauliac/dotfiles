@@ -1,0 +1,86 @@
+#!/usr/bin/perl
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+use strict;
+use warnings;
+use File::MimeInfo;
+
+unless ($ARGV[0]) {
+	print "usage: xdg-open [file|protocol]\n";
+	exit 1;
+}
+
+my $arg = $ARGV[0];
+$arg = $1 if $arg =~ m|^file://(.*)|;
+$arg =~ s/%20/ /g;
+my $arg_mime = mimetype($arg) if -e $arg;
+
+my ($config_path, $config);
+GET_CONFIG: {
+	my $home_path = "$ENV{'HOME'}/.config/busking/config";
+	my $dirs_path = '/etc/xdg/busking/config';
+	for my $file ($home_path, $dirs_path) {
+		next unless -f $file;
+		$config_path = $file;
+		open($config, '<', $config_path)
+			or die "error: could not open $config_path: $!\n";
+		last GET_CONFIG;
+	}
+	die "error: config not found\n";
+}
+
+my $cmd;
+while (my $line = <$config>) {
+	next if $line =~ /^(\n|#)/;
+	if ($line =~ m|^@\s*(.+[^\s])\s*=\s*(.+)|) {
+		my $c = $2;
+		$cmd = $c if $arg =~ m|$1|;
+	}
+	elsif ($arg_mime && $line =~ m|^(.+[^\s])\s*=\s*(.+)|) {
+		my $c = $2;
+		$cmd = $c if $arg_mime =~ m|$1|;
+	}
+	last if $cmd;
+}
+
+sub open_in_terminal {
+	my ($term, $run) = @_;
+	die "error: no terminal specified\n" unless $term;
+	exec("$term -e $run \"$arg\" &");
+}
+
+if ($cmd) {
+	if ($cmd =~ /(?<!\\)\?:/) {
+		my @cmd = split /\s*\?:\s*/, $cmd;
+		if (qx(ps -o stat= -p \$PPID) =~ /^S/
+				and qx(ps -o stat= -p \$\$) !~ /\+/) {
+			open_in_terminal($cmd[1], $cmd[0])
+		}
+		else {
+			exec("$cmd[0] \"$arg\"");
+		}
+	}
+	elsif ($cmd =~ /(?<!\\)::/) {
+		my @cmd = split /\s*::\s*/, $cmd;
+		open_in_terminal($cmd[1], $cmd[0])
+	}
+	else {
+		exec("$cmd \"$arg\" &> /dev/null &");
+	}
+}
+else {
+	print "error: no matching entry found in $config_path\n";
+	exit 2;
+}
