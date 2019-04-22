@@ -1,7 +1,7 @@
 #!/bin/sh
-vm=$(VBoxManage list runningvms)
+vm=$(virsh list --state-running --name)
 if [ ! -z "$vm" ]; then
-    echo  $(VBoxManage list runningvms | wc -l)
+    echo  $(virsh list --state-running --name | wc -l)
 else
     echo ""
 fi
