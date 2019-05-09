@@ -1,0 +1,15 @@
+
+node_modules/
+.*.swp
+.vagrant
+vendor
+*.pyc
+__pycache__
+venv/
+k8s/bin
+*.ova
+*.tgz
+*.tar.gz
+*.rkestate
+*.img
+*.iso

@@ -10,14 +10,37 @@ fi
 #############
 # Tools
 #############
-{{- if eq .chezmoi.hostname "spectre" }}
 [ -f ~/.bash_aliases ] && source ~/.bash_aliases
 [ -f ~/.bash_functions ] && source ~/.bash_functions
+
+####################################
+# Fzf
+####################################
+{{- if eq .chezmoi.hostname "spectre" }}
+[ -f /usr/share/fzf/key-bindings.bash ] && source /usr/share/fzf/key-bindings.bash
+[ -f /usr/share/fzf/completion.bash ] && source /usr/share/fzf/completion.bash
 
 {{- else if eq .chezmoi.hostname "simforhealth" }}
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 {{- end }}
+
+# Use ~~ as the trigger sequence instead of the default **
+export FZF_DEFAULT_COMMAND='fd --type f'
+export FZF_DEFAULT_OPTS="--layout=reverse --inline-info"
+
+# Use fd (https://github.com/sharkdp/fd) instead of the default find
+# command for listing path candidates.
+# - The first argument to the function ($1) is the base path to start traversal
+# - See the source code (completion.{bash,zsh}) for the details.
+_fzf_compgen_path() {
+  fd --hidden --follow --exclude ".git" . "$1"
+}
+
+# Use fd to generate the list for directory completion
+_fzf_compgen_dir() {
+  fd --type d --hidden --follow --exclude ".git" . "$1"# History
+}
 
 # History
 HISTSIZE=50000

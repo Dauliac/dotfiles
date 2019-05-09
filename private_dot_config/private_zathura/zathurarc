@@ -35,4 +35,4 @@ map f toggle_fullscreen
 map [fullscreen] f toggle_fullscreen
 
 # White background
-set default-bg "#ffffff"
+set default-bg "#282828"

@@ -311,7 +311,7 @@ for_window [class="pavucontrol|nm-connection-editor|Blueman-manager|blueman-mana
 
 # Mini-Player
 for_window [title="Freetube Mini-Player"] floating toggle; exec --no-startup-id bottomleft; sticky toggle
-bindsym $mod+Shift+b floating toggle; exec --no-startup-id bottomleft; sticky toggle
+bindsym $mod+Shift+b floating enable; sticky enable; exec --no-startup-id bottomleft; exec notify-send "video mode 📼"
 
 ###############################
 #     STARTUP APPLICATIONS    #

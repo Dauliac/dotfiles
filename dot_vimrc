@@ -27,6 +27,7 @@ Plugin 'tonychg/MagicTemplate'                 "Templates
 Plugin 'airblade/vim-gitgutter'                "Git display
 Plugin 'fatih/vim-go'                          "Golang
 Plugin 'lervag/vimtex'                         "Latex
+Plugin 'rust-lang/rust.vim'                    "Rust
 
 call vundle#end()
 filetype plugin indent on
@@ -58,8 +59,35 @@ autocmd Filetype tex setl updatetime=1
 " automatically deletes all tralling whitespace on save.
 autocmd BufWritePre * %s/\s\+$//e
 
-" automatically change directory
-" set autochdir
+" spell checking
+set spell
+
+" color
+highlight clear SpellBad
+highlight SpellBad term=standout ctermfg=1
+highlight SpellBad term=underline cterm=underline
+highlight clear SpellCap
+highlight SpellCap term=underline cterm=underline
+highlight clear SpellRare
+highlight SpellRare term=underline cterm=underline
+highlight clear SpellLocal
+highlight SpellLocal term=underline cterm=underline
+map <F6><Esc>setlocal spell spelllang=fr<CR>
+map<F7><Esc>setlocal nospell<CR>
+
+autocmd BufRead,BufNewFile *.md setlocal spell spelllang=en_us
+autocmd BufRead,BufNewFile *.txt setlocal spell spelllang=fr
+autocmd FileType gitcommit setlocal spell spelllang=en_us
+set complete+=kspell
+
+function! FzfSpellSink(word)
+  exe 'normal! "_ciw'.a:word
+endfunction
+function! FzfSpell()
+  let suggestions = spellsuggest(expand("<cword>"))
+  return fzf#run({'source': suggestions, 'sink': function("FzfSpellSink"), 'down': 10 })
+endfunction
+nnoremap z= :call FzfSpell()<CR>
 
 " indentation
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
@@ -154,27 +182,23 @@ inoremap <c-s> <Esc><c-s>
 
 " Quit
 nnoremap qq :bdelete<CR>
-noremap S :%s//g<Left><Left>
-
-" do 'S' to search selected text
-vnoremap // y/\V<C-r>=escape(@",'/\')<CR><CR>
 
 "====================FZF====================
 " command
-command! Buffers call fzf#run(fzf#wrap(
-    \ {'source': map(range(1, bufnr('$')), 'bufname(v:val)')}))
+" command! Buffers call fzf#run(fzf#wrap(
+"     \ {'source': map(range(1, bufnr('$')), 'bufname(v:val)')}))
 
-" bind
-nnoremap <C-f> :FZF<CR>
-nnoremap <C-d> :!git diff<CR>
-nnoremap <C-g> :!clear
-            \ && echo -e "$(git status -b --show-stash)"
-            \ && echo -e "---------------------------------------------------------------"
-            \ && echo -e "$(git branch -va --color=always)"
-            \ && echo -e "---------------------------------------------------------------"
-            \ && echo -e "$(git log --reverse --color=always --decorate=short -n 5)"
-            \ <CR>
-nnoremap <C-b> :Buffers<CR>
+" " bind
+" nnoremap <C-f> :FZF<CR>
+" nnoremap <C-d> :!git diff<CR>
+" nnoremap <C-g> :!clear
+"             \ && echo -e "$(git status -b --show-stash)"
+"             \ && echo -e "---------------------------------------------------------------"
+"             \ && echo -e "$(git branch -va --color=always)"
+"             \ && echo -e "---------------------------------------------------------------"
+"             \ && echo -e "$(git log --reverse --color=always --decorate=short -n 5)"
+"             \ <CR>
+" nnoremap <C-b> :Buffers<CR>
 
 "====================Airline====================
 let g:airline#extensions#tabline#enabled = 1
@@ -194,24 +218,24 @@ let g:gruvbox_termcolors=256
 hi Normal guibg=NONE ctermbg=NONE "Transparent background
 
 "=====================FZF===================
-nnoremap <C-f> :Files<CR>
-nnoremap <C-g> :GFiles<CR>
-nnoremap <C-b> :Buffers<CR>
-nmap q: :echo<CR>
-imap q: :echo<CR>
-" nmap <F1> :echo<CR>
-" imap <F1> <C-o>:echo<CR>
-"
-let g:lightline = {
-      \ 'colorscheme': 'challenger_deep',
-      \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
-      \ },
-      \ 'component_function': {
-      \   'gitbranch': 'fugitive#head'
-      \ },
-      \ }
+" nnoremap <C-f> :Files<CR>
+" nnoremap <C-g> :GFiles<CR>
+" nnoremap <C-b> :Buffers<CR>
+" nmap q: :echo<CR>
+" imap q: :echo<CR>
+" " nmap <F1> :echo<CR>
+" " imap <F1> <C-o>:echo<CR>
+" "
+" let g:lightline = {
+"       \ 'colorscheme': 'challenger_deep',
+"       \ 'active': {
+"       \   'left': [ [ 'mode', 'paste' ],
+"       \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+"       \ },
+"       \ 'component_function': {
+"       \   'gitbranch': 'fugitive#head'
+"       \ },
+      " \ }
 
 inoremap <expr> <C-p> fzf#vim#complete(fzf#wrap({
   \ 'prefix': '^.*$',
