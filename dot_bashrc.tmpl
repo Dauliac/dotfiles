@@ -10,10 +10,14 @@ fi
 #############
 # Tools
 #############
-
-# [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+{{- if eq .chezmoi.hostname "spectre" }}
 [ -f ~/.bash_aliases ] && source ~/.bash_aliases
 [ -f ~/.bash_functions ] && source ~/.bash_functions
+
+{{- else if eq .chezmoi.hostname "simforhealth" }}
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+{{- end }}
 
 # History
 HISTSIZE=50000
