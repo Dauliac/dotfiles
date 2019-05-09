@@ -22,12 +22,13 @@ fi
 
 {{- else if eq .chezmoi.hostname "simforhealth" }}
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+[ -f ~/.fzf/shell/key-bindings.bash ] && source ~/.fzf/shell/key-bindings.bash
 
 {{- end }}
 
 # Use ~~ as the trigger sequence instead of the default **
 export FZF_DEFAULT_COMMAND='fd --type f'
-export FZF_DEFAULT_OPTS="--layout=reverse --inline-info"
+export FZF_DEFAULT_OPTS='--height 15% --border --layout=reverse'
 
 # Use fd (https://github.com/sharkdp/fd) instead of the default find
 # command for listing path candidates.
