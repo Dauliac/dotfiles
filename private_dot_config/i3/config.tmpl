@@ -105,7 +105,7 @@ bindsym $mod+k focus up
 bindsym $mod+l focus right
 
 # screenshot
-bindsym Print exec "scrot -z -e 'mv $f /tmp/ && xclip -selection clipboard -t image/png -i < /tmp/$f' && sleep 0.5 && notify-send screenshot -u low"
+bindsym Print exec "scrot -s -z -e 'mv $f /tmp/ && xclip -selection clipboard -t image/png -i < /tmp/$f' && sleep 0.5 && notify-send screenshot -u low"
 
 # scratchpad basic
 bindsym $mod+Shift+Return [instance="dropdown"] scratchpad show

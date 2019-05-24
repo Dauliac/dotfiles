@@ -4,6 +4,9 @@
 [merge]
     tool = vimdiff
 
+[merge "ours"]
+    driver = true
+
 [diff]
     tool = vimdiff
 
