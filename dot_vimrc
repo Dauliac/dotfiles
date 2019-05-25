@@ -1,39 +1,29 @@
 "==================== Vundle ==================
 
-set nocompatible
-filetype off
-set rtp+=~/.vim/bundle/Vundle.vim
+call plug#begin('~/.vim/plugged')
 
-call vundle#begin()
+"==================== Plugs =================
+Plug 'vim-airline/vim-airline'               "Bottom bar
+Plug 'scrooloose/nerdcommenter'              "simply commenter
+Plug 'google/vim-jsonnet'                    "jsonnet
+Plug 'rstacruz/sparkup', {'rtp': 'vim/'}     "Html
+Plug 'morhetz/gruvbox'                       "Color
+Plug 'lilydjwg/colorizer'                    "Hilight color
+Plug 'Yggdroot/indentLine'                   "vertical indent symbol
+Plug 'majutsushi/tagbar'                     "right bar with fuctions
+Plug 'christoomey/vim-tmux-navigator'        "Tmux integration in vim
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " Fzf
+Plug 'junegunn/fzf.vim'                      "Fzf integration and completion
+Plug 'tonychg/MagicTemplate'                 "Templates
+Plug 'airblade/vim-gitgutter'                "Git display
+Plug 'fatih/vim-go', { 'for': 'go' }         "Golang
+Plug 'lervag/vimtex', { 'for': 'latex' }     "Latex
 
-" let Vundle manage Vundle, required
-Plugin 'VundleVim/Vundle.vim'
+call plug#end()
 
-" Change leader key
-
-"==================== Plugins =================
-Plugin 'vim-airline/vim-airline'               "Bottom bar
-Plugin 'scrooloose/nerdcommenter'              "simply commenter
-Plugin 'google/vim-jsonnet'                    "jsonnet
-Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}     "Html
-Plugin 'morhetz/gruvbox'                       "Color
-Plugin 'lilydjwg/colorizer'                    "Hilight color
-Plugin 'Yggdroot/indentLine'                   "vertical indent symbol
-Plugin 'majutsushi/tagbar'                     "right bar with fuctions
-Plugin 'christoomey/vim-tmux-navigator'        "Tmux integration in vim
-Plugin 'junegunn/fzf'                          "Fzf integration and completion
-Plugin 'ervandew/supertab'                     "Tab completion
-Plugin 'tonychg/MagicTemplate'                 "Templates
-Plugin 'airblade/vim-gitgutter'                "Git display
-Plugin 'fatih/vim-go'                          "Golang
-Plugin 'lervag/vimtex'                         "Latex
-Plugin 'rust-lang/rust.vim'                    "Rust
-
-call vundle#end()
-filetype plugin indent on
+"filetype plugin indent on
 
 "====================Vanilla====================
-
 set encoding=utf-8
 set splitbelow
 set splitright
@@ -59,36 +49,6 @@ autocmd Filetype tex setl updatetime=1
 " automatically deletes all tralling whitespace on save.
 autocmd BufWritePre * %s/\s\+$//e
 
-" spell checking
-set spell
-
-" color
-highlight clear SpellBad
-highlight SpellBad term=standout ctermfg=1
-highlight SpellBad term=underline cterm=underline
-highlight clear SpellCap
-highlight SpellCap term=underline cterm=underline
-highlight clear SpellRare
-highlight SpellRare term=underline cterm=underline
-highlight clear SpellLocal
-highlight SpellLocal term=underline cterm=underline
-map <F6><Esc>setlocal spell spelllang=fr<CR>
-map<F7><Esc>setlocal nospell<CR>
-
-autocmd BufRead,BufNewFile *.md setlocal spell spelllang=en_us
-autocmd BufRead,BufNewFile *.txt setlocal spell spelllang=fr
-autocmd FileType gitcommit setlocal spell spelllang=en_us
-set complete+=kspell
-
-function! FzfSpellSink(word)
-  exe 'normal! "_ciw'.a:word
-endfunction
-function! FzfSpell()
-  let suggestions = spellsuggest(expand("<cword>"))
-  return fzf#run({'source': suggestions, 'sink': function("FzfSpellSink"), 'down': 10 })
-endfunction
-nnoremap z= :call FzfSpell()<CR>
-
 " indentation
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
 autocmd FileType tf setlocal ts=2 sts=2 sw=2 expandtab
@@ -112,13 +72,8 @@ set autoread
 
 let $BASH_ENV = "~/.bash_aliases"
 
-let $FZF_DEFAULT_COMMAND='ag -l
-            \ --ignore .git
-            \ --ignore venv
-            \ --ignore *.sw?
-            \ --ignore *Explore [0-9]?
-\ --hidden -g ""'
-
+" Spell
+set spell
 
 "====================Style====================
 " display positional numbers
@@ -139,7 +94,6 @@ set shiftwidth=4
 set softtabstop=4
 set laststatus=2
 set expandtab
-set autoindent
 set smartindent
 set backspace=indent,eol,start
 set cindent
@@ -161,44 +115,26 @@ let mapleader = ','
 " xut code witout buffer
 nmap <Leader>d "_d<CR>
 
-" exit
-nnoremap <C-q> :qa<CR>
-
-" close buffer
-nnoremap <C-x> :bd<CR>
-
 " save sudo
 command! W w !sudo tee %
 
-nnoremap k gk
-nnoremap J )
-nnoremap K (
-nnoremap µ #
-
-" Saving
-nnoremap <c-s> :w<CR>
-vnoremap <c-s> <Esc><c-s>gv
-inoremap <c-s> <Esc><c-s>
-
-" Quit
-nnoremap qq :bdelete<CR>
+" nnoremap k gk
+" nnoremap J )
+" nnoremap K (
+" nnoremap µ #
 
 "====================FZF====================
-" command
-" command! Buffers call fzf#run(fzf#wrap(
-"     \ {'source': map(range(1, bufnr('$')), 'bufname(v:val)')}))
+nnoremap <C-f> :Files<CR>
+nnoremap <C-g> :GFiles<CR>
+nnoremap <C-b> :Buffers<CR>
 
-" " bind
-" nnoremap <C-f> :FZF<CR>
-" nnoremap <C-d> :!git diff<CR>
-" nnoremap <C-g> :!clear
-"             \ && echo -e "$(git status -b --show-stash)"
-"             \ && echo -e "---------------------------------------------------------------"
-"             \ && echo -e "$(git branch -va --color=always)"
-"             \ && echo -e "---------------------------------------------------------------"
-"             \ && echo -e "$(git log --reverse --color=always --decorate=short -n 5)"
-"             \ <CR>
-" nnoremap <C-b> :Buffers<CR>
+" Insert mode completion
+imap <c-x><c-k> <plug>(fzf-complete-word)
+inoremap <expr> <c-x><c-k> fzf#vim#complete('cat /usr/share/dict/french')
+inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'left': '13%'})
+imap <c-x><c-f> <plug>(fzf-complete-path)
+imap <c-x><c-j> <plug>(fzf-complete-file-ag)
+imap <c-x><c-l> <plug>(fzf-complete-line)
 
 "====================Airline====================
 let g:airline#extensions#tabline#enabled = 1
@@ -216,32 +152,6 @@ let g:gruvbox_termcolors=256
 
 " transparent background
 hi Normal guibg=NONE ctermbg=NONE "Transparent background
-
-"=====================FZF===================
-" nnoremap <C-f> :Files<CR>
-" nnoremap <C-g> :GFiles<CR>
-" nnoremap <C-b> :Buffers<CR>
-" nmap q: :echo<CR>
-" imap q: :echo<CR>
-" " nmap <F1> :echo<CR>
-" " imap <F1> <C-o>:echo<CR>
-" "
-" let g:lightline = {
-"       \ 'colorscheme': 'challenger_deep',
-"       \ 'active': {
-"       \   'left': [ [ 'mode', 'paste' ],
-"       \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
-"       \ },
-"       \ 'component_function': {
-"       \   'gitbranch': 'fugitive#head'
-"       \ },
-      " \ }
-
-inoremap <expr> <C-p> fzf#vim#complete(fzf#wrap({
-  \ 'prefix': '^.*$',
-  \ 'source': 'rg -n ^ --color always',
-  \ 'options': '--ansi --delimiter : --nth 3..',
-  \ 'reducer': { lines -> join(split(lines[0], ':\zs')[2:], '') }}))
 
 "=====================NERDCommenter===================
 filetype plugin on
