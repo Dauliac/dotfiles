@@ -10,6 +10,8 @@
 #
 # Auteur: {{ .git.name }}
 
+
+
 ###############################
 #          MODIFIERS          #
 ###############################
@@ -21,7 +23,13 @@ set $alt Mod1
 ###############################
 
 #font
-font InconsolataGo Nerd Font:8
+font pango:{{ .font }}:8
+
+bar {
+    font pango:{{ .font }} 8
+    position top
+    status_command /bin/i3status-rs ~/.config/i3/status.toml
+}
 
 #import .Xressource colors
 set_from_resource $c_foreground foreground
@@ -348,14 +356,12 @@ exec --no-startup-id nm-applet
 exec --no-startup-id geary
 exec --no-startup-id keepassxc
 
-exec_always --no-startup-id "killall -q --wait polybar; polybar -r one"
 
 {{- if eq .chezmoi.hostname "spectre" }}
 exec --no-startup-id blueberry-tray
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 
 {{- else if eq .chezmoi.hostname "simforhealth" }}
-exec_always --no-startup-id "polybar -r two"
 exec_always --no-startup-id "rambox"
 
 {{- end }}
