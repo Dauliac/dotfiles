@@ -18,6 +18,7 @@ Plug 'tonychg/MagicTemplate'                 "Templates
 Plug 'airblade/vim-gitgutter'                "Git display
 Plug 'fatih/vim-go', { 'for': 'go' }         "Golang
 Plug 'lervag/vimtex', { 'for': 'latex' }     "Latex
+Plug 'cespare/vim-toml', { 'for': 'toml' }   "Toml
 
 call plug#end()
 

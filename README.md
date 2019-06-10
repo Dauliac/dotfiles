@@ -21,6 +21,7 @@ chezmoi edit-config
 And add:
 ```yaml
 data:
+  font: "Monoid Nerd Font Mono"
   git:
     email: "<git email>"
     name: "<git name>"
