@@ -3,20 +3,23 @@
 ####################################
 
 # defautl #################################
-export EDITOR="{{ .defaults.text }}"
-export TERM_BIN="{{ .defaults.term }}"
-export BROWSER="{{ .defaults.browser }}"
-export READER="{{ .defaults.pdf }}"
+export EDITOR="/usr/bin/vim"
+export TERM_BIN="/usr/bin/alacritty"
+export BROWSER="/usr/bin/firefox"
+export READER="/usr/bin/zathura"
 export WORKSPACE="$HOME/Workspace"
 export TEMPLATES="$HOME/Templates"
 
 # env #################################
 # Qt update
 export QT_AUTO_SCREEN_SCALE_FACTOR=0
-# Qt use gtk-2 style
-export QT_STYLE_OVERRIDE=gtk2
+# Use gtk2 in qt
+QT_QPA_PLATFORMTHEME=gtk2
 # X resources
 export XDG_CONFIG_HOME="$HOME/.config"
+# Dmenu
+export SUDO_ASKPASS="$HOME/.local/bin/dmenupass"
+
 
 # bin #################################
 # Node exec

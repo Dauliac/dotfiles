@@ -89,5 +89,11 @@ export VAGRANT_DEFAULT_PROVIDER='libvirt'
 #   Completion
 ####################################
 #kubectl
+<<<<<<< HEAD
 # source <(kubectl completion bash)
 
+=======
+source <(kubectl completion bash)
+# fubectl
+[ -f ~/.fubectl.source ] && source ~/.fubectl.source
+>>>>>>> 98b4805e62b57044319eee88d10df010b4c29b54
