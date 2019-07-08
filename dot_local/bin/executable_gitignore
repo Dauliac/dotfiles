@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # From: https://gist.github.com/phha/cb4f4bb07519dc494609792fb918e167
 
 # Create useful gitignore files

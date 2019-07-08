@@ -16,9 +16,7 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " Fzf
 Plug 'junegunn/fzf.vim'                      "Fzf integration and completion
 Plug 'tonychg/MagicTemplate'                 "Templates
 Plug 'airblade/vim-gitgutter'                "Git display
-Plug 'fatih/vim-go', { 'for': 'go' }         "Golang
-Plug 'lervag/vimtex', { 'for': 'latex' }     "Latex
-Plug 'cespare/vim-toml', { 'for': 'toml' }   "Toml
+Plug 'sheerun/vim-polyglot'                  "Syntax
 
 call plug#end()
 
@@ -52,12 +50,12 @@ autocmd BufWritePre * %s/\s\+$//e
 
 " indentation
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+autocmd FileType groovy setlocal ts=2 sts=2 sw=2 expandtab
 autocmd FileType tf setlocal ts=2 sts=2 sw=2 expandtab
 autocmd FileType ruby setlocal ts=2 sts=2 sw=2 expandtab
 autocmd FileType html setlocal ts=2 sts=2 sw=2 expandtab
 autocmd FileType css  setlocal ts=2 sts=2 sw=2 expandtab
 autocmd FileType tf   setlocal ts=2 sts=2 sw=2 expandtab
-autocmd FileType go   setlocal noet ci pi sts=0 sw=4 ts=4
 autocmd FileType css  setlocal noet ci pi sts=0 sw=4 ts=4
 autocmd FileType jsonnet setlocal ts=2 sts=2 sw=2 expandtab
 
