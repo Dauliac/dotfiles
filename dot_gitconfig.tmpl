@@ -1,6 +1,8 @@
 [user]
-    email = juliendauliac@gmail.com
-    name = Dauliac
+    email = {{ .git.email }}
+    name = {{ .git.name }}
+    signingkey = {{ .git.gpg }}
+
 [merge]
     tool = vimdiff
 
@@ -18,11 +20,10 @@
     co = checkout
     df = diff
     dc = diff --cached
-    lg = log -p
     l = log --graph --decorate --pretty=oneline --abbrev-commit
-
     ls = ls-files
     lg = log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+    lgh = log --follow -p
     chs = !git checkout $1 $2 && git status &&
     pull = !git pull && git submodule sync --recursive && git submodule update --init --recursive
 
