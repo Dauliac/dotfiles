@@ -17,6 +17,7 @@ Plug 'junegunn/fzf.vim'                      "Fzf integration and completion
 Plug 'tonychg/MagicTemplate'                 "Templates
 Plug 'airblade/vim-gitgutter'                "Git display
 Plug 'sheerun/vim-polyglot'                  "Syntax
+Plug 'mzlogin/vim-markdown-toc'              " Index markdown
 
 call plug#end()
 
@@ -35,6 +36,9 @@ else
 end
 
 set wildmenu
+
+" Disable swap file
+set noswapfile
 
 " timeout
 set timeout

@@ -21,6 +21,10 @@ extract () {
   fi
 }
 
+notif () {
+    $@ && notify-send "Job finished!"|| notify-send "Job failed!"
+}
+
 # Tmux
 function tns {
     label=$(basename $PWD)
