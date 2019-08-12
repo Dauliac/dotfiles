@@ -16,7 +16,7 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " Fzf
 Plug 'junegunn/fzf.vim'                      "Fzf integration and completion
 Plug 'tonychg/MagicTemplate'                 "Templates
 Plug 'airblade/vim-gitgutter'                "Git display
-Plug 'sheerun/vim-polyglot'                  "Syntax
+Plug 'fatih/vim-go'                          "Syntax
 
 call plug#end()
 
@@ -36,6 +36,32 @@ end
 
 set wildmenu
 
+" Protect changes between writes. Default values of
+" updatecount (200 keystrokes) and updatetime
+" (4 seconds) are fine
+set swapfile
+set directory^=~/.vim/swap//
+
+" protect against crash-during-write
+set writebackup
+" but do not persist backup after successful write
+set nobackup
+" use rename-and-write-new method whenever safe
+set backupcopy=auto
+" patch required to honor double slash at end
+if has("patch-8.1.0251")
+        " consolidate the writebackups -- not a big
+        " deal either way, since they usually get deleted
+        set backupdir^=~/.vim/backup//
+end
+
+" Auto reload file
+au FocusGained,BufEnter * :checktime
+
+" persist the undo tree for each file
+set undofile
+set undodir^=~/.vim/undo//
+
 " timeout
 set timeout
 set timeoutlen=1000
@@ -54,10 +80,11 @@ autocmd FileType groovy setlocal ts=2 sts=2 sw=2 expandtab
 autocmd FileType tf setlocal ts=2 sts=2 sw=2 expandtab
 autocmd FileType ruby setlocal ts=2 sts=2 sw=2 expandtab
 autocmd FileType html setlocal ts=2 sts=2 sw=2 expandtab
-autocmd FileType css  setlocal ts=2 sts=2 sw=2 expandtab
 autocmd FileType tf   setlocal ts=2 sts=2 sw=2 expandtab
 autocmd FileType css  setlocal noet ci pi sts=0 sw=4 ts=4
 autocmd FileType jsonnet setlocal ts=2 sts=2 sw=2 expandtab
+autocmd FileType go setlocal noet ci pi sts=0 sw=4 ts=4
+autocmd Filetype gitcommit setlocal spell textwidth=72
 
 " see cursor line
 set cursorline                               "See cursor line

@@ -11,7 +11,7 @@ export SSH_AUTH_SOCK
 exec /usr/bin/i3
 
 # start networkManager
-# /usr/bin/NetworkManager --no-daemon
+/usr/bin/NetworkManager --no-daemon
 
 # mount nextcloud
 # mount /home/dauliac/Nextcloud

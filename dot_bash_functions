@@ -1,5 +1,5 @@
 # Global
-extract () {
+function extract {
   if [ -f $1 ] ; then
       case $1 in
           *.tar.bz2)   tar xvjf $1    ;;
@@ -19,6 +19,10 @@ extract () {
   else
       echo "'$1' is not a valid file!"
   fi
+}
+
+function replace {
+    find . -type f -exec sed -i "s/$1/$2/g" {} +
 }
 
 # Tmux

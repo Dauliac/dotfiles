@@ -21,6 +21,7 @@
     df = diff
     dc = diff --cached
     l = log --graph --decorate --pretty=oneline --abbrev-commit
+    plog = log --graph --pretty=format:'%h -%d %s %n' --abbrev-commit --date=relative --branches
     ls = ls-files
     lg = log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
     lgh = log --follow -p
@@ -40,3 +41,5 @@
 
     # Tags
     drt = git push origin :refs/tags/$1
+[commit]
+    template = /home/dauliac/.gitmessage

@@ -36,6 +36,8 @@ if [ -d "$HOME/.config/bin" ]; then
     export PATH="$HOME/.config/bin:$PATH"
 fi
 
+exec NetworkManager
+
 ####################################
 #   BASH
 ####################################

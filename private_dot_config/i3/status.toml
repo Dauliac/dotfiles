@@ -9,6 +9,11 @@ buttons = ["play", "next"]
 
 [[block]]
 block = "custom"
+on_click = "sshutdown"
+cycle = ["echo "]
+
+[[block]]
+block = "custom"
 on_click = "sreboot"
 cycle = ["echo "]
 
