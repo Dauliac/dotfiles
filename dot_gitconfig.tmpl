@@ -42,4 +42,7 @@
     # Tags
     drt = git push origin :refs/tags/$1
 [commit]
-    template = /home/dauliac/.gitmessage
+    template = /home/{{ .user }}/.gitmessage
+
+[core]
+    excludesfile = /home/{{ .user }}/.gitignore
