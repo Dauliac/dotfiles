@@ -3,21 +3,22 @@
 call plug#begin('~/.vim/plugged')
 
 "==================== Plugs =================
-Plug 'vim-airline/vim-airline'               "Bottom bar
-Plug 'scrooloose/nerdcommenter'              "simply commenter
-Plug 'google/vim-jsonnet'                    "jsonnet
-Plug 'rstacruz/sparkup', {'rtp': 'vim/'}     "Html
-Plug 'morhetz/gruvbox'                       "Color
-Plug 'lilydjwg/colorizer'                    "Hilight color
-Plug 'Yggdroot/indentLine'                   "vertical indent symbol
-Plug 'majutsushi/tagbar'                     "right bar with fuctions
-Plug 'christoomey/vim-tmux-navigator'        "Tmux integration in vim
+Plug 'vim-airline/vim-airline'  "Bottom bar
+Plug 'majutsushi/tagbar'        "right bar with fuctions
+Plug 'Yggdroot/indentLine'      "vertical indent symbol
+Plug 'morhetz/gruvbox'          "Color
+Plug 'lilydjwg/colorizer'       "Hilight color
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " Fzf
-Plug 'junegunn/fzf.vim'                      "Fzf integration and completion
-Plug 'tonychg/MagicTemplate'                 "Templates
-Plug 'airblade/vim-gitgutter'                "Git display
+Plug 'junegunn/fzf.vim'         "Fzf integration and completion
+Plug 'airblade/vim-gitgutter'   "Git display
+Plug 'tonychg/MagicTemplate'    "Templates
+Plug 'scrooloose/nerdcommenter' "simply commenter
+Plug 'google/vim-jsonnet', {'for': 'jsonnet'}   "jsonnet
+Plug 'rstacruz/sparkup', {'rtp': 'vim/', 'for': 'html'}   "Html
+Plug 'christoomey/vim-tmux-navigator'        "Tmux integration in vim
 Plug 'sheerun/vim-polyglot'                  "Syntax
-Plug 'mzlogin/vim-markdown-toc'              " Index markdown
+Plug 'dpelle/vim-Grammalecte', {'for': ['latex', 'markdown', 'txt']}
+
 
 call plug#end()
 
@@ -192,4 +193,8 @@ highlight GitGutterDelete ctermfg=Red
 " change 'change-delete' symbol
 highlight GitGutterChangeDelete ctermbg=none
 highlight GitGutterChangeDelete ctermfg=Yellow
+
+"=====================Grammalecte===================
+" grammalecte script from https://grammalecte.net/#download
+let g:grammalecte_cli_py='~/Downloads/grammalecte-cli.py'
 
