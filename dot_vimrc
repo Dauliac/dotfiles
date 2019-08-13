@@ -17,6 +17,8 @@ Plug 'junegunn/fzf.vim'                      "Fzf integration and completion
 Plug 'tonychg/MagicTemplate'                 "Templates
 Plug 'airblade/vim-gitgutter'                "Git display
 Plug 'fatih/vim-go'                          "Syntax
+Plug 'sheerun/vim-polyglot'                  "Syntax
+Plug 'mzlogin/vim-markdown-toc'              " Index markdown
 
 call plug#end()
 
@@ -61,6 +63,10 @@ au FocusGained,BufEnter * :checktime
 " persist the undo tree for each file
 set undofile
 set undodir^=~/.vim/undo//
+=======
+" Disable swap file
+set noswapfile
+>>>>>>> 8880d5f1647d45771d17d4983f59c2d4539d927e
 
 " timeout
 set timeout

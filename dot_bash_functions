@@ -24,6 +24,9 @@ function extract {
 function replace {
     find . -type f -exec sed -i "s/$1/$2/g" {} +
 }
+notif () {
+    $@ && notify-send "Job finished!"|| notify-send "Job failed!"
+}
 
 # Tmux
 function tns {
