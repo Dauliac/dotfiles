@@ -9,6 +9,7 @@ export BROWSER="/usr/bin/firefox"
 export READER="/usr/bin/zathura"
 export WORKSPACE="$HOME/Workspace"
 export TEMPLATES="$HOME/Templates"
+export PAGER="/usr/bin/less"
 
 # env #################################
 # Qt update
@@ -17,9 +18,6 @@ export QT_AUTO_SCREEN_SCALE_FACTOR=0
 QT_QPA_PLATFORMTHEME=gtk2
 # X resources
 export XDG_CONFIG_HOME="$HOME/.config"
-# Dmenu
-export SUDO_ASKPASS="$HOME/.local/bin/dmenupass"
-
 
 # bin #################################
 # Node exec
@@ -34,9 +32,9 @@ PATH="$GOPATH/bin:$PATH"
 # Local bin
 if [ -d "$HOME/.config/bin" ]; then
     export PATH="$HOME/.config/bin:$PATH"
+    # Dmenu
+    export SUDO_ASKPASS="dmenupass"
 fi
-
-exec NetworkManager
 
 ####################################
 #   BASH

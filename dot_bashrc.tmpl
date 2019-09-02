@@ -13,6 +13,7 @@ fi
 [ -f ~/.bash_aliases ] && source ~/.bash_aliases
 [ -f ~/.bash_functions ] && source ~/.bash_functions
 
+
 ####################################
 # Fzf
 ####################################
@@ -27,8 +28,13 @@ fi
 {{- end }}
 
 # Use ~~ as the trigger sequence instead of the default **
-export FZF_DEFAULT_COMMAND='fd --type f'
-export FZF_DEFAULT_OPTS='--height 15% --border --layout=reverse'
+
+# Setting fd as the default source for fzf
+export FZF_DEFAULT_COMMAND='fd --type f --color=always'
+export FZF_DEFAULT_OPTS='--height 15% --border --layout=reverse --ansi'
+
+# To apply the command to CTRL-T as well
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
 # Use fd (https://github.com/sharkdp/fd) instead of the default find
 # command for listing path candidates.
@@ -55,9 +61,6 @@ export PROMPT_COMMAND="${PROMPT_COMMAND}${PROMPT_COMMAND:+;}history -a; history 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
-
-# better less with binnary files (see metadatas)
-[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
@@ -94,5 +97,17 @@ export VAGRANT_DEFAULT_PROVIDER='libvirt'
 source <(kubectl completion bash)
 [ -f ~/.fubectl.source ] && source ~/.fubectl.source
 {{- end }}
+
+####################################
+#   LESS
+####################################
+export LESS_TERMCAP_mb=$'\E[01;31m'
+export LESS_TERMCAP_md=$'\E[01;31m'
+export LESS_TERMCAP_me=$'\E[0m'
+export LESS_TERMCAP_so=$'\E[01;44;33m'
+export LESS_TERMCAP_se=$'\E[0m'
+export LESS_TERMCAP_us=$'\E[01;32m'
+export LESS_TERMCAP_ue=$'\E[0m'
+export LESS="-FSRXI"
 
 

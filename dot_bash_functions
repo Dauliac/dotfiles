@@ -30,7 +30,7 @@ notif () {
 
 # Tmux
 function tns {
-    label=$(basename $PWD)
+    label=$(basename $PWD | sed -E "s/\.|\\|\/|\:|\~|\-|\|//g")
     if [ ! -z $1 ]; then
         label=$1
     fi
