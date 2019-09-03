@@ -21,11 +21,14 @@ chezmoi edit-config
 And add:
 ```yaml
 data:
+  # folder: /usr/share/fonts/nerd-fonts-complete/
   font: "Monoid Nerd Font Mono"
+  user: "dauliac"
   git:
     email: "<git email>"
     name: "<git name>"
     token: "<git token>"
+    gpg: "5D96D7C523157205"
   colors:
     hard_background: "1d2021"
     soft_background: "32302f"
@@ -58,6 +61,9 @@ data:
     browser: "/usr/bin/firefox"
     text: "/usr/bin/vim"
     file: "/usr/bin/nnn"
+keepassxc:
+  database: nextcloud/Documents/Keys/Daulock.kdbx
+
 ```
 
 Deploy `chezmoi` configs:
