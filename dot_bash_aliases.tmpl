@@ -86,3 +86,10 @@ alias sc="scratch"
 # Containers
 # alias kapitan="docker run -t --rm -u $(id -u) -v $(pwd):/src:delegated deepmind/kapitan"
 
+# Correction
+alias cat="bat"
+alias nano="vim"
+{{- if eq .chezmoi.hostname "ubiwan" }}
+# Fix fd on ubuntu
+alias fd="fdfind"
+{{- end }}

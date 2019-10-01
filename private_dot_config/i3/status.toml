@@ -62,7 +62,7 @@ block = "sound"
 [[block]]
 block = "battery"
 interval = 10
-device = "BAT1"
+device = "BAT0"
 format = "{percentage}% {time}"
 
 [[block]]
