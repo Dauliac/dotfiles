@@ -117,4 +117,18 @@ export LESS_TERMCAP_us=$'\E[01;32m'
 export LESS_TERMCAP_ue=$'\E[0m'
 export LESS="-FSRXI"
 
+####################################
+#   Fasd
+####################################
+# https://github.com/clvv/fasd
+eval "$(fasd --init auto)"
+alias zz='fasd_cd -d -i' # cd with interactive selection
+fasd_cache="$HOME/.fasd-init-bash"
+
+if [ "$(command -v fasd)" -nt "$fasd_cache" -o ! -s "$fasd_cache" ]; then
+  fasd --init posix-alias bash-hook bash-ccomp bash-ccomp-install >| "$fasd_cache"
+fi
+
+source "$fasd_cache"
+unset fasd_cache
 
