@@ -1,18 +1,19 @@
 # import config.
 
+UNAME := $(shell uname)
+
 # HELP
 # This will output the help for each task
 # thanks to https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 .PHONY: all
 export SHELL := /bin/bash
 
-
-help: ## This help.
-	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
-
 .DEFAULT_GOAL := help
 BIN := ~/.local/bin/chezmoi
 DIR := /tmp/dotfiles
+
+help: ## This help.
+	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 add-chezmoi: ## Download and install chezmoi
 	@echo "+ $@"
@@ -49,8 +50,16 @@ install: ## Install nerdfont, chezmoi repo, and some binaries
 		&& unzip gramalecte.zip -d grammalecte \
 		&& mv grammalecte ~/.local/share/grammalecte
 
+install-distrib: ## Install distribution packages, with yay,apt,..
+	ifeq ($(UNAME), Linux)
+	# do something Linux-y
+	endif
+	ifeq ($(UNAME), Solaris)
+	# do something Solaris-y
+	endif
+
+
+
 update: add-vim ## Chezmoi apply
 	@echo "+ $@"
-	@${BIN} apply
-
-
+	@${BIN} apply -v
