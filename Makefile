@@ -15,9 +15,15 @@ install: ## Install nerdfont, chezmoi repo, and some binaries
 	./others/./install.sh
 	cd /tmp \
 	&& git clone https://github.com/ryanoasis/nerd-fonts.git
-	@curl -o /tmp/gramalecte.zip -L -O https://grammalecte.net/grammalecte/zip/Grammalecte-fr-v1.3.0.zip
-	@extract /tmp/grammalecte.zip /tmp/grammalecte
-	@echo TODO
+
+
+grammalecte: ## Install grammalecte
+	curl -o /tmp/grammalecte.zip -L -O https://grammalecte.net/grammalecte/zip/Grammalecte-fr-v1.6.0.zip
+	unzip /tmp/grammalecte.zip -d /tmp/grammalecte
+	mkdir -p ~/.local/lib/
+	mv /tmp/grammalecte ~/.local/lib/grammalect
+
+
 
 update: install
 	chezmoi apply
