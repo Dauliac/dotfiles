@@ -35,6 +35,15 @@ add-fasd: ## Install fasd
 	@[ ! -d ${DIR}/fasd ] && (git clone https://github.com/clvv/fasd.git ${DIR}/fasd)
 	@cd ${DIR}/fasd && sudo make install
 
+add-fd: ## Install fg
+	@echo "+ $@"
+	@curl -fLo /tmp/fd.deb \
+    	https://github.com/sharkdp/fd/releases/download/v7.4.0/fd_7.4.0_amd64.deb \
+	&& sudo dpkg -i /tmp/fd.deb \
+	; rm -f /tmp/fd.deb-
+
+
+
 add-bat: ## Install bat
 	@echo "+ $@"
 	@curl -o ${DIR}/bat.tar.gz https://github.com/sharkdp/bat/releases/download/v0.12.1/bat-v0.12.1-x86_64-unknown-linux-gnu.tar.gz -OL

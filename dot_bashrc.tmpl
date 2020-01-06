@@ -132,11 +132,12 @@ fi
 source "$fasd_cache"
 unset fasd_cache
 
-{{- if eq .chezmoi.hostname "WSL" }}
+{{- if eq .chezmoi.hostname "UBIWAN-0001" }}
 ####################################
 #   WSL
 ####################################
 #ssh-agent
 eval `keychain --eval --agents ssh ~/.ssh/id_rsa`
+export DOCKER_HOST=tcp://localhost:2375
 {{- end }}
 
