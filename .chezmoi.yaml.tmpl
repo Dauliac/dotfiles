@@ -1,11 +1,16 @@
+{{- $email := promptString "email" -}}
+{{- $user := promptString "user" -}}
+{{- $gpg:= promptString "gpg id" -}}
+{{- $token:= promptString "git token" -}}
 data:
   # folder: /usr/share/fonts/nerd-fonts-complete/
   font: "Monoid Nerd Font Mono"
-  user: {{- $user := promptString "user" -}}
+  user:  "{{ $user }}"
   git:
-    email: {{- $email := promptString "email" -}}
-    name: {{- $name := promptString "name" -}}
-    gpg: {{- $gpg:= promptString "gpg id" -}}
+    email: "{{ $email }}"
+    name: "{{ $user }}"
+    gpg: "{{ $gpg}}"
+    token: "{{ $token }}"
   colors:
     hard_background: "1d2021"
     soft_background: "32302f"

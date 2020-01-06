@@ -21,30 +21,27 @@ add-chezmoi: ## Download and install chezmoi
 	@mkdir -p ~/.local/bin
 	@mv bin/chezmoi ${BIN}
 	@rm -rf bin
+	@~/.local/bin/chezmoi init
 
 
-update: install
-	chezmoi apply
-	curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-
-add-vim:
+add-vim: ## Add vim plugins and confs
 	@echo "+ $@"
 	@curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
     	https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 	@vim +PlugInstall +VundleInstall! +qall
 
-add-fasd:
+add-fasd: ## Install fasd
 	@echo "+ $@"
 	@[ ! -d ${DIR}/fasd ] && (git clone https://github.com/clvv/fasd.git ${DIR}/fasd)
 	@cd ${DIR}/fasd && sudo make install
 
-add-bat:
+add-bat: ## Install bat
 	@echo "+ $@"
 	@curl -o ${DIR}/bat.tar.gz https://github.com/sharkdp/bat/releases/download/v0.12.1/bat-v0.12.1-x86_64-unknown-linux-gnu.tar.gz -OL
 	@tar -xf ${DIR}/bat.tar.gz -C ${DIR}
 	@mv ${DIR}/bat-v0.12.1-x86_64-unknown-linux-gnu/bat ~/.local/bin/bat
 
-add-grammalecte:
+add-grammalecte: ## Add grammalecte speller
 	@echo "+ $@"
 	@curl -LO -o gramalecte.zip \
 		https://grammalecte.net/grammalecte/zip/Grammalecte-fr-v1.3.0.zip
@@ -58,7 +55,8 @@ install: ## Install nerdfont, chezmoi repo, and some binaries
 	cd /tmp/dotfiles \
 	&& curl -o Monoid.zip -L https://github.com/ryanoasis/nerd-fonts/releases/download/v2.0.0/Monoid.zip \
 		&& unzip Monoid.zip -d monoid \
-		&& mv monoid/* ~/.local/share/fonts \
+		&& mv monoid/* ~/.local/share/fonts
+	@~/.local/bin/chezmoi apply
 
 install-distrib: ## Install distribution packages, with yay,apt,..
 	ifeq ($(UNAME), Linux)
@@ -68,8 +66,3 @@ install-distrib: ## Install distribution packages, with yay,apt,..
 	# do something Solaris-y
 	endif
 
-
-
-update: add-vim ## Chezmoi apply
-	@echo "+ $@"
-	@${BIN} apply -v

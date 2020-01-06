@@ -132,3 +132,11 @@ fi
 source "$fasd_cache"
 unset fasd_cache
 
+{{- if eq .chezmoi.hostname "WSL" }}
+####################################
+#   WSL
+####################################
+#ssh-agent
+eval `keychain --eval --agents ssh ~/.ssh/id_rsa`
+{{- end }}
+
