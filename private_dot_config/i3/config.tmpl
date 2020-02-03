@@ -10,7 +10,7 @@
 #
 # Auteur: {{ .git.name }}
 
-
+aa
 
 ###############################
 #          MODIFIERS          #
@@ -229,8 +229,12 @@ set $ws11 "11"
 set $ws12 "12"
 
 # Monitor
+# Left screen
 set $monitorDefault {{ .monitors.one }}
-set $monitorTwo     {{ .monitors.two }}
+# center
+set $monitorTwo {{ .monitors.two }}
+# Right
+set $monitorThree {{ .monitors.three }}
 
 {{- if eq .chezmoi.hostname "spectre" }}
 workspace $ws1 output $monitorDefault
@@ -246,20 +250,19 @@ workspace $ws10 output $monitorTwo
 workspace $ws11 output $monitorTwo
 workspace $ws12 output $monitorTwo
 
-{{- else if eq .chezmoi.hostname "simforhealth" }}
+{{- else if eq .chezmoi.hostname "ubiwan" }}
 workspace $ws1 output $monitorDefault
 workspace $ws2 output $monitorDefault
 workspace $ws3 output $monitorDefault
 workspace $ws4 output $monitorDefault
-workspace $ws5 output $monitorDefault
-workspace $ws6 output $monitorDefault
+workspace $ws5 output $monitorTwo
+workspace $ws6 output $monitorTwo
 workspace $ws7 output $monitorTwo
 workspace $ws8 output $monitorTwo
-workspace $ws9 output $monitorTwo
-workspace $ws10 output $monitorTwo
-workspace $ws11 output $monitorTwo
-workspace $ws12 output $monitorTwo
-
+workspace $ws9 output $monitorThree
+workspace $ws10 output $monitorThree
+workspace $ws11 output $monitorThree
+workspace $ws12 output $monitorThree
 {{- end }}
 
 
@@ -292,6 +295,7 @@ bindsym $mod+Shift+agrave move container to workspace $ws10; workspace $ws10
 bindsym $mod+Shift+parenright move container to workspace $ws11; workspace $ws11
 bindsym $mod+Shift+equal move container to workspace $ws12; workspace $ws12
 
+{{- if eq .chezmoi.hostname "spectre" }}
 # Workspace 1 (Web) :
 assign [class="Google-chrome|Vivaldi-snapshot|Vivaldi|firefox"]                 $ws1
 for_window [class="Google-chrome|Vivaldi-snapshot|Vivaldi|firefox"]             move to workspace $ws1
@@ -313,7 +317,28 @@ assign [class="Spotify|keepassxc"]                                      $ws7
 for_window [class="Spotify"]                                            move to workspace $ws7
 
 # Workspace 8 (VM) :
-assign [class="VirtualBox|Rambox|Franz|virt-manager"]                                             $ws8
+assign [class="VirtualBox|Rambox|Franz|Virtual Machine Manager"]                                             $ws8
+
+
+{{- else if eq .chezmoi.hostname "ubiwan" }}
+# Workspace 1 (rambox) :
+assign [class="rambox"] $ws1
+for_window [class="rambox"] move to workspace $ws1
+
+# Workspace 2 (keepass) :
+assign [class="keepassxc"] $ws2
+
+# Workspace 3 (spotify) :
+assign [class="Spotify"] $ws3
+for_window [class="Spotify"] move to workspace $ws3
+
+# Workspace 4 (VM) :
+assign [class="VirtualBox|virt-manager"] $ws4
+
+# Workspace 5 (VM) :
+assign [class="Google-chrome|Vivaldi-snapshot|Vivaldi|Firefox"] $ws9
+for_window [class="Google-chrome|Vivaldi-snapshot|Vivaldi|Firefox"] move to workspace $ws9
+{{- end }}
 
 # Float
 for_window [class="pavucontrol|nm-connection-editor|Blueman-manager|blueman-manager|Pavucontrol|Blueberry.py"] floating enable
@@ -334,9 +359,14 @@ exec_always --no-startup-id compton
 exec_always --no-startup-id DISPLAY=:0.0 feh --bg-scale ~/Pictures/wallpaper/wave.png
 exec_always --no-startup-id DISPLAY=:0.1 feh --bg-scale ~/Pictures/wallpaper/load.png
 
-{{- else if eq .chezmoi.hostname "simforhealth" }}
-exec_always --no-startup-id DISPLAY=:0.0 feh --bg-scale ~/Pictures/wallpaper/liu.jpg
-exec_always --no-startup-id DISPLAY=:0.1 feh --bg-scale ~/Pictures/wallpaper/portail-shinto.jpg
+{{- else if eq .chezmoi.hostname "ubiwan" }}
+# Screen order
+exec_always xrandr --output {{ .monitors.one }} --auto
+exec_always xrandr --output {{ .monitors.two }} --right-of {{ .monitors.one }}
+exec_always xrandr --output {{ .monitors.three }} --right-of {{ .monitors.two }}
+
+# Wallpaper
+exec_always --no-startup-id DISPLAY=:0.0 feh --bg-scale ~/Pictures/wallpaper/hubble.jpg
 
 {{- end }}
 
@@ -362,7 +392,7 @@ exec --no-startup-id keepassxc
 exec --no-startup-id blueberry-tray
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 
-{{- else if eq .chezmoi.hostname "simforhealth" }}
+{{- else if eq .chezmoi.hostname "ubiwan" }}
 exec_always --no-startup-id "rambox"
 
 {{- end }}

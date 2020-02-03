@@ -21,16 +21,19 @@ fi
 [ -f /usr/share/fzf/key-bindings.bash ] && source /usr/share/fzf/key-bindings.bash
 [ -f /usr/share/fzf/completion.bash ] && source /usr/share/fzf/completion.bash
 
-{{- else if eq .chezmoi.hostname "simforhealth" }}
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
-[ -f ~/.fzf/shell/key-bindings.bash ] && source ~/.fzf/shell/key-bindings.bash
-
+{{- else if eq .chezmoi.hostname "ubiwan" }}
+[ -f /usr/share/doc/fzf/examples/key-bindings.bash ] && source /usr/share/doc/fzf/examples/key-bindings.bash
 {{- end }}
 
 # Use ~~ as the trigger sequence instead of the default **
 
 # Setting fd as the default source for fzf
+{{- if eq .chezmoi.hostname "ubiwan" }}
+export FZF_DEFAULT_COMMAND='fdfind --type f --color=always'
+{{- else }}
 export FZF_DEFAULT_COMMAND='fd --type f --color=always'
+{{- end }}
+
 export FZF_DEFAULT_OPTS='--height 15% --border --layout=reverse --ansi'
 
 # To apply the command to CTRL-T as well
@@ -98,6 +101,10 @@ source <(kubectl completion bash)
 [ -f ~/.fubectl.source ] && source ~/.fubectl.source
 {{- end }}
 
+#docker-compose
+# source: https://docs.docker.com/compose/completion/
+[ -f /etc/bash_completion.d/docker-compose ] && source /etc/bash_completion.d/docker-compose
+
 ####################################
 #   LESS
 ####################################
@@ -124,4 +131,13 @@ fi
 
 source "$fasd_cache"
 unset fasd_cache
+
+{{- if eq .chezmoi.hostname "UBIWAN-0001" }}
+####################################
+#   WSL
+####################################
+#ssh-agent
+eval `keychain --eval --agents ssh ~/.ssh/id_rsa`
+export DOCKER_HOST=tcp://localhost:2375
+{{- end }}
 

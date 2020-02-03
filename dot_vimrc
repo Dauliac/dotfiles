@@ -61,11 +61,11 @@ end
 " Auto reload file
 au FocusGained,BufEnter * :checktime
 
-" persist the undo tree for each file
-set undofile
-set undodir^=~/.vim/undo//
-" Disable swap file
-set noswapfile
+" UNDO and swap files
+" FROM: https://medium.com/@Aenon/vim-swap-backup-undo-git-2bf353caa02f
+set backupdir=/tmp//
+set directory=/tmp//
+set undodir=/tmp//
 
 " timeout
 set timeout
@@ -150,11 +150,6 @@ nmap <Leader>d "_d<CR>
 
 " save sudo
 command! W w !sudo tee %
-
-" nnoremap k gk
-" nnoremap J )
-" nnoremap K (
-" nnoremap µ #
 
 "====================FZF====================
 " This is the default extra key bindings
