@@ -52,6 +52,9 @@ _fzf_compgen_dir() {
   fd --type d --hidden --follow --exclude ".git" . "$1"# History
 }
 
+# PATH
+export PATH="${PATH}:${HOME}/.local/bin/"
+
 # History
 HISTSIZE=50000
 HISTFILESIZE=50000
