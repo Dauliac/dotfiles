@@ -1,0 +1,10 @@
+[Unit]
+Description=Backup nextcloud keys in ~/Backup folder
+Wants=backup.timer
+
+[Service]
+ExecStart=/usr/bin/rsync -r ~/nextcloud/Documents/Keys/ ~/Backups
+ExecStopPost='/usr/bin/notify-send backup done ! 💾'
+
+[Install]
+WantedBy=multi-user.target
