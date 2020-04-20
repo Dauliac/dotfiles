@@ -1,0 +1,10 @@
+# Nnn
+export NNN_USE_EDITOR=1
+export NNN_BMS='d:~/Documents;u:~/;D:~/Downloads;W:~/Workspace/;t:/tmp/'
+export NNN_COPIER="/home/dauliac/.config/nnn/copier.sh"
+export NNN_OPENER=mimeopen
+export NNN_TRASH=1
+export NNN_FALLBACK_OPENER=xdg-open
+export NNN_OPENER_DETACH=1
+
+
