@@ -39,6 +39,9 @@ end
 
 set wildmenu
 
+" Enable color hilight search
+set hlsearch
+
 " Protect changes between writes. Default values of
 " updatecount (200 keystrokes) and updatetime
 " (4 seconds) are fine
