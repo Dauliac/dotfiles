@@ -1,0 +1,11 @@
+[Unit]
+Description=Trash empty daily timer
+
+[Timer]
+OnCalendar=weekly
+Persistent=true
+Unit=trash-empty.service
+
+[Install]
+WantedBy=timers.target
+

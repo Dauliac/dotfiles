@@ -22,6 +22,16 @@ add-chezmoi: ## Download and install chezmoi
 	@rm -rf ${DIR}/bin
 	@${CHEZMOI} init
 
+add-services: ## Add systemd --user services
+	@echo "+ $@"
+	systemctl enable --now systemd-networkd-wait-online.service
+	systemctl --user daemon-reload
+	systemctl --user --now status timers.target
+	systemctl --user --now enable ssh-agent.service
+	systemctl --user --now enable purge-trash.service
+	systemctl --user --now enable purge-trash.timer
+	systemctl --user --now enable backup.timer
+	systemctl --user --now enable backup.service
 
 add-vim: ## Add vim plugins and confs
 	@echo "+ $@"

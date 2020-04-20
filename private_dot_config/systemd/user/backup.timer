@@ -1,0 +1,11 @@
+[Unit]
+Description=Backup files all week
+Requires=backup.service
+
+[Timer]
+Unit=backup.service
+OnCalendar=weekly
+Persistent=true
+
+[Install]
+WantedBy=timers.target
