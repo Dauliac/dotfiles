@@ -1,0 +1,3 @@
+# https://github.com/clvv/fasd
+eval "$(fasd --init posix-alias zsh-hook)"
+alias zz='fasd_cd -d -i' # cd with interactive selection
