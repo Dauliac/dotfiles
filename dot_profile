@@ -1,14 +1,5 @@
 # Profile for serverx/bash/zsh
 
-# defautl #################################
-export EDITOR="/usr/bin/nvim"
-export TERM_BIN="/usr/bin/alacritty"
-export BROWSER="/usr/bin/brave"
-export READER="/usr/bin/zathura"
-export WORKSPACE="$HOME/Workspace"
-export TEMPLATES="$HOME/Templates"
-export PAGER="/usr/bin/less"
-
 # env #################################
 # Qt update
 export QT_AUTO_SCREEN_SCALE_FACTOR=0
@@ -35,6 +26,9 @@ export npm_config_prefix=~/.node_modules
 # Go local bin
 export  GOPATH="$WORKSPACE/go"
 PATH="$GOPATH/bin:$PATH"
+
+# Rust local bin
+PATH="$CARGO_HOME/bin:$PATH"
 
 [ -x "$(which dmenupass)" ] && export SUDO_ASKPASS="dmenupass"
 

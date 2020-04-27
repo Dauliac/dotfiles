@@ -23,3 +23,4 @@ alias tmux='tmux -f $XDG_CONFIG_HOME/tmux/tmux.conf'
 export TMUX_TMPDIR="$XDG_RUNTIME_DIR"
 mkdir -p "$XDG_DATA_HOME"/wineprefixes
 export WINEPREFIX="$XDG_DATA_HOME"/wineprefixes/default
+export CARGO_HOME="$XDG_DATA_HOME"/cargo

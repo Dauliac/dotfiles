@@ -1,0 +1,10 @@
+# Defaults program variables
+
+export EDITOR="/usr/bin/nvim"
+export TERM_BIN="/usr/bin/alacritty"
+export BROWSER="/usr/bin/brave"
+export READER="/usr/bin/zathura"
+export WORKSPACE="$HOME/Workspace"
+export TEMPLATES="$HOME/Templates"
+export PAGER="/usr/bin/less"
+
