@@ -70,3 +70,6 @@ Deploy `chezmoi` configs:
 ```bash
 make update
 ```
+
+## Additionals repo
+[gitmoji selector](https://github.com/tomhoule/gitmoji-selector)
