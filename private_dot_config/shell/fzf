@@ -1,18 +1,27 @@
 # fzf
 # https://github.com/junegunn/fzf/wiki
 
-# bash
-if [ $SHELL = "/bin/bash" ]; then
-    [ -f /usr/share/fzf/key-bindings.bash ] && source /usr/share/fzf/key-bindings.bash
-    [ -f /usr/share/fzf/completion.bash ] && source /usr/share/fzf/completion.bash
-fi
-# zsh
-if [ $SHELL = "/bin/zsh" ]; then
-    [ -f /usr/share/fzf/key-bindings.zsh ] && source /usr/share/fzf/key-bindings.zsh
-    [ -f /usr/share/fzf/completion.zsh ] && source /usr/share/fzf/completion.zsh
-fi
+key_binding='.'
+completion='/usr/share/fzf/completion.'
 
-# Use ~~ as the trigger sequence instead of the default **
+_source_zsh_completion() {
+    # bash
+    if [ $SHELL = "/bin/bash" ]; then
+        key_binding="${1}.bash"
+        completion="${2}.bash"
+    fi
+    # zsh
+    if [ $SHELL = "/bin/zsh" ]; then
+        key_binding="${1}.zsh"
+        completion="${2}.zsh"
+    fi
+
+    [ -f "$key_binding" ] && source $key_binding
+    [ -f "$completion" ] && source $completion
+}
+
+_source_zsh_completion "/usr/share/fzf/key-bindings" "/usr/share/fzf/completion"
+_source_zsh_completion "$HOME/.fzf/shell/key-bindings" "$HOME/.fzf/shell/completion"
 
 # Setting fd as the default source for fzf
 export FZF_DEFAULT_COMMAND='fd --type f --color=always'

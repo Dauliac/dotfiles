@@ -33,13 +33,6 @@ add-services: ## Add systemd --user services
 	systemctl --user --now enable backup.timer
 	systemctl --user --now enable backup.service
 
-add-vim: ## Add vim plugins and confs
-	@echo "+ $@"
-	@mkdir -p ~/.vim/autoload/
-	@curl -fL -o ~/.vim/autoload/plug.vim --create-dirs \
-    	https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-	@vim +PlugInstall +VundleInstall! +qall
-
 add-fasd: ## Install fasd
 	@echo "+ $@"
 	@[ ! -d ${DIR}/fasd ] && (git clone https://github.com/clvv/fasd.git ${DIR}/fasd)
@@ -65,7 +58,6 @@ add-grammalecte: ## Add grammalecte speller
 	@unzip ${DIR}/grammalecte.zip -d ${DIR}/grammalecte
 	@rm -fr ~/.local/share/grammalecte
 	@mv -f ${DIR}/grammalecte ~/.local/share/grammalecte
-
 
 install: add-grammalecte add-bat add-fd add-fasd add-bat add-vim add-chezmoi ## Install nerdfont, chezmoi repo, and some binaries
 	@echo "+ $@"
