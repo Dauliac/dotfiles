@@ -4,16 +4,27 @@
     signingkey = 5D96D7C523157205
 
 [merge]
-    tool = vimdiff
-
-[mergetool]
-    keepBackup = false
+    tool = nvim
+    ff = true
+    commit = false
 
 [merge "ours"]
     driver = true
 
 [diff]
-    tool = vimdiff
+    tool = nvim -d
+
+[pull]
+  ff = false
+
+[branch]
+  mergeoptions = --ff-only
+
+[branch "beta"]
+  ff = true
+
+[branch "stable"]
+  ff = true
 
 [alias]
     st = status -sb
@@ -30,7 +41,6 @@
     lgh = log --follow -p
     chs = !git checkout $1 $2 && git status &&
     pull = !git pull && git submodule sync --recursive && git submodule update --init --recursive
-
     # Show files ignored by git:
     publish = git push --set-upstream origin $(git rev-parse — abbrev-ref HEAD)
     sync = !git fetch --all --prune && git rebase -p --autostash $1
@@ -41,9 +51,10 @@
     leaderboard = shortlog -s -n
     rollback = reset HEAD~
     alias = config --get-regexp alias
-
+    pl = pull --rebase
     # Tags
     drt = git push origin :refs/tags/$1
+
 [commit]
     template = ~/.gitmessage
 

@@ -23,6 +23,7 @@ Plug 'rstacruz/sparkup', {'rtp': 'vim/', 'for': 'html'}   "Html
 Plug 'christoomey/vim-tmux-navigator'        "Tmux integration in vim
 Plug 'dense-analysis/ale'                     " Liner
 Plug 'dpelle/vim-Grammalecte', {'for': ['latex', 'markdown', 'txt']}
+Plug 'mzlogin/vim-markdown-toc'
 
 call plug#end()
 

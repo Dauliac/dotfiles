@@ -6,12 +6,12 @@ completion='/usr/share/fzf/completion.'
 
 _source_zsh_completion() {
     # bash
-    if [ $SHELL = "/bin/bash" ]; then
+    if [ $SHELL = "/usr/bin/bash" ]; then
         key_binding="${1}.bash"
         completion="${2}.bash"
     fi
     # zsh
-    if [ $SHELL = "/bin/zsh" ]; then
+    if [ $SHELL = "/usr/bin/zsh" ]; then
         key_binding="${1}.zsh"
         completion="${2}.zsh"
     fi

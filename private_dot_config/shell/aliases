@@ -43,6 +43,7 @@ alias sc="scratch"
 # Correction
 alias nano="nvim"
 alias vim="nvim"
+alias vimdiff='nvim -d'
 
 # Fasd
 # https://github.com/clvbv/fasd
