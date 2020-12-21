@@ -23,7 +23,9 @@ Plug 'rstacruz/sparkup', {'rtp': 'vim/', 'for': 'html'}   "Html
 Plug 'christoomey/vim-tmux-navigator'        "Tmux integration in vim
 Plug 'dense-analysis/ale'                     " Liner
 Plug 'dpelle/vim-Grammalecte', {'for': ['latex', 'markdown', 'txt']}
-Plug 'mzlogin/vim-markdown-toc'
+Plug 'neoclide/coc.nvim' , { 'branch' : 'release' }
+
+let g:ycm_key_list_select_completion = ['<TAB>', '<Down>']
 
 call plug#end()
 
@@ -116,6 +118,22 @@ nmap <Leader>d "_d<CR>
 
 " save sudo
 command! W w !sudo tee %
+
+"==================== COC Completion ====================
+" Run before: CocInstall coc-tsserver
+let g:coc_global_extensions = [ 'coc-tsserver' ]
+" From this post:
+"   https://medium.com/swlh/ultimate-vim-typescript-setup-35b5ac5c8c4e
+" Remap keys for applying codeAction to the current line.
+nmap <leader>ac  <Plug>(coc-codeaction)
+" Apply AutoFix to problem on the current line.
+nmap <leader>qf  <Plug>(coc-fix-current)
+
+" GoTo code navigation.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
 
 "====================FZF====================
 " This is the default extra key bindings

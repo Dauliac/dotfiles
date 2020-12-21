@@ -4,3 +4,4 @@ text/plain=text.desktop
 image/jpeg=image.desktop
 application/pdf=pdf.desktop
 image/png=image.desktop
+x-scheme-handler/postman=Postman.desktop

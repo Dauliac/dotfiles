@@ -16,19 +16,7 @@ export SHELL_CONFIG=$XDG_CONFIG_HOME/shell/
 
 # Source xdg mapping
 source $XDG_CONFIG_HOME/xdg_base_dir
-
-# bin #################################
-# Node exec
-PATH="$HOME/.node_modules/bin:$PATH"
-# Node local bin
-PATH="$HOME/.local/bin:$PATH"
-export npm_config_prefix=~/.node_modules
-# Go local bin
-export  GOPATH="$WORKSPACE/go"
-PATH="$GOPATH/bin:$PATH"
-
-# Rust local bin
-PATH="$CARGO_HOME/bin:$PATH"
+source $XDG_CONFIG_HOME/shell/defaults
 
 [ -x "$(which dmenupass)" ] && export SUDO_ASKPASS="dmenupass"
 
@@ -36,3 +24,4 @@ PATH="$CARGO_HOME/bin:$PATH"
 if [[ ! $DISPLAY && $XDG_VTNR -eq 1 ]]; then
     exec startx "$XINITRC"
 fi
+
