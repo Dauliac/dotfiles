@@ -54,6 +54,7 @@ autocmd BufWritePre * %s/\s\+$//e
 
 " indentation
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+autocmd FileType typescript setlocal ts=2 sts=2 sw=2 expandtab
 autocmd FileType groovy setlocal ts=2 sts=2 sw=2 expandtab
 autocmd FileType tf setlocal ts=2 sts=2 sw=2 expandtab
 autocmd FileType ruby setlocal ts=2 sts=2 sw=2 expandtab
@@ -122,8 +123,25 @@ command! W w !sudo tee %
 "==================== COC Completion ====================
 " Run before: CocInstall coc-tsserver
 let g:coc_global_extensions = [ 'coc-tsserver' ]
-" From this post:
-"   https://medium.com/swlh/ultimate-vim-typescript-setup-35b5ac5c8c4e
+
+" To complete with C-y
+" From:
+"   https://github.com/neoclide/coc.nvim/wiki/Completion-with-sources
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+
+" use <tab> for trigger completion and navigate to the next complete item
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~ '\s'
+endfunction
+
+inoremap <silent><expr> <Tab>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<Tab>" :
+      \ coc#refresh()
+
+" From:
+"   https://medium.com/swlh/ultimate-vim-typescript-setup-34b5ac5c8c4e
 " Remap keys for applying codeAction to the current line.
 nmap <leader>ac  <Plug>(coc-codeaction)
 " Apply AutoFix to problem on the current line.

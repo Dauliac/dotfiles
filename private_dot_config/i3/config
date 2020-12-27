@@ -299,7 +299,7 @@ exec --no-startup-id nm-applet
 
 #Launch startup programs
 exec --no-startup-id blueberry-tray
-exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1gnome-keyring-daemon
+exec_always ~/.config/i3/scripts/ssh-agent
 
 # I use rambox instead
 # exec --no-startup-id "LANG=fr_FR.UTF-8; pidgin"

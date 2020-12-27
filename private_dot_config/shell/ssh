@@ -1,5 +1,18 @@
+#!/bin/bash
 # SSH agent
 # Require: systemctl --user enable ssh-agent
 #          systemctl --user start ssh-agent
 
-export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
+if [[ -f ~/.ssh/agent.env ]] ; then
+    # shellcheck source=/dev/null
+    . "${HOME}/.ssh/agent.env" > /dev/null
+    if ! kill -0 "${SSH_AGENT_PID}" > /dev/null 2>&1; then
+        echo "Stale agent file found. Spawning a new agent. "
+        eval `ssh-agent | tee ~/.ssh/agent.env`
+        ssh-add
+    fi
+else
+    echo "Starting ssh-agent"
+    eval `ssh-agent | tee ~/.ssh/agent.env`
+    ssh-add
+fi

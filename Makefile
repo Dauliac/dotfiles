@@ -59,6 +59,10 @@ add-grammalecte: ## Add grammalecte speller
 	@rm -fr ~/.local/share/grammalecte
 	@mv -f ${DIR}/grammalecte ~/.local/share/grammalecte
 
+add-fubectl: ## TODO
+	@echo "+ $@"
+	@curl -LO https://rawgit.com/kubermatic/fubectl/master/fubectl.source
+
 install: add-grammalecte add-bat add-fd add-fasd add-bat add-vim add-chezmoi ## Install nerdfont, chezmoi repo, and some binaries
 	@echo "+ $@"
 	@mkdir -p ~/.local/share/fonts
