@@ -4,7 +4,7 @@
     signingkey = 5D96D7C523157205
 
 [merge]
-    tool = nvim
+    tool = vimdiff
     ff = true
     commit = false
 
@@ -15,16 +15,25 @@
     tool = nvim -d
 
 [pull]
-  ff = false
+  rebase = true
 
 [branch]
-  mergeoptions = --ff-only
+  rebase = true
+
+[branch "develop"]
+  remote = origin
+  merge = refs/heads/develop
+  rebase = true
 
 [branch "beta"]
-  ff = true
+  remote = origin
+  merge = refs/heads/beta
+  rebase = false
 
 [branch "stable"]
-  ff = true
+  remote = origin
+  merge = refs/heads/stable
+  rebase = false
 
 [alias]
     st = status -sb
@@ -60,3 +69,6 @@
 
 [core]
     excludesfile = ~/.gitignore
+
+[mergetool "vimdiff"]
+    path = nvim
