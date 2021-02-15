@@ -1,12 +1,18 @@
 #!/bin/zsh
 # Enable colors and change prompt:
+setopt promptsubst
+setopt prompt_subst
 autoload -U colors && colors	# Load colors
-PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%}$%b "
+export PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%}$%b "
+# Add Date at end of line
+RPS1='%W %*'
+
+
 setopt autocd		# Automatically cd into typed directory.
 stty stop undef		# Disable ctrl-s to freeze terminal.
 
+
 # Git branch
-setopt prompt_subst
 autoload -Uz vcs_info
 zstyle ':vcs_info:*' stagedstr 'M'
 zstyle ':vcs_info:*' unstagedstr 'M'
@@ -79,3 +85,5 @@ source $XDG_CONFIG_HOME/xdg_base_dir
 
 # Source all files in $SHELL_CONFIG
 source <(cat "${SHELL_CONFIG:?}"*)
+
+PS1=$'${(r:$COLUMNS::\u2500:)}'$PS1
