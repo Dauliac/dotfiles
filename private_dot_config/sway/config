@@ -1,5 +1,17 @@
-#!/usr/bin/i3
-#
+# vi:syntax=config
+# xwayland disable
+
+input * {
+    xkb_layout "fr,us"
+}
+
+input <identifier> xkb_model "pc101"
+
+input type:touchpad {
+    tap enabled
+    natural_scroll enabled
+}
+
 # MODIFIERS
 set $mod Mod4
 set $alt Mod1
@@ -15,41 +27,15 @@ bar {
     status_command i3status-rs ~/.config/i3/status.toml
 }
 
-# import .Xressource colors
-set_from_resource $c_foreground foreground
-set_from_resource $c_background background
-set_from_resource $c_black_d color0
-set_from_resource $c_black_l color8
-set_from_resource $c_red_d color1
-set_from_resource $c_red_l color9
-set_from_resource $c_green_d color2
-set_from_resource $c_green_l color10
-set_from_resource $c_yellow_d color3
-set_from_resource $c_yellow_l color11
-set_from_resource $c_blue_d color4
-set_from_resource $c_blue_l color12
-set_from_resource $c_magenta_d color5
-set_from_resource $c_magenta_l color13
-set_from_resource $c_cyan_d color6
-set_from_resource $c_cyan_l color14
-set_from_resource $c_white_d color7
-set_from_resource $c_white_l color15
-
-#Colors Apply
-#class                  background    border        text          split
-client.focused          $c_red_l      $c_red_l      $c_white_d    $c_blue_l
-client.focused_inactive $c_background $c_background $c_yellow_l   $c_yellow_l
-client.unfocused        $c_background $c_background $c_yellow_l   $c_yellow_l
-client.urgent           $c_red_d      $c_red_d      $c_red_d      $c_red_d
-client.background       $c_background
-
 # KEYBINDING
 # launcher
 bindsym $mod+d exec rofi -show run
 
 # Windows movin flow
+default_border pixel 2
+
 bindsym $mod+Tab exec --no-startup-id rofi -show window
-for_window [class="^.*"] border pixel 2
+# for_window [class="^.*"] border pixel 2
 
 # start a terminal
 bindsym $mod+Return exec /usr/bin/alacritty
@@ -60,16 +46,6 @@ bindsym $mod+Control+l exec xautolock -locknow
 # start $BROWSER
 bindsym $mod+F1 exec $BROWSER
 # start a vim
-bindsym $mod+F2 exec /usr/bin/alacritty -e vim
-
-# start a ranger
-bindsym $mod+F3 exec /usr/bin/alacritty -e nnn
-
-# start a neomutt
-bindsym $mod+F4 exec /usr/bin/alacritty -e neomutt
-
-# start a weechat
-bindsym $mod+F5 exec /usr/bin/alacritty -e weechat
 
 # Start emoji keyboard
 bindsym $mod+Control+u exec dmenuunicode
@@ -96,10 +72,6 @@ bindsym $mod+l focus right
 
 # screenshot
 bindsym Print  --release exec "notify-send 'Screenshot 🖼️; screenshot"
-
-# Passhole
-bindsym $mod+p exec "ph type"
-bindsym $mod+Shift+p exec "ph type --tabbed"
 
 # scratchpad basic
 bindsym $mod+Shift+Return [instance="dropdown"] scratchpad show
@@ -282,9 +254,8 @@ for_window [title="Freetube Mini-Player"] floating toggle; exec --no-startup-id 
 bindsym $mod+Shift+b floating enable; sticky enable; exec --no-startup-id bottomleft; exec notify-send "video mode 📼"
 
 # STARTUP APPLICATIONS
-#picom: windows styler
-# sources: https://github.com/yshui/picom
-exec_always --no-startup-id picom
+#compton: windows styler
+exec_always --no-startup-id compton
 
 #Wallpaper
 exec_always --no-startup-id DISPLAY=:0.0 feh --bg-scale ~/Pictures/wallpaper/wave.png
@@ -294,16 +265,10 @@ exec_always --no-startup-id DISPLAY=:0.1 feh --bg-scale ~/Pictures/wallpaper/loa
 exec_always --no-startup-id compton
 exec_always --no-startup-id dunst
 
-exec_always --no-startup-id 'source /home/dauliac/.profile; /usr/bin/alacritty --class dropdown -t dropdown -e tmux new -s dropdown'
+exec_always --no-startup-id 'source /home/dauliac/.profile; /usr/bin/alacritty --class dropdown -t dropdown -e "tmux"'
 exec --no-startup-id pulseaudio
 exec --no-startup-id nm-applet
 
 #Launch startup programs
 exec --no-startup-id blueberry-tray
 exec_always ~/.config/i3/scripts/ssh-agent
-
-# I use rambox instead
-# exec --no-startup-id "LANG=fr_FR.UTF-8; pidgin"
-# TODO FIX ME
-#exec_always --no-startup-id "killall xautolock;xautolock"
-

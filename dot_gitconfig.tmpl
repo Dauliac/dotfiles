@@ -1,7 +1,7 @@
 [user]
-    email = juliendauliac@gmail.com
-    name = Dauliac
-    signingkey = 5D96D7C523157205
+    email = {{ .git.email }}
+    name = {{ .git.name }}
+    signingkey = {{ .git.gpg }}
 
 [merge]
     tool = vimdiff

@@ -1,5 +1,13 @@
 {
     "eslint.enable": true,
     "eslint.autoFixOnSave": true,
-    "eslint.run": "onSave"
+    "eslint.run": "onSave",
+    "java.home": "/usr/lib/jvm/java-8-openjdk/",
+    "java.configuration.runtimes": [
+        {
+            "name": "Java-8",
+            "path": "/usr/lib/jvm/java-8-openjdk/",
+            "default": true
+        }
+    ]
 }
