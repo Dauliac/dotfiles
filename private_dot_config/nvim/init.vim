@@ -24,6 +24,8 @@ Plug 'christoomey/vim-tmux-navigator'        "Tmux integration in vim
 Plug 'dense-analysis/ale'                     " Liner
 Plug 'dpelle/vim-Grammalecte', {'for': ['latex', 'markdown', 'txt']}
 Plug 'neoclide/coc.nvim' , { 'branch' : 'release' }
+Plug 'mzlogin/vim-markdown-toc'
+Plug 'tpope/vim-surround'
 
 let g:ycm_key_list_select_completion = ['<TAB>', '<Down>']
 
