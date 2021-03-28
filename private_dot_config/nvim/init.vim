@@ -26,6 +26,7 @@ Plug 'dpelle/vim-Grammalecte', {'for': ['latex', 'markdown', 'txt']}
 Plug 'neoclide/coc.nvim' , { 'branch' : 'release' }
 Plug 'mzlogin/vim-markdown-toc'
 Plug 'tpope/vim-surround'
+Plug 'kkoomen/vim-doge', { 'do': { -> doge#install() } }
 
 let g:ycm_key_list_select_completion = ['<TAB>', '<Down>']
 
@@ -278,3 +279,6 @@ let g:grammalecte_cli_py='~/.local/lib/grammalecte/grammalecte-cli.py'
 nmap <Leader>j "=system('gitmoji-selector')<C-M>P
 
 
+"====================Dodge=====================
+" Preserve existing doge settings.
+let g:doge_doc_standard_typescript = 'tsdoc'

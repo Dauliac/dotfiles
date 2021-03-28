@@ -6,14 +6,14 @@ completion='/usr/share/fzf/completion.'
 
 _source_zsh_completion() {
     # bash
-    if [ $SHELL = "/bin/bash" ]; then
+    if [[ "${SHELL}" =~ ".*bash.*" ]]; then
         key_binding="${1}.bash"
         completion="${2}.bash"
-    fi
-    # zsh
-    if [ $SHELL = "/bin/zsh" ]; then
+    elif [[ "${SHELL}" =~ ".*zsh.*" ]]; then
         key_binding="${1}.zsh"
         completion="${2}.zsh"
+    else
+        echo 1
     fi
 
     [ -f "$key_binding" ] && source $key_binding

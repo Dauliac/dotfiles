@@ -1,0 +1,18 @@
+if [[ -e "${HOME}/.basher/bin" ]]
+then
+    export PATH="$HOME/.basher/bin:$PATH"
+
+    if [[ -z ${BASHER_INIT} ]]
+    then
+        if [[ "${SHELL}" =~ .*zsh ]]
+        then
+            eval "$(basher init - zsh)"
+        fi
+        if [[ "${SHELL}" =~ .*bash ]]
+        then
+            eval "$(basher init - bash)"
+        fi
+        BASHER_INIT=1
+    fi
+
+fi

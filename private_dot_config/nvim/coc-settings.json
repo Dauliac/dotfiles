@@ -9,5 +9,12 @@
             "path": "/usr/lib/jvm/java-8-openjdk/",
             "default": true
         }
-    ]
+    ],
+    "languageserver": {
+    "terraform": {
+      "command": "terraform-lsp",
+      "filetypes": ["terraform"],
+      "initializationOptions": {}
+    }
+  }
 }
