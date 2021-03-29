@@ -30,9 +30,10 @@ notif () {
 
 # Screenshot
 function screenshot {
-    file="/tmp/$(date '+%Y-%m-%d')_screenshot.png"
+    file="/tmp/$(date '+%Y-%m-%d-%M-%S')_screenshot.png"
     scrot -s "$file"
     xclip -selection clipboard -t image/png -i "$file"
+    rm -f $file
 }
 
 # Tmux
