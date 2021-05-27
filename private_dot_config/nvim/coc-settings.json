@@ -11,10 +11,11 @@
         }
     ],
     "languageserver": {
-    "terraform": {
-      "command": "terraform-lsp",
-      "filetypes": ["terraform"],
-      "initializationOptions": {}
-    }
-  }
+        "terraform": {
+          "command": "terraform-lsp",
+          "filetypes": ["terraform"],
+          "initializationOptions": {}
+        }
+    },
+    "clangd.compilationDatabasePath": "./build/"
 }

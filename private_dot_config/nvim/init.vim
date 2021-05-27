@@ -287,3 +287,4 @@ let g:doge_doc_standard_typescript = 'tsdoc'
 
 "====================Chezmoi=====================
 autocmd BufWritePost ~/.local/share/chezmoi/* ! chezmoi apply --source-path %
+
