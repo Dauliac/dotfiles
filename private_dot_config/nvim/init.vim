@@ -27,6 +27,7 @@ Plug 'neoclide/coc.nvim' , { 'branch' : 'release' }
 Plug 'mzlogin/vim-markdown-toc'
 Plug 'tpope/vim-surround'
 Plug 'kkoomen/vim-doge', { 'do': { -> doge#install() } }
+Plug 'aliou/bats.vim'
 
 let g:ycm_key_list_select_completion = ['<TAB>', '<Down>']
 
@@ -283,3 +284,6 @@ nmap <Leader>j "=system('gitmoji-selector')<C-M>P
 "====================Dodge=====================
 " Preserve existing doge settings.
 let g:doge_doc_standard_typescript = 'tsdoc'
+
+"====================Chezmoi=====================
+autocmd BufWritePost ~/.local/share/chezmoi/* ! chezmoi apply --source-path %
