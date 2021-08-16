@@ -1,3 +1,4 @@
+# vi: set ft=sh :
 # Profile for serverx/bash/zsh
 
 # env #################################
@@ -21,23 +22,23 @@ source $XDG_CONFIG_HOME/shell/defaults
 [ -x "$(which dmenupass)" ] && export SUDO_ASKPASS="dmenupass"
 
 # STARTX
-if [[ -z  ${DISPLAY} ]] && [[ "$(tty)" == "/dev/tty1" ]]; then
-    eval $(/usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh)
-    export SSH_AUTH_SOCK
+# if [[ -z  ${DISPLAY} ]] && [[ "$(tty)" == "/dev/tty1" ]]; then
+#     eval $(/usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh)
+#     export SSH_AUTH_SOCK
 
-    # Wayland
-    # IF wayland is installed
-    # Don't set it
-    # export GDK_BACKEND=wayland
-    # export QT_QPA_PLATFORMTHEME=wayland
-    # export CULTTER_BACKEND=wayland
-    # export CULTTER_VIDEODRIVER=wayland
+#     # Wayland
+#     # IF wayland is installed
+#     # Don't set it
+#     # export GDK_BACKEND=wayland
+#     # export QT_QPA_PLATFORMTHEME=wayland
+#     # export CULTTER_BACKEND=wayland
+#     # export CULTTER_VIDEODRIVER=wayland
 
-    # Grafical server
-    # exec sway
+#     # Grafical server
+#     # exec sway
 
-    # X11
-    # [[ -f ~/.Xresources ]] && xrdb -merge -I$HOME ~/.Xresources
-    exec startx "$XINITRC"
-fi
+#     # X11
+#     # [[ -f ~/.Xresources ]] && xrdb -merge -I$HOME ~/.Xresources
+#     exec startx "$XINITRC"
+# fi
 
