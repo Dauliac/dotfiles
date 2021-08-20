@@ -16,20 +16,23 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " Fzf
 Plug 'junegunn/fzf.vim'                      "Fzf integration and completion
 Plug 'tonychg/MagicTemplate'                 "Templates
 Plug 'airblade/vim-gitgutter'                "Git display
-Plug 'fatih/vim-go'                          "Syntax
 Plug 'scrooloose/nerdcommenter' "simply commenter
-Plug 'google/vim-jsonnet', {'for': 'jsonnet'}   "jsonnet
-Plug 'rstacruz/sparkup', {'rtp': 'vim/', 'for': 'html'}   "Html
+" Plug 'google/vim-jsonnet', {'for': 'jsonnet'}   "jsonnet
+" Plug 'rstacruz/sparkup', {'rtp': 'vim/', 'for': 'html'}   "Html
 Plug 'christoomey/vim-tmux-navigator'        "Tmux integration in vim
 " Plug 'dense-analysis/ale'                     " Liner
 Plug 'dpelle/vim-Grammalecte', {'for': ['latex', 'markdown', 'txt']}
-Plug 'rhysd/vim-clang-format'
-Plug 'neoclide/coc.nvim' , { 'branch' : 'release' }
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " Better hilight
+
 Plug 'mzlogin/vim-markdown-toc'
 Plug 'tpope/vim-surround'
-Plug 'kkoomen/vim-doge', { 'do': { -> doge#install() } }
 Plug 'aliou/bats.vim'
+Plugin 'frazrepo/vim-rainbow'
+
+" Moderns that rule them all
+Plug 'sbdchd/neoformat' " formatter
+Plug 'neoclide/coc.nvim' , { 'branch' : 'release' } " Errors
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " Better hilight
+Plug 'kkoomen/vim-doge', { 'do': { -> doge#install() } } " Documentation
 
 let g:ycm_key_list_select_completion = ['<TAB>', '<Down>']
 
@@ -186,6 +189,9 @@ nmap <leader>f  <Plug>(coc-format-selected)
 " NOTE: Please see `:h coc-status` for integrations with external plugins that
 " provide custom statusline: lightline.vim, vim-airline.
 set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+
+" Vim Coc pairs
+autocmd FileType markdown let b:coc_pairs_disabled = ['`']
 
 "====================FZF====================
 " This is the default extra key bindings
