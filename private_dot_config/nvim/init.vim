@@ -26,7 +26,7 @@ Plug 'dpelle/vim-Grammalecte', {'for': ['latex', 'markdown', 'txt']}
 Plug 'mzlogin/vim-markdown-toc'
 Plug 'tpope/vim-surround'
 Plug 'aliou/bats.vim'
-Plugin 'frazrepo/vim-rainbow'
+Plug 'frazrepo/vim-rainbow'
 
 " Moderns that rule them all
 Plug 'sbdchd/neoformat' " formatter
