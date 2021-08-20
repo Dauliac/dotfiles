@@ -351,3 +351,9 @@ require'nvim-treesitter.configs'.setup {
 }
 EOF
 
+"====================NeoformatTreesitter=====================
+" Format on save: https://github.com/sbdchd/neoformat#basic-usage
+augroup fmt
+  autocmd!
+  autocmd BufWritePre * undojoin | Neoformat
+augroup END
