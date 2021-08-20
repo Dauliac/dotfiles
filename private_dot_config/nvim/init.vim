@@ -26,7 +26,6 @@ Plug 'dpelle/vim-Grammalecte', {'for': ['latex', 'markdown', 'txt']}
 Plug 'mzlogin/vim-markdown-toc'
 Plug 'tpope/vim-surround'
 Plug 'aliou/bats.vim'
-Plug 'frazrepo/vim-rainbow'
 
 " Moderns that rule them all
 Plug 'sbdchd/neoformat' " formatter
@@ -352,5 +351,3 @@ require'nvim-treesitter.configs'.setup {
 }
 EOF
 
-"====================Rainbow=====================
-au FileType c,cpp,objc,objcpp,js,ts,php call rainbow#load()
