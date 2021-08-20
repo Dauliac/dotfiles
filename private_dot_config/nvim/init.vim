@@ -351,3 +351,6 @@ require'nvim-treesitter.configs'.setup {
   },
 }
 EOF
+
+"====================Rainbow=====================
+au FileType c,cpp,objc,objcpp,js,ts,php call rainbow#load()
