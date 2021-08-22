@@ -5,6 +5,9 @@ let &t_SI = "\<Esc>]12;orange\x7"
 " use a red cursor otherwise
 let &t_EI = "\<Esc>]12;red\x7"
 silent !echo -ne "\033]12;red\007"
+" reset cursor when vim exits
+autocmd VimLeave * silent !echo -ne "\033]112\007"
+" use \003]12;gray\007 for gnome-terminal
 
 set encoding=utf-8
 set mouse=a
@@ -21,7 +24,7 @@ set nu
 set nowrap
 set noswapfile
 set nobackup
-set undodir=~/.local/cache/vim/undodir
+set undodir=~/.vim/undodir
 set undofile
 set incsearch
 set termguicolors
@@ -41,14 +44,11 @@ set updatetime=50
 " Don't pass messages to |ins-completion-menu|.
 set shortmess+=c
 
-set colorcolumn=80
+set colorcolumn=120
 
 "Use X clipboard
-set clipboard+=unnamedplus
 
-"Syntax completion
 set omnifunc=syntaxComplete#Complete
 
 set list listchars=tab:▶-,trail:·,precedes:←,extends:→,eol:¬,nbsp:␣
 set backspace=indent,eol,start
-
