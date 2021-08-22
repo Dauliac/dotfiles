@@ -38,9 +38,10 @@ set colorcolumn=80
 
 "Use X clipboard
 set clipboard+=unnamedplus
-set clipboard=unnamedplus
+
 "Syntax completion
 set omnifunc=syntaxComplete#Complete
 
 set list listchars=tab:▶-,trail:·,precedes:←,extends:→,eol:¬,nbsp:␣
 set backspace=indent,eol,start
+
