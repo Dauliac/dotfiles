@@ -3,6 +3,9 @@ fun! GotoWindow(id)
     MaximizerToggle
 endfun
 
+" Do not forget to run VimspectorInstall at first time
+let g:vimspector_install_gadgets = [ 'debugpy', 'vscode-cpptools', 'CodeLLDB' ]
+
 " Debugger remaps
 nnoremap <leader>m :MaximizerToggle!<CR>
 nnoremap <leader>dd :call vimspector#Launch()<CR>
