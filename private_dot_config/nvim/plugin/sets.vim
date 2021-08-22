@@ -1,4 +1,11 @@
+" Cursor
 set guicursor=
+" use an orange cursor in insert mode
+let &t_SI = "\<Esc>]12;orange\x7"
+" use a red cursor otherwise
+let &t_EI = "\<Esc>]12;red\x7"
+silent !echo -ne "\033]12;red\007"
+
 set encoding=utf-8
 set mouse=a
 set number
@@ -14,7 +21,7 @@ set nu
 set nowrap
 set noswapfile
 set nobackup
-set undodir=~/.vim/undodir
+set undodir=~/.local/cache/vim/undodir
 set undofile
 set incsearch
 set termguicolors
