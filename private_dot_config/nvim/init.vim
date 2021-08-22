@@ -58,7 +58,6 @@ au FocusGained,BufEnter * :checktime
 " automatically deletes all tralling whitespace on save.
 autocmd BufWritePre * %s/\s\+$//e
 
-" indentation
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
 autocmd FileType typescript setlocal ts=2 sts=2 sw=2 expandtab
 autocmd FileType groovy setlocal ts=2 sts=2 sw=2 expandtab
