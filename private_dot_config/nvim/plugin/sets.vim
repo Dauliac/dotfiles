@@ -42,11 +42,12 @@ set cmdheight=1
 set updatetime=50
 
 " Don't pass messages to |ins-completion-menu|.
-set shortmess+=c
+" set shortmess+=c
 
 set colorcolumn=120
 
 "Use X clipboard
+set clipboard+=unnamedplus
 
 set omnifunc=syntaxComplete#Complete
 
