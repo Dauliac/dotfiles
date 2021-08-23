@@ -60,12 +60,6 @@ autocmd BufWritePre * %s/\s\+$//e
 
 let $BASH_ENV = "~/.bash_aliases"
 
-" color
-" syntax on
-
-" filetype plugin on
-" filetype plugin indent on
-
 " change leader
 let mapleader = ','
 
@@ -74,3 +68,7 @@ nmap <Leader>d "_d<CR>
 
 " save sudo
 command! W w !sudo tee %
+
+" Enable move in visual mode
+vnoremap J :m '>+1<CR>gv=gv
+vnoremap K :m '<-2<CR>gv=gv
