@@ -25,8 +25,6 @@ Plug 'vim-airline/vim-airline'  "Bottom bar
 Plug 'majutsushi/tagbar'        "right bar with fuctions
 Plug 'Yggdroot/indentLine'      "vertical indent symbol
 Plug 'lilydjwg/colorizer'       "Hilight color
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " Fzf
-Plug 'junegunn/fzf.vim'                      "Fzf integration and completion
 Plug 'tonychg/MagicTemplate'                 "Templates
 Plug 'airblade/vim-gitgutter'                "Git display
 Plug 'scrooloose/nerdcommenter' "simply commenter
@@ -39,6 +37,17 @@ Plug 'dpelle/vim-Grammalecte', {'for': ['latex', 'markdown', 'txt']}
 Plug 'mzlogin/vim-markdown-toc'
 Plug 'tpope/vim-surround'
 Plug 'aliou/bats.vim'
+
+" Fuzzy "
+" fzf
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " Fzf
+Plug 'junegunn/fzf.vim'                      "Fzf integration and completion
+" telescope requirements...
+Plug 'nvim-lua/popup.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-telescope/telescope-fzy-native.nvim'
+
 
 " Moderns that rule them all
 Plug 'gruvbox-community/gruvbox' " Color scheme
