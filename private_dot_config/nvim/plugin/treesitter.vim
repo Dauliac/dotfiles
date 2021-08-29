@@ -9,7 +9,9 @@ require'nvim-treesitter.configs'.setup {
     "toml",
     "typescript",
     "cmake",
+    "vim",
     "dockerfile",
+    "comment",
     "vim",
     "json"
   }, -- one of "all", "maintained" (parsers with maintainers), or a list of languages
