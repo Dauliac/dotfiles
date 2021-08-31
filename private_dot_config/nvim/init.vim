@@ -41,13 +41,8 @@ Plug 'aliou/bats.vim'
 " Fuzzy "
 " fzf
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " Fzf
-Plug 'junegunn/fzf.vim'                      "Fzf integration and completion
+Plug 'junegunn/fzf.vim' "Fzf integration and completion
 " telescope requirements...
-Plug 'nvim-lua/popup.nvim'
-Plug 'nvim-lua/plenary.nvim'
-Plug 'nvim-telescope/telescope.nvim'
-Plug 'nvim-telescope/telescope-fzy-native.nvim'
-
 
 " Moderns that rule them all
 Plug 'gruvbox-community/gruvbox' " Color scheme
