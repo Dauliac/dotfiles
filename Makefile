@@ -63,10 +63,10 @@ add-fubectl: ## TODO
 	@echo "+ $@"
 	@curl -LO https://rawgit.com/kubermatic/fubectl/master/fubectl.source
 
-install: add-grammalecte add-bat add-fd add-fasd add-bat add-vim add-chezmoi ## Install nerdfont, chezmoi repo, and some binaries
+install: add-grammalecte add-bat add-fd add-fasd ## Install nerdfont, chezmoi repo, and some binaries
 	@echo "+ $@"
-	@mkdir -p ~/.local/share/fonts
-	cd /tmp/dotfiles \
+	@mkdir -p ~/.local/share/fonts /tmp/tmp.vOf5upPFLZ/monoid/* \
+	&& cd /tmp/dotfiles \
 	&& curl -o ${DIR}/Monoid.zip -L https://github.com/ryanoasis/nerd-fonts/releases/download/v2.0.0/Monoid.zip \
 		&& unzip ${DIR}/Monoid.zip -d monoid \
 		&& mv -f ${DIR}/monoid/* ~/.local/share/fonts

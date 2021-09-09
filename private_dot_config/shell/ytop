@@ -1,0 +1,10 @@
+# ytop
+# https://github.com/cjbassi/ytop
+
+command -v ytop &> /dev/null
+if [[ $? -eq 0 ]]
+then
+    alias htop="ytop"
+fi
+
+
