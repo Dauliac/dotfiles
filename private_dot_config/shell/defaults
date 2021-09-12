@@ -1,6 +1,7 @@
 # Defaults program variables
 [[ -f "/usr/bin/nvim" ]] && export EDITOR="/usr/bin/nvim"
 [[ -f "/usr/local/bin/nvim" ]] && export EDITOR="/usr/local/bin/nvim"
+export TERM="xterm-256color-italic"
 export TERM_BIN="/usr/bin/alacritty"
 export BROWSER="/usr/bin/brave"
 export READER="/usr/bin/zathura"
