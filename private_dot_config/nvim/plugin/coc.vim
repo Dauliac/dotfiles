@@ -11,7 +11,7 @@ else
   set signcolumn=yes
 endif
 " Run before: CocInstall coc-tsserver
-let g:coc_global_extensions = [ 'coc-tsserver' ]
+let g:coc_global_extensions = [ 'coc-tsserver', "coc-phpls", "coc-yaml", "coc-json", "coc-pyright"]
 
 " To complete with C-y
 " From:
