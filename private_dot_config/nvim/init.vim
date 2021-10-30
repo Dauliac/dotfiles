@@ -52,6 +52,10 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " Better hilight
 Plug 'kkoomen/vim-doge', { 'do': { -> doge#install() } } " Documentation
 Plug 'puremourning/vimspector' " Debugger
 
+" TODO Comment
+Plug 'nvim-lua/plenary.nvim'
+Plug 'folke/todo-comments.nvim'
+
 let g:ycm_key_list_select_completion = ['<TAB>', '<Down>']
 
 call plug#end()
