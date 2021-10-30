@@ -52,9 +52,17 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " Better hilight
 Plug 'kkoomen/vim-doge', { 'do': { -> doge#install() } } " Documentation
 Plug 'puremourning/vimspector' " Debugger
 
-" TODO Comment
+" TODO Comments
 Plug 'nvim-lua/plenary.nvim'
 Plug 'folke/todo-comments.nvim'
+
+lua << EOF
+  require("todo-comments").setup {
+    -- your configuration comes here
+    -- or leave it empty to use the default settings
+    -- refer to the configuration section below
+  }
+EOF
 
 let g:ycm_key_list_select_completion = ['<TAB>', '<Down>']
 
