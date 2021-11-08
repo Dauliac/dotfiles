@@ -4,8 +4,8 @@ require'nvim-treesitter.configs'.setup {
     "cpp",
     "bash",
     "php",
+    "hcl",
     "regex",
-    "yaml",
     "toml",
     "typescript",
     "cmake",
@@ -28,3 +28,5 @@ require'nvim-treesitter.configs'.setup {
 }
 EOF
 
+" For terraform
+autocmd BufEnter *.tf :setlocal filetype=hcl

@@ -1,0 +1,9 @@
+# vi: set ft=bash:
+# exa
+# https://the.exa.website
+
+command -v gping &> /dev/null
+if [[ $? -eq 0 ]]
+then
+    alias ping="gping"
+fi
