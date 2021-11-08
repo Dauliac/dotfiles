@@ -51,5 +51,8 @@ set clipboard+=unnamedplus
 
 set omnifunc=syntaxComplete#Complete
 
-set list listchars=tab:▶-,trail:·,precedes:←,extends:→,eol:¬,nbsp:␣
+" set list listchars=tab:▶-,trail:·,precedes:←,extends:→,eol:¬,nbsp:␣
 set backspace=indent,eol,start
+
+" For wichkey
+set timeoutlen=500
