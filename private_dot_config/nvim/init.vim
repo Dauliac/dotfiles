@@ -23,7 +23,6 @@ endif
 call plug#begin('~/.config/nvim/plugged')
 Plug 'vim-airline/vim-airline'  "Bottom bar
 Plug 'majutsushi/tagbar'        "right bar with fuctions
-Plug 'Yggdroot/indentLine'      "vertical indent symbol
 Plug 'lilydjwg/colorizer'       "Hilight color
 Plug 'tonychg/MagicTemplate'                 "Templates
 Plug 'airblade/vim-gitgutter'                "Git display
@@ -50,19 +49,19 @@ Plug 'sbdchd/neoformat' " formatter
 Plug 'neoclide/coc.nvim' , { 'branch' : 'release' } " Errors
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " Better hilight
 Plug 'kkoomen/vim-doge', { 'do': { -> doge#install() } } " Documentation
-Plug 'puremourning/vimspector' " Debugger
+" No disctraction mode
+Plug 'folke/zen-mode.nvim'
+" Intellij integration
+" Install deoplete for code completion.
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'beeender/Comrade'
 
-" TODO Comments
-Plug 'nvim-lua/plenary.nvim'
-Plug 'folke/todo-comments.nvim'
+Plug 'lukas-reineke/indent-blankline.nvim'
 
-lua << EOF
-  require("todo-comments").setup {
-    -- your configuration comes here
-    -- or leave it empty to use the default settings
-    -- refer to the configuration section below
-  }
-EOF
+" Magic helper
+Plug 'folke/which-key.nvim'
+" Add target objects
+Plug 'wellle/targets.vim'
 
 let g:ycm_key_list_select_completion = ['<TAB>', '<Down>']
 
