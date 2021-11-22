@@ -62,6 +62,8 @@ Plug 'lukas-reineke/indent-blankline.nvim'
 Plug 'folke/which-key.nvim'
 " Add target objects
 Plug 'wellle/targets.vim'
+" Markdown preview
+Plug 'oknozor/illumination', { 'dir': '~/.illumination', 'do': '.install.sh' }
 
 let g:ycm_key_list_select_completion = ['<TAB>', '<Down>']
 
