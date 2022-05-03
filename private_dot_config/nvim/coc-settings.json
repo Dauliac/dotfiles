@@ -22,7 +22,7 @@
   "cmake": {
     "lsp": {
       "enable": false
-    },
-  }
+    }
+  },
   "clangd.compilationDatabasePath": "./build/"
 }
