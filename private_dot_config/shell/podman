@@ -1,8 +1,0 @@
-# exa
-# https://the.exa.website
-
-command -v podman &> /dev/null
-if [[ $? -eq 0 ]]
-then
-    alias docker="podman"
-fi

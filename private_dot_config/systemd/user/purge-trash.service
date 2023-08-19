@@ -1,9 +1,0 @@
-[Unit]
-Description=Purge trash files older than 10 days
-Wants=purge-trash.timer
-
-[Service]
-ExecStart=/usr/bin/trash-empty 10
-
-[Install]
-WantedBy=multi-user.target

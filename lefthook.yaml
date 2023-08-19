@@ -1,0 +1,20 @@
+---
+# SPDX-License-Identifier: AGPL-3.0-or-later
+skip_output: [meta, success]
+pre-commit:
+  parallel: false
+  commands:
+    check:
+      tags: check
+      run: nix flake check
+    formatter-nix:
+      tags: formatter
+      glob: '*.nix'
+      run: nix fmt
+      stage_fixed: true
+pre-push:
+  parallel: true
+  commands:
+    check:
+      tags: nix checks
+      run: nix flake check

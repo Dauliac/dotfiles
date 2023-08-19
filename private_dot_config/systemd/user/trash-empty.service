@@ -1,8 +1,0 @@
-#https://github.com/stesind/trash-empty
-[Unit]
-Description=weekly trash-empty service
-
-[Service]
-ExecStart=/usr/bin/trash-empty
-ExecStopPost=/usr/bin/notify-send trash cleaned up ! 🗑️'
-

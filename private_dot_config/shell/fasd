@@ -1,4 +1,0 @@
-# https://github.com/clvv/fasd
-eval "$(fasd --init posix-alias auto)"
-alias zz='fasd_cd -d -i' # cd with interactive selection
-_FASD_DATA="${XDG_CACHE_HOME}fasd"

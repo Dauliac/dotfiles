@@ -1,3 +1,0 @@
-CREATE DATABASE xxx;
-GRANT USAGE ON *.* to user@localhost identified by 'passwd';
-GRANT ALL PRIVILEGES ON database.* to user@localhost;

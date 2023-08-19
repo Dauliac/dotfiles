@@ -1,5 +1,0 @@
-# Ocaml
-
-if [ -x opam ]; then
-    eval $(opam env)
-fi
