@@ -22,4 +22,6 @@ tasks:
     desc: Install project
     cmds:
       - |
-        nix profile install . --refresh
+        nix run home-manager/master -- \
+          switch \
+          --flake .
