@@ -107,6 +107,35 @@
     starship = {
       enable = true;
       enableZshIntegration = true;
+      settings = {
+        add_newline = true;
+        character = {
+          success_symbol = "[➜](bold green)";
+          error_symbol = "[✗](bold red) ";
+          vicmd_symbol = "[V](bold green) ";
+        };
+        cmd_duration = {
+          min_time = 500;
+        };
+        git_branch = {
+          symbol = "🌱 ";
+        };
+
+        git_state = {
+          cherry_pick = "[🍒 PICKING](bold red)";
+          merge = "[🔀 MERGE](bold red)";
+        };
+
+        git_commit = {
+          commit_hash_length = 4;
+          tag_symbol = "🔖 ";
+        };
+
+        kubernetes = {
+          format = "on [ ⛵ $context \($namespace\) ] (dimmed green) ";
+          disabled = false;
+        };
+      };
     };
     direnv = {
       enable = true;
@@ -123,7 +152,7 @@
     git = {
       enable = true;
       aliases = {
-        st = "status - sb";
+        st = "status -sb";
         br = "branch -a";
         co = "checkout";
         l = "log --graph --decorate --pretty=oneline --abbrev-commit";
@@ -156,6 +185,9 @@
         "*.iso"
       ];
       extraConfig = {
+        core = {
+          editor = "nvim";
+        };
         commit = {
           template = "${config.xdg.configHome}/git/commit-template";
         };
@@ -190,5 +222,20 @@
     #   git = true;
     #   icons = true;
     # };
+    wezterm = {
+      enable = true;
+      enableZshIntegration = true;
+      extraConfig = ''
+        local
+        wezterm = require 'wezterm';
+
+        return {
+          color_scheme = "Gruvbox Dark",
+          window_background_opacity = 0.89,
+          font = wezterm.font("FiraCode Nerd Font Mono", {bold=false, weight = "Regular", stretch = "Normal", italic = false}),
+          default_cursor_style = "SteadyUnderline",
+        }
+      '';
+    };
   };
 }
