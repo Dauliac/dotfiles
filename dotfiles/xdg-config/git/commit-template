@@ -1,0 +1,30 @@
+feat: replace me
+# documentation:
+#   [<issue id>][<type>] <Title>
+#
+# <type>: can respect gitmoji convention:https://gitmoji.carloscuesta.me/
+# <Title>: must shortly describe commit content
+# e.g:
+# [ubiback/web#12][refacto] Refacto my banana
+# # GITLAB:
+# You can use quick action to assign persons to future merge request
+# /assign @jean.thomas
+
+# If applied, this commit will...
+# You can also ad CRM issues link
+📑 Description:
+
+# bugfix, features, improvements, CI, Client request ...
+ℹ Why is it necessary ?
+-
+
+# Respect specs, partial respectfull, POC
+🔝 How does the change address the issue ?
+-
+
+# Refacto code on other repo, break/improve services, pipeline, dev environment
+⚠ What side effects does this change have ?
+-
+
+📅TODO for the future:
+-

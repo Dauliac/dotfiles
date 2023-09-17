@@ -35,13 +35,14 @@ tasks:
       - statix fix .
     sources:
       - "**/*.nix"
-  format:sh:
-    silent: true
-    desc: Format sh files
-    sources:
-      - "**/*.sh"
-    cmds:
-      - shfmt -w -i 2 **/*.sh
+  # TODO: re-enable it if sh files are added
+  # format:sh:
+  #   silent: true
+  #   desc: Format sh files
+  #   sources:
+  #     - "**/*.sh"
+  #   cmds:
+  #     - shfmt -w -i 2 **/*.sh
   format:
     silent: true
     desc: Format all files
@@ -63,5 +64,5 @@ tasks:
   check:
     silent: true
     deps: 
-      - check:sh
+      # - check:sh
       - check:typo

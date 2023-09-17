@@ -5,8 +5,8 @@
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   home.username = "dauliac";
-  home.homeDirectory = "/home/dauliac";
-  xdg.cacheHome = "/home/dauliac/.local/cache/";
+  home.homeDirectory = "/home/dauliac/";
+  xdg.enable = true;
 
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
@@ -15,23 +15,15 @@
   # You should not change this value, even if you update Home Manager. If you do
   # want to update the value, then make sure to first check the Home Manager
   # release notes.
-  home.stateVersion = "23.05"; # Please read the comment before changing.
+  home.stateVersion = "23.11"; # Please read the comment before changing.
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
   home.packages = [
     pkgs.go-task
     pkgs.direnv
-    pkgs.git
-    pkgs.git
     pkgs.ghq
     pkgs.silver-searcher # search
-    pkgs.zellij # terminal multiplexer
-    pkgs.fzf # fuzzy finder
-    pkgs.delta # diff alternative
-    pkgs.bat # cat alternative
-    pkgs.eza # ls alternative
-    pkgs.starship # Prompt
     pkgs.ncdu # Du alternative
     pkgs.duf # df alternative
     pkgs.fd # find alternative
@@ -39,21 +31,16 @@
     pkgs.gping # ping alternative
     pkgs.procs # ps alternative
     pkgs.hyperfine # benchmarking
-    pkgs.broot # tree alternative
-    pkgs.tealdeer # Documentation
     pkgs.dog # dig alternative
-    # # It is sometimes useful to fine-tune packages, for example, by applying
-    # # overrides. You can do that directly here, just don't forget the
-    # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
+    pkgs.trash-cli # shell trash
+    pkgs.eza # TODO: check how to upgrade home-manager to use eza configs
+    pkgs.k9s # kubernetes client
     # # fonts?
     (pkgs.nerdfonts.override { fonts = [ "FiraMono" ]; })
 
-    # # You can also create simple shell scripts directly inside your
-    # # configuration. For example, this adds a command 'my-hello' to your
-    # # environment:
-    # (pkgs.writeShellScriptBin "my-hello" ''
-    #   echo "Hello, ${config.home.username}!"
-    # '')
+    (pkgs.writeShellScriptBin "work" ''
+      cd "$(ghq root)/$(ghq list | fzf)"
+    '')
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
@@ -68,33 +55,129 @@
     source = ./dotfiles/xdg-config;
     recursive = true;
   };
-  # home.file = {
-  # ".zprofile".source = dotfiles/profile.sh;
-  # ".profile".source = config.lib.file.mkOutOfStoreSymlink dotfiles/profile;
 
-  # xdg.configFile."shell/defaults.bash".source = ./dotfiles/shell/defaults.bash;
-
-  # # You can also set the file content immediately.
-  # ".gradle/gradle.properties".text = ''
-  #   org.gradle.console=verbose
-  #   org.gradle.daemon.idletimeout=3600000
-  # '';
-  # };
-
-  # You can also manage environment variables but you will have to manually
-  # source
-  #
-  #  ~/.nix-profile/etc/profile.d/hm-session-vars.sh
-  #
-  # or
-  #
-  #  /etc/profiles/per-user/dauliac/etc/profile.d/hm-session-vars.sh
-  #
-  # if you don't want to manage your shell through Home Manager.
   home.sessionVariables = {
-    # EDITOR = "emacs";
+    EDITOR = "nvim";
+    PAGER = "bat";
   };
 
-  # Let Home Manager install and manage itself.
+  home.shellAliases = {
+    cat = "bat";
+    clip = "xclip -selection c";
+    restore = "trash-restore";
+    rm = "trash-put";
+    watch = "viddy";
+    ping = "gping";
+    ls = "eza";
+    tree = "eza --tree";
+    ps = "procs";
+    df = "duf";
+    du = "ncdu";
+  };
+
   programs.home-manager.enable = true;
+
+  programs = {
+    zsh = {
+      enable = true;
+      enableCompletion = true;
+      enableAutosuggestions = true;
+      autocd = true;
+      defaultKeymap = "vicmd";
+      syntaxHighlighting.enable = true;
+
+      history = {
+        expireDuplicatesFirst = true;
+        extended = true;
+        ignoreAllDups = true;
+        ignorePatterns = [ "rm *" "pkill *" "ls *" ];
+        path = "${config.xdg.dataHome}/zsh/zsh_history";
+        save = 20000;
+      };
+    };
+    starship = {
+      enable = true;
+      enableZshIntegration = true;
+    };
+    direnv = {
+      enable = true;
+      enableZshIntegration = true;
+    };
+    pazi = {
+      enable = true;
+      enableZshIntegration = true;
+    };
+    tealdeer = {
+      enable = true;
+    };
+    git = {
+      aliases = {
+        st = "status - sb";
+        br = "branch -a";
+        co = "checkout";
+        l = "log --graph --decorate --pretty=oneline --abbrev-commit";
+        ls = "ls-files";
+        lg = "log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit";
+        unstage = "reset --";
+        rollback = "reset HEAD~";
+        alias = "config --get-regexp alias";
+        rewrite = "!git commit --amend --no-edit && git push --force-with-lease";
+        rewrite-all = "!git add . && git rewrite";
+      };
+      delta = {
+        enable = true;
+      };
+      ignores = [
+        "node_modules/"
+        ".*.swp"
+        ".*.un~"
+        ".vagrant"
+        "vendor"
+        "*.pyc"
+        "__pycache__"
+        "venv/"
+        "*.ova"
+        "*.zip"
+        "*.tgz"
+        "*.tar.gz"
+        "*.rkestate"
+        "*.img"
+        "*.iso"
+      ];
+      extraConfig = {
+        commit = {
+          template = "${config.xdg.configHome}/git/commit-template";
+        };
+      };
+    };
+    fzf = {
+      enable = true;
+      enableZshIntegration = true;
+    };
+    bat = {
+      enable = true;
+      config = {
+        pager = "less -FR";
+        theme = "ansi";
+        style = "numbers,changes,header";
+        map-syntax = [
+          # NOTE: use C++ syntax highlighting for header files
+          "h:cpp"
+          # NOTE: use "gitignore" highlighting for ".ignore" files
+          ".ignore:.gitignore"
+        ];
+      };
+    };
+    zellij = {
+      enable = true;
+      enableZshIntegration = true;
+    };
+    # TODO: fix this
+    # eza = {
+    #   enable = true;
+    #   enableAliases = true;
+    #   git = true;
+    #   icons = true;
+    # };
+  };
 }
