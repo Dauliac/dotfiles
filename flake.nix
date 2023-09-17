@@ -10,15 +10,28 @@
     };
   };
 
-  outputs = { nixpkgs, home-manager, ... }:
+  outputs =
+    { nixpkgs
+    , home-manager
+    , ...
+    }:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
       formatterPackages = with pkgs; [
+        go-task
         nixpkgs-fmt
         alejandra
         statix
+        shfmt
       ];
+      checkPackages = with pkgs; [
+        go-task
+        shellcheck
+        typos
+        yamllint
+      ];
+      ciPackages = with pkgs; formatterPackages ++ checkPackages;
     in
     {
       homeConfigurations."dauliac" = home-manager.lib.homeManagerConfiguration {
@@ -26,33 +39,22 @@
         modules = [ ./home.nix ];
       };
 
-
       formatter = pkgs.writeShellApplication {
         name = "normalise_nix";
         runtimeInputs = formatterPackages;
         text = ''
-          set -o xtrace
-          alejandra "$@"
-          nixpkgs-fmt "$@"
-          statix fix "$@"
+          task format
         '';
       };
 
-      # checks = {
-      #   typos = pkgs.mkShell {
-      #     buildInputs = with pkgs; [ typos ];
-      #     shellHook = ''
-      #       typos .
-      #     '';
-      #   };
-      #   yamllint = pkgs.mkShell {
-      #     buildInputs = with pkgs; [ yamllint ];
-      #     shellHook = ''
-      #       yamllint .
-      #     '';
-      #   };
-      # };
-
+      checks = {
+        check = pkgs.mkShell {
+          buildInputs = with pkgs; checkPackages;
+          shellHook = ''
+            task check
+          '';
+        };
+      };
       devShells.x86_64-linux.default =
         pkgs.mkShell
           {
@@ -60,9 +62,8 @@
             nativeBuildInputs = with pkgs;
               [
                 lefthook
-                go-task
               ]
-              ++ formatterPackages;
+              ++ ciPackages;
 
             devShellHook = ''
               task install

@@ -1,5 +1,7 @@
-{ config, pkgs, ... }:
-{
+{ config
+, pkgs
+, ...
+}: {
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   home.username = "dauliac";
@@ -15,7 +17,6 @@
   # release notes.
   home.stateVersion = "23.05"; # Please read the comment before changing.
 
-
   # The home.packages option allows you to install Nix packages into your
   # environment.
   home.packages = [
@@ -29,7 +30,7 @@
     pkgs.fzf # fuzzy finder
     pkgs.delta # diff alternative
     pkgs.bat # cat alternative
-    pkgs.exa # ls alternative
+    pkgs.eza # ls alternative
     pkgs.starship # Prompt
     pkgs.ncdu # Du alternative
     pkgs.duf # df alternative
@@ -39,14 +40,13 @@
     pkgs.procs # ps alternative
     pkgs.hyperfine # benchmarking
     pkgs.broot # tree alternative
-    pkgs.tealdeer # Documentation 
-    pkgs.ytop # top alternative
+    pkgs.tealdeer # Documentation
     pkgs.dog # dig alternative
     # # It is sometimes useful to fine-tune packages, for example, by applying
     # # overrides. You can do that directly here, just don't forget the
     # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
     # # fonts?
-    (pkgs.nerdfonts.override { fonts = [ "FiraCodeMono" ]; })
+    (pkgs.nerdfonts.override { fonts = [ "FiraMono" ]; })
 
     # # You can also create simple shell scripts directly inside your
     # # configuration. For example, this adds a command 'my-hello' to your
@@ -58,18 +58,28 @@
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
-  home.file = {
-    # # Building this configuration will create a copy of 'dotfiles/screenrc' in
-    # # the Nix store. Activating the configuration will then make '~/.screenrc' a
-    # # symlink to the Nix store copy.
-    # ".screenrc".source = dotfiles/screenrc;
-
-    # # You can also set the file content immediately.
-    # ".gradle/gradle.properties".text = ''
-    #   org.gradle.console=verbose
-    #   org.gradle.daemon.idletimeout=3600000
-    # '';
+  # xdg.configFile."shell/defaults".source = config.lib.file.mkOutOfStoreSymlink dotfiles/shell/defaults.bash;
+  # xdg.configFile."shell/main".source = ./dotfiles/config/shell/main.sh;
+  # xdg.configFile."shell" = {
+  #   source = ./dotfiles/xdg-config/shell;
+  #   recursive = true;
+  # };
+  home.file."${config.xdg.configHome}" = {
+    source = ./dotfiles/xdg-config;
+    recursive = true;
   };
+  # home.file = {
+  # ".zprofile".source = dotfiles/profile.sh;
+  # ".profile".source = config.lib.file.mkOutOfStoreSymlink dotfiles/profile;
+
+  # xdg.configFile."shell/defaults.bash".source = ./dotfiles/shell/defaults.bash;
+
+  # # You can also set the file content immediately.
+  # ".gradle/gradle.properties".text = ''
+  #   org.gradle.console=verbose
+  #   org.gradle.daemon.idletimeout=3600000
+  # '';
+  # };
 
   # You can also manage environment variables but you will have to manually
   # source

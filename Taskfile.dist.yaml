@@ -1,0 +1,67 @@
+---
+
+version: "3"
+
+set: [errexit, pipefail, nounset]
+shopt: [globstar]
+
+dotenv: [".env.local", ".env"]
+
+tasks:
+  init:
+    silent: true
+    desc: Setup project
+    cmds:
+      - |
+        nix run nixpkgs#lefthook install
+    sources:
+      - ./lefthook.yaml
+      - ./flake.nix
+  install:
+    silent: true
+    desc: Install project
+    cmds:
+      - |
+        nix run home-manager/master -- \
+          switch \
+          --flake .
+  format:nix:
+    silent: true
+    desc: Format nix files
+    cmds:
+      - nixpkgs-fmt .
+      - alejandra .
+      - nixpkgs-fmt .
+      - statix fix .
+    sources:
+      - "**/*.nix"
+  format:sh:
+    silent: true
+    desc: Format sh files
+    sources:
+      - "**/*.sh"
+    cmds:
+      - shfmt -w -i 2 **/*.sh
+  format:
+    silent: true
+    desc: Format all files
+    deps:
+      - format:nix
+      - format:sh
+  check:typo:
+    silent: true
+    desc: Check typos
+    cmds:
+      - typos .
+    sources:
+      - "**/*"
+  check:sh:
+    cmds:
+      - shellcheck -x **/*.sh
+    sources:
+      - "**/*.sh"
+  check:
+    silent: true
+    deps: 
+      - check:sh
+      - check:typo

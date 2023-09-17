@@ -1,9 +1,0 @@
-# vi: set ft=zsh:
-# Documentation: https://starship.rs/config
-
-command -v starship &> /dev/null
-if [[ $? -eq 0 ]]
-then
-    export STARSHIP_CONFIG="${XDG_CONFIG_HOME}/starship/config.toml"
-    eval "$(starship init zsh)"
-fi
