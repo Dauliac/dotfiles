@@ -13,7 +13,9 @@ tasks:
     desc: Setup project
     cmds:
       - |
-        nix run nixpkgs#lefthook install
+        nix \
+          run \
+          nixpkgs#lefthook install
     sources:
       - ./lefthook.yaml
       - ./flake.nix
@@ -22,9 +24,11 @@ tasks:
     desc: Install project
     cmds:
       - |
-        nix run home-manager/master -- \
+        nix \
+          run \
+          home-manager/release-23.05 -- \
           switch \
-          --flake .
+          --flake . 
   format:nix:
     silent: true
     desc: Format nix files

@@ -2,29 +2,15 @@
 , pkgs
 , ...
 }: {
-  # Home Manager needs a bit of information about you and the paths it should
-  # manage.
   home.username = "dauliac";
   home.homeDirectory = "/home/dauliac/";
   xdg.enable = true;
-
-  # This value determines the Home Manager release that your configuration is
-  # compatible with. This helps avoid breakage when a new Home Manager release
-  # introduces backwards incompatible changes.
-  #
-  # You should not change this value, even if you update Home Manager. If you do
-  # want to update the value, then make sure to first check the Home Manager
-  # release notes.
-  home.stateVersion = "23.11"; # Please read the comment before changing.
-
-  # The home.packages option allows you to install Nix packages into your
-  # environment.
+  home.stateVersion = "23.05"; # Please read the comment before changing.
   home.packages = [
     pkgs.go-task
-    pkgs.direnv
     pkgs.ghq
     pkgs.silver-searcher # search
-    pkgs.ncdu # Du alternative
+    pkgs.ncdu # du alternative
     pkgs.duf # df alternative
     pkgs.fd # find alternative
     pkgs.viddy # watch alternative
@@ -35,32 +21,17 @@
     pkgs.trash-cli # shell trash
     pkgs.eza # TODO: check how to upgrade home-manager to use eza configs
     pkgs.k9s # kubernetes client
-    # # fonts?
     (pkgs.nerdfonts.override { fonts = [ "FiraMono" ]; })
-
-    (pkgs.writeShellScriptBin "work" ''
-      cd "$(ghq root)/$(ghq list | fzf)"
-    '')
   ];
-
-  # Home Manager is pretty good at managing dotfiles. The primary way to manage
-  # plain files is through 'home.file'.
-  # xdg.configFile."shell/defaults".source = config.lib.file.mkOutOfStoreSymlink dotfiles/shell/defaults.bash;
-  # xdg.configFile."shell/main".source = ./dotfiles/config/shell/main.sh;
-  # xdg.configFile."shell" = {
-  #   source = ./dotfiles/xdg-config/shell;
-  #   recursive = true;
-  # };
   home.file."${config.xdg.configHome}" = {
     source = ./dotfiles/xdg-config;
     recursive = true;
   };
-
   home.sessionVariables = {
     EDITOR = "nvim";
     PAGER = "bat";
+    DIRENV_LOG_FORMAT = ""; # NOTE: disable direnv log
   };
-
   home.shellAliases = {
     cat = "bat";
     clip = "xclip -selection c";
@@ -69,23 +40,23 @@
     watch = "viddy";
     ping = "gping";
     ls = "eza";
+    ll = "ls -la";
     tree = "eza --tree";
     ps = "procs";
+    c = "clear";
     df = "duf";
     du = "ncdu";
+    work = "cd $(ghq root)/$(ghq list | fzf)";
   };
-
   programs.home-manager.enable = true;
-
   programs = {
     zsh = {
       enable = true;
       enableCompletion = true;
       enableAutosuggestions = true;
       autocd = true;
-      defaultKeymap = "vicmd";
+      # defaultKeymap = "vicmd";
       syntaxHighlighting.enable = true;
-
       history = {
         expireDuplicatesFirst = true;
         extended = true;
@@ -93,6 +64,44 @@
         ignorePatterns = [ "rm *" "pkill *" "ls *" ];
         path = "${config.xdg.dataHome}/zsh/zsh_history";
         save = 20000;
+      };
+      prezto = {
+        enable = true;
+        autosuggestions.color = "fg=blue";
+        editor.keymap = "vi";
+        ssh.identities = [
+          "id_rsa"
+          "id_dsa"
+        ];
+        syntaxHighlighting = {
+          highlighters = [
+            "main"
+            "brackets"
+            "pattern"
+            "line"
+            "cursor"
+            "root"
+          ];
+          styles = {
+            builtin = "bg=blue";
+            command = "bg=blue";
+            function = "bg=blue";
+          };
+
+          pattern = {
+            "rm*-rf*" = "fg=white,bold,bg=red";
+          };
+        };
+        pmodules = [
+          "environment"
+          "terminal"
+          "editor"
+          "history"
+          "directory"
+          "spectrum"
+          "utility"
+          "completion"
+        ];
       };
     };
     starship = {
@@ -102,6 +111,7 @@
     direnv = {
       enable = true;
       enableZshIntegration = true;
+      nix-direnv.enable = true;
     };
     pazi = {
       enable = true;
@@ -111,6 +121,7 @@
       enable = true;
     };
     git = {
+      enable = true;
       aliases = {
         st = "status - sb";
         br = "branch -a";
