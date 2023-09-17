@@ -20,7 +20,6 @@
     pkgs.dog # dig alternative
     pkgs.trash-cli # shell trash
     pkgs.eza # TODO: check how to upgrade home-manager to use eza configs
-    pkgs.k9s # kubernetes client
     (pkgs.nerdfonts.override { fonts = [ "FiraMono" ]; })
   ];
   home.file."${config.xdg.configHome}" = {
@@ -193,10 +192,10 @@
         };
       };
     };
-    fzf = {
-      enable = true;
-      enableZshIntegration = true;
-    };
+    # fzf = {
+    #   enable = true;
+    #   enableZshIntegration = true;
+    # };
     bat = {
       enable = true;
       config = {
@@ -222,6 +221,9 @@
     #   git = true;
     #   icons = true;
     # };
+    htop = {
+      enable = true;
+    };
     wezterm = {
       enable = true;
       enableZshIntegration = true;
@@ -236,6 +238,17 @@
           default_cursor_style = "SteadyUnderline",
         }
       '';
+    };
+    jq = {
+      enable = true;
+    };
+    k9s = {
+      enable = true;
+    };
+    mcfly = {
+      enable = true;
+      enableZshIntegration = true;
+      keyScheme = "vim";
     };
   };
 }
