@@ -34,9 +34,17 @@
       ciPackages = with pkgs; formatterPackages ++ checkPackages;
     in
     {
+      homeConfigurations."jdauliac" = home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
+        modules = [ ./jdauliac.nix ];
+      };
+
+      home-manager.useUserPackages = true;
+      home-manager.useGlobalPkgs = true;
+
       homeConfigurations."dauliac" = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
-        modules = [ ./home.nix ];
+        modules = [ ./dauliac.nix ];
       };
 
       formatter = pkgs.writeShellApplication {

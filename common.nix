@@ -2,8 +2,8 @@
 , pkgs
 , ...
 }: {
-  home.username = "dauliac";
-  home.homeDirectory = "/home/dauliac/";
+  # home.username = "dauliac";
+  # home.homeDirectory = "/home/dauliac/";
   xdg.enable = true;
   home.stateVersion = "23.05"; # Please read the comment before changing.
   home.packages = [
@@ -33,6 +33,7 @@
   };
   home.shellAliases = {
     cat = "bat";
+    nvim = "nix run $(${pkgs.ghq}/bin/ghq root)/$(${pkgs.ghq}/bin/ghq list | grep Dauliac/neovim)";
     clip = "xclip -selection c";
     restore = "trash-restore";
     rm = "trash-put";
@@ -47,6 +48,15 @@
     du = "ncdu";
     work = "cd $(ghq root)/$(ghq list | fzf)";
   };
+  xdg = {
+    desktopEntries = {
+      wezterm = {
+	name = "Wezterm";
+	genericName = "Terminal";
+        exec = "nix run --impure github:guibou/nixGL -- ${pkgs.wezterm}/bin/wezterm";
+      };
+    };
+  };	
   programs.home-manager.enable = true;
   programs = {
     zsh = {
@@ -54,8 +64,13 @@
       enableCompletion = true;
       enableAutosuggestions = true;
       autocd = true;
-      # defaultKeymap = "vicmd";
+      defaultKeymap = "vicmd";
       syntaxHighlighting.enable = true;
+      profileExtra = ''
+        export XDG_SECRET_HOME="''${XDG_CONFIG_HOME}/secrets"
+        # Source all files into XDG_SECRET_HOME
+        source <(cat ''${XDG_SECRET_HOME:?}/*)
+      '';
       history = {
         expireDuplicatesFirst = true;
         extended = true;
@@ -128,11 +143,6 @@
         git_commit = {
           commit_hash_length = 4;
           tag_symbol = "🔖 ";
-        };
-
-        kubernetes = {
-          format = "on [ ⛵ $context \($namespace\) ] (dimmed green) ";
-          disabled = false;
         };
       };
     };
@@ -233,9 +243,14 @@
 
         return {
           color_scheme = "Gruvbox Dark",
+
           window_background_opacity = 0.89,
-          font = wezterm.font("FiraCode Nerd Font Mono", {bold=false, weight = "Regular", stretch = "Normal", italic = false}),
-          default_cursor_style = "SteadyUnderline",
+          font = wezterm.font(
+            "FiraCode Nerd Font Mono",
+            {bold=false, weight = "Regular", stretch = "Normal", italic = false}
+          ),
+          default_cursor_style = "SteadyBar",
+          hide_tab_bar_if_only_one_tab = true,
         }
       '';
     };
