@@ -30,6 +30,7 @@
     EDITOR = "nvim";
     PAGER = "bat";
     DIRENV_LOG_FORMAT = ""; # NOTE: disable direnv log
+    MCFLY_PROMPT = "❯";
   };
   home.shellAliases = {
     cat = "bat";
@@ -51,12 +52,12 @@
   xdg = {
     desktopEntries = {
       wezterm = {
-	name = "Wezterm";
-	genericName = "Terminal";
+        name = "Wezterm";
+        genericName = "Terminal";
         exec = "nix run --impure github:guibou/nixGL -- ${pkgs.wezterm}/bin/wezterm";
       };
     };
-  };	
+  };
   programs.home-manager.enable = true;
   programs = {
     zsh = {
@@ -64,12 +65,16 @@
       enableCompletion = true;
       enableAutosuggestions = true;
       autocd = true;
-      defaultKeymap = "vicmd";
       syntaxHighlighting.enable = true;
       profileExtra = ''
         export XDG_SECRET_HOME="''${XDG_CONFIG_HOME}/secrets"
         # Source all files into XDG_SECRET_HOME
         source <(cat ''${XDG_SECRET_HOME:?}/*)
+
+        # NOTE: this enable CTRL+e to eddit current command line
+        autoload edit-command-line
+        zle -N edit-command-line
+        bindkey -M vicmd e edit-command-line
       '';
       history = {
         expireDuplicatesFirst = true;
@@ -242,7 +247,7 @@
         wezterm = require 'wezterm';
 
         return {
-          color_scheme = "Gruvbox Dark",
+          color_scheme = "Gruvbox Dark (Gogh)",
 
           window_background_opacity = 0.89,
           font = wezterm.font(
@@ -264,6 +269,7 @@
       enable = true;
       enableZshIntegration = true;
       keyScheme = "vim";
+      fuzzySearchFactor = 5;
     };
   };
 }
