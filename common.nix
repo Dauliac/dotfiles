@@ -19,6 +19,7 @@
     pkgs.hyperfine # benchmarking
     pkgs.dog # dig alternative
     pkgs.trash-cli # shell trash
+    pkgs.speedtest-go # network speed test
     pkgs.eza # TODO: check how to upgrade home-manager to use eza configs
     (pkgs.nerdfonts.override { fonts = [ "FiraMono" ]; })
   ];
@@ -30,6 +31,7 @@
     EDITOR = "nvim";
     PAGER = "bat";
     DIRENV_LOG_FORMAT = ""; # NOTE: disable direnv log
+    DIRENV_WARN_TIMEOUT = "80s";
     MCFLY_PROMPT = "❯";
   };
   home.shellAliases = {
@@ -48,6 +50,7 @@
     df = "duf";
     du = "ncdu";
     work = "cd $(ghq root)/$(ghq list | fzf)";
+    speedtest = "speedtest-go";
   };
   xdg = {
     desktopEntries = {
@@ -156,32 +159,63 @@
       enableZshIntegration = true;
       nix-direnv.enable = true;
     };
+    # NOTE: fast cd
     pazi = {
       enable = true;
       enableZshIntegration = true;
     };
+    # NOTE: cheat sheet
     tealdeer = {
       enable = true;
+    };
+    # NOTE: cheat sheet
+    navi = {
+      enable = true;
+      enableZshIntegration = true;
+    };
+    pet = {
+      enable = true;
+      snippets = [
+        {
+          command = "docker system prune -a -f; nix-store -gc; trash-empty";
+          description = "Clean docker, nix, and trash";
+          tag = [ "docker" "nix" "trash" ];
+        }
+        {
+          command = "git rebase -i HEAD~10";
+          description = "Rewrite 10 last commits";
+          tag = [ "git" "history" ];
+        }
+        {
+          command = "git 
+          tag = [ " git " "
+            history " ];
+        }
+      ];
     };
     git = {
       enable = true;
       aliases = {
-        st = "status -sb";
-        br = "branch -a";
-        co = "checkout";
-        l = "log --graph --decorate --pretty=oneline --abbrev-commit";
+        st = "
+            status - sb ";
+            br = "
+            branch - a ";
+            co = "
+            checkout ";
+            l = "
+            log - -graph - -decorate - -pretty=oneline --abbrev-commit";
         ls = "ls-files";
         lg = "log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit";
         unstage = "reset --";
         rollback = "reset HEAD~";
-        alias = "config --get-regexp alias";
-        rewrite = "!git commit --amend --no-edit && git push --force-with-lease";
-        rewrite-all = "!git add . && git rewrite";
-      };
-      delta = {
+          alias = "config --get-regexp alias";
+          rewrite = "!git commit --amend --no-edit && git push --force-with-lease";
+          rewrite-all = "!git add . && git rewrite";
+        };
+        delta = {
         enable = true;
       };
-      ignores = [
+        ignores = [
         "node_modules/"
         ".*.swp"
         ".*.un~"
@@ -198,7 +232,7 @@
         "*.img"
         "*.iso"
       ];
-      extraConfig = {
+        extraConfig = {
         core = {
           editor = "nvim";
         };
@@ -206,70 +240,70 @@
           template = "${config.xdg.configHome}/git/commit-template";
         };
       };
-    };
-    # fzf = {
-    #   enable = true;
-    #   enableZshIntegration = true;
-    # };
-    bat = {
-      enable = true;
-      config = {
-        pager = "less -FR";
-        theme = "ansi";
-        style = "numbers,changes,header";
-        map-syntax = [
-          # NOTE: use C++ syntax highlighting for header files
-          "h:cpp"
-          # NOTE: use "gitignore" highlighting for ".ignore" files
-          ".ignore:.gitignore"
-        ];
+        };
+        # fzf = {
+        #   enable = true;
+        #   enableZshIntegration = true;
+        # };
+        bat = {
+        enable = true;
+        config = {
+          pager = "less -FR";
+          theme = "ansi";
+          style = "numbers,changes,header";
+          map-syntax = [
+            # NOTE: use C++ syntax highlighting for header files
+            "h:cpp"
+            # NOTE: use "gitignore" highlighting for ".ignore" files
+            ".ignore:.gitignore"
+          ];
+        };
       };
-    };
-    zellij = {
-      enable = true;
-      enableZshIntegration = true;
-    };
-    # TODO: fix this
-    # eza = {
-    #   enable = true;
-    #   enableAliases = true;
-    #   git = true;
-    #   icons = true;
-    # };
-    htop = {
-      enable = true;
-    };
-    wezterm = {
-      enable = true;
-      enableZshIntegration = true;
-      extraConfig = ''
-        local
-        wezterm = require 'wezterm';
+        zellij = {
+        enable = true;
+        enableZshIntegration = true;
+      };
+        # TODO: fix this
+        # eza = {
+        #   enable = true;
+        #   enableAliases = true;
+        #   git = true;
+        #   icons = true;
+        # };
+        htop = {
+        enable = true;
+      };
+        wezterm = {
+        enable = true;
+        enableZshIntegration = true;
+        extraConfig = ''
+          local
+          wezterm = require 'wezterm';
 
-        return {
-          color_scheme = "Gruvbox Dark (Gogh)",
+          return {
+            color_scheme = "Gruvbox Dark (Gogh)",
 
-          window_background_opacity = 0.89,
-          font = wezterm.font(
-            "FiraCode Nerd Font Mono",
-            {bold=false, weight = "Regular", stretch = "Normal", italic = false}
-          ),
-          default_cursor_style = "SteadyBar",
-          hide_tab_bar_if_only_one_tab = true,
+            window_background_opacity = 0.89,
+            font = wezterm.font(
+              "FiraCode Nerd Font Mono",
+              {bold=false, weight = "Regular", stretch = "Normal", italic = false}
+            ),
+            default_cursor_style = "SteadyBar",
+            hide_tab_bar_if_only_one_tab = true,
+          }
+        '';
+      };
+        jq = {
+        enable = true;
+      };
+        k9s = {
+        enable = true;
+      };
+        mcfly = {
+        enable = true;
+        enableZshIntegration = true;
+        keyScheme = "vim";
+        fuzzySearchFactor = 5;
+      };
+        };
         }
-      '';
-    };
-    jq = {
-      enable = true;
-    };
-    k9s = {
-      enable = true;
-    };
-    mcfly = {
-      enable = true;
-      enableZshIntegration = true;
-      keyScheme = "vim";
-      fuzzySearchFactor = 5;
-    };
-  };
-}
