@@ -1,7 +1,4 @@
-{ config
-, pkgs
-, ...
-}: {
+{ config, pkgs, ... }: {
   # home.username = "dauliac";
   # home.homeDirectory = "/home/dauliac/";
   xdg.enable = true;
@@ -19,6 +16,7 @@
     pkgs.hyperfine # benchmarking
     pkgs.dog # dig alternative
     pkgs.trash-cli # shell trash
+    pkgs.systemctl-tui # Cool tui
     pkgs.speedtest-go # network speed test
     pkgs.eza # TODO: check how to upgrade home-manager to use eza configs
     (pkgs.nerdfonts.override { fonts = [ "FiraMono" ]; })
@@ -36,7 +34,8 @@
   };
   home.shellAliases = {
     cat = "bat";
-    nvim = "nix run $(${pkgs.ghq}/bin/ghq root)/$(${pkgs.ghq}/bin/ghq list | grep Dauliac/neovim)";
+    nvim =
+      "nix run $(${pkgs.ghq}/bin/ghq root)/$(${pkgs.ghq}/bin/ghq list | grep Dauliac/neovim)";
     clip = "xclip -selection c";
     restore = "trash-restore";
     rm = "trash-put";
@@ -57,7 +56,8 @@
       wezterm = {
         name = "Wezterm";
         genericName = "Terminal";
-        exec = "nix run --impure github:guibou/nixGL -- ${pkgs.wezterm}/bin/wezterm";
+        exec =
+          "nix run --impure github:guibou/nixGL -- ${pkgs.wezterm}/bin/wezterm";
       };
     };
   };
@@ -91,28 +91,16 @@
         enable = true;
         autosuggestions.color = "fg=blue";
         editor.keymap = "vi";
-        ssh.identities = [
-          "id_rsa"
-          "id_dsa"
-        ];
+        ssh.identities = [ "id_rsa" "id_dsa" ];
         syntaxHighlighting = {
-          highlighters = [
-            "main"
-            "brackets"
-            "pattern"
-            "line"
-            "cursor"
-            "root"
-          ];
+          highlighters = [ "main" "brackets" "pattern" "line" "cursor" "root" ];
           styles = {
             builtin = "bg=blue";
             command = "bg=blue";
             function = "bg=blue";
           };
 
-          pattern = {
-            "rm*-rf*" = "fg=white,bold,bg=red";
-          };
+          pattern = { "rm*-rf*" = "fg=white,bold,bg=red"; };
         };
         pmodules = [
           "environment"
@@ -136,12 +124,8 @@
           error_symbol = "[✗](bold red) ";
           vicmd_symbol = "[V](bold green) ";
         };
-        cmd_duration = {
-          min_time = 500;
-        };
-        git_branch = {
-          symbol = "🌱 ";
-        };
+        cmd_duration = { min_time = 500; };
+        git_branch = { symbol = "🌱 "; };
 
         git_state = {
           cherry_pick = "[🍒 PICKING](bold red)";
@@ -165,9 +149,7 @@
       enableZshIntegration = true;
     };
     # NOTE: cheat sheet
-    tealdeer = {
-      enable = true;
-    };
+    tealdeer = { enable = true; };
     # NOTE: cheat sheet
     navi = {
       enable = true;
@@ -187,35 +169,32 @@
           tag = [ "git" "history" ];
         }
         {
-          command = "git 
-          tag = [ " git " "
-            history " ];
+          command =
+            "ls $(nix build 'nixpkgs#typescript' --print-out-paths --no-link)";
+          tag = [ "nix" "package" ];
         }
       ];
     };
     git = {
       enable = true;
       aliases = {
-        st = "
-            status - sb ";
-            br = "
-            branch - a ";
-            co = "
-            checkout ";
-            l = "
-            log - -graph - -decorate - -pretty=oneline --abbrev-commit";
+        st = "\n            status - sb ";
+        br = "\n            branch - a ";
+        co = "\n            checkout ";
+        l =
+          "\n            log - -graph - -decorate - -pretty=oneline --abbrev-commit";
         ls = "ls-files";
-        lg = "log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit";
+        lg =
+          "log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit";
         unstage = "reset --";
         rollback = "reset HEAD~";
-          alias = "config --get-regexp alias";
-          rewrite = "!git commit --amend --no-edit && git push --force-with-lease";
-          rewrite-all = "!git add . && git rewrite";
-        };
-        delta = {
-        enable = true;
+        alias = "config --get-regexp alias";
+        rewrite =
+          "!git commit --amend --no-edit && git push --force-with-lease";
+        rewrite-all = "!git add . && git rewrite";
       };
-        ignores = [
+      delta = { enable = true; };
+      ignores = [
         "node_modules/"
         ".*.swp"
         ".*.un~"
@@ -232,78 +211,91 @@
         "*.img"
         "*.iso"
       ];
-        extraConfig = {
-        core = {
-          editor = "nvim";
-        };
-        commit = {
-          template = "${config.xdg.configHome}/git/commit-template";
-        };
+      extraConfig = {
+        core = { editor = "nvim"; };
+        commit = { template = "${config.xdg.configHome}/git/commit-template"; };
       };
-        };
-        # fzf = {
-        #   enable = true;
-        #   enableZshIntegration = true;
-        # };
-        bat = {
-        enable = true;
-        config = {
-          pager = "less -FR";
-          theme = "ansi";
-          style = "numbers,changes,header";
-          map-syntax = [
-            # NOTE: use C++ syntax highlighting for header files
-            "h:cpp"
-            # NOTE: use "gitignore" highlighting for ".ignore" files
-            ".ignore:.gitignore"
-          ];
-        };
+    };
+    # fzf = {
+    #   enable = true;
+    #   enableZshIntegration = true;
+    # };
+    bat = {
+      enable = true;
+      config = {
+        pager = "less -FR";
+        theme = "ansi";
+        style = "numbers,changes,header";
+        map-syntax = [
+          # NOTE: use C++ syntax highlighting for header files
+          "h:cpp"
+          # NOTE: use "gitignore" highlighting for ".ignore" files
+          ".ignore:.gitignore"
+        ];
       };
-        zellij = {
-        enable = true;
-        enableZshIntegration = true;
-      };
-        # TODO: fix this
-        # eza = {
-        #   enable = true;
-        #   enableAliases = true;
-        #   git = true;
-        #   icons = true;
-        # };
-        htop = {
-        enable = true;
-      };
-        wezterm = {
-        enable = true;
-        enableZshIntegration = true;
-        extraConfig = ''
-          local
-          wezterm = require 'wezterm';
+    };
+    zellij = {
+      enable = true;
+      enableZshIntegration = true;
+    };
+    # TODO: fix this
+    # eza = {
+    #   enable = true;
+    #   enableAliases = true;
+    #   git = true;
+    #   icons = true;
+    # };
+    htop = { enable = true; };
+    wezterm = {
+      enable = true;
+      enableZshIntegration = true;
+      extraConfig = ''
+        local
+        wezterm = require 'wezterm';
 
-          return {
-            color_scheme = "Gruvbox Dark (Gogh)",
+        wezterm.on('user-var-changed', function(window, pane, name, value)
+            local overrides = window:get_config_overrides() or {}
+            if name == "ZEN_MODE" then
+                local incremental = value:find("+")
+                local number_value = tonumber(value)
+                if incremental ~= nil then
+                    while (number_value > 0) do
+                        window:perform_action(wezterm.action.IncreaseFontSize, pane)
+                        number_value = number_value - 1
+                    end
+                    overrides.enable_tab_bar = false
+                elseif number_value < 0 then
+                    window:perform_action(wezterm.action.ResetFontSize, pane)
+                    overrides.font_size = nil
+                    overrides.enable_tab_bar = true
+                else
+                    overrides.font_size = number_value
+                    overrides.enable_tab_bar = false
+                end
+            end
+            window:set_config_overrides(overrides)
+        end)
 
-            window_background_opacity = 0.89,
-            font = wezterm.font(
-              "FiraCode Nerd Font Mono",
-              {bold=false, weight = "Regular", stretch = "Normal", italic = false}
-            ),
-            default_cursor_style = "SteadyBar",
-            hide_tab_bar_if_only_one_tab = true,
-          }
-        '';
-      };
-        jq = {
-        enable = true;
-      };
-        k9s = {
-        enable = true;
-      };
-        mcfly = {
-        enable = true;
-        enableZshIntegration = true;
-        keyScheme = "vim";
-        fuzzySearchFactor = 5;
-      };
-        };
+        return {
+          color_scheme = "Gruvbox Dark (Gogh)",
+
+          window_background_opacity = 0.89,
+          font = wezterm.font(
+            "FiraCode Nerd Font Mono",
+            {bold=false, weight = "Regular", stretch = "Normal", italic = false}
+          ),
+          default_cursor_style = "SteadyBar",
+          hide_tab_bar_if_only_one_tab = true,
         }
+      '';
+    };
+    jq = { enable = true; };
+    k9s = { enable = true; };
+    mcfly = {
+      enable = true;
+      enableZshIntegration = true;
+      keyScheme = "vim";
+      fuzzySearchFactor = 5;
+    };
+  };
+}
