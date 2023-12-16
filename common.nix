@@ -86,6 +86,7 @@
         ignorePatterns = [ "rm *" "pkill *" "ls *" ];
         path = "${config.xdg.dataHome}/zsh/zsh_history";
         save = 20000;
+        share = true;
       };
       prezto = {
         enable = true;
