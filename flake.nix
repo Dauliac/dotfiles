@@ -4,17 +4,17 @@
   inputs = {
     # Specify the source of Home Manager and Nixpkgs.
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixGL = {
+      url = "github:guibou/nixGL";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs =
-    { nixpkgs
-    , home-manager
-    , ...
-    }:
+  outputs = inputs@{ nixpkgs, home-manager, nixGL, ... }:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
@@ -25,26 +25,27 @@
         statix
         shfmt
       ];
-      checkPackages = with pkgs; [
-        go-task
-        shellcheck
-        typos
-        yamllint
-      ];
+      checkPackages = with pkgs; [ go-task shellcheck typos yamllint ];
       ciPackages = with pkgs; formatterPackages ++ checkPackages;
-    in
-    {
-      homeConfigurations."jdauliac" = home-manager.lib.homeManagerConfiguration {
-        inherit pkgs;
-        modules = [ ./jdauliac.nix ];
-      };
+    in {
+      homeConfigurations."jdauliac" =
+        home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+          modules = [
+            { nixpkgs.overlays = [ nixGL.overlay ]; }
+            ./modules/jdauliac.nix
+          ];
+          extraSpecialArgs = { inherit inputs; };
+        };
 
       home-manager.useUserPackages = true;
       home-manager.useGlobalPkgs = true;
 
       homeConfigurations."dauliac" = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
-        modules = [ ./dauliac.nix ];
+        modules =
+          [ { nixpkgs.overlays = [ nixGL.overlay ]; } ./modules/dauliac.nix ];
+        extraSpecialArgs = { inherit inputs; };
       };
 
       formatter = pkgs.writeShellApplication {
@@ -64,19 +65,13 @@
         };
       };
       nix.experimental.features = "nix-command";
-      devShells.x86_64-linux.default =
-        pkgs.mkShell
-          {
-            # inputsFrom = builtins.attrValues self.checks.${system};
-            nativeBuildInputs = with pkgs;
-              [
-                lefthook
-              ]
-              ++ ciPackages;
+      devShells.x86_64-linux.default = pkgs.mkShell {
+        # inputsFrom = builtins.attrValues self.checks.${system};
+        nativeBuildInputs = with pkgs; [ lefthook ] ++ ciPackages;
 
-            devShellHook = ''
-              task install
-            '';
-          };
+        devShellHook = ''
+          task install
+        '';
+      };
     };
 }
