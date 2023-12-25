@@ -4,18 +4,18 @@
     {
       command = "docker system prune -a -f; nix-store -gc; trash-empty";
       description = "Clean docker, nix, and trash";
-      tag = [ "docker" "nix" "trash" ];
+      tag = [ "docker" "nix" "trash" "cli" ];
     }
     {
       command = "git rebase -i HEAD~10";
       description = "Rewrite 10 last commits";
-      tag = [ "git" "history" ];
+      tag = [ "git" "history" "cli" ];
     }
     {
       command =
         "ls $(nix build 'nixpkgs#typescript' --print-out-paths --no-link)";
       description = "List typescript packages";
-      tag = [ "nix" "package" ];
+      tag = [ "nix" "package" "cli" ];
     }
     {
       command =
@@ -46,17 +46,22 @@
     {
       command = "hyperfine";
       description = "Benchmark";
-      tag = [ "benchmark" ];
+      tag = [ "benchmark" "cli" ];
     }
     {
       command = "nix repl '<nixpkgs>'";
       description = "Nix repl";
-      tag = [ "nix" "repl" ];
+      tag = [ "nix" "repl" "cli" ];
     }
     {
-      command = "sniffnet";
+      command = "sudo sniffnet";
       description = "Sniff network";
-      tag = [ "network" "sniff" ];
+      tag = [ "network" "sniff" "gui" ];
+    }
+    {
+      command = "tldr";
+      description = "Commands examples";
+      tag = [ "help" "command" "cli" ];
     }
   ];
 }
