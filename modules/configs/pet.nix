@@ -18,7 +18,7 @@
     }
     {
       command =
-        "kubectl create secret generic regcred --from-file=.dockerconfigjson=/home/${USER}/.docker/config.json --type=kubernetes.io/dockerconfigjsom --namespace sellsy-system";
+        "kubectl create secret generic regcred --from-file=.dockerconfigjson=/home/\${USER}/.docker/config.json --type=kubernetes.io/dockerconfigjsom --namespace sellsy-system";
       tag = [ "kubernetes" "secret" "docker" ];
     }
   ];

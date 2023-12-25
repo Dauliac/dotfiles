@@ -15,5 +15,5 @@
   df = "${pkgs.duf}/bin/duf";
   du = "${pkgs.ncdu}/bin/ncdu";
   work = "cd $(${pkgs.ghq}/bin/ghq root)/$(${pkgs.ghq}/bin/ghq list | fzf)";
-  speedtest = "${pkgs.peedtest-go}/bin/peedtest-go";
+  speedtest = "${pkgs.speedtest-go}/bin/peedtest-go";
 }

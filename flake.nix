@@ -27,13 +27,14 @@
       ];
       checkPackages = with pkgs; [ go-task shellcheck typos yamllint ];
       ciPackages = with pkgs; formatterPackages ++ checkPackages;
-    in {
+    in
+    {
       homeConfigurations."jdauliac" =
         home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
           modules = [
             { nixpkgs.overlays = [ nixGL.overlay ]; }
-            ./modules/jdauliac.nix
+            ./modules/users/jdauliac.nix
           ];
           extraSpecialArgs = { inherit inputs; };
         };
@@ -43,8 +44,10 @@
 
       homeConfigurations."dauliac" = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
-        modules =
-          [ { nixpkgs.overlays = [ nixGL.overlay ]; } ./modules/dauliac.nix ];
+        modules = [
+          { nixpkgs.overlays = [ nixGL.overlay ]; }
+          ./modules/users/dauliac.nix
+        ];
         extraSpecialArgs = { inherit inputs; };
       };
 

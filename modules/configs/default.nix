@@ -1,5 +1,5 @@
 { config, pkgs, inputs, ... }:
-let wrapNixGL = import ./nixgl.nix { inherit pkgs; };
+let wrapNixGL = import ./nixGl.nix { inherit pkgs; };
 in
 {
   xdg.enable = true;
@@ -18,9 +18,9 @@ in
   programs.home-manager.enable = true;
   programs = {
     zsh = import ./zsh.nix { inherit config pkgs; };
-    git = import ./git.nix { inherit pkgs; };
-    starship = import ./starship.nix;
-    direnv = import ./direnv.nix { inherit pkgs; }.dotfiles;
+    git = import ./git.nix { inherit config pkgs; };
+    starship = import ./starship.nix { };
+    direnv = (import ./direnv.nix { inherit config pkgs; }).dotfiles;
     # NOTE: fast cd
     pazi = {
       enable = true;
@@ -43,6 +43,6 @@ in
     wezterm = import ./wezterm.nix { package = (wrapNixGL pkgs.wezterm); };
     jq = { enable = true; };
     k9s = { enable = true; };
-    mcfly = (./history.nix { inherit config pkgs; }).mcfly;
+    mcfly = (import ./history.nix { inherit config pkgs; }).mcfly;
   };
 }
