@@ -8,7 +8,6 @@
   home.sessionVariables = {
     EDITOR = "nvim";
     PAGER = "bat";
-    XDG_DATA_DIRS = "/\${HOME}/.nix-profile/share:$XDG_DATA_DIRS";
   } // (import ./programs/direnv.nix { inherit pkgs; }).shellEnv
   // (import ./programs/history.nix { inherit config pkgs; }).shellEnv;
   home.shellAliases = import ./aliases.nix { inherit pkgs; };

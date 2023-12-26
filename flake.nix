@@ -17,7 +17,14 @@
   outputs = inputs@{ nixpkgs, home-manager, nixGL, ... }:
     let
       system = "x86_64-linux";
-      pkgs = nixpkgs.legacyPackages.${system};
+      pkgs = import nixpkgs {
+        inherit system;
+        config = {
+          allowUnfreePredicate = pkg:
+            builtins.elem (nixpkgs.lib.getName pkg) [ "parsec-bin" ];
+        };
+      };
+      # pkgs = nixpkgs.legacyPackages.${system};
       formatterPackages = with pkgs; [
         go-task
         nixpkgs-fmt

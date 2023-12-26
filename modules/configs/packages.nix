@@ -17,5 +17,7 @@ with pkgs; [
   systemctl-tui # Cool tui
   speedtest-go # network speed test
   eza # TODO: check how to upgrade home-manager to use eza configs
+  parsec-bin # Remote streaming service client
+  signal-desktop # Signal client
   (nerdfonts.override { fonts = [ "FiraMono" ]; })
 ]
