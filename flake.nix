@@ -20,8 +20,8 @@
       pkgs = import nixpkgs {
         inherit system;
         config = {
-          allowUnfreePredicate = pkg:
-            builtins.elem (nixpkgs.lib.getName pkg) [ "parsec-bin" ];
+          # allowUnfreePredicate = pkg:
+          #   builtins.elem (nixpkgs.lib.getName pkg) [ "parsec-bin" ];
         };
       };
       # pkgs = nixpkgs.legacyPackages.${system};
