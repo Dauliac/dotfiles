@@ -1,7 +1,4 @@
 { pkgs }:
-# Should I in the feature return a set of { default, nixGLDefault, nixGLNvidia, nixGLNvidiaBumblebee, nixGLIntel, nixVulkanNvidia, nixVulkanIntel }?
-# How to debug pkgs.nixgl in an overlay(?) in nix repl
-# NOTE: maybe in future { wrapNixGLNvidia, wrapNixGLNvidiaBumblebee, wrapNixGLVulkanNvidia }
 pkg:
 let bins = "${pkg}/bin";
 in

@@ -20,11 +20,11 @@
       pkgs = import nixpkgs {
         inherit system;
         config = {
-          # allowUnfreePredicate = pkg:
-          #   builtins.elem (nixpkgs.lib.getName pkg) [ "parsec-bin" ];
+          allowUnfreePredicate = pkg:
+            builtins.elem (nixpkgs.lib.getName pkg)
+              [ "libsciter-4.4.8.23-bis" ];
         };
       };
-      # pkgs = nixpkgs.legacyPackages.${system};
       formatterPackages = with pkgs; [
         go-task
         nixpkgs-fmt

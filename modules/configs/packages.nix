@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ inputs, pkgs, ... }:
 let
   cli = with pkgs; [
     go-task
@@ -22,9 +22,9 @@ let
   gui = with pkgs; [
     sniffnet
     signal-desktop # Signal client
-    rustdesk # Remote desktop
+    # TODO: fix unfree packages
+    # rustdesk # Remote desktop
     brave # Brave browser
     firefox-devedition # Firefox browser
   ];
-in
-cli ++ gui
+in cli ++ gui

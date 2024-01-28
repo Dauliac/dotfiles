@@ -1,7 +1,7 @@
 { package, ... }: {
+  inherit package;
   enable = true;
   enableZshIntegration = true;
-  package = package;
   extraConfig = ''
     local
     wezterm = require 'wezterm';
