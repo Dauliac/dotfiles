@@ -1,4 +1,7 @@
-{ inputs, pkgs, ... }:
+{ inputs
+, pkgs
+, ...
+}:
 let
   cli = with pkgs; [
     go-task
@@ -16,6 +19,7 @@ let
     trash-cli # shell trash
     systemctl-tui # Cool tui
     speedtest-go # network speed test
+    radicle-cli # Decentralized git
     eza # TODO: check how to upgrade home-manager to use eza configs
     (nerdfonts.override { fonts = [ "FiraMono" "Iosevka" ]; })
   ];
@@ -27,4 +31,5 @@ let
     brave # Brave browser
     firefox-devedition # Firefox browser
   ];
-in cli ++ gui
+in
+cli ++ gui

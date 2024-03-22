@@ -1,21 +1,26 @@
-{ config, pkgs, ... }: {
+{ config
+, pkgs
+, ...
+}: {
   enable = true;
   aliases = {
-    st = "\n            status - sb ";
-    br = "\n            branch - a ";
-    co = "\n            checkout ";
-    l =
-      "\n            log - -graph - -decorate - -pretty=oneline --abbrev-commit";
+    st = "status - sb ";
+    br = "branch - a ";
+    co = "checkout ";
+    l = "log - -graph - -decorate - -pretty=oneline --abbrev-commit";
     ls = "ls-files";
-    lg =
-      "log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit";
+    lg = "log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit";
     unstage = "reset --";
     rollback = "reset HEAD~";
     alias = "config --get-regexp alias";
     rewrite = "!git commit --amend --no-edit && git push --force-with-lease";
     rewrite-all = "!git add . && git rewrite";
+    rb = "!git fetch --all; git rebase";
   };
-  delta = { enable = true; };
+  difftastic = {
+    enable = true;
+    # display = "side-by-side-show-both";
+  };
   ignores = [
     "node_modules/"
     ".*.swp"
@@ -29,6 +34,7 @@
     "*.zip"
     "*.tgz"
     "*.tar.gz"
+    ".direnv"
     "*.rkestate"
     "*.img"
     "*.iso"
