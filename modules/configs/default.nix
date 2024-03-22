@@ -5,6 +5,7 @@
     source = ../../dotfiles/xdg-config;
     recursive = true;
   };
+  fonts.fontconfig.enable = true;
   home.sessionVariables = {
     EDITOR = "nvim";
     PAGER = "bat";

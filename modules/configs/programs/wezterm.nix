@@ -5,7 +5,6 @@
   extraConfig = ''
     local
     wezterm = require 'wezterm';
-
     wezterm.on('user-var-changed', function(window, pane, name, value)
         local overrides = window:get_config_overrides() or {}
         if name == "ZEN_MODE" then
@@ -33,10 +32,11 @@
       color_scheme = "Gruvbox Dark (Gogh)",
 
       window_background_opacity = 0.89,
-      font = wezterm.font(
-        "FiraCode Nerd Font Mono",
-        {bold=false, weight = "Regular", stretch = "Normal", italic = false}
-      ),
+      font = wezterm.font {
+       family = 'Iosevka Nerd Font',
+       stretch = 'Expanded',
+       weight = 'Regular',
+      },
       default_cursor_style = "SteadyBar",
       hide_tab_bar_if_only_one_tab = true,
     }

@@ -29,6 +29,7 @@ tasks:
           home-manager/release-23.05 -- \
           switch \
           --flake . 
+        fc-cache -f -v
   format:nix:
     silent: true
     desc: Format nix files

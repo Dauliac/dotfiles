@@ -17,7 +17,7 @@ let
     systemctl-tui # Cool tui
     speedtest-go # network speed test
     eza # TODO: check how to upgrade home-manager to use eza configs
-    (nerdfonts.override { fonts = [ "FiraMono" ]; })
+    (nerdfonts.override { fonts = [ "FiraMono" "Iosevka" ]; })
   ];
   gui = with pkgs; [
     sniffnet
