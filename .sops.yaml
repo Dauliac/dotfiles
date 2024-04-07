@@ -1,0 +1,9 @@
+---
+
+keys:
+  - &admin_dauliac age17r5jkhtwepl0k27r5q6kdsfsyqyzxf25s5dzv4xc2awtea6c8cjs5clu6q
+creation_rules:
+  - path_regex: secrets.yaml
+    key_groups:
+    - age:
+      - *admin_dauliac

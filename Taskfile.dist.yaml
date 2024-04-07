@@ -19,35 +19,55 @@ tasks:
     sources:
       - ./lefthook.yaml
       - ./flake.nix
-  install:
+  build:
+    cmds:
+      - task: build:home-manager:nix-os
+      - task: build:nix-os
+      - nix build '.#dev.driverInteractive' 
+  build:nix-os:
+    silent: true
+    desc: Install project
+    cmds:
+      - nixos-rebuild --flake . build
+  build:home-manager:nix-os:
+    silent: true
+    desc: Install project
+    cmds:
+      - home-manager --flake . build
+  install:disko:
+    cmds:
+      - disko-install --flake '.#nixos' --disk backup '/dev/nvme1n1'
+  install:home-manager:
+    cmds:
+      - home-manager --flake '.' switch
+  install:nix-os:
+    silent: true
+    desc: Install project
+    cmds:
+      - sudo nixos-rebuild --flake . switch
+  install:home-manager:pro:
     silent: true
     desc: Install project
     cmds:
       - |
-        nix \
-          run \
-          home-manager/release-23.05 -- \
-          switch \
+        home-manager switch \
           --flake . 
+          switch 
         fc-cache -f -v
+  test:
+    silent: true
+    cmds:
+      - |
+        nix build \
+          '.#dev.driverInteractive' \
+        && ./result/bin/nixos-test-driver
   format:nix:
     silent: true
     desc: Format nix files
     cmds:
-      - nixpkgs-fmt .
-      - alejandra .
-      - nixpkgs-fmt .
-      - statix fix .
+      - nix fmt .
     sources:
       - "**/*.nix"
-  # TODO: re-enable it if sh files are added
-  # format:sh:
-  #   silent: true
-  #   desc: Format sh files
-  #   sources:
-  #     - "**/*.sh"
-  #   cmds:
-  #     - shfmt -w -i 2 **/*.sh
   format:
     silent: true
     desc: Format all files
@@ -71,3 +91,7 @@ tasks:
     deps: 
       # - check:sh
       - check:typo
+  secret:edit:
+    silent: true
+    cmds:
+      - sops secrets.yaml

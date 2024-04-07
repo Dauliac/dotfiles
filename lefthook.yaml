@@ -4,6 +4,10 @@ skip_output: [meta, success]
 pre-commit:
   parallel: false
   commands:
+    # TODO: rewrite it as signe derivation
+    build:
+      tags: build
+      run: task build
     check:
       tags: check
       run: nix flake check

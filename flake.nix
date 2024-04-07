@@ -1,87 +1,43 @@
 {
-  description = "Home Manager configuration of dauliac";
-
   inputs = {
-    # Specify the source of Home Manager and Nixpkgs.
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixGL = {
-      url = "github:guibou/nixGL";
+    # nixpkgs.url = "github:nixos/nixpkgs/nixos-stable";
+    flake-parts.url = "github:hercules-ci/flake-parts";
+    disko = {
+      url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-  };
-
-  outputs = inputs@{ nixpkgs, home-manager, nixGL, ... }:
-    let
-      system = "x86_64-linux";
-      pkgs = import nixpkgs {
-        inherit system;
-        config = {
-          allowUnfreePredicate = pkg:
-            builtins.elem (nixpkgs.lib.getName pkg)
-              [ "libsciter-4.4.8.23-bis" ];
-        };
-      };
-      formatterPackages = with pkgs; [
-        go-task
-        nixpkgs-fmt
-        alejandra
-        statix
-        shfmt
-      ];
-      checkPackages = with pkgs; [ go-task shellcheck typos yamllint ];
-      ciPackages = with pkgs; formatterPackages ++ checkPackages;
-    in
-    {
-      homeConfigurations."jdauliac" =
-        home-manager.lib.homeManagerConfiguration {
-          inherit pkgs;
-          modules = [
-            { nixpkgs.overlays = [ nixGL.overlay ]; }
-            ./modules/users/jdauliac.nix
-          ];
-          extraSpecialArgs = { inherit inputs; };
-        };
-
-      home-manager.useUserPackages = true;
-      home-manager.useGlobalPkgs = true;
-
-      homeConfigurations."dauliac" = home-manager.lib.homeManagerConfiguration {
-        inherit pkgs;
-        modules = [
-          { nixpkgs.overlays = [ nixGL.overlay ]; }
-          ./modules/users/dauliac.nix
-        ];
-        extraSpecialArgs = { inherit inputs; };
-      };
-
-      formatter = pkgs.writeShellApplication {
-        name = "normalise_nix";
-        runtimeInputs = formatterPackages;
-        text = ''
-          task format
-        '';
-      };
-
-      checks = {
-        check = pkgs.mkShell {
-          buildInputs = with pkgs; checkPackages;
-          shellHook = ''
-            task check
-          '';
-        };
-      };
-      nix.experimental.features = "nix-command";
-      devShells.x86_64-linux.default = pkgs.mkShell {
-        # inputsFrom = builtins.attrValues self.checks.${system};
-        nativeBuildInputs = with pkgs; [ lefthook ] ++ ciPackages;
-
-        devShellHook = ''
-          task install
-        '';
-      };
+    nixGL = {
+      url = "github:guibou/nixGL";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixpkgs-howdy.url = "github:fufexan/nixpkgs/howdy";
+    sops-nix.url = "github:Mic92/sops-nix";
+    nh = {
+      url = "github:viperML/nh";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nix-index-db = {
+      url = "github:Mic92/nix-index-database";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+  outputs = inputs @ {
+    nixpkgs,
+    flake-parts,
+    disko,
+    home-manager,
+    nixGL,
+    nixpkgs-howdy,
+    nh,
+    sops-nix,
+    ...
+  }:
+    flake-parts.lib.mkFlake {inherit inputs;} (_: {
+      systems = ["x86_64-linux"];
+      imports = [./modules];
+    });
 }
