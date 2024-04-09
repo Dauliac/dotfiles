@@ -30,7 +30,27 @@
     ];
     extraConfig = {
       core = { editor = "nvim"; };
-      commit = { template = "${config.xdg.configHome}/git/commit-template"; };
+      gpg.format = "ssh";
+      user.signingkey = "~/.ssh/id_ed25519";
+      push = {
+        autoSetupRemote = true;
+        default = "current";
+      };
+      commit = {
+        gpgsign = true;
+        template = "${config.xdg.configHome}/git/commit-template";
+      };
+      #TODO: add include per server:
+      # includes = [
+      #   https://nix-community.github.io/home-manager/options.xhtml#opt-programs.git.includes._.condition
+      #   {
+      #     condition = {};
+      #     path = "~/.config/git/secret";
+      #   }
+      #   {
+      #     path = "~/.config/git/secret";
+      #   }
+      # ];
     };
   };
 }
