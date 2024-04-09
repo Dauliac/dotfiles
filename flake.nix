@@ -24,20 +24,25 @@
       url = "github:Mic92/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    system-manager = {
+      url = "github:numtide/system-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
-  outputs = inputs @ {
-    nixpkgs,
-    flake-parts,
-    disko,
-    home-manager,
-    nixGL,
-    nixpkgs-howdy,
-    nh,
-    sops-nix,
-    ...
-  }:
-    flake-parts.lib.mkFlake {inherit inputs;} (_: {
-      systems = ["x86_64-linux"];
-      imports = [./modules];
+  outputs =
+    inputs @ { nixpkgs
+    , flake-parts
+    , disko
+    , home-manager
+    , nixGL
+    , nixpkgs-howdy
+    , nh
+    , sops-nix
+    , system-manager
+    , ...
+    }:
+    flake-parts.lib.mkFlake { inherit inputs; } (_: {
+      systems = [ "x86_64-linux" ];
+      imports = [ ./modules ];
     });
 }
