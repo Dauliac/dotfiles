@@ -36,6 +36,10 @@
         autoSetupRemote = true;
         default = "current";
       };
+      status = {
+        showUntrackedFiles = "all";
+        submoduleSummary = true;
+      };
       commit = {
         gpgsign = true;
         template = "${config.xdg.configHome}/git/commit-template";
