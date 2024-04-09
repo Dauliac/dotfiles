@@ -1,14 +1,18 @@
-{ inputs
-, config
-, pkgs
-, system
-, ...
+{
+  inputs,
+  config,
+  pkgs,
+  system,
+  ...
 }: {
   imports = [
     ./hardening.nix
     ./secrets.nix
   ];
-  boot.loader.systemd-boot.enable = true;
+  boot.loader.systemd-boot = {
+    enable = true;
+    configurationLimit = 4;
+  };
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelPackages = pkgs.linuxPackages_hardened;
   nixpkgs.config.allowUnfree = true;
@@ -54,12 +58,12 @@
   users.users.dauliac = {
     isNormalUser = true;
     description = "dauliac";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = ["networkmanager" "wheel"];
     shell = pkgs.zsh;
     hashedPasswordFile = config.sops.secrets.dauliac_hashed_password.path;
   };
   nix = {
-    settings.experimental-features = [ "nix-command" "flakes" ];
+    settings.experimental-features = ["nix-command" "flakes"];
     gc = {
       automatic = true;
       persistent = true;

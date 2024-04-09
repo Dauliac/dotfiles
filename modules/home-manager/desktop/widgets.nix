@@ -1,19 +1,21 @@
-{ pkgs
-, osConfig
-, lib
-, ...
-}:
-let
-  mkIf = lib.mkIf;
-in
 {
+  pkgs,
+  osConfig,
+  lib,
+  ...
+}: let
+in {
+  services.mako = {
+    enable = true;
+    catppuccin.enable = true;
+  };
   programs = {
-    rofi = mkIf osConfig.programs.hyprland.enable {
+    rofi = {
       enable = true;
       package = pkgs.rofi-wayland-unwrapped;
       theme = ./rofi/catppuccin.rasi;
     };
-    waybar = mkIf osConfig.programs.hyprland.enable {
+    waybar = {
       enable = true;
       style = ./waybar-style.css;
       settings = {
@@ -51,7 +53,7 @@ in
             format = "{icon} {volume}%";
             format-muted = "{icon} {volume}%";
             format-icons = {
-              default = [ "" "" "" ];
+              default = ["" "" ""];
             };
           };
         };

@@ -22,12 +22,13 @@
               inputs.nix-index-db.hmModules.nix-index
               inputs.sops-nix.homeManagerModules.sops
               inputs.catppuccin.homeManagerModules.catppuccin
+              ../home-manager/home.nix
             ];
             extraSpecialArgs = {inherit inputs;};
           };
           home-manager.users.dauliac = {
             imports = [
-              ../home-manager/home.nix
+              ../home-manager/profiles/dauliac.nix
             ];
           };
         }

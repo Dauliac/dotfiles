@@ -6,7 +6,6 @@
   lib,
   ...
 }: let
-  mkIf = lib.mkIf;
   screenshotarea = "hyprctl keyword animation 'fadeOut,0,0,default'; ${pkgs.grimblast}/bin/grimblast --notify copysave area; hyprctl keyword animation 'fadeOut,1,4,default'";
   # binds $mod + [shift +] {1..10} to [move to] workspace {1..10}
   workspaces = builtins.concatLists (builtins.genList
@@ -24,7 +23,7 @@
     10);
 in {
   wayland = {
-    windowManager.hyprland = mkIf osConfig.programs.hyprland.enable {
+    windowManager.hyprland = {
       enable = true;
       catppuccin.enable = true;
       settings = {
