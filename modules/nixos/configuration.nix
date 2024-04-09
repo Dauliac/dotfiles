@@ -58,7 +58,15 @@
     shell = pkgs.zsh;
     hashedPasswordFile = config.sops.secrets.dauliac_hashed_password.path;
   };
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix = {
+    settings.experimental-features = [ "nix-command" "flakes" ];
+    gc = {
+      automatic = true;
+      persistent = true;
+      dates = "012:15";
+      options = "-d";
+    };
+  };
   environment.systemPackages = with pkgs; [
     git
     vim
