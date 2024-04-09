@@ -1,37 +1,44 @@
-{
-  inputs,
-  lib,
-  config,
-  ...
-}: let
-  inherit (lib) mkOption mdDoc;
-  inherit (inputs.flake-parts.lib) mkPerSystemOption;
+{ inputs
+, lib
+, ...
+}:
+let
   inherit (inputs.home-manager.lib) homeManagerConfiguration;
   pkgs = inputs.nixpkgs.legacyPackages.x86_64-linux;
-in {
-  flake.homeConfigurations.jdauliac = homeManagerConfiguration {
+  shared = [
+    inputs.nix-index-db.hmModules.nix-index
+    inputs.sops-nix.homeManagerModules.sops
+    ./home.nix
+  ];
+  userOne = "jdauliac";
+  userTwo = "dauliac";
+in
+{
+  flake.homeConfigurations.${userOne} = homeManagerConfiguration {
     inherit pkgs;
-    imports = [
-      {nixpkgs.overlays = [inputs.nixGL.overlay];}
-      {
-        imports = [./home.nix];
-        home.username = "jdauliac";
-        home.homeDirectory = "/home/jdauliac/";
-      }
-    ];
-    extraSpecialArgs = {inherit inputs;};
+    modules =
+      shared
+      ++ [
+        { nixpkgs.overlays = [ inputs.nixGL.overlay ]; }
+        ./profiles/${userOne}.nix
+        {
+          home.username = userOne;
+          home.homeDirectory = "/home/${userOne}/";
+        }
+      ];
+    extraSpecialArgs = { inherit inputs; };
   };
-  flake.homeConfigurations.dauliac = homeManagerConfiguration {
+  flake.homeConfigurations.${userTwo} = homeManagerConfiguration {
     inherit pkgs;
-    modules = [
-      inputs.nix-index-db.hmModules.nix-index
-      inputs.sops-nix.homeManagerModules.sops
-      ./home.nix
-      {
-        home.username = "dauliac";
-        home.homeDirectory = "/home/dauliac/";
-      }
-    ];
-    extraSpecialArgs = {inherit inputs;};
+    modules =
+      shared
+      ++ [
+        ./profiles/${userTwo}.nix
+        {
+          home.username = userTwo;
+          home.homeDirectory = "/home/${userTwo}/";
+        }
+      ];
+    extraSpecialArgs = { inherit inputs; };
   };
 }

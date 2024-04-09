@@ -1,9 +1,8 @@
-{
-  inputs,
-  config,
-  pkgs,
-  system,
-  ...
+{ inputs
+, config
+, pkgs
+, system
+, ...
 }: {
   imports = [
     ./hardening.nix
@@ -55,16 +54,17 @@
   users.users.dauliac = {
     isNormalUser = true;
     description = "dauliac";
-    extraGroups = ["networkmanager" "wheel"];
+    extraGroups = [ "networkmanager" "wheel" ];
     shell = pkgs.zsh;
     hashedPasswordFile = config.sops.secrets.dauliac_hashed_password.path;
   };
-  nix.settings.experimental-features = ["nix-command" "flakes"];
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
   environment.systemPackages = with pkgs; [
     git
     vim
     curl
     vulnix
+    overskride
   ];
   environment.variables.EDITOR = "vim";
   programs.gnupg.agent = {

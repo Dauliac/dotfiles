@@ -1,4 +1,8 @@
-{pkgs, ...}: let
+{ pkgs
+, lib
+, ...
+}:
+let
   cli = with pkgs; [
     go-task
     ghq
@@ -18,8 +22,7 @@
     radicle-cli # Decentralized git
     age # encryption
     eza # TODO: check how to upgrade home-manager to use eza configs
-    nil # Nix lsp
-    (nerdfonts.override {fonts = ["FiraMono" "Iosevka"];})
+    (nerdfonts.override { fonts = [ "FiraMono" "Iosevka" ]; })
   ];
   gui = with pkgs; [
     sniffnet
@@ -29,10 +32,10 @@
     # rustdesk # Remote desktop
     # TODO: only install if we are not in nixOs profile
     # firefox-devedition # Firefox browser
-    overskride # Bluetooth client
     system76-keyboard-configurator
     system76-firmware
   ];
-in {
+in
+{
   home.packages = cli ++ gui;
 }

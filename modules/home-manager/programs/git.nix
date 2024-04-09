@@ -1,8 +1,4 @@
-{
-  config,
-  pkgs,
-  ...
-}: {
+{ config, ... }: {
   programs.git = {
     enable = true;
     userName = config.home.username;
@@ -33,8 +29,8 @@
       "*.iso"
     ];
     extraConfig = {
-      core = {editor = "nvim";};
-      commit = {template = "${config.xdg.configHome}/git/commit-template";};
+      core = { editor = "nvim"; };
+      commit = { template = "${config.xdg.configHome}/git/commit-template"; };
     };
   };
 }

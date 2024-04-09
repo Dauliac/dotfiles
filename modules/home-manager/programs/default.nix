@@ -1,11 +1,12 @@
-{
-  config,
-  pkgs,
-  ...
-}: let
+{ config
+, pkgs
+, ...
+}:
+let
   # TODO: fix nixgl integration
   # wrapNixGL = import ./nixGl.nix {inherit pkgs;};
-in {
+in
+{
   imports = [
     ./alacritty.nix
     ./bat.nix
@@ -24,7 +25,7 @@ in {
     enableZshIntegration = true;
   };
   # NOTE: cheat sheet
-  programs.tealdeer = {enable = true;};
+  programs.tealdeer = { enable = true; };
   # NOTE: cheat sheet
   programs.navi = {
     enable = true;
@@ -34,8 +35,8 @@ in {
     enable = true;
     enableZshIntegration = true;
   };
-  programs.htop = {enable = true;};
-  programs.jq = {enable = true;};
-  programs.k9s = {enable = true;};
-  programs.alacritty = {enable = true;};
+  programs.htop = { enable = true; };
+  programs.jq = { enable = true; };
+  programs.k9s = { enable = true; };
+  programs.alacritty = { enable = true; };
 }

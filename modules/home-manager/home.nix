@@ -1,14 +1,8 @@
-{
-  config,
-  pkgs,
-  inputs,
-  ...
-}: {
+{ config, ... }: {
   imports = [
-    ./desktop
-    ./packages.nix
-    ./xdg.nix
     ./aliases.nix
+    ./desktop/gtk.nix
+    ./packages.nix
     ./programs
     ./secrets.nix
   ];
@@ -19,6 +13,7 @@
       recursive = true;
     };
     fonts.fontconfig.enable = true;
+    xdg.enable = true;
     home.sessionVariables = {
       EDITOR = "nvim";
       # TODO: use firefox binary if nixOs profile is enabled
