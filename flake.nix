@@ -14,7 +14,6 @@
       url = "github:guibou/nixGL";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixpkgs-howdy.url = "github:fufexan/nixpkgs/howdy";
     sops-nix.url = "github:Mic92/sops-nix";
     nh = {
       url = "github:viperML/nh";
@@ -28,21 +27,22 @@
       url = "github:numtide/system-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    catppuccin.url = "github:catppuccin/nix";
   };
-  outputs =
-    inputs @ { nixpkgs
-    , flake-parts
-    , disko
-    , home-manager
-    , nixGL
-    , nixpkgs-howdy
-    , nh
-    , sops-nix
-    , system-manager
-    , ...
-    }:
-    flake-parts.lib.mkFlake { inherit inputs; } (_: {
-      systems = [ "x86_64-linux" ];
-      imports = [ ./modules ];
+  outputs = inputs @ {
+    nixpkgs,
+    flake-parts,
+    disko,
+    home-manager,
+    nixGL,
+    nh,
+    sops-nix,
+    system-manager,
+    catppuccin,
+    ...
+  }:
+    flake-parts.lib.mkFlake {inherit inputs;} (_: {
+      systems = ["x86_64-linux"];
+      imports = [./modules];
     });
 }

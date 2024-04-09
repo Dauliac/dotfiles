@@ -3,7 +3,6 @@
     enable = true;
     config = {
       pager = "less -FR";
-      theme = "ansi";
       style = "numbers,changes,header";
       map-syntax = [
         # NOTE: use C++ syntax highlighting for header files

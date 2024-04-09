@@ -1,5 +1,20 @@
 {
   "nodes": {
+    "catppuccin": {
+      "locked": {
+        "lastModified": 1712482981,
+        "narHash": "sha256-LJOOpTey9Y29C/TK4h9KP7v4HvqDL3mLyT9hSWCfFlI=",
+        "owner": "catppuccin",
+        "repo": "nix",
+        "rev": "4043beb6c792a40e9c513aa261f4ba10601a4457",
+        "type": "github"
+      },
+      "original": {
+        "owner": "catppuccin",
+        "repo": "nix",
+        "type": "github"
+      }
+    },
     "crane": {
       "inputs": {
         "nixpkgs": [
@@ -263,22 +278,6 @@
         "type": "indirect"
       }
     },
-    "nixpkgs-howdy": {
-      "locked": {
-        "lastModified": 1710705896,
-        "narHash": "sha256-9P8vryADuNikcl/agW/guGaaIYzqOwlz+zqwxRphNlE=",
-        "owner": "fufexan",
-        "repo": "nixpkgs",
-        "rev": "773ae5bb82a57fae73ffd7f47c74ab32ba97678f",
-        "type": "github"
-      },
-      "original": {
-        "owner": "fufexan",
-        "ref": "howdy",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "nixpkgs-lib": {
       "locked": {
         "dir": "lib",
@@ -375,6 +374,7 @@
     },
     "root": {
       "inputs": {
+        "catppuccin": "catppuccin",
         "disko": "disko",
         "flake-parts": "flake-parts",
         "home-manager": "home-manager",
@@ -382,7 +382,6 @@
         "nix-index-db": "nix-index-db",
         "nixGL": "nixGL",
         "nixpkgs": "nixpkgs",
-        "nixpkgs-howdy": "nixpkgs-howdy",
         "sops-nix": "sops-nix",
         "system-manager": "system-manager"
       }

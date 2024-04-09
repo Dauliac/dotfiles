@@ -21,6 +21,7 @@
             sharedModules = [
               inputs.nix-index-db.hmModules.nix-index
               inputs.sops-nix.homeManagerModules.sops
+              inputs.catppuccin.homeManagerModules.catppuccin
             ];
             extraSpecialArgs = {inherit inputs;};
           };

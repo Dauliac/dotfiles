@@ -1,21 +1,19 @@
-{ config
-, pkgs
-, ...
-}:
-let
-  # TODO: fix nixgl integration
-  # wrapNixGL = import ./nixGl.nix {inherit pkgs;};
-in
 {
+  config,
+  pkgs,
+  ...
+}: {
   imports = [
     ./alacritty.nix
     ./bat.nix
     ./direnv.nix
     ./git.nix
     ./history.nix
+    ./lazygit.nix
     ./pet.nix
     ./starship.nix
     ./wezterm.nix
+    ./zellij.nix
     ./zsh.nix
   ];
   programs.home-manager.enable = true;
@@ -25,18 +23,13 @@ in
     enableZshIntegration = true;
   };
   # NOTE: cheat sheet
-  programs.tealdeer = { enable = true; };
+  programs.tealdeer = {enable = true;};
   # NOTE: cheat sheet
   programs.navi = {
     enable = true;
     enableZshIntegration = true;
   };
-  programs.zellij = {
-    enable = true;
-    enableZshIntegration = true;
-  };
-  programs.htop = { enable = true; };
-  programs.jq = { enable = true; };
-  programs.k9s = { enable = true; };
-  programs.alacritty = { enable = true; };
+  programs.jq = {enable = true;};
+  programs.k9s = {enable = true;};
+  programs.alacritty = {enable = true;};
 }
