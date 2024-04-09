@@ -1,6 +1,7 @@
 {...}: {
   programs.alacritty = {
     enable = true;
+    catppuccin.enable = true;
     settings = {
       selection = {
         save_to_clipboard = true;

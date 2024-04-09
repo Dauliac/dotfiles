@@ -1,82 +1,76 @@
-{ inputs
-, pkgs
-, config
-, osConfig
-, lib
-, ...
-}:
-let
+{
+  inputs,
+  pkgs,
+  config,
+  osConfig,
+  lib,
+  ...
+}: let
   mkIf = lib.mkIf;
   screenshotarea = "hyprctl keyword animation 'fadeOut,0,0,default'; ${pkgs.grimblast}/bin/grimblast --notify copysave area; hyprctl keyword animation 'fadeOut,1,4,default'";
   # binds $mod + [shift +] {1..10} to [move to] workspace {1..10}
   workspaces = builtins.concatLists (builtins.genList
     (
-      x:
-      let
-        ws =
-          let
-            c = (x + 1) / 10;
-          in
+      x: let
+        ws = let
+          c = (x + 1) / 10;
+        in
           builtins.toString (x + 1 - (c * 10));
-      in
-      [
+      in [
         "$mod, ${ws}, workspace, ${toString (x + 1)}"
         "$mod SHIFT, ${ws}, movetoworkspace, ${toString (x + 1)}"
       ]
     )
     10);
-in
-{
+in {
   wayland = {
     windowManager.hyprland = mkIf osConfig.programs.hyprland.enable {
       enable = true;
+      catppuccin.enable = true;
       settings = {
         exec-once = "${config.programs.waybar.package}/bin/waybar";
         "$mod" = "SUPER";
-        monitor =
-          let
-            default = rec {
-              description = "Chimei Innolux Corporation 0x1408";
-              width = 1920;
-              height = 1080;
-              verticalPosition = 0;
-              horizontalPosition = 0;
-              positionConfig = builtins.toString horizontalPosition + "x" + builtins.toString verticalPosition;
-              config = "desc:${description},preferred,${default.positionConfig},1";
-            };
-            topLarge = rec {
-              description = "Beihai Century Joint Innovation Technology Co.Ltd CS2900";
-              width = 2560;
-              height = 1080;
-              verticalPosition = -height;
-              horizontalPosition = -(width - default.width);
-              positionConfig = builtins.toString horizontalPosition + "x" + builtins.toString verticalPosition;
-              config = "desc:${description},preferred,${topLarge.positionConfig},1";
-            };
-            leftVertical = rec {
-              description = "Lenovo Group Limited LEN T24i-20 VNA4HXH3";
-              width = 1080;
-              height = 1920;
-              verticalPosition = -topLarge.height;
-              horizontalPosition = default.width;
-              positionConfig = builtins.toString leftVertical.horizontalPosition + "x" + builtins.toString leftVertical.verticalPosition;
-              config = "desc:${description},preferred,${leftVertical.positionConfig},1,transform,1";
-            };
-          in
-          [
-            default.config
-            topLarge.config
-            leftVertical.config
-          ];
+        monitor = let
+          default = rec {
+            description = "Chimei Innolux Corporation 0x1408";
+            width = 1920;
+            height = 1080;
+            verticalPosition = 0;
+            horizontalPosition = 0;
+            positionConfig = builtins.toString horizontalPosition + "x" + builtins.toString verticalPosition;
+            config = "desc:${description},preferred,${default.positionConfig},1";
+          };
+          topLarge = rec {
+            description = "Beihai Century Joint Innovation Technology Co.Ltd CS2900";
+            width = 2560;
+            height = 1080;
+            verticalPosition = -height;
+            horizontalPosition = -(width - default.width);
+            positionConfig = builtins.toString horizontalPosition + "x" + builtins.toString verticalPosition;
+            config = "desc:${description},preferred,${topLarge.positionConfig},1";
+          };
+          leftVertical = rec {
+            description = "Lenovo Group Limited LEN T24i-20 VNA4HXH3";
+            width = 1080;
+            height = 1920;
+            verticalPosition = -topLarge.height;
+            horizontalPosition = default.width;
+            positionConfig = builtins.toString leftVertical.horizontalPosition + "x" + builtins.toString leftVertical.verticalPosition;
+            config = "desc:${description},preferred,${leftVertical.positionConfig},1,transform,1";
+          };
+        in [
+          default.config
+          topLarge.config
+          leftVertical.config
+        ];
         bindm = [
           "$mod, mouse:272, movewindow"
           "$mod, mouse:273, resizewindow"
           "$mod ALT, mouse:272, resizewindow"
         ];
-        bind =
-          let
-            monocle = "dwindle:no_gaps_when_only";
-          in
+        bind = let
+          monocle = "dwindle:no_gaps_when_only";
+        in
           [
             # NOTE: compositor commands
             "$mod SHIFT, E, exec, pkill Hyprland"
