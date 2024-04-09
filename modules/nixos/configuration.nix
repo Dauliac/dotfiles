@@ -77,6 +77,7 @@
     curl
     vulnix
     overskride
+    htop
   ];
   environment.variables.EDITOR = "vim";
   programs.gnupg.agent = {

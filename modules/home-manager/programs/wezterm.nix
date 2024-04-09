@@ -33,7 +33,7 @@
       end)
 
       return {
-        color_scheme = "Gruvbox Dark (Gogh)",
+        color_scheme = "Catppuccin Mocha (Gogh)",
         window_background_opacity = 0.89,
         font = wezterm.font {
          family = 'Iosevka Nerd Font',

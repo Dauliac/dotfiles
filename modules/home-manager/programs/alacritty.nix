@@ -3,6 +3,9 @@
     enable = true;
     catppuccin.enable = true;
     settings = {
+      font = {
+        normal.family = "Iosevka Nerd Font Mono";
+      };
       selection = {
         save_to_clipboard = true;
       };

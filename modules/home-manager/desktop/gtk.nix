@@ -6,6 +6,9 @@
       size = "compact";
       accent = "pink";
       tweaks = ["rimless"];
+      cursor = {
+        enable = true;
+      };
     };
     font = {
       name = "Iosevka";
