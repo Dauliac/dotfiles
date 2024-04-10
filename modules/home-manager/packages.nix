@@ -1,8 +1,8 @@
-{ pkgs
-, lib
-, ...
-}:
-let
+{
+  pkgs,
+  lib,
+  ...
+}: let
   cli = with pkgs; [
     go-task
     ghq
@@ -22,7 +22,7 @@ let
     radicle-cli # Decentralized git
     age # encryption
     eza # TODO: check how to upgrade home-manager to use eza configs
-    (nerdfonts.override { fonts = [ "FiraMono" "Iosevka" ]; })
+    (nerdfonts.override {fonts = ["FiraMono" "Iosevka"];})
   ];
   gui = with pkgs; [
     sniffnet
@@ -35,7 +35,6 @@ let
     system76-keyboard-configurator
     system76-firmware
   ];
-in
-{
+in {
   home.packages = cli ++ gui;
 }

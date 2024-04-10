@@ -29,20 +29,20 @@
     };
     catppuccin.url = "github:catppuccin/nix";
   };
-  outputs =
-    inputs @ { nixpkgs
-    , flake-parts
-    , disko
-    , home-manager
-    , nixGL
-    , nh
-    , sops-nix
-    , system-manager
-    , catppuccin
-    , ...
-    }:
-    flake-parts.lib.mkFlake { inherit inputs; } (_: {
-      systems = [ "x86_64-linux" ];
-      imports = [ ./modules ];
+  outputs = inputs @ {
+    nixpkgs,
+    flake-parts,
+    disko,
+    home-manager,
+    nixGL,
+    nh,
+    sops-nix,
+    system-manager,
+    catppuccin,
+    ...
+  }:
+    flake-parts.lib.mkFlake {inherit inputs;} (_: {
+      systems = ["x86_64-linux"];
+      imports = [./modules];
     });
 }

@@ -1,4 +1,4 @@
-{...}: {
+_: {
   # TODO: reintegrate nixGl wrapper
   programs.wezterm = {
     enable = true;

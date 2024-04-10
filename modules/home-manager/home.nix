@@ -1,4 +1,4 @@
-{ config, ... }: {
+{config, ...}: {
   imports = [
     ./aliases.nix
     ./desktop/gtk.nix

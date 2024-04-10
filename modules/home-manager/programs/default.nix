@@ -1,8 +1,4 @@
-{
-  config,
-  pkgs,
-  ...
-}: {
+{...}: {
   imports = [
     ./alacritty.nix
     ./bat.nix
@@ -23,13 +19,13 @@
     enableZshIntegration = true;
   };
   # NOTE: cheat sheet
-  programs.tealdeer = { enable = true; };
+  programs.tealdeer = {enable = true;};
   # NOTE: cheat sheet
   programs.navi = {
     enable = true;
     enableZshIntegration = true;
   };
-  programs.jq = { enable = true; };
+  programs.jq = {enable = true;};
   programs.k9s = {
     enable = true;
     settings = {

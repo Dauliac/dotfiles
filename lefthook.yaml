@@ -13,7 +13,7 @@ pre-commit:
       run: nix flake check
     formatter-nix:
       tags: formatter
-      glob: '*.nix'
+      glob: '**/*.nix'
       run: nix fmt
       stage_fixed: true
 pre-push:

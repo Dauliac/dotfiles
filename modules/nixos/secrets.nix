@@ -1,4 +1,4 @@
-{...}: {
+_: {
   sops = {
     age.keyFile = "/home/dauliac/.config/sops/age/keys.txt";
     defaultSopsFile = ../../secrets.yaml;

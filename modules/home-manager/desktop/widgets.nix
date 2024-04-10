@@ -3,8 +3,7 @@
   osConfig,
   lib,
   ...
-}: let
-in {
+}: {
   services.mako = {
     enable = true;
     catppuccin.enable = true;

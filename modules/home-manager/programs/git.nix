@@ -1,4 +1,4 @@
-{ config, ... }: {
+{config, ...}: {
   programs.git = {
     enable = true;
     userName = config.home.username;
@@ -29,7 +29,7 @@
       "*.iso"
     ];
     extraConfig = {
-      core = { editor = "nvim"; };
+      core = {editor = "nvim";};
       gpg.format = "ssh";
       user.signingkey = "~/.ssh/id_ed25519";
       push = {
