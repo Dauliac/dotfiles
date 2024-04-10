@@ -1,7 +1,6 @@
 { config, ... }: {
   sops = {
-    # TODO: use config
-    age.keyFile = "/home/dauliac/.config/sops/age/keys.txt";
+    age.keyFile = "${config.home.homeDirectory}.config/sops/age/dotfiles.txt";
     defaultSopsFile = ../../secrets.yaml;
     secrets.openai_key = { };
     secrets.email = { };
