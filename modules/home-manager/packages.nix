@@ -23,6 +23,7 @@
     age # encryption
     eza # TODO: check how to upgrade home-manager to use eza configs
     (nerdfonts.override {fonts = ["FiraMono" "Iosevka"];})
+    yt-dlp
   ];
   gui = with pkgs; [
     sniffnet
@@ -34,6 +35,7 @@
     # firefox-devedition # Firefox browser
     system76-keyboard-configurator
     system76-firmware
+    vlc
   ];
 in {
   home.packages = cli ++ gui;

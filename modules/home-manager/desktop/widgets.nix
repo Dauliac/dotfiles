@@ -26,14 +26,20 @@
             "hyprland/workspaces"
             "hyprland/window"
             "wlr/taskbar"
+            "cpu"
+            "memory"
+            "systemd-failed-units"
           ];
           modules-center = [
             "clock"
           ];
           modules-right = [
+            "cava"
             "network"
+            # "bluetooth"
             "upower"
             "blacklight"
+            "backlight/slider"
             "pulseaudio"
           ];
           "hyprland/workspaces" = {

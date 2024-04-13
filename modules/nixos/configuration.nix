@@ -45,6 +45,7 @@
     xkbVariant = "altgr-intl";
   };
   services.printing.enable = true;
+
   sound.enable = true;
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
@@ -55,10 +56,29 @@
     pulse.enable = true;
     wireplumber.enable = true;
   };
+
+  location.provider = "geoclue2";
+  # provide location
+  services.geoclue2.enable = true;
+
+  hardware.brillo.enable = true;
+  services.clight = {
+    enable = true;
+    settings = {
+      verbose = true;
+      backlight.disabled = true;
+      dpms.timeouts = [900 300];
+      dimmer.timeouts = [870 270];
+      gamma.long_transition = true;
+      keyboard.disabled = true;
+      screen.disabled = true;
+    };
+  };
+
   users.users.dauliac = {
     isNormalUser = true;
     description = "dauliac";
-    extraGroups = ["networkmanager" "wheel"];
+    extraGroups = ["networkmanager" "wheel" "audio" "video"];
     shell = pkgs.zsh;
     hashedPasswordFile = config.sops.secrets.dauliac_hashed_password.path;
   };
