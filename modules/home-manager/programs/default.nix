@@ -6,6 +6,7 @@
     ./git.nix
     ./history.nix
     ./lazygit.nix
+    ./neovim
     ./pet.nix
     ./starship.nix
     ./wezterm.nix

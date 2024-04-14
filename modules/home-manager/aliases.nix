@@ -1,7 +1,7 @@
 {pkgs, ...}: {
   home.shellAliases = {
     cat = "${pkgs.bat}/bin/bat";
-    nvim = "nix run $(${pkgs.ghq}/bin/ghq root)/$(${pkgs.ghq}/bin/ghq list | grep Dauliac/neovim)";
+    # nvim = "nix run $(${pkgs.ghq}/bin/ghq root)/$(${pkgs.ghq}/bin/ghq list | grep Dauliac/neovim)";
     clip = "xclip -selection c";
     restore = "trash-restore";
     rm = "trash-put";

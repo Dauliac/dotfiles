@@ -55,6 +55,7 @@
     alsa.support32Bit = true;
     pulse.enable = true;
     wireplumber.enable = true;
+    jack.enable = true;
   };
 
   location.provider = "geoclue2";
@@ -93,7 +94,7 @@
   };
   environment.systemPackages = with pkgs; [
     git
-    vim
+    # vim
     curl
     vulnix
     overskride
@@ -106,5 +107,7 @@
   };
   programs.zsh.enable = true;
   networking.firewall.enable = true;
+  # BUG: https://discourse.nixos.org/t/logrotate-config-fails-due-to-missing-group-30000/28501
+  services.logrotate.checkConfig = false;
   system.stateVersion = "23.11"; # Did you read the comment?
 }
