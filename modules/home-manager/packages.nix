@@ -34,8 +34,6 @@
     # TODO: only install if we are not in nixOs profile
     # firefox-devedition # Firefox browser
     system76-keyboard-configurator
-    system76-firmware
-    vlc
   ];
 in {
   home.packages = cli ++ gui;

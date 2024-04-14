@@ -15,5 +15,6 @@
     brillo
     cava
     sonic-pi
+    system76-firmware
   ];
 }

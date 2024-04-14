@@ -22,7 +22,7 @@
         ++ config.linters
         ++ config.formatterPackages;
       devShellHook = ''
-        export SOPS_AGE_KEY_FILE="~/.config/sops/keys/age/dotfiles.txt"
+        export SOPS_AGE_KEY_FILE=~/.config/sops/age/dotfiles.txt
         git config diff.sopsdiffer.textconv "sops decrypt"
       '';
     };
