@@ -27,7 +27,7 @@ in {
       enable = true;
       catppuccin.enable = true;
       settings = {
-        exec-once = "${config.programs.waybar.package}/bin/waybar";
+        exec-once = "${config.programs.wpaperd.package}/bin/wpaperd && ${config.programs.waybar.package}/bin/waybar";
         "$mod" = "SUPER";
         monitor = let
           default = rec {
