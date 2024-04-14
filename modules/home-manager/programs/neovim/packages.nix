@@ -1,0 +1,41 @@
+{pkgs, ...}: {
+  home.packages = with pkgs; [
+    alejandra
+    dotenv-linter
+    editorconfig-checker
+    fd
+    ghq
+    gopls
+    hadolint
+    lazygit
+    ltex-ls
+    lua-language-server
+    nil
+    nixfmt
+    nixpkgs-fmt
+    nodePackages."@volar/vue-language-server"
+    nodePackages.bash-language-server
+    nodePackages.dockerfile-language-server-nodejs
+    nodePackages.prettier
+    nodePackages.typescript
+    php83Packages.phan
+    php83Packages.php-codesniffer
+    php83Packages.phpstan
+    phpactor
+    pyright
+    python311Packages.pynvim
+    ripgrep
+    rust-analyzer
+    rustfmt
+    shellcheck
+    shellharden
+    shfmt
+    stylua
+    terraform-ls
+    typos
+    vscode-extensions.llvm-org.lldb-vscode
+    vscode-langservers-extracted
+    xsel
+    yaml-language-server
+  ];
+}

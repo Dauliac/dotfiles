@@ -1,6 +1,6 @@
 {
   inputs = {
-    # nixpkgs.url = "github:nixos/nixpkgs/nixos-stable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-parts.url = "github:hercules-ci/flake-parts";
     disko = {
       url = "github:nix-community/disko";
@@ -28,6 +28,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     catppuccin.url = "github:catppuccin/nix";
+    nixvim = {
+      url = "github:nix-community/nixvim";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs = inputs @ {
     nixpkgs,
@@ -39,6 +43,7 @@
     sops-nix,
     system-manager,
     catppuccin,
+    nixvim,
     ...
   }:
     flake-parts.lib.mkFlake {inherit inputs;} (_: {

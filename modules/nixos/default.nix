@@ -22,6 +22,7 @@
               inputs.nix-index-db.hmModules.nix-index
               inputs.sops-nix.homeManagerModules.sops
               inputs.catppuccin.homeManagerModules.catppuccin
+              inputs.nixvim.homeManagerModules.nixvim
               ../home-manager/home.nix
             ];
             extraSpecialArgs = {inherit inputs;};

@@ -22,7 +22,6 @@
     fonts.fontconfig.enable = true;
     xdg.enable = true;
     home.sessionVariables = {
-      EDITOR = "nvim";
       # TODO: use firefox binary if nixOs profile is enabled
       BROWSER = "firefox-devedition";
     };
