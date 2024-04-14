@@ -14,6 +14,14 @@
       package = pkgs.rofi-wayland-unwrapped;
       theme = ./rofi/catppuccin.rasi;
     };
+    wpaperd = {
+      enable = true;
+      settings = {
+        default = {
+          path = ./wallpaper.jpg;
+        };
+      };
+    };
     waybar = {
       enable = true;
       style = ./waybar-style.css;
