@@ -1,6 +1,7 @@
 {
-  inputs,
   config,
+  inputs,
+  lib,
   pkgs,
   system,
   ...
@@ -8,15 +9,10 @@
   imports = [
     ./hardening.nix
     ./secrets.nix
+    ./boot.nix
   ];
-  boot.loader.systemd-boot = {
-    enable = true;
-    configurationLimit = 4;
-  };
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.kernelPackages = pkgs.linuxPackages_hardened;
   nixpkgs.config.allowUnfree = true;
-  networking.hostName = "nixos"; # Define your hostname.
+  networking.hostName = "nixos";
   networking.networkmanager.enable = true;
   time.timeZone = "Europe/Paris";
   i18n.defaultLocale = "en_US.UTF-8";
@@ -35,20 +31,31 @@
     enable = true;
     xwayland.enable = true;
   };
-  hardware.opengl.enable = true;
+  hardware.opengl = {
+    enable = true;
+    extraPackages = with pkgs; [
+      intel-media-driver
+      vaapiIntel
+      vaapiVdpau
+      libvdpau-va-gl
+    ];
+    extraPackages32 = with pkgs.pkgsi686Linux; [vaapiIntel vaapiVdpau intel-media-driver libvdpau-va-gl];
+    driSupport32Bit = true;
+  };
   services.xserver.enable = true;
   services.xserver.displayManager.gdm.enable = true;
   services.picom.vSync = "drm";
   services.xserver.desktopManager.gnome.enable = true;
   services.xserver = {
-    layout = "us";
-    xkbVariant = "altgr-intl";
+    xkb = {
+      layout = "us";
+      variant = "altgr-intl";
+    };
   };
   services.printing.enable = true;
 
   sound.enable = true;
   hardware.pulseaudio.enable = false;
-  security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
     alsa.enable = true;
@@ -84,7 +91,9 @@
     hashedPasswordFile = config.sops.secrets.dauliac_hashed_password.path;
   };
   nix = {
-    settings.experimental-features = ["nix-command" "flakes"];
+    settings = {
+      experimental-features = ["nix-command" "flakes"];
+    };
     gc = {
       automatic = true;
       persistent = true;
@@ -94,13 +103,16 @@
   };
   environment.systemPackages = with pkgs; [
     git
-    # vim
     curl
-    vulnix
     overskride
     htop
+    pipewire.jack
+    sbctl
   ];
-  environment.variables.EDITOR = "vim";
+  environment.variables = {
+    VDPAU_DRIVER = lib.mkIf config.hardware.opengl.enable (lib.mkDefault "va_gl");
+    LIBVA_DRIVER_NAME = "iHD";
+  };
   programs.gnupg.agent = {
     enable = true;
     enableSSHSupport = true;

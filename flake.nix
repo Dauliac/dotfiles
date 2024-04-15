@@ -32,6 +32,14 @@
       url = "github:nix-community/nixvim";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    sonicpi-nvim = {
+      url = "github:magicmonty/sonicpi.nvim";
+      flake = false;
+    };
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs = inputs @ {
     nixpkgs,
@@ -44,6 +52,8 @@
     system-manager,
     catppuccin,
     nixvim,
+    sonicpi-nvim,
+    lanzaboote,
     ...
   }:
     flake-parts.lib.mkFlake {inherit inputs;} (_: {

@@ -1,6 +1,8 @@
 require("catppuccin").setup({
-  transparent_background = true,
+	transparent_background = true,
 })
+vim.cmd.colorscheme("catppuccin-mocha")
+
 vim.cmd("highlight normal guibg=none ctermbg=none")
 vim.cmd("highlight nontext guibg=none ctermbg=none")
 vim.cmd("highlight signcolumn guibg=none ctermbg=none")
