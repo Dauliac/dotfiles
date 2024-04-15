@@ -37,5 +37,6 @@
     vscode-langservers-extracted
     xsel
     yaml-language-server
+    supercollider
   ];
 }

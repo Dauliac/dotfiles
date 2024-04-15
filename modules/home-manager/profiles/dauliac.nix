@@ -14,7 +14,10 @@
     prismlauncher
     brillo
     cava
+    ffmpeg_4-full.bin
+    termusic
     sonic-pi
     system76-firmware
+    rclone
   ];
 }

@@ -12,6 +12,7 @@
         inputs.disko.nixosModules.disko
         inputs.home-manager.nixosModules.home-manager
         inputs.sops-nix.nixosModules.sops
+        inputs.lanzaboote.nixosModules.lanzaboote
         ./disko.nix
         ./configuration.nix
         ./hardware-configuration.nix

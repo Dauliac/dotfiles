@@ -86,7 +86,7 @@ in {
             "$mod, P, pseudo,"
             "$mod ALT, ,resizeactive,"
             # terminal
-            "$mod, Return, exec, ${pkgs.alacritty}/bin/alacritty"
+            "$mod, Return, exec, ${pkgs.wezterm}/bin/wezterm"
             # logout menu
             "$mod, Escape, exec, wlogout -p layer-shell"
             # lock screen

@@ -19,6 +19,13 @@ tasks:
     sources:
       - ./lefthook.yaml
       - ./flake.nix
+  secrure-boot:
+    silent: true
+    desc: Generate secure boot keys
+    cmds:
+      - |
+        bootctl status
+        sudo sbctl create-keys
   build:
     cmds:
       - task: build:home-manager:nix-os

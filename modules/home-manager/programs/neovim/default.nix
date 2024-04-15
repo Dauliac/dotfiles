@@ -1,20 +1,33 @@
-{pkgs, ...}: {
+{
+  inputs,
+  pkgs,
+  ...
+}: let
+  sonicpi-nvim =
+    pkgs.vimUtils.buildVimPlugin
+    {
+      name = "sonicpi";
+      src = "${inputs.sonicpi-nvim.outPath}";
+    };
+in {
   imports = [
     ./opts.nix
     ./packages.nix
   ];
   programs.nixvim = {
     enable = true;
+    defaultEditor = true;
+    viAlias = true;
+    vimAlias = true;
     colorscheme = "catppuccin-mocha";
     globals.mapleader = ",";
-    defaultEditor = true;
     clipboard = {
       register = "unnamedplus";
       providers.wl-copy.enable = true;
     };
     extraConfigLua = ''
       dofile("${./lua/autopair.lua}")
-      dofile("${./lua/catppuccino.lua}")
+      dofile("${./lua/catppuccin.lua}")
       dofile("${./lua/chatgpt.lua}")
       dofile("${./lua/cmp.lua}")
       dofile("${./lua/comment.lua}")
@@ -25,9 +38,11 @@
       dofile("${./lua/gitsigns.lua}")
       dofile("${./lua/glow.lua}")
       dofile("${./lua/indent-blankline-nvim.lua}")
+      dofile("${./lua/init.lua}")
       dofile("${./lua/keymap.lua}")
       dofile("${./lua/lazygit.lua}")
       dofile("${./lua/lsp-colors.lua}")
+      dofile("${./lua/lspkind.lua}")
       dofile("${./lua/lualine.lua}")
       dofile("${./lua/neoclip.lua}")
       dofile("${./lua/neoscroll.lua}")
@@ -40,6 +55,9 @@
       dofile("${./lua/todo-comments.lua}")
       dofile("${./lua/treesitter.lua}")
       dofile("${./lua/which-key.lua}")
+      require("sonicpi").setup({
+        server_dir = "${pkgs.sonic-pi}/app/server",
+      })
     '';
     plugins = {
       copilot-lua.enable = true;
@@ -56,6 +74,7 @@
       goyo.enable = true;
       nvim-autopairs.enable = true;
       undotree.enable = true;
+      lspkind.enable = true;
     };
     extraPlugins = with pkgs.vimPlugins; [
       ChatGPT-nvim
@@ -70,7 +89,6 @@
       lsp-colors-nvim
       lsp-format-nvim
       lsp-status-nvim
-      lspkind-nvim
       lspsaga-nvim
       lualine-lsp-progress
       lualine-nvim
@@ -93,6 +111,7 @@
       plenary-nvim
       registers-nvim
       rust-tools-nvim
+      sonicpi-nvim
       sqlite-lua
       ssr-nvim
       telescope-dap-nvim
