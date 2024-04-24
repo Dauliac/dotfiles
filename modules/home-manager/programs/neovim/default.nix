@@ -35,6 +35,7 @@ in {
       dofile("${./lua/doge.lua}")
       dofile("${./lua/filetree.lua}")
       dofile("${./lua/fzf.lua}")
+      dofile("${./lua/lsp.lua}")
       dofile("${./lua/gitsigns.lua}")
       dofile("${./lua/glow.lua}")
       dofile("${./lua/indent-blankline-nvim.lua}")
@@ -60,26 +61,37 @@ in {
       })
     '';
     plugins = {
-      copilot-lua.enable = true;
       cmp-buffer.enable = true;
       cmp-cmdline.enable = true;
       cmp-emoji.enable = true;
       cmp-nvim-lsp.enable = true;
       cmp-path.enable = true;
       cmp.enable = true;
+      cmp-conventionalcommits.enable = true;
       comment.enable = true;
       copilot-cmp.enable = true;
+      copilot-lua.enable = true;
       flash.enable = true;
       fzf-lua.enable = true;
       goyo.enable = true;
-      nvim-autopairs.enable = true;
-      undotree.enable = true;
+      lsp-format.enable = true;
+      lsp-lines.enable = true;
+      lsp.enable = true;
       lspkind.enable = true;
+      lspsaga.enable = true;
+      neogit.enable = true;
+      nvim-autopairs.enable = true;
+      todo-comments.enable = true;
+      treesitter-context.enable = true;
+      trouble.enable = true;
+      undotree.enable = true;
     };
     extraPlugins = with pkgs.vimPlugins; [
       ChatGPT-nvim
       barbar-nvim
       catppuccin-nvim
+      crates-nvim
+      rustaceanvim
       diffview-nvim
       firenvim
       gitsigns-nvim
@@ -87,9 +99,7 @@ in {
       indent-blankline-nvim-lua
       lazygit-nvim
       lsp-colors-nvim
-      lsp-format-nvim
       lsp-status-nvim
-      lspsaga-nvim
       lualine-lsp-progress
       lualine-nvim
       neodev-nvim
@@ -106,7 +116,6 @@ in {
       nvim-spectre
       nvim-surround
       nvim-tree-lua
-      nvim-treesitter-context
       nvim-web-devicons
       plenary-nvim
       registers-nvim
@@ -116,8 +125,6 @@ in {
       ssr-nvim
       telescope-dap-nvim
       telescope-nvim
-      todo-comments-nvim
-      trouble-nvim
       vim-gitgutter
       which-key-nvim
       (nvim-treesitter.withPlugins (p: [

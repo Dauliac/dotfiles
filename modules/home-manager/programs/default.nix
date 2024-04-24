@@ -15,7 +15,7 @@
   ];
   programs.home-manager.enable = true;
   # NOTE: fast cd
-  programs.pazi = {
+  programs.zoxide = {
     enable = true;
     enableZshIntegration = true;
   };

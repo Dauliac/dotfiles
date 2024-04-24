@@ -1,14 +1,14 @@
-{ config
-, pkgs
-, ...
-}:
-let
+{
+  config,
+  pkgs,
+  ...
+}: let
   nixGL = pkgs.nixgl.nixGLIntel;
   nixGlWrapper = pkg:
     pkgs.buildEnv {
       name = "nixGL-${pkg.name}";
       paths =
-        [ pkg ]
+        [pkg]
         ++ (map
           (bin:
             pkgs.hiPrio (pkgs.writeShellScriptBin bin ''
@@ -16,18 +16,19 @@ let
             ''))
           (builtins.attrNames (builtins.readDir "${pkg}/bin")));
     };
-in
-{
+in {
   # WARN: set it to true segfault nautilus in non nixOs systems
   xdg.mime.enable = false;
-  xdg.systemDirs.data = [ "${config.home.homeDirectory}/.nix-profile/share" ];
-  home.activation.setupEtc = config.lib.dag.entryAfter [ "writeBoundary" ] ''
+  xdg.systemDirs.data = ["${config.home.homeDirectory}/.nix-profile/share"];
+  home.activation.setupEtc = config.lib.dag.entryAfter ["writeBoundary"] ''
     /usr/bin/systemctl start --user sops-nix
   '';
   home.packages = with pkgs; [
-    kgs.firefox-devedition
+    firefox-devedition
     jira-cli-go
     slack
+    gptcommit
+    glab
   ];
   programs = {
     wezterm.package = nixGlWrapper pkgs.wezterm;
