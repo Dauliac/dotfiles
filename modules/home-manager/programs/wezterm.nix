@@ -1,11 +1,8 @@
-_: {
-  # TODO: reintegrate nixGl wrapper
+{...}: {
   programs.wezterm = {
     enable = true;
     enableZshIntegration = true;
 
-    # TODO: add option to disable wayland in tests:
-    #   enable_wayland = false,
     extraConfig = ''
       local
       wezterm = require 'wezterm';

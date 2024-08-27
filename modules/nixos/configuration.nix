@@ -1,9 +1,7 @@
 {
   config,
-  inputs,
   lib,
   pkgs,
-  system,
   ...
 }: {
   imports = [
@@ -94,6 +92,7 @@
     settings = {
       experimental-features = ["nix-command" "flakes"];
     };
+    auto-optimise-store = true;
     gc = {
       automatic = true;
       persistent = true;

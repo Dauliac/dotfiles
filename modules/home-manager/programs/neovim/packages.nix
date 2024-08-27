@@ -38,5 +38,7 @@
     xsel
     yaml-language-server
     supercollider
+    helm-ls
+    markdown-oxide
   ];
 }

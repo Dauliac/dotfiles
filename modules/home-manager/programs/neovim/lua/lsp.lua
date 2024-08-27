@@ -1,3 +1,14 @@
+---
+require("crates").setup()
+
+local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
+capabilities.workspace = {
+    didChangeWatchedFiles = {
+      dynamicRegistration = true,
+    },
+}
+
 require("lspconfig").pyright.setup({
 	capabilities = capabilities,
 	-- on_attach = require("lsp-format").on_attach,
@@ -5,6 +16,7 @@ require("lspconfig").pyright.setup({
 
 require("lspconfig").terraformls.setup({
 	capabilities = capabilities,
+  filetypes = { "tf", "hcl"},
 	-- on_attach = require("lsp-format").on_attach,
 	root_dir = require("lspconfig.util").root_pattern(".git"),
 })
@@ -52,6 +64,7 @@ require("lspconfig").lua_ls.setup({
 require("lspconfig").yamlls.setup({
 	capabilities = capabilities,
 	-- on_attach = require("lsp-format").on_attach,
+  filetypes = { "yaml.docker-compose", "yaml.gitlab", "yaml.kubernetes", "yaml.taskfile"},
 	settings = {
 		yaml = {
 			format = {
@@ -60,14 +73,21 @@ require("lspconfig").yamlls.setup({
 			},
 			customTags = { "!reference sequence" },
 			schemas = {
-				["https://raw.githubusercontent.com/instrumenta/kubernetes-json-schema/master/v1.18.0-standalone-strict/all.json"] = "k8s/**/*.yml",
-				["https://taskfile.dev/schema.json"] = "**/Taskfile.*",
-				["https://gitlab.com/gitlab-org/gitlab/-/raw/master/app/assets/javascripts/editor/schema/ci.json"] = {
-					".gitlab-ci.yml",
-					"ci/environments/**/*.yaml",
-					"ci/modules/**/*.yaml",
+				["https://raw.githubusercontent.com/instrumenta/kubernetes-json-schema/master/v1.18.0-standalone-strict/all.json"] = {
+					"**/kube/**/*.{yml,yaml}",
+					"**/k8s/**/*.{yml,yaml}",
+					"**/kubernetes/**/*.{yml,yaml}",
 				},
-				["https://json.schemastore.org/container-structure-test.json"] = ".cst.yml",
+				-- ["https://taskfile.dev/schema.json"] = "Taskfile.{yml,yaml}",
+				["https://gitlab.com/gitlab-org/gitlab/-/raw/master/app/assets/javascripts/editor/schema/ci.json"] = {
+					".gitlab-ci.{yml,yaml}",
+					"ci/environments/**/*.{yml,yaml}",
+					"ci/modules/**/*.{yml,yaml}",
+				},
+				["https://json.schemastore.org/container-structure-test.json"] = {
+					".cst.yml",
+					"tests/Integrity/*.{yml,yaml}",
+				},
 			},
 			editor = {
 				formatOnType = true,
@@ -129,12 +149,20 @@ vim.g.rustaceanvim = {
 	server = {
 		on_attach = function(client, bufnr)
 			require("lsp-format").on_attach(client, bufnr)
-			-- vim.lsp.inlay_hint.enable(0, true)
+			local il_hints = require("lsp-inlayhints")
+			il_hints.on_attach(client, bufnr)
 		end,
 		capabilities = capabilities,
 		root_pattern = { "Cargo.toml", "Cargo.lock" },
-		-- cmd = { "direnv", "exec", ".", "rust-analyzer" },
 		filetypes = { "rust" },
+		inlay_hints = {
+			highlight = "NonText",
+		},
+		tools = {
+			hover_actions = {
+				auto_focus = true,
+			},
+		},
 		settings = {
 			["rust-analyzer"] = {
 				checkOnSave = {
@@ -151,5 +179,7 @@ require("lspconfig").phpactor.setup({
 
 require("lspconfig").markdown_oxide.setup({
 	capabilities = capabilities,
-	-- on_attach = require("lsp-format").on_attach,
+	on_attach = require("lsp-format").on_attach,
 })
+
+require'lspconfig'.helm_ls.setup{}

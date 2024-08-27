@@ -24,14 +24,17 @@ in {
     /usr/bin/systemctl start --user sops-nix
   '';
   home.packages = with pkgs; [
-    firefox-devedition
-    jira-cli-go
-    slack
+    (nixGlWrapper firefox-devedition)
+    (nixGlWrapper slack)
+    (nixGlWrapper appflowy)
+    # slack
     gptcommit
     glab
+    pritunl-client
+    kubecm
+    # gnomeExtensions.pop-shell
   ];
   programs = {
     wezterm.package = nixGlWrapper pkgs.wezterm;
-    # alacritty.package = nixGlWrapper pkgs.alacritty;
   };
 }

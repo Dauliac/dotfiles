@@ -1,15 +1,13 @@
 {
-  config,
   lib,
   inputs,
   ...
 }: let
   inpt = inputs;
-  cfg = config;
 in {
   config.perSystem = {pkgs, ...}: {
     packages = {
-      dev = pkgs.nixosTest rec {
+      dev = pkgs.nixosTest {
         name = "test-infra-nixos";
         nodes.nixos = {config, ...}: let
           user = "dauliac";

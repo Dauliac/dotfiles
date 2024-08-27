@@ -40,6 +40,10 @@
       url = "github:nix-community/lanzaboote";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    lsp-lens-nvim = {
+      url = "github:VidocqH/lsp-lens.nvim";
+      flake = false;
+    };
   };
   outputs = inputs @ {
     nixpkgs,
@@ -54,6 +58,7 @@
     nixvim,
     sonicpi-nvim,
     lanzaboote,
+    lsp-lens-nvim,
     ...
   }:
     flake-parts.lib.mkFlake {inherit inputs;} (_: {

@@ -9,11 +9,20 @@
       name = "sonicpi";
       src = "${inputs.sonicpi-nvim.outPath}";
     };
+  lsp-lens-nvim =
+    pkgs.vimUtils.buildVimPlugin
+    {
+      name = "lsp-lens-nvim";
+      src = "${inputs.lsp-lens-nvim.outPath}";
+    };
 in {
   imports = [
     ./opts.nix
     ./packages.nix
   ];
+  home.sessionVariables = {
+    VISUAL = "nvim";
+  };
   programs.nixvim = {
     enable = true;
     defaultEditor = true;
@@ -42,6 +51,7 @@ in {
       dofile("${./lua/init.lua}")
       dofile("${./lua/keymap.lua}")
       dofile("${./lua/lazygit.lua}")
+      dofile("${./lua/lsp-lens.lua}")
       dofile("${./lua/lsp-colors.lua}")
       dofile("${./lua/lspkind.lua}")
       dofile("${./lua/lualine.lua}")
@@ -51,7 +61,6 @@ in {
       dofile("${./lua/notify.lua}")
       dofile("${./lua/null-ls.lua}")
       dofile("${./lua/saga.lua}")
-      dofile("${./lua/surround.lua}")
       dofile("${./lua/telescope.lua}")
       dofile("${./lua/todo-comments.lua}")
       dofile("${./lua/treesitter.lua}")
@@ -61,13 +70,14 @@ in {
       })
     '';
     plugins = {
+      # treesitter-context.enable = true;
       cmp-buffer.enable = true;
       cmp-cmdline.enable = true;
+      cmp-conventionalcommits.enable = true;
       cmp-emoji.enable = true;
       cmp-nvim-lsp.enable = true;
       cmp-path.enable = true;
       cmp.enable = true;
-      cmp-conventionalcommits.enable = true;
       comment.enable = true;
       copilot-cmp.enable = true;
       copilot-lua.enable = true;
@@ -79,54 +89,76 @@ in {
       lsp.enable = true;
       lspkind.enable = true;
       lspsaga.enable = true;
+      neo-tree.enable = true;
       neogit.enable = true;
       nvim-autopairs.enable = true;
+      obsidian = {
+        enable = true;
+        settings = {
+          completion = {
+            min_chars = 2;
+            nvim_cmp = true;
+          };
+          new_notes_location = "current_dir";
+          workspaces = [
+            {
+              name = "work";
+              path = "~/Documents/Obsidian\ Vault";
+            }
+          ];
+        };
+      };
+      surround.enable = true;
+      spider.enable = true;
       todo-comments.enable = true;
-      treesitter-context.enable = true;
+      treesitter.enable = true;
+      trim.enable = true;
       trouble.enable = true;
       undotree.enable = true;
     };
     extraPlugins = with pkgs.vimPlugins; [
-      ChatGPT-nvim
-      barbar-nvim
-      catppuccin-nvim
-      crates-nvim
-      rustaceanvim
-      diffview-nvim
-      firenvim
-      gitsigns-nvim
-      glow-nvim
-      indent-blankline-nvim-lua
-      lazygit-nvim
-      lsp-colors-nvim
-      lsp-status-nvim
-      lualine-lsp-progress
-      lualine-nvim
-      neodev-nvim
-      neoscroll-nvim
-      noice-nvim
-      nui-nvim
-      null-ls-nvim
-      nvim-dap
-      nvim-dap-ui
-      nvim-dap-virtual-text
-      nvim-lspconfig
-      nvim-neoclip-lua
-      nvim-notify
-      nvim-spectre
-      nvim-surround
-      nvim-tree-lua
-      nvim-web-devicons
-      plenary-nvim
-      registers-nvim
-      rust-tools-nvim
-      sonicpi-nvim
-      sqlite-lua
-      ssr-nvim
-      telescope-dap-nvim
-      telescope-nvim
-      vim-gitgutter
       which-key-nvim
+      vim-gitgutter
+      telescope-nvim
+      telescope-dap-nvim
+      ssr-nvim
+      sqlite-lua
+      sonicpi-nvim
+      lsp-lens-nvim
+      rustaceanvim
+      rust-tools-nvim
+      registers-nvim
+      plenary-nvim
+      nvim-web-devicons
+      nvim-spectre
+      nvim-neoclip-lua
+      nvim-lspconfig
+      nvim-dap-virtual-text
+      nvim-dap-ui
+      nvim-dap
+      null-ls-nvim
+      nui-nvim
+      noice-nvim
+      neoscroll-nvim
+      nvim-hlslens
+      neodev-nvim
+      lualine-nvim
+      lualine-lsp-progress
+      lsp-status-nvim
+      lsp-inlayhints-nvim
+      lsp-colors-nvim
+      lazygit-nvim
+      indent-blankline-nvim-lua
+      glow-nvim
+      gitsigns-nvim
+      firenvim
+      diffview-nvim
+      crates-nvim
+      catppuccin-nvim
+      vim-helm
+      barbar-nvim
+      ChatGPT-nvim
+      # nvim-notify
       (nvim-treesitter.withPlugins (p: [
         p.javascript
         p.typescript
@@ -150,6 +182,7 @@ in {
         p.jsonnet
         p.markdown
         p.python
+        p.helm
         p.vim
         p.vimdoc
         p.php

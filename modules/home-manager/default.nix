@@ -1,6 +1,5 @@
 {
   inputs,
-  lib,
   ...
 }: let
   inherit (inputs.home-manager.lib) homeManagerConfiguration;

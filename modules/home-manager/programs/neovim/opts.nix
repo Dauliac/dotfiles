@@ -24,6 +24,7 @@
       sessionoptions = "tabpages,globals";
       ignorecase = true;
       swapfile = false;
+      conceallevel = 1;
       laststatus = 3;
       re = 0;
       eol = true;

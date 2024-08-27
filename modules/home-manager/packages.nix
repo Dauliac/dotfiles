@@ -1,6 +1,5 @@
 {
   pkgs,
-  lib,
   ...
 }: let
   cli = with pkgs; [
@@ -19,9 +18,9 @@
     trash-cli # shell trash
     systemctl-tui # Cool tui
     speedtest-go # network speed test
-    radicle-cli # Decentralized git
     age # encryption
     eza # TODO: check how to upgrade home-manager to use eza configs
+    yazi # file manager
     (nerdfonts.override {fonts = ["FiraMono" "Iosevka"];})
     yt-dlp
   ];
@@ -34,6 +33,7 @@
     # TODO: only install if we are not in nixOs profile
     # firefox-devedition # Firefox browser
     system76-keyboard-configurator
+    protonvpn-gui
   ];
 in {
   home.packages = cli ++ gui;

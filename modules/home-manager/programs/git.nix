@@ -42,7 +42,7 @@
       };
       commit = {
         gpgsign = true;
-        template = "${config.xdg.configHome}/git/commit-template";
+        # template = "${config.xdg.configHome}/git/commit-template";
       };
       #TODO: add include per server:
       # includes = [
