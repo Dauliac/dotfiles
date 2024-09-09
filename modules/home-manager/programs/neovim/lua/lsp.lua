@@ -125,13 +125,13 @@ require("lspconfig").volar.setup({
 			tsdk = "${pkgs.nodePackages.typescript}/lib/node_modules/typescript/lib",
 		},
 	},
-	settings = {
-		languages = {
-			javascript = { prettier },
-			typescript = { prettier },
-			vue = { prettier },
-		},
-	},
+	-- settings = {
+	-- 	languages = {
+	-- 		javascript = { prettier },
+	-- 		typescript = { prettier },
+	-- 		vue = { prettier },
+	-- 	},
+	-- },
 })
 
 vim.g.rustaceanvim = {

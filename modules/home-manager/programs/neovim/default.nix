@@ -71,6 +71,7 @@ in {
     '';
     plugins = {
       # treesitter-context.enable = true;
+      ccc.enable = true;
       cmp-buffer.enable = true;
       cmp-cmdline.enable = true;
       cmp-conventionalcommits.enable = true;
