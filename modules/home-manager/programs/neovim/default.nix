@@ -93,22 +93,6 @@ in {
       neo-tree.enable = true;
       neogit.enable = true;
       nvim-autopairs.enable = true;
-      obsidian = {
-        enable = true;
-        settings = {
-          completion = {
-            min_chars = 2;
-            nvim_cmp = true;
-          };
-          new_notes_location = "current_dir";
-          workspaces = [
-            {
-              name = "work";
-              path = "~/Documents/Obsidian\ Vault";
-            }
-          ];
-        };
-      };
       surround.enable = true;
       spider.enable = true;
       todo-comments.enable = true;

@@ -28,7 +28,7 @@ in {
     (nixGlWrapper slack)
     (nixGlWrapper appflowy)
     # slack
-    gptcommit
+    # gptcommit
     glab
     pritunl-client
     kubecm

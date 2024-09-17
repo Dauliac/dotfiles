@@ -62,6 +62,11 @@ _: {
         description = "Commands examples";
         tag = ["help" "command" "cli"];
       }
+      {
+        command = "git commit --fixup ";
+        description = "Commit with fixup";
+        tag = ["git" "commit" "cli"];
+      }
     ];
   };
 }
