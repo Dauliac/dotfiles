@@ -26,7 +26,6 @@ in {
   home.packages = with pkgs; [
     (nixGlWrapper firefox-devedition)
     (nixGlWrapper slack)
-    (nixGlWrapper appflowy)
     # slack
     # gptcommit
     glab
@@ -36,5 +35,6 @@ in {
   ];
   programs = {
     wezterm.package = nixGlWrapper pkgs.wezterm;
+    rio.package = nixGlWrapper pkgs.rio;
   };
 }

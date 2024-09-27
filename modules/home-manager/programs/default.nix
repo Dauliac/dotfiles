@@ -7,6 +7,7 @@
     ./history.nix
     ./lazygit.nix
     ./neovim
+    ./rio.nix
     ./pet.nix
     ./starship.nix
     ./wezterm.nix
