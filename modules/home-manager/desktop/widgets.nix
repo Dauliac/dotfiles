@@ -1,9 +1,4 @@
-{
-  pkgs,
-  osConfig,
-  lib,
-  ...
-}: {
+{ pkgs, ... }: {
   services.mako = {
     enable = true;
     catppuccin.enable = true;
@@ -12,7 +7,6 @@
     rofi = {
       enable = true;
       package = pkgs.rofi-wayland-unwrapped;
-      theme = ./rofi/catppuccin.rasi;
     };
     wpaperd = {
       enable = true;
@@ -24,7 +18,7 @@
     };
     waybar = {
       enable = true;
-      style = ./waybar-style.css;
+      systemd.enable = true;
       settings = {
         mainBar = {
           layer = "top";
@@ -44,7 +38,7 @@
           modules-right = [
             "cava"
             "network"
-            # "bluetooth"
+            "bluetooth"
             "upower"
             "blacklight"
             "backlight/slider"

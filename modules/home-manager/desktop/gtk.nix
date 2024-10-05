@@ -1,7 +1,4 @@
-{pkgs, ...}: {
-  catppuccin.pointerCursor = {
-    enable = true;
-  };
+{...}: {
   gtk = {
     enable = true;
     font = {
@@ -9,11 +6,7 @@
       size = 9;
     };
   };
-  # home.pointerCursor = {
-  #   package = pkgs.catppuccin-cursors.mochaDark;
-  #   name = "Catppuccin-Mocha-Dark-Cursors";
-  #   size = 24;
-  #   gtk.enable = true;
-  #   x11.enable = true;
-  # };
+  catppuccin.pointerCursor = {
+    enable = true;
+  };
 }

@@ -22,12 +22,23 @@
     )
     10);
 in {
+
+  # systemd.user.services.wpaperd = {
+  #   description = "wpaperd Service";
+  #   wantedBy = [ "hyprland-session.target" ];
+  #   after = [ "hyprland-session.target" ];
+  #   serviceConfig = {
+  #     ExecStart = "${config.programs.wpaperd.package}/bin/wpaperd";
+  #     Restart = "on-failure";
+  #   };
+  # };
+
   wayland = {
     windowManager.hyprland = {
       enable = true;
       catppuccin.enable = true;
       settings = {
-        exec-once = "${config.programs.wpaperd.package}/bin/wpaperd && ${config.programs.waybar.package}/bin/waybar";
+        exec-once = "${config.programs.wpaperd.package}/bin/wpaperd";
         "$mod" = "SUPER";
         monitor = let
           default = rec {
@@ -86,7 +97,8 @@ in {
             "$mod, P, pseudo,"
             "$mod ALT, ,resizeactive,"
             # terminal
-            "$mod, Return, exec, ${pkgs.wezterm}/bin/wezterm"
+            # "$mod, Return, exec, ${pkgs.wezterm}/bin/wezterm"
+            "$mod, Return, exec, ${pkgs.rio}/bin/rio"
             # logout menu
             "$mod, Escape, exec, wlogout -p layer-shell"
             # lock screen

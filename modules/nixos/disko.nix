@@ -1,9 +1,4 @@
-{
-  inputs,
-  config,
-  pkgs,
-  ...
-}: let
+{ ... }: let
   mkConfig = disk: {
     type = "disk";
     device = disk;

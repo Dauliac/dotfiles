@@ -8,23 +8,17 @@
     ./hardening.nix
     ./secrets.nix
     ./boot.nix
+    ./bluetooth.nix
+    ./locales.nix
   ];
-  nixpkgs.config.allowUnfree = true;
+  nixpkgs = {
+    config = {
+      allowUnfree = true;
+      allowBroken = true;
+    };
+  };
   networking.hostName = "nixos";
   networking.networkmanager.enable = true;
-  time.timeZone = "Europe/Paris";
-  i18n.defaultLocale = "en_US.UTF-8";
-  i18n.extraLocaleSettings = {
-    LC_ADDRESS = "fr_FR.UTF-8";
-    LC_IDENTIFICATION = "fr_FR.UTF-8";
-    LC_MEASUREMENT = "fr_FR.UTF-8";
-    LC_MONETARY = "fr_FR.UTF-8";
-    LC_NAME = "fr_FR.UTF-8";
-    LC_NUMERIC = "fr_FR.UTF-8";
-    LC_PAPER = "fr_FR.UTF-8";
-    LC_TELEPHONE = "fr_FR.UTF-8";
-    LC_TIME = "fr_FR.UTF-8";
-  };
   programs.hyprland = {
     enable = true;
     xwayland.enable = true;
@@ -43,16 +37,14 @@
   services.xserver.enable = true;
   services.xserver.displayManager.gdm.enable = true;
   services.picom.vSync = "drm";
-  services.xserver.desktopManager.gnome.enable = true;
+  # services.xserver.desktopManager.gnome.enable = true;
   services.xserver = {
     xkb = {
       layout = "us";
-      variant = "altgr-intl";
+      variant = "intl";
     };
   };
   services.printing.enable = true;
-
-  sound.enable = true;
   hardware.pulseaudio.enable = false;
   services.pipewire = {
     enable = true;
@@ -61,26 +53,15 @@
     pulse.enable = true;
     wireplumber.enable = true;
     jack.enable = true;
-  };
-
-  location.provider = "geoclue2";
-  # provide location
-  services.geoclue2.enable = true;
-
-  hardware.brillo.enable = true;
-  services.clight = {
-    enable = true;
-    settings = {
-      verbose = true;
-      backlight.disabled = true;
-      dpms.timeouts = [900 300];
-      dimmer.timeouts = [870 270];
-      gamma.long_transition = true;
-      keyboard.disabled = true;
-      screen.disabled = true;
+    wireplumber.extraConfig = {
+      "monitor.bluez.properties" = {
+        "bluez5.enable-sbc-xq" = true;
+        "bluez5.enable-msbc" = true;
+        "bluez5.enable-hw-volume" = true;
+        "bluez5.roles" = ["hsp_hs" "hsp_ag" "hfp_hf" "hfp_ag"];
+      };
     };
   };
-
   users.users.dauliac = {
     isNormalUser = true;
     description = "dauliac";
@@ -90,9 +71,15 @@
   };
   nix = {
     settings = {
+      system-features = [
+        "benchmark"
+        "big-parallel"
+        "kvm"
+        "nixos-test"
+      ];
       experimental-features = ["nix-command" "flakes"];
     };
-    auto-optimise-store = true;
+    optimise.automatic = true;
     gc = {
       automatic = true;
       persistent = true;
@@ -107,6 +94,7 @@
     htop
     pipewire.jack
     sbctl
+    jdk21
   ];
   environment.variables = {
     VDPAU_DRIVER = lib.mkIf config.hardware.opengl.enable (lib.mkDefault "va_gl");
@@ -120,5 +108,5 @@
   networking.firewall.enable = true;
   # BUG: https://discourse.nixos.org/t/logrotate-config-fails-due-to-missing-group-30000/28501
   services.logrotate.checkConfig = false;
-  system.stateVersion = "23.11"; # Did you read the comment?
+  system.stateVersion = "23.11";
 }

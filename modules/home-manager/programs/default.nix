@@ -12,6 +12,7 @@
     ./wezterm.nix
     ./zellij.nix
     ./zsh.nix
+    ./rio.nix
   ];
   programs.home-manager.enable = true;
   # NOTE: fast cd
