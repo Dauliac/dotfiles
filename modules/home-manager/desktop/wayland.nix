@@ -22,7 +22,6 @@
     )
     10);
 in {
-
   # systemd.user.services.wpaperd = {
   #   description = "wpaperd Service";
   #   wantedBy = [ "hyprland-session.target" ];

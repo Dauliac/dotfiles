@@ -93,13 +93,14 @@ in {
       neo-tree.enable = true;
       neogit.enable = true;
       nvim-autopairs.enable = true;
-      surround.enable = true;
       spider.enable = true;
+      vim-surround.enable = true;
       todo-comments.enable = true;
       treesitter.enable = true;
       trim.enable = true;
       trouble.enable = true;
       undotree.enable = true;
+      web-devicons.enable = true;
     };
     extraPlugins = with pkgs.vimPlugins; [
       which-key-nvim
@@ -114,7 +115,6 @@ in {
       rust-tools-nvim
       registers-nvim
       plenary-nvim
-      nvim-web-devicons
       nvim-spectre
       nvim-neoclip-lua
       nvim-lspconfig

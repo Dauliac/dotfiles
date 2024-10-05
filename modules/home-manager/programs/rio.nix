@@ -1,4 +1,4 @@
-{...}: {
+_: {
   programs.rio = {
     enable = true;
     catppuccin.enable = true;

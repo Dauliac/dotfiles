@@ -1,4 +1,4 @@
-{ ... }: let
+_: let
   mkConfig = disk: {
     type = "disk";
     device = disk;

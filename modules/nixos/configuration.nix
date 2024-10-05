@@ -23,7 +23,7 @@
     enable = true;
     xwayland.enable = true;
   };
-  hardware.opengl = {
+  hardware.graphics = {
     enable = true;
     extraPackages = with pkgs; [
       intel-media-driver
@@ -32,7 +32,6 @@
       libvdpau-va-gl
     ];
     extraPackages32 = with pkgs.pkgsi686Linux; [vaapiIntel vaapiVdpau intel-media-driver libvdpau-va-gl];
-    driSupport32Bit = true;
   };
   services.xserver.enable = true;
   services.xserver.displayManager.gdm.enable = true;
@@ -97,7 +96,7 @@
     jdk21
   ];
   environment.variables = {
-    VDPAU_DRIVER = lib.mkIf config.hardware.opengl.enable (lib.mkDefault "va_gl");
+    VDPAU_DRIVER = lib.mkIf config.hardware.graphics.enable (lib.mkDefault "va_gl");
     LIBVA_DRIVER_NAME = "iHD";
   };
   programs.gnupg.agent = {

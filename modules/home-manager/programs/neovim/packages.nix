@@ -11,7 +11,7 @@
     ltex-ls
     lua-language-server
     nil
-    nixfmt
+    nixfmt-rfc-style
     nixpkgs-fmt
     nodePackages."@volar/vue-language-server"
     nodePackages.bash-language-server
