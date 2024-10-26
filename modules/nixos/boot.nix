@@ -4,6 +4,8 @@
   ...
 }: {
   boot = {
+    # kernelPackages = pkgs.linuxPackages_hardened;
+    kernelPackages = pkgs.linuxKernel.packages.linux_6_1;
     plymouth = {
       enable = true;
       themePackages = [(pkgs.catppuccin-plymouth.override {variant = "mocha";})];
@@ -13,10 +15,6 @@
     loader.systemd-boot.enable = lib.mkForce false;
     loader.systemd-boot.configurationLimit = 5;
     loader.efi.canTouchEfiVariables = true;
-    # TODO: Choose which kernel to use
-    # kernelPackages = pkgs.linuxPackages_xanmod_latest;
-    # boot.kernelPackages = pkgs.linuxPackages_hardened;
-    # boot.kernelPackages = pkgs.linuxPackages_6_8;
     bootspec.enable = true;
     lanzaboote = {
       enable = true;

@@ -27,4 +27,8 @@ _: {
       screen.disabled = true;
     };
   };
+  services.xserver = {
+    layout = "us";
+    xkbVariant = "altgr-intl";
+  };
 }

@@ -1,8 +1,5 @@
 {
-  inputs,
-  config,
   pkgs,
-  system,
   lib,
   ...
 }: {
@@ -162,10 +159,11 @@
     "cramfs"
     "cramfs"
     "cifs"
-    "btusb"
+    "btintel"
     "bfs"
     "befs"
     "affs"
     "adfs"
+    "ath3k"
   ];
 }

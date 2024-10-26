@@ -19,5 +19,7 @@
     sonic-pi
     system76-firmware
     rclone
+    discord
+    ncpamixer
   ];
 }

@@ -36,13 +36,6 @@
   services.xserver.enable = true;
   services.xserver.displayManager.gdm.enable = true;
   services.picom.vSync = "drm";
-  # services.xserver.desktopManager.gnome.enable = true;
-  services.xserver = {
-    xkb = {
-      layout = "us";
-      variant = "intl";
-    };
-  };
   services.printing.enable = true;
   hardware.pulseaudio.enable = false;
   services.pipewire = {
