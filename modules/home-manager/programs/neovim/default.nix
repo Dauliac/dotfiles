@@ -44,15 +44,15 @@ in {
       dofile("${./lua/doge.lua}")
       dofile("${./lua/filetree.lua}")
       dofile("${./lua/fzf.lua}")
-      dofile("${./lua/lsp.lua}")
       dofile("${./lua/gitsigns.lua}")
       dofile("${./lua/glow.lua}")
       dofile("${./lua/indent-blankline-nvim.lua}")
       dofile("${./lua/init.lua}")
       dofile("${./lua/keymap.lua}")
       dofile("${./lua/lazygit.lua}")
-      dofile("${./lua/lsp-lens.lua}")
       dofile("${./lua/lsp-colors.lua}")
+      dofile("${./lua/lsp-lens.lua}")
+      dofile("${./lua/lsp.lua}")
       dofile("${./lua/lspkind.lua}")
       dofile("${./lua/lualine.lua}")
       dofile("${./lua/neoclip.lua}")
@@ -61,6 +61,7 @@ in {
       dofile("${./lua/notify.lua}")
       dofile("${./lua/null-ls.lua}")
       dofile("${./lua/saga.lua}")
+      dofile("${./lua/substitute.lua}")
       dofile("${./lua/telescope.lua}")
       dofile("${./lua/todo-comments.lua}")
       dofile("${./lua/treesitter.lua}")
@@ -143,6 +144,7 @@ in {
       vim-helm
       barbar-nvim
       ChatGPT-nvim
+      substitute-nvim
       # nvim-notify
       (nvim-treesitter.withPlugins (p: [
         p.javascript

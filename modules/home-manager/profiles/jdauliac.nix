@@ -31,6 +31,8 @@ in {
     glab
     pritunl-client
     kubecm
+    jdk21
+    prismlauncher
     # gnomeExtensions.pop-shell
   ];
   programs = {
