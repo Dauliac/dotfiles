@@ -2,7 +2,6 @@ _: {
   programs.wezterm = {
     enable = true;
     enableZshIntegration = true;
-
     extraConfig = ''
       local
       wezterm = require 'wezterm';
@@ -30,14 +29,7 @@ _: {
       end)
 
       return {
-        color_scheme = "Catppuccin Mocha (Gogh)",
-        window_background_opacity = 0.89,
-        font = wezterm.font {
-         family = 'Iosevka Nerd Font',
-         stretch = 'Expanded',
-         weight = 'Regular',
-        },
-        enable_wayland = false,
+        enable_wayland = true,
         default_cursor_style = "SteadyBar",
         hide_tab_bar_if_only_one_tab = true,
         hide_mouse_cursor_when_typing = false,
