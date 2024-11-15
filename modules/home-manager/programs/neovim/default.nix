@@ -15,6 +15,12 @@
       name = "lsp-lens-nvim";
       src = "${inputs.lsp-lens-nvim.outPath}";
     };
+  yaml-companion-nvim =
+    pkgs.vimUtils.buildVimPlugin
+      {
+        name = "yaml-companion-nvim";
+        src = "${inputs.yaml-companion-nvim.outPath}";
+      };
 in {
   imports = [
     ./opts.nix
@@ -34,42 +40,6 @@ in {
       register = "unnamedplus";
       providers.wl-copy.enable = true;
     };
-    extraConfigLua = ''
-      dofile("${./lua/autopair.lua}")
-      dofile("${./lua/catppuccin.lua}")
-      dofile("${./lua/chatgpt.lua}")
-      dofile("${./lua/cmp.lua}")
-      dofile("${./lua/comment.lua}")
-      dofile("${./lua/dap.lua}")
-      dofile("${./lua/doge.lua}")
-      dofile("${./lua/filetree.lua}")
-      dofile("${./lua/fzf.lua}")
-      dofile("${./lua/gitsigns.lua}")
-      dofile("${./lua/glow.lua}")
-      dofile("${./lua/indent-blankline-nvim.lua}")
-      dofile("${./lua/init.lua}")
-      dofile("${./lua/keymap.lua}")
-      dofile("${./lua/lazygit.lua}")
-      dofile("${./lua/lsp-colors.lua}")
-      dofile("${./lua/lsp-lens.lua}")
-      dofile("${./lua/lsp.lua}")
-      dofile("${./lua/lspkind.lua}")
-      dofile("${./lua/lualine.lua}")
-      dofile("${./lua/neoclip.lua}")
-      dofile("${./lua/neoscroll.lua}")
-      dofile("${./lua/noice.lua}")
-      dofile("${./lua/notify.lua}")
-      dofile("${./lua/null-ls.lua}")
-      dofile("${./lua/saga.lua}")
-      dofile("${./lua/substitute.lua}")
-      dofile("${./lua/telescope.lua}")
-      dofile("${./lua/todo-comments.lua}")
-      dofile("${./lua/treesitter.lua}")
-      dofile("${./lua/which-key.lua}")
-      require("sonicpi").setup({
-        server_dir = "${pkgs.sonic-pi}/app/server",
-      })
-    '';
     plugins = {
       # treesitter-context.enable = true;
       ccc.enable = true;
@@ -83,6 +53,7 @@ in {
       comment.enable = true;
       copilot-cmp.enable = true;
       copilot-lua.enable = true;
+      dressing.enable = true;
       flash.enable = true;
       fzf-lua.enable = true;
       goyo.enable = true;
@@ -93,14 +64,15 @@ in {
       lspsaga.enable = true;
       neo-tree.enable = true;
       neogit.enable = true;
+      noice.enable = true;
       nvim-autopairs.enable = true;
       spider.enable = true;
-      vim-surround.enable = true;
       todo-comments.enable = true;
       treesitter.enable = true;
       trim.enable = true;
       trouble.enable = true;
       undotree.enable = true;
+      vim-surround.enable = true;
       web-devicons.enable = true;
     };
     extraPlugins = with pkgs.vimPlugins; [
@@ -144,8 +116,7 @@ in {
       vim-helm
       barbar-nvim
       ChatGPT-nvim
-      substitute-nvim
-      # nvim-notify
+      yaml-companion-nvim
       (nvim-treesitter.withPlugins (p: [
         p.javascript
         p.typescript
@@ -176,5 +147,42 @@ in {
         p.vue
       ]))
     ];
+    extraConfigLua = ''
+      dofile("${./lua/autopair.lua}")
+      dofile("${./lua/catppuccin.lua}")
+      dofile("${./lua/chatgpt.lua}")
+      dofile("${./lua/cmp.lua}")
+      dofile("${./lua/comment.lua}")
+      dofile("${./lua/dap.lua}")
+      dofile("${./lua/dressing.lua}")
+      dofile("${./lua/doge.lua}")
+      dofile("${./lua/filetree.lua}")
+      dofile("${./lua/fzf.lua}")
+      dofile("${./lua/gitsigns.lua}")
+      dofile("${./lua/glow.lua}")
+      dofile("${./lua/hlslens.lua}")
+      dofile("${./lua/indent-blankline-nvim.lua}")
+      dofile("${./lua/init.lua}")
+      dofile("${./lua/keymap.lua}")
+      dofile("${./lua/lazygit.lua}")
+      dofile("${./lua/lsp-colors.lua}")
+      dofile("${./lua/lsp-lens.lua}")
+      dofile("${./lua/lsp.lua}")
+      dofile("${./lua/lspkind.lua}")
+      dofile("${./lua/lualine.lua}")
+      dofile("${./lua/neoclip.lua}")
+      dofile("${./lua/neoscroll.lua}")
+      dofile("${./lua/noice.lua}")
+      dofile("${./lua/notify.lua}")
+      dofile("${./lua/null-ls.lua}")
+      dofile("${./lua/saga.lua}")
+      dofile("${./lua/telescope.lua}")
+      dofile("${./lua/todo-comments.lua}")
+      dofile("${./lua/treesitter.lua}")
+      dofile("${./lua/which-key.lua}")
+      require("sonicpi").setup({
+        server_dir = "${pkgs.sonic-pi}/app/server",
+      })
+    '';
   };
 }

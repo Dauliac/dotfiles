@@ -44,6 +44,11 @@
       url = "github:VidocqH/lsp-lens.nvim";
       flake = false;
     };
+    yaml-companion-nvim = {
+      url = "github:someone-stole-my-name/yaml-companion.nvim";
+      flake = false;
+
+    };
   };
   outputs = inputs @ {
     nixpkgs,
@@ -59,6 +64,7 @@
     sonicpi-nvim,
     lanzaboote,
     lsp-lens-nvim,
+    yaml-companion-nvim,
     ...
   }:
     flake-parts.lib.mkFlake {inherit inputs;} (_: {

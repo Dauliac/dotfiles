@@ -61,56 +61,61 @@ require("lspconfig").lua_ls.setup({
 	-- on_attach = require("lsp-format").on_attach,
 })
 
-require("lspconfig").yamlls.setup({
-	capabilities = capabilities,
-	-- on_attach = require("lsp-format").on_attach,
-  filetypes = { "yaml.docker-compose", "yaml.gitlab", "yaml.kubernetes", "yaml.taskfile"},
-	settings = {
-		yaml = {
-			format = {
-				bracketSpacing = false,
-				enable = true,
-			},
-			customTags = { "!reference sequence" },
-			schemas = {
-				["https://raw.githubusercontent.com/instrumenta/kubernetes-json-schema/master/v1.18.0-standalone-strict/all.json"] = {
-					"**/kube/**/*.{yml,yaml}",
-					"**/k8s/**/*.{yml,yaml}",
-					"**/kubernetes/**/*.{yml,yaml}",
-				},
-				-- ["https://taskfile.dev/schema.json"] = "Taskfile.{yml,yaml}",
-				["https://gitlab.com/gitlab-org/gitlab/-/raw/master/app/assets/javascripts/editor/schema/ci.json"] = {
-					".gitlab-ci.{yml,yaml}",
-					"ci/environments/**/*.{yml,yaml}",
-					"ci/modules/**/*.{yml,yaml}",
-				},
-				["https://json.schemastore.org/container-structure-test.json"] = {
-					".cst.yml",
-					"tests/Integrity/*.{yml,yaml}",
-				},
-			},
-			editor = {
-				formatOnType = true,
-				tabSize = 2,
-			},
-		},
-	},
+local yaml_cfg = require("yaml-companion").setup({
+  builtin_matchers = {
+    kubernetes = { enabled = true },
+    cloud_init = { enabled = true },
+  },
+  schemas = {
+    {
+      name = "kubernetes 1.22.4",
+      uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.22.4-standalone-strict/all.json",
+    },
+    {
+      name = "container structure test",
+      uri = "https://json.schemastore.org/container-structure-test.json",
+    },
+    {
+      name = "taskfile",
+      uri = "https://taskfile.dev/schema.json",
+    },
+    {
+      name = "flux gitRepository",
+      uri = "https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/gitrepository-source-v1.json",
+    },
+    {
+      name = "flux helmRelease",
+      uri = "https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/gitrepository-source-v1.json",
+    },
+    {
+      name = "kustomization",
+      uri = "https://json.schemastore.org/kustomization.json"
+    },
+  },
+  lspconfig = {
+    settings = {
+      yaml = {
+        validate = true,
+        schemaStore = {
+          enable = false,
+          url = "",
+        },
+        -- schemas = require('schemastore').yaml.schemas {
+        --   select = {
+        --     'kustomization.yaml',
+        --     'GitHub Workflow',
+        --     'chart',
+        --     'Taskfile config',
+        --     'gitlab-ci',
+        --   }
+        -- }
+      }
+    }
+  }
 })
 
---[[ require("lsp-format").setup {
-    typescript = {
-      tab_width = function()
-        return vim.opt.shiftwidth:get()
-      end,
-    },
-    javascript = { tab_width = 2 },
-    vue = { tab_width = 2 },
-  } ]]
 
-local prettier = {
-	formatCommand = [[prettier --stdin-filepath ''${INPUT} ''${--tab-width:tab_width}]],
-	formatStdin = true,
-}
+require("lspconfig").yamlls.setup(yaml_cfg)
 
 require("lspconfig").volar.setup({
 	filetypes = {
@@ -125,13 +130,6 @@ require("lspconfig").volar.setup({
 			tsdk = "${pkgs.nodePackages.typescript}/lib/node_modules/typescript/lib",
 		},
 	},
-	-- settings = {
-	-- 	languages = {
-	-- 		javascript = { prettier },
-	-- 		typescript = { prettier },
-	-- 		vue = { prettier },
-	-- 	},
-	-- },
 })
 
 vim.g.rustaceanvim = {

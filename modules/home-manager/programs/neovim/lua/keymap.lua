@@ -8,27 +8,27 @@ end
 
 local function set_fzf_keymap()
 	vim.keymap.set("n", "<leader>ff", "<Cmd>lua require('fzf-lua').files()<CR>", {
-		desc = "Find files",
+		desc = "find files",
 		silent = true,
 		noremap = true,
 	})
 	vim.api.nvim_set_keymap("n", "<leader>fg", "<Cmd>lua require('fzf-lua').live_grep_glob()<CR>", {
-		desc = "Find inside files",
+		desc = "find inside files",
 		noremap = true,
 		silent = true,
 	})
 	vim.api.nvim_set_keymap("n", "<leader>fb", "<Cmd>lua require('fzf-lua').buffers()<CR>", {
-		desc = "Find buffers",
+		desc = "find buffers",
 		noremap = true,
 		silent = true,
 	})
 	vim.api.nvim_set_keymap("n", "<leader>fr", "<Cmd>lua require('fzf-lua').quickfix()<CR>", {
-		desc = "Find qwick fixes",
+		desc = "find qwick fixes",
 		noremap = true,
 		silent = true,
 	})
 	vim.api.nvim_set_keymap("n", "<leader>ft", "<Cmd>lua require('fzf-lua').tabs()<CR>", {
-		desc = "Find tabs",
+		desc = "find tabs",
 		noremap = true,
 		silent = true,
 	})
@@ -213,6 +213,22 @@ local function set_code_action()
 	end, { silent = true, buffer = bufnr })
 end
 
+local function set_hlslens()
+  local kopts = {noremap = true, silent = true}
+  vim.api.nvim_set_keymap('n', 'n',
+      [[<Cmd>execute('normal! ' . v:count1 . 'n')<CR><Cmd>lua require('hlslens').start()<CR>]],
+      kopts)
+  vim.api.nvim_set_keymap('n', 'N',
+      [[<Cmd>execute('normal! ' . v:count1 . 'N')<CR><Cmd>lua require('hlslens').start()<CR>]],
+      kopts)
+  vim.api.nvim_set_keymap('n', '*', [[*<Cmd>lua require('hlslens').start()<CR>]], kopts)
+  vim.api.nvim_set_keymap('n', '#', [[#<Cmd>lua require('hlslens').start()<CR>]], kopts)
+  vim.api.nvim_set_keymap('n', 'g*', [[g*<Cmd>lua require('hlslens').start()<CR>]], kopts)
+  vim.api.nvim_set_keymap('n', 'g#', [[g#<Cmd>lua require('hlslens').start()<CR>]], kopts)
+
+  vim.api.nvim_set_keymap('n', '<Leader>l', '<Cmd>noh<CR>', kopts)
+end
+
 local function set_keymaps()
 	vim.g.mapleader = ","
 
@@ -233,6 +249,7 @@ local function set_keymaps()
 	set_todo_comments_keymap()
 	set_trouble_keymap()
 	set_undotree_keymap()
+  set_hlslens()
 end
 return {
 	set_keymaps(),

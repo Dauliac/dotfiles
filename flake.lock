@@ -759,7 +759,8 @@
         "nixvim": "nixvim",
         "sonicpi-nvim": "sonicpi-nvim",
         "sops-nix": "sops-nix",
-        "system-manager": "system-manager"
+        "system-manager": "system-manager",
+        "yaml-companion-nvim": "yaml-companion-nvim"
       }
     },
     "rust-overlay": {
@@ -935,6 +936,22 @@
       "original": {
         "owner": "numtide",
         "repo": "treefmt-nix",
+        "type": "github"
+      }
+    },
+    "yaml-companion-nvim": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1720990335,
+        "narHash": "sha256-49498W7Hadju54Vi9oOnlNouujhnS8hLQ7ji/3cvIZg=",
+        "owner": "someone-stole-my-name",
+        "repo": "yaml-companion.nvim",
+        "rev": "131b0d67bd2e0f1a02e0daf2f3460482221ce3c0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "someone-stole-my-name",
+        "repo": "yaml-companion.nvim",
         "type": "github"
       }
     }
