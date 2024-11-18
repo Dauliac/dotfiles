@@ -2,6 +2,7 @@
   config = {
     flake.nixosConfigurations.nixos = inputs.nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
+      specialArgs = { inherit inputs; };
       # BUG: Check why this not works
       # nixpkgs.config.allowUnfree = true;
       modules = [

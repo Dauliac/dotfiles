@@ -1,8 +1,8 @@
 {
+  inputs,
   config,
   lib,
   pkgs,
-  system,
   ...
 }: {
   imports = [
@@ -73,7 +73,7 @@
     pipewire.jack
     sbctl
     jdk21
-    inputs.zen-browser.packages."${system}".default
+    inputs.zen-browser.packages."${pkgs.system}".default
   ];
   environment.variables = {
     VDPAU_DRIVER = lib.mkIf config.hardware.graphics.enable (lib.mkDefault "va_gl");
