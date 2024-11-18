@@ -115,7 +115,7 @@ local yaml_cfg = require("yaml-companion").setup({
 })
 
 
-require("lspconfig").yamlls.setup(yaml_cfg)
+-- require("lspconfig").yamlls.setup(yaml_cfg)
 
 require("lspconfig").volar.setup({
 	filetypes = {
