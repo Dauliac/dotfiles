@@ -32,6 +32,7 @@
       url = "github:nix-community/nixvim";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    musnix  = { url = "github:musnix/musnix"; };
     sonicpi-nvim = {
       url = "github:magicmonty/sonicpi.nvim";
       flake = false;
@@ -49,6 +50,7 @@
       flake = false;
 
     };
+    zen-browser.url = "github:MarceColl/zen-browser-flake";
   };
   outputs = inputs @ {
     nixpkgs,
@@ -65,6 +67,8 @@
     lanzaboote,
     lsp-lens-nvim,
     yaml-companion-nvim,
+    musnix,
+    zen-browser,
     ...
   }:
     flake-parts.lib.mkFlake {inherit inputs;} (_: {

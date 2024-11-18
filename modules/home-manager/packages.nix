@@ -21,6 +21,10 @@
     (nerdfonts.override {fonts = ["FiraMono" "Iosevka"];})
     yt-dlp
   ];
+  tui = with pkgs; [
+    bluetuith
+    pulsemixer
+  ];
   gui = with pkgs; [
     sniffnet
     # TODO: add override if we are in nixOs profile Signal client
@@ -33,5 +37,5 @@
     protonvpn-gui
   ];
 in {
-  home.packages = cli ++ gui;
+  home.packages = cli ++ gui ++ tui;
 }

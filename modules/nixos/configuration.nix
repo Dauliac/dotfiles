@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  system,
   ...
 }: {
   imports = [
@@ -10,6 +11,8 @@
     ./boot.nix
     ./bluetooth.nix
     ./locales.nix
+    ./sound.nix
+    ./gaming.nix
   ];
   nixpkgs = {
     config = {
@@ -37,23 +40,6 @@
   services.xserver.displayManager.gdm.enable = true;
   services.picom.vSync = "drm";
   services.printing.enable = true;
-  hardware.pulseaudio.enable = false;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    wireplumber.enable = true;
-    jack.enable = true;
-    wireplumber.extraConfig = {
-      "monitor.bluez.properties" = {
-        "bluez5.enable-sbc-xq" = true;
-        "bluez5.enable-msbc" = true;
-        "bluez5.enable-hw-volume" = true;
-        "bluez5.roles" = ["hsp_hs" "hsp_ag" "hfp_hf" "hfp_ag"];
-      };
-    };
-  };
   users.users.dauliac = {
     isNormalUser = true;
     description = "dauliac";
@@ -87,6 +73,7 @@
     pipewire.jack
     sbctl
     jdk21
+    inputs.zen-browser.packages."${system}".default
   ];
   environment.variables = {
     VDPAU_DRIVER = lib.mkIf config.hardware.graphics.enable (lib.mkDefault "va_gl");

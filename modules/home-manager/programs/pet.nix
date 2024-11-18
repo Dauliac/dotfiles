@@ -67,6 +67,21 @@ _: {
         description = "Commit with fixup";
         tag = ["git" "commit" "cli"];
       }
+      {
+        command = "steam-tui";
+        description = "Run steam";
+        tag = ["steam" "tui" "cli"];
+      }
+      {
+        command = "nmtui";
+        description = "Run network manager in terminal";
+        tag = ["network" "tui" "cli"];
+      }
+      {
+      command = "pulsemixer";
+        description = "Run sound mixer in terminal";
+        tag = ["sound" "tui" "cli"];
+      }
     ];
   };
 }

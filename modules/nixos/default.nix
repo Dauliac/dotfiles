@@ -9,6 +9,7 @@
         inputs.home-manager.nixosModules.home-manager
         inputs.sops-nix.nixosModules.sops
         inputs.lanzaboote.nixosModules.lanzaboote
+        inputs.musnix.nixosModules.musnix
         ./disko.nix
         ./configuration.nix
         ./hardware-configuration.nix

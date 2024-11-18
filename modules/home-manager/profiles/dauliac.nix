@@ -10,7 +10,17 @@
   home.activation.setupEtc = config.lib.dag.entryAfter ["writeBoundary"] ''
     /run/current-system/sw/bin/systemctl start --user sops-nix
   '';
-  home.packages = with pkgs; [
+  home.packages =
+  let
+    music = with pkgs; [
+      rosegarden
+      ardour
+      zam-plugins
+      qpwgraph
+      # bristol
+    ];
+  in
+  with pkgs; [
     prismlauncher
     brillo
     cava
@@ -21,5 +31,9 @@
     rclone
     discord
     ncpamixer
-  ];
+    steam-tui
+    steamcmd
+    pavucontrol
+    pulsemixer
+  ] ++ music;
 }

@@ -41,7 +41,6 @@ in {
       providers.wl-copy.enable = true;
     };
     plugins = {
-      # treesitter-context.enable = true;
       ccc.enable = true;
       cmp-buffer.enable = true;
       cmp-cmdline.enable = true;
@@ -117,6 +116,7 @@ in {
       barbar-nvim
       ChatGPT-nvim
       yaml-companion-nvim
+      substitute-nvim
       (nvim-treesitter.withPlugins (p: [
         p.javascript
         p.typescript
