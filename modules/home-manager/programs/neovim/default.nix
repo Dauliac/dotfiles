@@ -93,6 +93,7 @@ in {
       nvim-dap-virtual-text
       nvim-dap-ui
       nvim-dap
+      nvim-sops
       null-ls-nvim
       nui-nvim
       noice-nvim
@@ -176,6 +177,7 @@ in {
       dofile("${./lua/notify.lua}")
       dofile("${./lua/null-ls.lua}")
       dofile("${./lua/saga.lua}")
+      dofile("${./lua/sops.lua}")
       dofile("${./lua/telescope.lua}")
       dofile("${./lua/todo-comments.lua}")
       dofile("${./lua/treesitter.lua}")

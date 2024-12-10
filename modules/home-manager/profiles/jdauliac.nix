@@ -33,6 +33,7 @@ in {
     kubecm
     jdk21
     prismlauncher
+    git-absorb
     # gnomeExtensions.pop-shell
   ];
   programs = {
