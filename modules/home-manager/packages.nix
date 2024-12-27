@@ -26,6 +26,7 @@
     git-absorb
     git-gamble
     convco
+    unzip
   ];
   tui = with pkgs; [
     bluetuith

@@ -181,3 +181,7 @@ require("lspconfig").markdown_oxide.setup({
 })
 
 require'lspconfig'.helm_ls.setup{}
+require'lspconfig'.svelte.setup({
+  capabilities = capabilities,
+	on_attach = require("lsp-format").on_attach,
+})

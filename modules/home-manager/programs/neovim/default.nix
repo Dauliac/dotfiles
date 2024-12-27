@@ -116,6 +116,8 @@ in {
       vim-helm
       barbar-nvim
       ChatGPT-nvim
+      tailwindcss-colors-nvim
+      tailwind-tools-nvim
       yaml-companion-nvim
       substitute-nvim
       (nvim-treesitter.withPlugins (p: [
@@ -182,6 +184,7 @@ in {
       dofile("${./lua/todo-comments.lua}")
       dofile("${./lua/treesitter.lua}")
       dofile("${./lua/which-key.lua}")
+      dofile("${./lua/tailwind.lua}")
       require("sonicpi").setup({
         server_dir = "${pkgs.sonic-pi}/app/server",
       })

@@ -40,5 +40,7 @@
     supercollider
     helm-ls
     markdown-oxide
+    svelte-language-server
+    tailwindcss-language-server
   ];
 }

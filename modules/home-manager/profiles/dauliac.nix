@@ -17,7 +17,23 @@
       ardour
       zam-plugins
       qpwgraph
-      # bristol
+      zam-plugins # NOTE: VST
+      bespokesynth # NOTE: synth
+      bristol # NOTE: synth
+      chow-kick # NOTE: drum synth
+      espeak # NOTE: speech synthesis
+      geonkick # NOTE: drum synth
+      industrializer # NOTE: drum synth
+      vcv-rack # NOTE: modular synth
+      cardinal # NOTE: modular synth
+      drumkv1
+      gnaural
+      ChowKick
+      drumgizmo
+    ];
+    videoGames = with pkgs; [
+      steam-tui
+      steamcmd
     ];
   in
   with pkgs; [
@@ -31,9 +47,10 @@
     rclone
     discord
     ncpamixer
-    steam-tui
-    steamcmd
     pavucontrol
     pulsemixer
-  ] ++ music;
+    whatsie
+  ] ++
+  music ++
+  videoGames;
 }

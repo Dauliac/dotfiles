@@ -31,7 +31,7 @@ if vim.g.started_by_firenvim == false then
       -- null_ls.builtins.diagnostics.editorconfig_checker,
       null_ls.builtins.formatting.black,
       null_ls.builtins.diagnostics.dotenv_linter,
-      -- null_ls.builtins.formatting.prettier,
+      null_ls.builtins.formatting.prettier_eslint,
       null_ls.builtins.formatting.stylua,
       null_ls.builtins.formatting.shfmt,
       null_ls.builtins.formatting.sql_formatter,
