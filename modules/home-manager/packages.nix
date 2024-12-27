@@ -23,6 +23,9 @@
     yazi # file manager
     (nerdfonts.override {fonts = ["FiraMono" "Iosevka"];})
     yt-dlp
+    git-absorb
+    git-gamble
+    convco
   ];
   tui = with pkgs; [
     bluetuith

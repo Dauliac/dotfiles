@@ -78,9 +78,39 @@ _: {
         tag = ["network" "tui" "cli"];
       }
       {
-      command = "pulsemixer";
+        command = "pulsemixer";
         description = "Run sound mixer in terminal";
         tag = ["sound" "tui" "cli"];
+      }
+      {
+        command = "nix profile rollback";
+        description = "To run when profile has unsupported version 3";
+        tag = ["nix" "cli" "profile" "fix"];
+      }
+      {
+        command = "export GAMBLE_TEST_COMMAND='cargo test'";
+        description = "Define test kube command for git-gamble";
+        tag = ["git" "cli" "gamble" "TDD"];
+      }
+      {
+        command = "git green";
+        description = "Valid code commit";
+        tag = ["git" "cli" "gamble" "TDD"];
+      }
+      {
+        command = "git refactor";
+        description = "Refactor code commit";
+        tag = ["git" "cli" "gamble" "TDD"];
+      }
+      {
+        command = "git red";
+        description = "Invalid code commit";
+        tag = ["git" "cli" "gamble" "TDD"];
+      }
+      {
+        command = "git rede";
+        description = "With edit invalid code commit";
+        tag = ["git" "cli" "gamble" "TDD"];
       }
     ];
   };

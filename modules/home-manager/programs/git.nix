@@ -3,6 +3,7 @@
     enable = true;
     userName = config.home.username;
     aliases = {
+      convco = "!GIT_EDITOR='convco commit' git commit";
       st = "status -sb";
       br = "branch -a";
       co = "checkout";
@@ -15,6 +16,10 @@
       rewrite = "!git commit --amend --no-edit && git push --force-with-lease";
       rewrite-all = "!git add . && git rewrite";
       rb = "!git fetch --all; git rebase";
+      red = "gamble --red";
+      green = "gamble --green";
+      refactor = "gamble --refactor";
+      rede = "gamble --red --edit";
     };
     difftastic = {
       enable = true;
@@ -42,19 +47,11 @@
       };
       commit = {
         gpgsign = true;
-        # template = "${config.xdg.configHome}/git/commit-template";
       };
-      #TODO: add include per server:
-      # includes = [
-      #   https://nix-community.github.io/home-manager/options.xhtml#opt-programs.git.includes._.condition
-      #   {
-      #     condition = {};
-      #     path = "~/.config/git/secret";
-      #   }
-      #   {
-      #     path = "~/.config/git/secret";
-      #   }
-      # ];
+      absorb = {
+        maxStack = 60;
+        oneFixupPerCommit = true;
+      };
     };
   };
 }
