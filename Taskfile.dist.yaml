@@ -1,7 +1,12 @@
+---
+
 version: "3"
+
 set: [errexit, pipefail, nounset]
 shopt: [globstar]
+
 dotenv: [".env.local", ".env"]
+
 tasks:
   init:
     silent: true
@@ -25,7 +30,7 @@ tasks:
     cmds:
       - task: build:home-manager:nix-os
       - task: build:nix-os
-      - nix build '.#dev.driverInteractive'
+      - nix build '.#dev.driverInteractive' 
   build:nix-os:
     silent: true
     desc: Install project
@@ -51,7 +56,11 @@ tasks:
     silent: true
     desc: Install project
     cmds:
-      - "home-manager switch \\\n  --flake . \n  switch \nfc-cache -f -v\n"
+      - |
+        home-manager switch \
+          --flake . 
+          switch 
+        fc-cache -f -v
   test:
     silent: true
     cmds:
@@ -86,7 +95,7 @@ tasks:
       - "**/*.sh"
   check:
     silent: true
-    deps:
+    deps: 
       # - check:sh
       - check:typo
   secret:edit:

@@ -4,8 +4,7 @@
   lib,
   pkgs,
   ...
-}:
-{
+}: {
   imports = [
     ./hardening.nix
     ./secrets.nix
@@ -35,12 +34,7 @@
       vaapiVdpau
       libvdpau-va-gl
     ];
-    extraPackages32 = with pkgs.pkgsi686Linux; [
-      vaapiIntel
-      vaapiVdpau
-      intel-media-driver
-      libvdpau-va-gl
-    ];
+    extraPackages32 = with pkgs.pkgsi686Linux; [vaapiIntel vaapiVdpau intel-media-driver libvdpau-va-gl];
   };
   services.xserver.enable = true;
   services.xserver.displayManager.gdm.enable = true;
@@ -49,12 +43,7 @@
   users.users.dauliac = {
     isNormalUser = true;
     description = "dauliac";
-    extraGroups = [
-      "networkmanager"
-      "wheel"
-      "audio"
-      "video"
-    ];
+    extraGroups = ["networkmanager" "wheel" "audio" "video"];
     shell = pkgs.zsh;
     hashedPasswordFile = config.sops.secrets.dauliac_hashed_password.path;
   };
@@ -66,10 +55,7 @@
         "kvm"
         "nixos-test"
       ];
-      experimental-features = [
-        "nix-command"
-        "flakes"
-      ];
+      experimental-features = ["nix-command" "flakes"];
     };
     optimise.automatic = true;
     gc = {

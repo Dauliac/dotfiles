@@ -1,1 +1,1 @@
-require("lsp-lens").setup({})
+require'lsp-lens'.setup({})

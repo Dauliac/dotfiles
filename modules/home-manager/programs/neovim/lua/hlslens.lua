@@ -1,1 +1,1 @@
-require("hlslens").setup()
+require('hlslens').setup()

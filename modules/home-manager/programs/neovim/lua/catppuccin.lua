@@ -1,5 +1,5 @@
 require("catppuccin").setup({
-	transparent_background = true,
+    transparent_background = true,
 })
 
 -- if vim.g.started_by_firenvim == false then

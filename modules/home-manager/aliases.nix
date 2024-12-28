@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   home.shellAliases = {
     cat = "${pkgs.bat}/bin/bat";
     clip = "xclip -selection c";

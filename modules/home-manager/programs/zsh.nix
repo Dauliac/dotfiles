@@ -2,8 +2,7 @@
   config,
   pkgs,
   ...
-}:
-{
+}: {
   programs.zsh = {
     enable = true;
     enableCompletion = true;
@@ -37,28 +36,16 @@
         color = "fg=blue";
       };
       editor.keymap = "vi";
-      ssh.identities = [
-        "id_rsa"
-        "id_dsa"
-      ];
+      ssh.identities = ["id_rsa" "id_dsa"];
       syntaxHighlighting = {
-        highlighters = [
-          "main"
-          "brackets"
-          "pattern"
-          "line"
-          "cursor"
-          "root"
-        ];
+        highlighters = ["main" "brackets" "pattern" "line" "cursor" "root"];
         styles = {
           builtin = "bg=blue";
           command = "bg=blue";
           function = "bg=blue";
         };
 
-        pattern = {
-          "rm*-rf*" = "fg=white,bold,bg=red";
-        };
+        pattern = {"rm*-rf*" = "fg=white,bold,bg=red";};
       };
       pmodules = [
         "environment"

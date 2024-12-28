@@ -1,6 +1,7 @@
 _: {
   programs.lazygit = {
     enable = true;
-    settings = { };
+    catppuccin.enable = true;
+    settings = {};
   };
 }

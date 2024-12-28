@@ -1,6 +1,7 @@
 _: {
   programs.alacritty = {
     enable = true;
+    catppuccin.enable = true;
     settings = {
       font = {
         normal.family = "Iosevka Nerd Font Mono";
