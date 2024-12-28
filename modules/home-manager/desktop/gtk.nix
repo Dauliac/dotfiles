@@ -6,7 +6,7 @@ _: {
       size = 9;
     };
   };
-  catppuccin.pointerCursor = {
-    enable = true;
-  };
+  # catppuccin.pointerCursor = {
+  #   enable = true;
+  # };
 }

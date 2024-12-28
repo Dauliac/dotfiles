@@ -1,92 +1,87 @@
 {
-  inputs,
   pkgs,
   config,
-  osConfig,
-  lib,
   ...
-}: let
+}:
+let
   screenshotarea = "hyprctl keyword animation 'fadeOut,0,0,default'; ${pkgs.grimblast}/bin/grimblast --notify copysave area; hyprctl keyword animation 'fadeOut,1,4,default'";
-  # binds $mod + [shift +] {1..10} to [move to] workspace {1..10}
-  workspaces = builtins.concatLists (builtins.genList
-    (
-      x: let
-        ws = let
-          c = (x + 1) / 10;
-        in
+  workspaces = builtins.concatLists (
+    builtins.genList (
+      x:
+      let
+        ws =
+          let
+            c = (x + 1) / 10;
+          in
           builtins.toString (x + 1 - (c * 10));
-      in [
+      in
+      [
         "$mod, ${ws}, workspace, ${toString (x + 1)}"
         "$mod SHIFT, ${ws}, movetoworkspace, ${toString (x + 1)}"
       ]
-    )
-    10);
-in {
-  # systemd.user.services.wpaperd = {
-  #   description = "wpaperd Service";
-  #   wantedBy = [ "hyprland-session.target" ];
-  #   after = [ "hyprland-session.target" ];
-  #   serviceConfig = {
-  #     ExecStart = "${config.programs.wpaperd.package}/bin/wpaperd";
-  #     Restart = "on-failure";
-  #   };
-  # };
-
+    ) 10
+  );
+in
+{
   wayland = {
     windowManager.hyprland = {
       enable = true;
-      catppuccin.enable = true;
       settings = {
-        exec-once = "${config.programs.wpaperd.package}/bin/wpaperd";
         "$mod" = "SUPER";
-        monitor = let
-          default = rec {
-            description = "Chimei Innolux Corporation 0x1408";
-            width = 1920;
-            height = 1080;
-            verticalPosition = 0;
-            horizontalPosition = 0;
-            positionConfig = builtins.toString horizontalPosition + "x" + builtins.toString verticalPosition;
-            config = "desc:${description},preferred,${default.positionConfig},1";
-          };
-          topLarge = rec {
-            description = "Beihai Century Joint Innovation Technology Co.Ltd CS2900";
-            width = 2560;
-            height = 1080;
-            verticalPosition = -height;
-            horizontalPosition = -(width - default.width);
-            positionConfig = builtins.toString horizontalPosition + "x" + builtins.toString verticalPosition;
-            config = "desc:${description},preferred,${topLarge.positionConfig},1";
-          };
-          leftVertical = rec {
-            description = "Lenovo Group Limited LEN T24i-20 VNA4HXH3";
-            width = 1080;
-            height = 1920;
-            verticalPosition = -topLarge.height;
-            horizontalPosition = default.width;
-            positionConfig = builtins.toString leftVertical.horizontalPosition + "x" + builtins.toString leftVertical.verticalPosition;
-            config = "desc:${description},preferred,${leftVertical.positionConfig},1,transform,1";
-          };
-        in [
-          default.config
-          topLarge.config
-          leftVertical.config
-        ];
+        monitor =
+          let
+            default = rec {
+              description = "Chimei Innolux Corporation 0x1408";
+              width = 1920;
+              height = 1080;
+              verticalPosition = 0;
+              horizontalPosition = 0;
+              positionConfig = builtins.toString horizontalPosition + "x" + builtins.toString verticalPosition;
+              config = "desc:${description},preferred,${default.positionConfig},1";
+            };
+            topLarge = rec {
+              description = "Beihai Century Joint Innovation Technology Co.Ltd CS2900";
+              width = 2560;
+              height = 1080;
+              verticalPosition = -height;
+              horizontalPosition = -(width - default.width);
+              positionConfig = builtins.toString horizontalPosition + "x" + builtins.toString verticalPosition;
+              config = "desc:${description},preferred,${topLarge.positionConfig},1";
+            };
+            leftVertical = rec {
+              description = "Lenovo Group Limited LEN T24i-20 VNA4HXH3";
+              width = 1080;
+              height = 1920;
+              verticalPosition = -topLarge.height;
+              horizontalPosition = default.width;
+              positionConfig =
+                builtins.toString leftVertical.horizontalPosition
+                + "x"
+                + builtins.toString leftVertical.verticalPosition;
+              config = "desc:${description},preferred,${leftVertical.positionConfig},1,transform,1";
+            };
+          in
+          [
+            default.config
+            topLarge.config
+            leftVertical.config
+          ];
         bindm = [
           "$mod, mouse:272, movewindow"
           "$mod, mouse:273, resizewindow"
           "$mod ALT, mouse:272, resizewindow"
         ];
-        bind = let
-          monocle = "dwindle:no_gaps_when_only";
-        in
+        bind =
+          let
+            monocle = "dwindle:no_gaps_when_only";
+          in
           [
             # NOTE: compositor commands
             "$mod SHIFT, E, exec, pkill Hyprland"
             "$mod, Q, killactive,"
             # TODO: use firefox in firejail if nixOs profile is enabled
             # "$mod ,B,exec,${pkgs.firefox-devedition}/bin/firefox-devedition"
-            "$mod ,B,exec,firefox-devedition"
+            "$mod ,B, exec,zen"
             "$mod, f, fullscreen,"
             "$mod, G, togglegroup,"
             "$mod SHIFT, N, changegroupactive, f"
@@ -95,16 +90,9 @@ in {
             "$mod, T, togglefloating,"
             "$mod, P, pseudo,"
             "$mod ALT, ,resizeactive,"
-            # terminal
-            # "$mod, Return, exec, ${pkgs.wezterm}/bin/wezterm"
             "$mod, Return, exec, ${pkgs.rio}/bin/rio"
-            # logout menu
             "$mod, Escape, exec, wlogout -p layer-shell"
-            # lock screen
             "$mod, L, exec, loginctl lock-session"
-            # select area to perform OCR on
-            # "$mod, O, exec, run-as-service wl-ocr"
-            # move focus
             "$mod, left, movefocus, l"
             "$mod, right, movefocus, r"
             "$mod, up, movefocus, u"

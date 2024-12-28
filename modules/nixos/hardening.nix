@@ -2,7 +2,8 @@
   pkgs,
   lib,
   ...
-}: {
+}:
+{
   # TODO: rewrite partitions to have imutable system ?
   # fileSystems."/".options = ["noexec"];
   programs.firejail = {
@@ -47,7 +48,7 @@
     apparmor = {
       enable = true;
       killUnconfinedConfinables = true;
-      packages = [pkgs.apparmor-profiles];
+      packages = [ pkgs.apparmor-profiles ];
     };
     virtualisation = {
       #  flush the L1 data cache before entering guests
@@ -123,7 +124,10 @@
     # Disable ftrace debugging
     "kernel.ftrace_enabled" = false;
   };
-  boot.kernelModules = ["tcp_bbr" "btintel"];
+  boot.kernelModules = [
+    "tcp_bbr"
+    "btintel"
+  ];
 
   boot.blacklistedKernelModules = [
     # Obscure network protocols

@@ -1,4 +1,5 @@
-{config, ...}: {
+{ config, ... }:
+{
   programs.mcfly = {
     enable = true;
     enableZshIntegration = true;
@@ -9,7 +10,11 @@
     expireDuplicatesFirst = true;
     extended = true;
     ignoreAllDups = true;
-    ignorePatterns = ["rm *" "pkill *" "ls *"];
+    ignorePatterns = [
+      "rm *"
+      "pkill *"
+      "ls *"
+    ];
     path = "${config.xdg.dataHome}/zsh/zsh_history";
 
     save = 20000;

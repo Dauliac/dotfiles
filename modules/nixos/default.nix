@@ -1,4 +1,5 @@
-{inputs, ...}: {
+{ inputs, ... }:
+{
   config = {
     flake.nixosConfigurations.nixos = inputs.nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
@@ -20,9 +21,10 @@
               inputs.sops-nix.homeManagerModules.sops
               inputs.catppuccin.homeManagerModules.catppuccin
               inputs.nixvim.homeManagerModules.nixvim
+              inputs.hyprpanel.homeManagerModules.hyprpanel
               ../home-manager/home.nix
             ];
-            extraSpecialArgs = {inherit inputs;};
+            extraSpecialArgs = { inherit inputs; };
           };
           home-manager.users.dauliac = {
             imports = [

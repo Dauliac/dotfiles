@@ -1,4 +1,3 @@
----
 # SPDX-License-Identifier: AGPL-3.0-or-later
 skip_output: [meta, success]
 pre-commit:
