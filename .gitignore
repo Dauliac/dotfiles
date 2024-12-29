@@ -1,3 +1,4 @@
 result
 .direnv/
 .task/
+.nixos-test-history

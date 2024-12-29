@@ -2,26 +2,22 @@
   inputs,
   pkgs,
   ...
-}: let
-  sonicpi-nvim =
-    pkgs.vimUtils.buildVimPlugin
-    {
-      name = "sonicpi";
-      src = "${inputs.sonicpi-nvim.outPath}";
-    };
-  lsp-lens-nvim =
-    pkgs.vimUtils.buildVimPlugin
-    {
-      name = "lsp-lens-nvim";
-      src = "${inputs.lsp-lens-nvim.outPath}";
-    };
-  yaml-companion-nvim =
-    pkgs.vimUtils.buildVimPlugin
-      {
-        name = "yaml-companion-nvim";
-        src = "${inputs.yaml-companion-nvim.outPath}";
-      };
-in {
+}:
+let
+  sonicpi-nvim = pkgs.vimUtils.buildVimPlugin {
+    name = "sonicpi";
+    src = "${inputs.sonicpi-nvim.outPath}";
+  };
+  lsp-lens-nvim = pkgs.vimUtils.buildVimPlugin {
+    name = "lsp-lens-nvim";
+    src = "${inputs.lsp-lens-nvim.outPath}";
+  };
+  yaml-companion-nvim = pkgs.vimUtils.buildVimPlugin {
+    name = "yaml-companion-nvim";
+    src = "${inputs.yaml-companion-nvim.outPath}";
+  };
+in
+{
   imports = [
     ./opts.nix
     ./packages.nix

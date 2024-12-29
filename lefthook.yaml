@@ -1,21 +1,16 @@
----
-# SPDX-License-Identifier: AGPL-3.0-or-later
 skip_output: [meta, success]
 pre-commit:
-  parallel: false
   commands:
-    # TODO: rewrite it as signe derivation
+    show:
+      tags: show
+      run: nix flake show
+    fmt:
+      tags: fmt
+      stage_fixed: true
+      run: nix fmt
     build:
       tags: build
-      run: task build
-    check:
-      tags: check
-      run: nix flake check
-    formatter-nix:
-      tags: formatter
-      glob: '**/*.nix'
-      run: nix fmt
-      stage_fixed: true
+      run: nix build
 pre-push:
   parallel: true
   commands:

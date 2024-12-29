@@ -4,9 +4,9 @@ require("crates").setup()
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
 capabilities.workspace = {
-    didChangeWatchedFiles = {
-      dynamicRegistration = true,
-    },
+	didChangeWatchedFiles = {
+		dynamicRegistration = true,
+	},
 }
 
 require("lspconfig").pyright.setup({
@@ -16,7 +16,7 @@ require("lspconfig").pyright.setup({
 
 require("lspconfig").terraformls.setup({
 	capabilities = capabilities,
-  filetypes = { "tf", "hcl"},
+	filetypes = { "tf", "hcl" },
 	-- on_attach = require("lsp-format").on_attach,
 	root_dir = require("lspconfig.util").root_pattern(".git"),
 })
@@ -62,58 +62,57 @@ require("lspconfig").lua_ls.setup({
 })
 
 local yaml_cfg = require("yaml-companion").setup({
-  builtin_matchers = {
-    kubernetes = { enabled = true },
-    cloud_init = { enabled = true },
-  },
-  schemas = {
-    {
-      name = "kubernetes 1.22.4",
-      uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.22.4-standalone-strict/all.json",
-    },
-    {
-      name = "container structure test",
-      uri = "https://json.schemastore.org/container-structure-test.json",
-    },
-    {
-      name = "taskfile",
-      uri = "https://taskfile.dev/schema.json",
-    },
-    {
-      name = "flux gitRepository",
-      uri = "https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/gitrepository-source-v1.json",
-    },
-    {
-      name = "flux helmRelease",
-      uri = "https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/gitrepository-source-v1.json",
-    },
-    {
-      name = "kustomization",
-      uri = "https://json.schemastore.org/kustomization.json"
-    },
-  },
-  lspconfig = {
-    settings = {
-      yaml = {
-        validate = true,
-        schemaStore = {
-          enable = false,
-          url = "",
-        },
-        -- schemas = require('schemastore').yaml.schemas {
-        --   select = {
-        --     'kustomization.yaml',
-        --     'GitHub Workflow',
-        --     'chart',
-        --     'Taskfile config',
-        --     'gitlab-ci',
-        --   }
-        -- }
-      }
-    }
-  }
+	builtin_matchers = {
+		kubernetes = { enabled = true },
+		cloud_init = { enabled = true },
+	},
+	schemas = {
+		{
+			name = "kubernetes 1.22.4",
+			uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.22.4-standalone-strict/all.json",
+		},
+		{
+			name = "container structure test",
+			uri = "https://json.schemastore.org/container-structure-test.json",
+		},
+		{
+			name = "taskfile",
+			uri = "https://taskfile.dev/schema.json",
+		},
+		{
+			name = "flux gitRepository",
+			uri = "https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/gitrepository-source-v1.json",
+		},
+		{
+			name = "flux helmRelease",
+			uri = "https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/gitrepository-source-v1.json",
+		},
+		{
+			name = "kustomization",
+			uri = "https://json.schemastore.org/kustomization.json",
+		},
+	},
+	lspconfig = {
+		settings = {
+			yaml = {
+				validate = true,
+				schemaStore = {
+					enable = false,
+					url = "",
+				},
+				-- schemas = require('schemastore').yaml.schemas {
+				--   select = {
+				--     'kustomization.yaml',
+				--     'GitHub Workflow',
+				--     'chart',
+				--     'Taskfile config',
+				--     'gitlab-ci',
+				--   }
+				-- }
+			},
+		},
+	},
 })
-
 
 -- require("lspconfig").yamlls.setup(yaml_cfg)
 
@@ -180,8 +179,8 @@ require("lspconfig").markdown_oxide.setup({
 	on_attach = require("lsp-format").on_attach,
 })
 
-require'lspconfig'.helm_ls.setup{}
-require'lspconfig'.svelte.setup({
-  capabilities = capabilities,
+require("lspconfig").helm_ls.setup({})
+require("lspconfig").svelte.setup({
+	capabilities = capabilities,
 	on_attach = require("lsp-format").on_attach,
 })

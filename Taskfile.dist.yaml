@@ -1,21 +1,20 @@
----
-
 version: "3"
-
 set: [errexit, pipefail, nounset]
 shopt: [globstar]
-
 dotenv: [".env.local", ".env"]
-
 tasks:
+  default:
+    run: "once"
+    silent: true
+    desc: List available tasks
+    cmds:
+      - task --list
   init:
+    run: "once"
     silent: true
     desc: Setup project
     cmds:
-      - |
-        nix \
-          run \
-          nixpkgs#lefthook install
+      - lefthook install
     sources:
       - ./lefthook.yaml
       - ./flake.nix
@@ -30,10 +29,13 @@ tasks:
     cmds:
       - task: build:home-manager:nix-os
       - task: build:nix-os
-      - nix build '.#dev.driverInteractive' 
+        # - nix build '.#dev.driverInteractive'
   build:nix-os:
     silent: true
     desc: Install project
+    sources:
+      - ./flake.nix
+      - ./modules/nixos/**/*.nix
     cmds:
       - nixos-rebuild --flake . build
   build:home-manager:nix-os:
@@ -41,6 +43,9 @@ tasks:
     desc: Install project
     cmds:
       - home-manager --flake . build
+    sources:
+      - ./flake.nix
+      - ./modules/home-manager/**/*.nix
   install:disko:
     cmds:
       - disko-install --flake '.#nixos' --disk backup '/dev/nvme1n1'
@@ -58,8 +63,8 @@ tasks:
     cmds:
       - |
         home-manager switch \
-          --flake . 
-          switch 
+          --flake .
+          switch
         fc-cache -f -v
   test:
     silent: true
@@ -68,37 +73,3 @@ tasks:
         nix build \
           '.#dev.driverInteractive' \
         && ./result/bin/nixos-test-driver
-  format:nix:
-    silent: true
-    desc: Format nix files
-    cmds:
-      - nix fmt .
-    sources:
-      - "**/*.nix"
-  format:
-    silent: true
-    desc: Format all files
-    deps:
-      - format:nix
-      - format:sh
-  check:typo:
-    silent: true
-    desc: Check typos
-    cmds:
-      - typos .
-    sources:
-      - "**/*"
-  check:sh:
-    cmds:
-      - shellcheck -x **/*.sh
-    sources:
-      - "**/*.sh"
-  check:
-    silent: true
-    deps: 
-      # - check:sh
-      - check:typo
-  secret:edit:
-    silent: true
-    cmds:
-      - sops secrets.yaml

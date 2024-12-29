@@ -1,4 +1,5 @@
-{ ...}: {
+_:
+{
   services.blueman.enable = true;
   hardware = {
     bluetooth = {
@@ -7,7 +8,7 @@
         General = {
           Experimental = true;
         };
-	    };
+      };
     };
   };
 }

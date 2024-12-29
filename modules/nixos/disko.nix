@@ -1,4 +1,5 @@
-_: let
+_:
+let
   mkConfig = disk: {
     type = "disk";
     device = disk;
@@ -37,19 +38,28 @@ _: let
             };
             content = {
               type = "btrfs";
-              extraArgs = ["-f"];
+              extraArgs = [ "-f" ];
               subvolumes = {
                 "/root" = {
                   mountpoint = "/";
-                  mountOptions = ["compress=zstd" "noatime"];
+                  mountOptions = [
+                    "compress=zstd"
+                    "noatime"
+                  ];
                 };
                 "/home" = {
                   mountpoint = "/home";
-                  mountOptions = ["compress=zstd" "noatime"];
+                  mountOptions = [
+                    "compress=zstd"
+                    "noatime"
+                  ];
                 };
                 "/nix" = {
                   mountpoint = "/nix";
-                  mountOptions = ["compress=zstd" "noatime"];
+                  mountOptions = [
+                    "compress=zstd"
+                    "noatime"
+                  ];
                 };
               };
             };
@@ -60,7 +70,8 @@ _: let
   };
   main = mkConfig "/dev/nvme0n1";
   backup = mkConfig "/dev/nvme1n1";
-in {
+in
+{
   imports = [
     {
       disko.devices = {

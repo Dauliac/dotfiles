@@ -1,10 +1,9 @@
 _: {
   programs.rio = {
     enable = true;
-    catppuccin.enable = true;
     settings = {
       fonts = {
-        familly = "Iosevka Nerd Font";
+        familly = "Iosevka Nerd Font Mono";
       };
       window = {
         opacity = 0.85;

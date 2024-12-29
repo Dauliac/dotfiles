@@ -1,7 +1,5 @@
-{
-  pkgs,
-  ...
-}: let
+{ pkgs, ... }:
+let
   cli = with pkgs; [
     go-task
     ghq
@@ -21,7 +19,12 @@
     age # encryption
     eza # TODO: check how to upgrade home-manager to use eza configs
     yazi # file manager
-    (nerdfonts.override {fonts = ["FiraMono" "Iosevka"];})
+    (nerdfonts.override {
+      fonts = [
+        "FiraMono"
+        "Iosevka"
+      ];
+    })
     yt-dlp
     git-absorb
     git-gamble
@@ -43,6 +46,7 @@
     system76-keyboard-configurator
     protonvpn-gui
   ];
-in {
+in
+{
   home.packages = cli ++ gui ++ tui;
 }
