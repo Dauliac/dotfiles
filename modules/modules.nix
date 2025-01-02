@@ -20,6 +20,7 @@ in
           lanzaboote.nixosModules.lanzaboote
           catppuccin.nixosModules.catppuccin
           musnix.nixosModules.musnix
+          comin.nixosModules.comin
         ]
         ++ [
           ./nixos/disko.nix

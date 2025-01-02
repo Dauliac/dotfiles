@@ -15,6 +15,7 @@
     ./sound.nix
     ./gaming.nix
     ./theme.nix
+    ./comin.nix
   ];
   networking.hostName = "nixos";
   networking.networkmanager.enable = true;
