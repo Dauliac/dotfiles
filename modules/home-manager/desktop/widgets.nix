@@ -17,8 +17,7 @@
       };
     };
     hyprpanel = {
-      # FIXME: enable this after resolution of this issue: https://github.com/Jas-SinghFSU/HyprPanel/issues/655
-      enable = false;
+      enable = true;
       systemd.enable = true;
       hyprland.enable = true;
       overwrite.enable = true;
@@ -30,12 +29,16 @@
               "dashboard"
               "workspaces"
             ];
-            middle = [ "media" ];
+            middle = [
+              "media"
+            ];
             right = [
-              "battery"
               "volume"
+             "network"
+              "bluetooth"
               "systray"
-              "notifications"
+              "clock"
+             "notifications"
             ];
           };
         };

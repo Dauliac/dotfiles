@@ -6,7 +6,6 @@
 }:
 let
   inherit (lib) mdDoc mkOption;
-  cfg = config;
 in
 {
   options = {
@@ -61,25 +60,13 @@ in
           allowUnfree = true;
           allowBroken = true;
         };
-        # overlays = [
-        #   inputs.foo.overlays.default
-        #   (final: prev: {
-        #     # ... things you need to patch ...
-        #   })
-        # ];
+        overlays = [
+          inputs.hyprpanel.overlay
+          (final: prev: {
+            # ... things you need to patch ...
+          })
+        ];
       };
     };
   };
-  config.perSystem =
-    {
-      config,
-      system,
-      ...
-    }:
-    {
-      _module.args.pkgs = import inputs.nixpkgs {
-        inherit system;
-        inherit (cfg.nixpkgsConfig) config;
-      };
-    };
 }
