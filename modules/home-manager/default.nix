@@ -13,7 +13,12 @@ in
     inherit pkgs;
     extraSpecialArgs = { inherit inputs; };
     modules = config.homeManagerModules ++ [
-      { nixpkgs.overlays = [ inputs.nixGL.overlay ]; }
+      {
+        nixpkgs = {
+          inherit (config.nixpkgsConfig) config;
+          overlays = [ inputs.nixGL.overlay ];
+        };
+      }
       ./profiles/${userOne}.nix
       {
         home.username = userOne;

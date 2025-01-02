@@ -16,12 +16,6 @@
     ./gaming.nix
     ./theme.nix
   ];
-  nixpkgs = {
-    config = {
-      allowUnfree = true;
-      allowBroken = true;
-    };
-  };
   networking.hostName = "nixos";
   networking.networkmanager.enable = true;
   programs.hyprland = {

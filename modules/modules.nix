@@ -6,6 +6,7 @@
 }:
 let
   inherit (lib) mdDoc mkOption;
+  cfg = config;
 in
 {
   options = {
@@ -24,7 +25,6 @@ in
         ++ [
           ./nixos/disko.nix
           ./nixos/configuration.nix
-          ./nixos/hardware-configuration.nix
           ./nixos/home-manager.nix
           {
             home-manager = {
@@ -54,5 +54,32 @@ in
           ./home-manager/home.nix
         ];
     };
+    nixpkgsConfig = mkOption {
+      description = mdDoc "NixPkgs config to import";
+      default = {
+        config = {
+          allowUnfree = true;
+          allowBroken = true;
+        };
+        # overlays = [
+        #   inputs.foo.overlays.default
+        #   (final: prev: {
+        #     # ... things you need to patch ...
+        #   })
+        # ];
+      };
+    };
   };
+  config.perSystem =
+    {
+      config,
+      system,
+      ...
+    }:
+    {
+      _module.args.pkgs = import inputs.nixpkgs {
+        inherit system;
+        inherit (cfg.nixpkgsConfig) config;
+      };
+    };
 }
