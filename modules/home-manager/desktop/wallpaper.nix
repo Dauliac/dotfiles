@@ -1,25 +1,22 @@
-{ config, ... }:
+_:
+let
+  path = "/home/dauliac/ghq/github.com/Dauliac/dotfiles/modules/home-manager/desktop/wallpaper.jpg";
+in
 {
-  programs.wpaperd = {
-    enable = true;
+  services.hyprpaper = {
+    enable = false;
     settings = {
-      default = {
-        path = ./wallpaper.jpg;
-      };
-    };
-  };
-  systemd.user.services.wpaperd = {
-    Unit = {
-      Description = "Start wallpaper.";
-      PartOf = "graphical-session.target";
-      After = "graphical-session.target";
-      ConditionEnvironment = "WAYLAND_DISPLAY";
-    };
-    Install = {
-      WantedBy = [ "default.target" ];
-    };
-    Service = {
-      ExecStart = "${config.programs.wpaperd.package}/bin/wpaperd";
+      ipc = "on";
+      splash = false;
+      splash_offset = 2.0;
+      preload = [
+        path
+      ];
+      wallpaper = [
+        "DP-1,${path}"
+        "DP-2,${path}"
+        "DP-3,${path}"
+      ];
     };
   };
 }

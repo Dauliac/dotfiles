@@ -34,7 +34,9 @@ _: {
     };
   };
   services.xserver = {
-    layout = "us";
-    xkbVariant = "altgr-intl";
+    xkb = {
+      layout = "us";
+      variant = "altgr-intl";
+    };
   };
 }
