@@ -8,14 +8,6 @@
       enable = true;
       package = pkgs.rofi-wayland-unwrapped;
     };
-    wpaperd = {
-      enable = true;
-      settings = {
-        default = {
-          path = ./wallpaper.jpg;
-        };
-      };
-    };
     hyprpanel = {
       enable = true;
       systemd.enable = true;
@@ -34,11 +26,11 @@
             ];
             right = [
               "volume"
-             "network"
+              "network"
               "bluetooth"
               "systray"
               "clock"
-             "notifications"
+              "notifications"
             ];
           };
         };
