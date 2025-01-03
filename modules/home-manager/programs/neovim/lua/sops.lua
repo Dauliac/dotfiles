@@ -1,1 +1,1 @@
-require("nvim_sops").setup({})
+require('nvim_sops').setup {}

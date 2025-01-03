@@ -235,6 +235,11 @@ local function set_hlslens()
 	vim.api.nvim_set_keymap("n", "<Leader>l", "<Cmd>noh<CR>", kopts)
 end
 
+local function set_sops_keymaps()
+  vim.keymap.set("n", "<leader>se", vim.cmd.SopsEncrypt, { desc = "Sops: [E]ncrypt file" })
+  vim.keymap.set("n", "<leader>sd", vim.cmd.SopsDecrypt, { desc = "Sops: [D]ecrypt file" })
+end
+
 local function set_keymaps()
 	vim.g.mapleader = ","
 
@@ -256,6 +261,7 @@ local function set_keymaps()
 	set_trouble_keymap()
 	set_undotree_keymap()
 	set_hlslens()
+  set_sops_keymaps()
 end
 return {
 	set_keymaps(),

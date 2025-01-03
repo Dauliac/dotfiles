@@ -7,10 +7,8 @@
     rm = "trash-put";
     watch = "${pkgs.viddy}/bin/viddy";
     ping = "${pkgs.gping}/bin/gping";
-    ls = "${pkgs.eza}/bin/eza";
     cd = "z";
     ll = "ls -la";
-    tree = "${pkgs.eza}/bin/eza --tree";
     ps = "${pkgs.procs}/bin/procs";
     df = "${pkgs.duf}/bin/duf";
     du = "${pkgs.ncdu}/bin/ncdu";

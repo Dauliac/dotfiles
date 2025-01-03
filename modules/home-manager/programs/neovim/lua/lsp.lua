@@ -1,5 +1,6 @@
 ---
 require("crates").setup()
+require("yaml-companion").open_ui_select()
 
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
@@ -7,6 +8,10 @@ capabilities.workspace = {
 	didChangeWatchedFiles = {
 		dynamicRegistration = true,
 	},
+}
+
+require("lspconfig").bashls.setup {
+    capabilities = capabilities,
 }
 
 require("lspconfig").pyright.setup({
@@ -60,61 +65,6 @@ require("lspconfig").lua_ls.setup({
 	capabilities = capabilities,
 	-- on_attach = require("lsp-format").on_attach,
 })
-
-local yaml_cfg = require("yaml-companion").setup({
-	builtin_matchers = {
-		kubernetes = { enabled = true },
-		cloud_init = { enabled = true },
-	},
-	schemas = {
-		{
-			name = "kubernetes 1.22.4",
-			uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.22.4-standalone-strict/all.json",
-		},
-		{
-			name = "container structure test",
-			uri = "https://json.schemastore.org/container-structure-test.json",
-		},
-		{
-			name = "taskfile",
-			uri = "https://taskfile.dev/schema.json",
-		},
-		{
-			name = "flux gitRepository",
-			uri = "https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/gitrepository-source-v1.json",
-		},
-		{
-			name = "flux helmRelease",
-			uri = "https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/gitrepository-source-v1.json",
-		},
-		{
-			name = "kustomization",
-			uri = "https://json.schemastore.org/kustomization.json",
-		},
-	},
-	lspconfig = {
-		settings = {
-			yaml = {
-				validate = true,
-				schemaStore = {
-					enable = false,
-					url = "",
-				},
-				-- schemas = require('schemastore').yaml.schemas {
-				--   select = {
-				--     'kustomization.yaml',
-				--     'GitHub Workflow',
-				--     'chart',
-				--     'Taskfile config',
-				--     'gitlab-ci',
-				--   }
-				-- }
-			},
-		},
-	},
-})
-
--- require("lspconfig").yamlls.setup(yaml_cfg)
 
 require("lspconfig").volar.setup({
 	filetypes = {
@@ -179,8 +129,119 @@ require("lspconfig").markdown_oxide.setup({
 	on_attach = require("lsp-format").on_attach,
 })
 
-require("lspconfig").helm_ls.setup({})
 require("lspconfig").svelte.setup({
 	capabilities = capabilities,
 	on_attach = require("lsp-format").on_attach,
 })
+
+
+
+-- YAML variables and Helm LS (quite big!)
+local schemas = {}
+
+local kubernetes = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/v1.29.6-standalone-strict/all.json"
+local flux2 = "https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/refs/heads/main/all.json"
+local gitlab = "https://gitlab.com/gitlab-org/gitlab/-/raw/master/app/assets/javascripts/editor/schema/ci.json"
+local taskfile = "https://taskfile.dev/schema.json"
+local podmonitor = "https://raw.githubusercontent.com/datreeio/CRDs-catalog/refs/heads/main/monitoring.coreos.com/podmonitor_v1.json"
+local servicemonitor = "https://raw.githubusercontent.com/datreeio/CRDs-catalog/refs/heads/main/monitoring.coreos.com/servicemonitor_v1.json"
+local prometheus = "https://raw.githubusercontent.com/datreeio/CRDs-catalog/refs/heads/main/monitoring.coreos.com/prometheus_v1.json"
+local ingress = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/v1.30.1/ingress-networking-v1.json"
+local lefthook = "https://json.schemastore.org/lefthook.json"
+local github = "https://json.schemastore.org/github-workflow.json"
+
+schemas[kubernetes] = {
+  "templates/*deployment.yaml",
+  "templates/*service.yaml",
+  "templates/*secret.yaml",
+  "templates/*configmap.yaml",
+  "templates/*daemonset.yaml",
+  "templates/*replicaset.yaml",
+  "templates/*persistentvolume.yaml",
+  "templates/*persistentvolumeclaim.yaml",
+  "templates/*serviceaccount.yaml",
+  "templates/*role.yaml",
+  "templates/*rolebinding.yaml",
+  "templates/*clusterrole.yaml",
+  "templates/*clusterrolebinding.yaml",
+  "templates/*job*.yaml",
+}
+schemas[podmonitor] = "templates/*podmonitor*"
+schemas[servicemonitor] = "templates/*servicemonitor*"
+schemas[ingress] = "templates/*ingress*"
+
+local cfg = require("yaml-companion").setup({
+  schemas = {
+    { name = "Flux2",           uri = flux2 },
+    { name = "Gitlab",          uri = gitlab },
+    { name = "Taskfile",        uri = taskfile },
+    { name = "PodMonitor",      uri = podmonitor },
+    { name = "ServiceMonitor",  uri = servicemonitor },
+    { name = "Prometheus",      uri = prometheus },
+    { name = "Kubernetes",      uri = kubernetes },
+    { name = "Lefthook",        uri = lefthook },
+  },
+  lspconfig = {
+    capabilities = capabilities,
+    settings = {
+      yaml = {
+        schemas = {
+          [flux2] = {
+            "*.{alert,provider,receiver,helmrelease,helmrepository,gitrepository}.yaml",
+            "gotk-sync.yaml",
+            "gotk-*.yaml",
+          },
+          [gitlab] = {
+            "ci/*.{yaml,yml}",
+            ".gitlab/**/*.{yaml,yml}",
+            ".gitlab-ci.{yaml,yml}",
+          },
+          [taskfile] = {
+           "**/Taskfile*.{yaml,yml}",
+            "taskfiles/**/*.{yaml,yml}",
+          },
+          [podmonitor] = {
+            "*podmonitor*.{yaml,yml}"
+          },
+          [servicemonitor] = {
+            "*servicemonitor*.{yaml,yml}"
+          },
+          [prometheus] = {
+            "*prometheus*.{yaml,yml}"
+          },
+          [ingress] = {
+            "*ingress*.{yaml,yml}"
+          },
+          [lefthook] = {
+            "**/lefthook.*"
+          },
+          [github] = {
+            ".github/workflow/**/*.{yaml,yml}"
+          }
+        },
+      },
+    },
+  },
+})
+
+require("lspconfig").helm_ls.setup {
+  capabilities = capabilities,
+  settings = {
+    ['helm-ls'] = {
+      yamlls = {
+        enabled = true,
+        enabledForFilesGlob = "*.{yaml,yml}",
+        diagnosticsLimit = 50,
+        showDiagnosticsDirectly = false,
+        path = "yaml-language-server",
+        config = {
+          schemas = schemas,
+          completion = true,
+          hover = true,
+        }
+      }
+    }
+  }
+}
+
+require("lspconfig").yamlls.setup{cfg}
