@@ -1,13 +1,9 @@
 {
-  inputs,
   pkgs,
   config,
-  osConfig,
-  lib,
   ...
 }:
 let
-  screenshotarea = "hyprctl keyword animation 'fadeOut,0,0,default'; ${pkgs.grimblast}/bin/grimblast --notify copysave area; hyprctl keyword animation 'fadeOut,1,4,default'";
   # binds $mod + [shift +] {1..10} to [move to] workspace {1..10}
   workspaces = builtins.concatLists (
     builtins.genList (
@@ -30,6 +26,16 @@ in
   wayland = {
     windowManager.hyprland = {
       enable = true;
+      systemd = {
+        enableXdgAutostart = true;
+        variables = [
+          "PATH"
+          "DISPLAY"
+          "HYPRLAND_INSTANCE_SIGNATURE"
+          "WAYLAND_DISPLAY"
+          "XDG_CURRENT_DESKTOP"
+        ];
+      };
       settings = {
         "$mod" = "SUPER";
         monitor =
@@ -70,6 +76,10 @@ in
             topLarge.config
             leftVertical.config
           ];
+        input = {
+          kb_layout = "us";
+          kb_variant = "altgr-intl";
+        };
         bindm = [
           "$mod, mouse:272, movewindow"
           "$mod, mouse:273, resizewindow"
@@ -112,9 +122,6 @@ in
             "$mod, l, movefocus, r"
             "$mod, k, movefocus, u"
             "$mod, j, movefocus, d"
-            # screenshot
-            # stop animations while screenshotting; makes black border go away
-            ", Print, exec, ${screenshotarea}"
             # special workspace
             "$mod SHIFT, grave, movetoworkspace, special"
             "$mod, grave, togglespecialworkspace, eDP-1"

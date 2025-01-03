@@ -7,7 +7,7 @@
   # TODO: rewrite partitions to have imutable system ?
   # fileSystems."/".options = ["noexec"];
   programs.firejail = {
-    enable = true;
+    enable = false;
     wrappedBinaries = {
       firefox-devedition = {
         executable = "${pkgs.firefox-devedition}/bin/firefox-devedition";
