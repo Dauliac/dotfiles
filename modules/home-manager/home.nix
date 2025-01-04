@@ -24,8 +24,7 @@
     fonts.fontconfig.enable = true;
     xdg.enable = true;
     home.sessionVariables = {
-      # TODO: use firefox binary if nixOs profile is enabled
-      BROWSER = "firefox-devedition";
+      BROWSER = "zen";
     };
   };
 }

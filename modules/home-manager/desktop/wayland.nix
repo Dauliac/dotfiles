@@ -93,9 +93,8 @@ in
             # NOTE: compositor commands
             "$mod SHIFT, E, exec, pkill Hyprland"
             "$mod, Q, killactive,"
-            # TODO: use firefox in firejail if nixOs profile is enabled
-            # "$mod ,B,exec,${pkgs.firefox-devedition}/bin/firefox-devedition"
-            "$mod ,B,exec,firefox-devedition"
+            "$mod ,B,exec,$BROWSER"
+            "$mod, r, exec, ${config.programs.tofi.package}/bin/tofi-drun | xargs hyprctl dispatch exec --"
             "$mod, f, fullscreen,"
             "$mod, G, togglegroup,"
             "$mod SHIFT, N, changegroupactive, f"

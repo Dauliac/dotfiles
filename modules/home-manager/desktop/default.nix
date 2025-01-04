@@ -1,5 +1,4 @@
-{ ... }:
-{
+_: {
   imports = [
     ./wayland.nix
     ./widgets.nix
