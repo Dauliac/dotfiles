@@ -43,6 +43,5 @@ in
   ];
   programs = {
     wezterm.package = nixGlWrapper pkgs.wezterm;
-    rio.package = nixGlWrapper pkgs.rio;
   };
 }

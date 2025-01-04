@@ -8,13 +8,11 @@
     ./history.nix
     ./lazygit.nix
     ./neovim
-    ./rio.nix
     ./pet.nix
     ./starship.nix
     ./wezterm.nix
     ./zellij.nix
     ./zsh.nix
-    ./rio.nix
     ./eza.nix
   ];
   programs.home-manager.enable = true;

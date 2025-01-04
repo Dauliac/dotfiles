@@ -236,8 +236,8 @@ local function set_hlslens()
 end
 
 local function set_sops_keymaps()
-  vim.keymap.set("n", "<leader>se", vim.cmd.SopsEncrypt, { desc = "Sops: [E]ncrypt file" })
-  vim.keymap.set("n", "<leader>sd", vim.cmd.SopsDecrypt, { desc = "Sops: [D]ecrypt file" })
+	vim.keymap.set("n", "<leader>se", vim.cmd.SopsEncrypt, { desc = "Sops: [E]ncrypt file" })
+	vim.keymap.set("n", "<leader>sd", vim.cmd.SopsDecrypt, { desc = "Sops: [D]ecrypt file" })
 end
 
 local function set_keymaps()
@@ -261,7 +261,7 @@ local function set_keymaps()
 	set_trouble_keymap()
 	set_undotree_keymap()
 	set_hlslens()
-  set_sops_keymaps()
+	set_sops_keymaps()
 end
 return {
 	set_keymaps(),

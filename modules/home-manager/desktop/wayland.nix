@@ -104,12 +104,8 @@ in
             "$mod, T, togglefloating,"
             "$mod, P, pseudo,"
             "$mod ALT, ,resizeactive,"
-            # terminal
-            # "$mod, Return, exec, ${pkgs.wezterm}/bin/wezterm"
-            "$mod, Return, exec, ${pkgs.rio}/bin/rio"
-            # logout menu
+            "$mod, Return, exec, ${pkgs.wezterm}/bin/wezterm"
             "$mod, Escape, exec, wlogout -p layer-shell"
-            # lock screen
             "$mod, L, exec, loginctl lock-session"
             # select area to perform OCR on
             # "$mod, O, exec, run-as-service wl-ocr"
@@ -138,9 +134,7 @@ in
           ++ workspaces;
 
         bindr = [
-          # NOTE: launcher
-          "$mod, r, exec, ${config.programs.rofi.package}/bin/rofi -show drun"
-          "$mod, w, exec, ${config.programs.rofi.package}/bin/rofi -show window"
+          "$mod, r, exec, ${config.programs.rofi.package}/bin/tofi-drun | xargs hyprctl dispatch exec --"
         ];
 
         bindl = [
