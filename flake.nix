@@ -24,9 +24,6 @@
       url = "github:nix-community/nixvim/nixos-24.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    musnix = {
-      url = "github:musnix/musnix";
-    };
     sonicpi-nvim = {
       url = "github:magicmonty/sonicpi.nvim";
       flake = false;
@@ -68,7 +65,6 @@
       lanzaboote,
       lsp-lens-nvim,
       yaml-companion-nvim,
-      musnix,
       zen-browser,
       hyprpanel,
       ...

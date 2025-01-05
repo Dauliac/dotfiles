@@ -5,6 +5,6 @@
     ./treefmt.nix
     ./build.nix
     ./dev.nix
-    ./test.nix
+    # ./test.nix
   ];
 }

@@ -19,7 +19,6 @@ in
           sops-nix.nixosModules.sops
           lanzaboote.nixosModules.lanzaboote
           catppuccin.nixosModules.catppuccin
-          musnix.nixosModules.musnix
           comin.nixosModules.comin
         ]
         ++ [
@@ -35,6 +34,7 @@ in
               imports = [
                 ./home-manager/profiles/dauliac.nix
               ];
+              nixpkgs = config.nixpkgsConfig;
             };
           }
         ];
@@ -61,13 +61,19 @@ in
           allowUnfree = true;
           allowBroken = true;
         };
-        overlays = [
-          inputs.hyprpanel.overlay
-          (final: prev: {
-            # ... things you need to patch ...
-          })
+        overlays = with inputs; [
+          hyprpanel.overlay
         ];
       };
     };
   };
+  config.perSystem =
+    { system, ... }:
+    {
+      _module.args.pkgs =
+        import inputs.nixpkgs {
+          inherit system;
+        }
+        // config.nixpkgsConfig;
+    };
 }

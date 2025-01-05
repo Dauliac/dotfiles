@@ -4,7 +4,7 @@ let
 in
 {
   services.hyprpaper = {
-    enable = false;
+    enable = true;
     settings = {
       ipc = "on";
       splash = false;

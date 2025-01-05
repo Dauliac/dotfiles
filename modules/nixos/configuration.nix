@@ -38,13 +38,7 @@
       libvdpau-va-gl
     ];
   };
-  # services.displayManager.sddm.enable = true;
-  # services.displayManager.sddm.wayland.enable = true;
-  # services.displayManager.sddm.package = pkgs.kdePackages.sddm;
   services.displayManager.ly.enable = true;
-
-  # services.xserver.enable = true;
-  # services.xserver.displayManager.gdm.enable = true;
   services.picom.vSync = "drm";
   services.printing.enable = true;
   users.users.dauliac = {

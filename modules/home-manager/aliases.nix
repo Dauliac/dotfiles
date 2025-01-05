@@ -9,6 +9,7 @@
     ping = "${pkgs.gping}/bin/gping";
     cd = "z";
     ll = "ls -la";
+    tree = "${pkgs.eza}/bin/eza --tree";
     ps = "${pkgs.procs}/bin/procs";
     df = "${pkgs.duf}/bin/duf";
     du = "${pkgs.ncdu}/bin/ncdu";
