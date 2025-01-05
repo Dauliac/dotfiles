@@ -13,6 +13,7 @@ in
         path
       ];
       wallpaper = [
+        "eDP-1,${path}"
         "DP-1,${path}"
         "DP-2,${path}"
         "DP-3,${path}"
