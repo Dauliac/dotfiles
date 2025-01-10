@@ -14,6 +14,7 @@
     ./zellij.nix
     ./zsh.nix
     ./eza.nix
+    ./appflowy.nix
   ];
   programs.home-manager.enable = true;
   # NOTE: fast cd
