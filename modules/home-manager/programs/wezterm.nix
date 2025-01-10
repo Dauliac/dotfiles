@@ -1,4 +1,12 @@
 _: {
+  programs.foot = {
+    enable = true;
+    settings = {
+      main = {
+        font = "Iosevka Nerd Font Mono";
+      };
+    };
+  };
   programs.wezterm = {
     enable = true;
     enableZshIntegration = true;

@@ -134,7 +134,7 @@ require("lspconfig").svelte.setup({
 	on_attach = require("lsp-format").on_attach,
 })
 
--- YAML variables and Helm LS (quite big!)
+-- NOTE: YAML variables and Helm LS (quite big!)
 local schemas = {}
 
 local kubernetes =
@@ -191,7 +191,6 @@ local cfg = require("yaml-companion").setup({
 				schemas = {
 					[flux2] = {
 						"*.{alert,provider,receiver,helmrelease,helmrepository,gitrepository}.yaml",
-						"gotk-sync.yaml",
 						"gotk-*.yaml",
 					},
 					[gitlab] = {
@@ -248,3 +247,9 @@ require("lspconfig").helm_ls.setup({
 })
 
 require("lspconfig").yamlls.setup({ cfg })
+
+-- NOTE: restart LSP server avoir problems with Helm-ls
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "helm",
+  command = "LspRestart",
+})

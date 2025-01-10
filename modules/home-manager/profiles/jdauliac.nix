@@ -31,7 +31,7 @@ in
   home.packages = with pkgs; [
     (nixGlWrapper firefox-devedition)
     (nixGlWrapper slack)
-    # slack
+    (nixGlWrapper appflowy)
     # gptcommit
     glab
     pritunl-client
