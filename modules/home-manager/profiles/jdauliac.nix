@@ -33,13 +33,15 @@ in
     (nixGlWrapper slack)
     (nixGlWrapper appflowy)
     # gptcommit
-    glab
     pritunl-client
     kubecm
     jdk21
-    prismlauncher
     git-absorb
+    kubectl
+    glab
+    fluxcd
     # gnomeExtensions.pop-shell
+    # prismlauncher
   ];
   programs = {
     wezterm.package = nixGlWrapper pkgs.wezterm;
