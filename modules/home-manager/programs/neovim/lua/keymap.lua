@@ -240,6 +240,10 @@ local function set_sops_keymaps()
 	vim.keymap.set("n", "<leader>sd", vim.cmd.SopsDecrypt, { desc = "Sops: [D]ecrypt file" })
 end
 
+local function set_neoclip_keymaps()
+	vim.keymap.set("n", "<leader>c", vim.cmd.Telescope("neoclip"), { desc = "Neoclip: [c]lipboard manager" })
+end
+
 local function set_keymaps()
 	vim.g.mapleader = ","
 
@@ -262,6 +266,7 @@ local function set_keymaps()
 	set_undotree_keymap()
 	set_hlslens()
 	set_sops_keymaps()
+  set_neoclip_keymaps()
 end
 return {
 	set_keymaps(),
