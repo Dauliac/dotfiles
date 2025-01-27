@@ -30,6 +30,7 @@ let
     git-gamble
     convco
     unzip
+    comma
   ];
   tui = with pkgs; [
     bluetuith
