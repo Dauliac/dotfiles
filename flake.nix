@@ -40,6 +40,10 @@
       url = "github:someone-stole-my-name/yaml-companion.nvim";
       flake = false;
     };
+    commander-nvim = {
+      url = "github:FeiyouG/commander.nvim";
+      flake = false;
+    };
     zen-browser.url = "github:MarceColl/zen-browser-flake";
     treefmt-nix.url = "github:numtide/treefmt-nix";
     hyprpanel = {
@@ -66,6 +70,7 @@
       lsp-lens-nvim,
       yaml-companion-nvim,
       zen-browser,
+      commander-nvim,
       hyprpanel,
       ...
     }:

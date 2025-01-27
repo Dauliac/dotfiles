@@ -16,6 +16,10 @@ let
     name = "yaml-companion-nvim";
     src = "${inputs.yaml-companion-nvim.outPath}";
   };
+  commander-nvim = pkgs.vimUtils.buildVimPlugin {
+    name = "commander";
+    src = "${inputs.commander-nvim.outPath}";
+  };
 in
 {
   imports = [
@@ -71,50 +75,51 @@ in
       web-devicons.enable = true;
     };
     extraPlugins = with pkgs.vimPlugins; [
-      which-key-nvim
-      vim-gitgutter
-      telescope-nvim
-      telescope-dap-nvim
-      ssr-nvim
-      sqlite-lua
-      sonicpi-nvim
-      lsp-lens-nvim
-      rustaceanvim
-      rust-tools-nvim
-      registers-nvim
-      plenary-nvim
-      nvim-spectre
-      nvim-neoclip-lua
-      nvim-lspconfig
-      nvim-dap-virtual-text
-      nvim-dap-ui
-      nvim-dap
-      nvim-sops
-      null-ls-nvim
-      nui-nvim
-      noice-nvim
-      neoscroll-nvim
-      nvim-hlslens
-      neodev-nvim
-      lualine-nvim
-      lualine-lsp-progress
-      lsp-status-nvim
-      lsp-inlayhints-nvim
-      lsp-colors-nvim
-      lazygit-nvim
-      indent-blankline-nvim-lua
-      glow-nvim
-      gitsigns-nvim
-      firenvim
-      diffview-nvim
-      crates-nvim
-      catppuccin-nvim
-      vim-helm
       barbar-nvim
-      tailwindcss-colors-nvim
-      tailwind-tools-nvim
-      yaml-companion-nvim
+      catppuccin-nvim
+      commander-nvim
+      crates-nvim
+      diffview-nvim
+      firenvim
+      gitsigns-nvim
+      glow-nvim
+      indent-blankline-nvim-lua
+      lazygit-nvim
+      lsp-colors-nvim
+      lsp-inlayhints-nvim
+      lsp-lens-nvim
+      lsp-status-nvim
+      lualine-lsp-progress
+      lualine-nvim
+      neodev-nvim
+      neoscroll-nvim
+      noice-nvim
+      nui-nvim
+      null-ls-nvim
+      nvim-dap
+      nvim-dap-ui
+      nvim-dap-virtual-text
+      nvim-hlslens
+      nvim-lspconfig
+      nvim-neoclip-lua
+      nvim-sops
+      nvim-spectre
+      plenary-nvim
+      registers-nvim
+      rust-tools-nvim
+      rustaceanvim
+      sonicpi-nvim
+      sqlite-lua
+      ssr-nvim
       substitute-nvim
+      tailwind-tools-nvim
+      tailwindcss-colors-nvim
+      telescope-dap-nvim
+      telescope-nvim
+      vim-gitgutter
+      vim-helm
+      which-key-nvim
+      yaml-companion-nvim
       (nvim-treesitter.withPlugins (p: [
         p.javascript
         p.typescript
@@ -149,6 +154,7 @@ in
       dofile("${./lua/autopair.lua}")
       dofile("${./lua/catppuccin.lua}")
       dofile("${./lua/cmp.lua}")
+      dofile("${./lua/commander.lua}")
       dofile("${./lua/comment.lua}")
       dofile("${./lua/dap.lua}")
       dofile("${./lua/dressing.lua}")
@@ -160,7 +166,7 @@ in
       dofile("${./lua/hlslens.lua}")
       dofile("${./lua/indent-blankline-nvim.lua}")
       dofile("${./lua/init.lua}")
-      dofile("${./lua/keymap.lua}")
+      -- dofile("${./lua/keymap.lua}")
       dofile("${./lua/lazygit.lua}")
       dofile("${./lua/lsp-colors.lua}")
       dofile("${./lua/lsp-lens.lua}")
