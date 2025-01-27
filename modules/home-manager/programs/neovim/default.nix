@@ -111,7 +111,6 @@ in
       catppuccin-nvim
       vim-helm
       barbar-nvim
-      ChatGPT-nvim
       tailwindcss-colors-nvim
       tailwind-tools-nvim
       yaml-companion-nvim
@@ -149,7 +148,6 @@ in
     extraConfigLua = ''
       dofile("${./lua/autopair.lua}")
       dofile("${./lua/catppuccin.lua}")
-      dofile("${./lua/chatgpt.lua}")
       dofile("${./lua/cmp.lua}")
       dofile("${./lua/comment.lua}")
       dofile("${./lua/dap.lua}")

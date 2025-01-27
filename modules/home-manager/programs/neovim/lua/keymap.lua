@@ -191,21 +191,6 @@ local function set_lazygit_keymap()
 	})
 end
 
-local function set_chatgpt_keymap()
-	vim.keymap.set("n", "<leader>U", "<Cmd>ChatGPT<CR>", {
-		desc = "Open ChatGPT prompt",
-	})
-	vim.keymap.set("n", "<leader>I", "<Cmd>ChatGPTEditWithInstruction<CR>", {
-		desc = "Edit current selection with ChatGPT",
-	})
-	vim.keymap.set("n", "<leader>O", "<Cmd>ChatGPTRun docstring<CR>", {
-		desc = "Generate docstring",
-	})
-	vim.keymap.set("n", "<leader>P", "<Cmd>ChatGPTRun add_tests<CR>", {
-		desc = "Generate tests",
-	})
-end
-
 local function set_code_action()
 	vim.keymap.set("n", "<leader>a", function()
 		vim.cmd.RustLsp("codeAction") -- supports rust-analyzer's grouping
@@ -251,7 +236,6 @@ local function set_keymaps()
 		desc = "telescope and fzf prefix",
 	})
 	set_barbar_keymap()
-	set_chatgpt_keymap()
 	set_code_action()
 	set_dap_keymap()
 	set_diffview_keymap()
