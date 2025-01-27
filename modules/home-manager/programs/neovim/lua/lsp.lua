@@ -250,6 +250,6 @@ require("lspconfig").yamlls.setup({ cfg })
 
 -- NOTE: restart LSP server avoir problems with Helm-ls
 vim.api.nvim_create_autocmd("FileType", {
-  pattern = "helm",
-  command = "LspRestart",
+	pattern = "helm",
+	command = "LspRestart",
 })
