@@ -61,7 +61,7 @@ in
       lsp.enable = true;
       lspkind.enable = true;
       lspsaga.enable = true;
-      neo-tree.enable = true;
+      # neo-tree.enable = true;
       neogit.enable = true;
       noice.enable = true;
       nvim-autopairs.enable = true;
@@ -120,6 +120,7 @@ in
       vim-helm
       which-key-nvim
       yaml-companion-nvim
+      yazi-nvim
       (nvim-treesitter.withPlugins (p: [
         p.javascript
         p.typescript

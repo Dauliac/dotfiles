@@ -83,6 +83,7 @@
     pipewire.jack
     sbctl
     jdk21
+    wl-clipboard
     inputs.zen-browser.packages."${pkgs.system}".default
   ];
   environment.variables = {
@@ -98,4 +99,12 @@
   # BUG: https://discourse.nixos.org/t/logrotate-config-fails-due-to-missing-group-30000/28501
   services.logrotate.checkConfig = false;
   system.stateVersion = "24.11";
+  virtualisation = {
+    waydroid.enable = true;
+    podman = {
+      enable = true;
+      dockerCompat = true;
+      defaultNetwork.settings.dns_enabled = true;
+    };
+  };
 }
