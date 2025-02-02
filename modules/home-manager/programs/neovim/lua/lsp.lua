@@ -253,3 +253,9 @@ vim.api.nvim_create_autocmd("FileType", {
 	pattern = "helm",
 	command = "LspRestart",
 })
+
+require("lspconfig").nixd.setup({})
+require("lspconfig").typos.setup({})
+
+require("lspconfig").harper.setup({})
+require("lspconfig").gitlab_ci_ls.setup({})

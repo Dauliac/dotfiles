@@ -8,10 +8,13 @@
     ghq
     gopls
     hadolint
+    helm-ls
     lazygit
     ltex-ls
     lua-language-server
+    markdown-oxide
     nil
+    nixd
     nixfmt-rfc-style
     nixpkgs-fmt
     nodePackages."@volar/vue-language-server"
@@ -28,20 +31,20 @@
     ripgrep
     rust-analyzer
     rustfmt
+    harper
     shellcheck
     shellharden
     shfmt
     stylua
+    supercollider
+    svelte-language-server
+    tailwindcss-language-server
     terraform-ls
     typos
     vscode-extensions.llvm-org.lldb-vscode
     vscode-langservers-extracted
     xsel
     yaml-language-server
-    supercollider
-    helm-ls
-    markdown-oxide
-    svelte-language-server
-    tailwindcss-language-server
+    gitlab-ci-ls
   ];
 }

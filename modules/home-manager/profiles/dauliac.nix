@@ -53,6 +53,7 @@
       pavucontrol
       pulsemixer
       whatsie
+      gparted
     ]
     ++ music
     ++ videoGames;

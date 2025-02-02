@@ -49,6 +49,7 @@
       "wheel"
       "audio"
       "video"
+      "docker"
     ];
     shell = pkgs.zsh;
     hashedPasswordFile = config.sops.secrets.dauliac_hashed_password.path;
@@ -103,8 +104,10 @@
     waydroid.enable = true;
     podman = {
       enable = true;
-      dockerCompat = true;
       defaultNetwork.settings.dns_enabled = true;
+    };
+    docker = {
+      enable = true;
     };
   };
 }
