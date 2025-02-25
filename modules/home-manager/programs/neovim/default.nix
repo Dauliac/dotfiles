@@ -50,8 +50,8 @@ in
       cmp-path.enable = true;
       cmp.enable = true;
       comment.enable = true;
-      copilot-cmp.enable = true;
-      copilot-lua.enable = true;
+      # copilot-cmp.enable = true;
+      # copilot-lua.enable = true;
       dressing.enable = true;
       flash.enable = true;
       fzf-lua.enable = true;

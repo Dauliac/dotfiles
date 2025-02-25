@@ -15,24 +15,24 @@ _: {
   location.provider = "geoclue2";
   services.geoclue2.enable = true;
   hardware.brillo.enable = true;
-  services.clight = {
-    enable = true;
-    settings = {
-      verbose = true;
-      backlight.disabled = true;
-      dpms.timeouts = [
-        900
-        300
-      ];
-      dimmer.timeouts = [
-        870
-        270
-      ];
-      gamma.long_transition = true;
-      keyboard.disabled = true;
-      screen.disabled = true;
-    };
-  };
+  # services.clight = {
+  #   enable = true;
+  #   settings = {
+  #     verbose = true;
+  #     backlight.disabled = true;
+  #     dpms.timeouts = [
+  #       900
+  #       300
+  #     ];
+  #     dimmer.timeouts = [
+  #       870
+  #       270
+  #     ];
+  #     gamma.long_transition = true;
+  #     keyboard.disabled = true;
+  #     screen.disabled = true;
+  #   };
+  # };
   services.xserver = {
     xkb = {
       layout = "us";

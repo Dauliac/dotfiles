@@ -15,9 +15,8 @@ _: {
       };
     };
     hyprpanel = {
-      # enable = true;
-      enable = false;
-      systemd.enable = true;
+      enable = true;
+      # systemd.enable = true;
       hyprland.enable = true;
       overwrite.enable = true;
       theme = "catppuccin_mocha";
@@ -38,6 +37,7 @@ _: {
               "systray"
               "clock"
               "notifications"
+              "battery"
             ];
           };
         };

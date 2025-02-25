@@ -34,7 +34,6 @@ in
               imports = [
                 ./home-manager/profiles/dauliac.nix
               ];
-              nixpkgs = config.nixpkgsConfig;
             };
           }
         ];

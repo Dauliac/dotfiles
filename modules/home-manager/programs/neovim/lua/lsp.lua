@@ -254,8 +254,23 @@ vim.api.nvim_create_autocmd("FileType", {
 	command = "LspRestart",
 })
 
-require("lspconfig").nixd.setup({})
-require("lspconfig").typos.setup({})
+require("lspconfig").nixd.setup({
+	capabilities = capabilities,
+})
 
-require("lspconfig").harper.setup({})
-require("lspconfig").gitlab_ci_ls.setup({})
+require("lspconfig").typos.setup({
+	capabilities = capabilities,
+})
+
+-- require("lspconfig").harper_ls.setup {
+-- 	capabilities = capabilities,
+--   settings = {
+--     ["harper-ls"] = {
+--       userDictPath = "~/dict.txt"
+--     }
+--   },
+-- }
+
+require("lspconfig").gitlab_ci_ls.setup({
+	capabilities = capabilities,
+})

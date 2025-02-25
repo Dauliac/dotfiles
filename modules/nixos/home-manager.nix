@@ -1,6 +1,6 @@
 _: {
   home-manager = {
-    useUserPackages = true;
+    useGlobalPkgs = true;
     users.dauliac = ../home-manager/home.nix;
   };
 }

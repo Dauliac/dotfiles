@@ -28,7 +28,7 @@ local function set_fzf_keymap()
 end
 
 local function set_nvim_tree_keymap()
-	vim.keymap.set("n", "<leader>e", ":Neotree<CR>", { desc = "Toggle Nvim tree", noremap = true, silent = true })
+	vim.keymap.set("n", "<leader>e", ":Yazi<CR>", { desc = "Toggle Nvim tree", noremap = true, silent = true })
 end
 
 local function set_spectre_keymap()

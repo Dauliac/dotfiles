@@ -50,6 +50,7 @@
       "audio"
       "video"
       "docker"
+      "dialout"
     ];
     shell = pkgs.zsh;
     hashedPasswordFile = config.sops.secrets.dauliac_hashed_password.path;
@@ -85,6 +86,7 @@
     sbctl
     jdk21
     wl-clipboard
+    firefox
     inputs.zen-browser.packages."${pkgs.system}".default
   ];
   environment.variables = {

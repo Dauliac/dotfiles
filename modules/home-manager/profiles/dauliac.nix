@@ -8,6 +8,40 @@
     ../desktop
   ];
   xdg.mime.enable = true;
+  xdg.desktopEntries.appflowy = {
+    name = "AppFlowy";
+    exec = "${pkgs.appflowy}/bin/appflowy %U";
+    icon = "${pkgs.appflowy}/share/icons/hicolor/256x256/apps/appflowy.png";
+    categories = [ "Utility" ];
+    mimeType = [ "x-scheme-handler/appflowy-flutter" ];
+  };
+  xdg.mimeApps = {
+    enable = true;
+    defaultApplications = {
+      "inode/directory" = [ "org.gnome.Nautilus.desktop" ];
+      # "image/png" = ["feh.desktop"];
+      # "image/jpeg" = ["feh.desktop"];
+      # "image/jpg" = ["feh.desktop"];
+      # "image/gif" = ["feh.desktop"];
+      # "image/bmp" = ["feh.desktop"];
+      # "image/tiff" = ["feh.desktop"];
+      # "image/webp" = ["feh.desktop"];
+      # "application/pdf" = ["sioyek.desktop"];
+      # "application/epub+zip" = ["com.github.johnfactotum.Foliate.desktop"];
+      # "video/*" = ["vlc.desktop"];
+      "audio/*" = [ "vlc.desktop" ];
+      "x-scheme-handler/http" = "zen.desktop"; # Replace with the actual file name
+      "x-scheme-handler/https" = "zen.desktop"; # Replace with the actual file name
+      "text/html" = "zen.desktop";
+    };
+
+    associations.added = {
+      "x-scheme-handler/appflowy-flutter" = "appflowy.desktop";
+      "x-scheme-handler/appflowy" = "appflowy.desktop";
+      "x-scheme-handler/appflowy-desktop" = "appflowy.desktop";
+    };
+  };
+
   home.activation.setupEtc = config.lib.dag.entryAfter [ "writeBoundary" ] ''
     /run/current-system/sw/bin/systemctl start --user sops-nix
   '';
@@ -45,6 +79,7 @@
       cava
       ffmpeg_4-full.bin
       termusic
+      appflowy
       sonic-pi
       system76-firmware
       rclone
@@ -54,6 +89,9 @@
       pulsemixer
       whatsie
       gparted
+      xdg-desktop-portal
+      xdg-desktop-portal-gtk
+      libreoffice
     ]
     ++ music
     ++ videoGames;
