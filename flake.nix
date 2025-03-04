@@ -56,24 +56,7 @@
     };
   };
   outputs =
-    inputs@{
-      nixpkgs,
-      flake-parts,
-      disko,
-      home-manager,
-      nixGL,
-      sops-nix,
-      catppuccin,
-      nixvim,
-      sonicpi-nvim,
-      lanzaboote,
-      lsp-lens-nvim,
-      yaml-companion-nvim,
-      zen-browser,
-      commander-nvim,
-      hyprpanel,
-      ...
-    }:
+    inputs@{ flake-parts, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } (_: {
       systems = [ "x86_64-linux" ];
       imports = [ ./modules ];
