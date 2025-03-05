@@ -92,6 +92,7 @@
       xdg-desktop-portal
       xdg-desktop-portal-gtk
       libreoffice
+      google-chrome
     ]
     ++ music
     ++ videoGames;
