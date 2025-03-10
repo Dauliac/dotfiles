@@ -23,6 +23,7 @@
     enable = true;
     xwayland.enable = true;
   };
+  services.upower.enable = true;
   hardware.graphics = {
     enable = true;
     extraPackages = with pkgs; [
