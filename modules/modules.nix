@@ -20,6 +20,7 @@ in
           lanzaboote.nixosModules.lanzaboote
           catppuccin.nixosModules.catppuccin
           comin.nixosModules.comin
+          nix-flatpak.nixosModules.nix-flatpak
         ]
         ++ [
           ./nixos/disko.nix

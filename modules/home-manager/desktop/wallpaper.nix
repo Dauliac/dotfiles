@@ -17,6 +17,7 @@ in
         "DP-1,${path}"
         "DP-2,${path}"
         "DP-3,${path}"
+        "HDMI-A-1,${path}"
       ];
     };
   };

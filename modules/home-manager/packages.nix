@@ -47,6 +47,7 @@ let
     # firefox-devedition # Firefox browser
     system76-keyboard-configurator
     protonvpn-gui
+    proton-pass
   ];
 in
 {

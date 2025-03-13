@@ -88,7 +88,6 @@
     jdk21
     wl-clipboard
     firefox
-    inputs.zen-browser.packages."${pkgs.system}".default
   ];
   environment.variables = {
     VDPAU_DRIVER = lib.mkIf config.hardware.graphics.enable (lib.mkDefault "va_gl");
@@ -102,6 +101,30 @@
   networking.firewall.enable = true;
   # BUG: https://discourse.nixos.org/t/logrotate-config-fails-due-to-missing-group-30000/28501
   services.logrotate.checkConfig = false;
+  services.flatpak = {
+    enable = true;
+    packages = [
+      {
+        appId = "app.zen_browser.zen";
+        origin = "flathub";
+      }
+    ];
+    overrides = {
+      global = {
+        Context.sockets = [
+          "wayland"
+          "!x11"
+          "!fallback-x11"
+        ];
+        Environment = {
+          # Fix un-themed cursor in some Wayland apps
+          XCURSOR_PATH = "/run/host/user-share/icons:/run/host/share/icons";
+          # Force correct theme for some GTK apps
+          # GTK_THEME = "Adwaita:dark";
+        };
+      };
+    };
+  };
   system.stateVersion = "24.11";
   virtualisation = {
     waydroid.enable = true;
