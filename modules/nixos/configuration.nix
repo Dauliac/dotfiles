@@ -108,6 +108,10 @@
         appId = "app.zen_browser.zen";
         origin = "flathub";
       }
+      {
+        appId = "io.appflowy.AppFlowy";
+        origin = "flathub";
+      }
     ];
     overrides = {
       global = {

@@ -31,7 +31,6 @@ in
   home.packages = with pkgs; [
     (nixGlWrapper firefox-devedition)
     (nixGlWrapper slack)
-    (nixGlWrapper appflowy)
     # gptcommit
     pritunl-client
     kubecm
