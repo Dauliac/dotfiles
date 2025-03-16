@@ -15,6 +15,7 @@ _: {
           ssh-to-age
           inputs'.home-manager.packages.home-manager
           inputs'.disko.packages.disko
+          inputs'.nix-fast-build.packages.nix-fast-build
         ];
         devShellHook = ''
           export SOPS_AGE_KEY_FILE=~/.config/sops/age/dotfiles.txt

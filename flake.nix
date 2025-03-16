@@ -2,6 +2,7 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
     flake-parts.url = "github:hercules-ci/flake-parts";
+    nix-fast-build.url = "github:Mic92/nix-fast-build";
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
