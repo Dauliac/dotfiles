@@ -51,7 +51,7 @@
     with pkgs;
     [
       prismlauncher
-      rustdesk-flutter
+      moonlight-embedded
       brillo
       cava
       ffmpeg_4-full.bin
