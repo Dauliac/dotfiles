@@ -51,7 +51,7 @@
     with pkgs;
     [
       prismlauncher
-      moonlight-embedded
+      moonlight-qt
       brillo
       cava
       ffmpeg_4-full.bin
