@@ -59,7 +59,7 @@
       sonic-pi
       system76-firmware
       rclone
-      discord
+      vencord
       ncpamixer
       pavucontrol
       pulsemixer
