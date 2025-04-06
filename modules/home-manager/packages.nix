@@ -19,6 +19,7 @@ let
     age # encryption
     eza # TODO: check how to upgrade home-manager to use eza configs
     yazi # file manager
+    gptcommit
     # nerd-fonts.iosevka
     (nerdfonts.override {
       fonts = [
