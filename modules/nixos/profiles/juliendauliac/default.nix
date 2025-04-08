@@ -6,5 +6,6 @@
         ./home-manager.nix
         ./boot.nix
         ./flatpak.nix
+        ./desktop.nix
     ];
 }

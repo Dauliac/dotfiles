@@ -18,12 +18,7 @@
   ];
   networking.hostName = "nixos";
   networking.networkmanager.enable = true;
-  programs.hyprland = {
-    enable = true;
-    xwayland.enable = true;
-  };
   services.upower.enable = true;
-  services.displayManager.ly.enable = true;
   services.picom.vSync = "drm";
   services.printing.enable = true;
   nix = {
