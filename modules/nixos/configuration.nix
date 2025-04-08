@@ -16,7 +16,6 @@
     ./theme.nix
     ./comin.nix
   ];
-  networking.hostName = "nixos";
   networking.networkmanager.enable = true;
   services.upower.enable = true;
   services.picom.vSync = "drm";

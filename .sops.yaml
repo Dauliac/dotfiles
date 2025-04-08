@@ -5,3 +5,7 @@ creation_rules:
     key_groups:
       - age:
           - *admin_dauliac
+  - path_regex: .*.enc.*
+    key_groups:
+      - age:
+          - *admin_dauliac

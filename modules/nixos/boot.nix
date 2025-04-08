@@ -7,8 +7,6 @@
   boot = {
     kernelPackages = pkgs.linuxKernel.packages.linux_6_1;
     plymouth.enable = true;
-    initrd.systemd.enable = true;
-    loader.systemd-boot.enable = lib.mkForce false;
     loader.systemd-boot.configurationLimit = 5;
     loader.efi.canTouchEfiVariables = true;
     bootspec.enable = true;

@@ -4,15 +4,11 @@
   ...
 }:
 {
-  # WARN: set it to true segfault nautilus in non nixOs systems
-  xdg.mime.enable = false;
   xdg.systemDirs.data = [ "${config.home.homeDirectory}/.nix-profile/share" ];
   home.activation.setupEtc = config.lib.dag.entryAfter [ "writeBoundary" ] ''
-    /usr/bin/systemctl start --user sops-nix
+    /run/current-system/sw/bin/systemctl start --user sops-nix
   '';
   home.packages = with pkgs; [
-    # gptcommit
-    
     kubecm
     kubectl
     glab

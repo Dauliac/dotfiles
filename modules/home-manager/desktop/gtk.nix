@@ -1,9 +1,9 @@
 _: {
   gtk = {
-    enable = true;
-    font = {
-      name = "Iosevka";
-      size = 9;
-    };
+    # enable = true;
+    # font = {
+    #  name = "Iosevka";
+    #  size = 9;
+    # };
   };
 }

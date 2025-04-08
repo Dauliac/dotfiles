@@ -38,8 +38,6 @@
       core = {
         editor = "nvim";
       };
-      gpg.format = "ssh";
-      user.signingkey = "~/.ssh/id_ed25519";
       push = {
         autoSetupRemote = true;
         default = "current";
@@ -47,9 +45,6 @@
       status = {
         showUntrackedFiles = "all";
         submoduleSummary = true;
-      };
-      commit = {
-        gpgsign = true;
       };
       absorb = {
         maxStack = 60;

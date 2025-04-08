@@ -7,5 +7,8 @@
         ./users.nix
         ./home-manager.nix
         ./desktop.nix
-    ]
+    ];
+    config = {
+        networking.hostName = "nixos";
+    };
 }

@@ -27,6 +27,7 @@ in
           {
             nixpkgs = config.nixpkgsConfig;
             home-manager = {
+              useGlobalPkgs = true;
               sharedModules = config.homeManagerModules;
               extraSpecialArgs = { inherit inputs; };
             };

@@ -3,6 +3,7 @@ let
   cli = with pkgs; [
     go-task
     ghq
+    sops
     glow
     silver-searcher # search
     ncdu # du alternative
@@ -47,6 +48,7 @@ let
     # TODO: only install if we are not in nixOs profile
     # firefox-devedition # Firefox browser
     system76-keyboard-configurator
+    vencord
     protonvpn-gui
     proton-pass
   ];
