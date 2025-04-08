@@ -37,7 +37,7 @@ tasks:
       - ./flake.nix
       - ./modules/nixos/**/*.nix
     cmds:
-      - nixos-rebuild --flake . build
+      - nix build .#nixosConfigurations.manomano.config.system.build.toplevel
   build:home-manager:nix-os:
     silent: true
     desc: Install project

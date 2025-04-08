@@ -12,6 +12,7 @@ _: {
           lefthook
           sops
           age
+          go-task
           ssh-to-age
           inputs'.home-manager.packages.home-manager
           inputs'.disko.packages.disko

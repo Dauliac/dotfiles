@@ -13,7 +13,6 @@
     ./bluetooth.nix
     ./locales.nix
     ./sound.nix
-    ./gaming.nix
     ./theme.nix
     ./comin.nix
   ];
@@ -24,38 +23,9 @@
     xwayland.enable = true;
   };
   services.upower.enable = true;
-  hardware.graphics = {
-    enable = true;
-    extraPackages = with pkgs; [
-      intel-media-driver
-      vaapiIntel
-      vaapiVdpau
-      libvdpau-va-gl
-    ];
-    extraPackages32 = with pkgs.pkgsi686Linux; [
-      vaapiIntel
-      vaapiVdpau
-      intel-media-driver
-      libvdpau-va-gl
-    ];
-  };
   services.displayManager.ly.enable = true;
   services.picom.vSync = "drm";
   services.printing.enable = true;
-  users.users.dauliac = {
-    isNormalUser = true;
-    description = "dauliac";
-    extraGroups = [
-      "networkmanager"
-      "wheel"
-      "audio"
-      "video"
-      "docker"
-      "dialout"
-    ];
-    shell = pkgs.zsh;
-    hashedPasswordFile = config.sops.secrets.dauliac_hashed_password.path;
-  };
   nix = {
     settings = {
       system-features = [

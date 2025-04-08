@@ -4,34 +4,6 @@
   ...
 }:
 {
-  # TODO: rewrite partitions to have imutable system ?
-  # fileSystems."/".options = ["noexec"];
-  programs.firejail = {
-    enable = false;
-    wrappedBinaries = {
-      firefox-devedition = {
-        executable = "${pkgs.firefox-devedition}/bin/firefox-devedition";
-        profile = "${pkgs.firejail}/etc/firejail/firefox-developer-edition.profile";
-        desktop = "${pkgs.firefox-devedition}/share/applications/firefox-devedition.desktop";
-      };
-    };
-  };
-  environment.etc."firejail/firejail.config".text = ''
-    browser-allow-drm yes
-  '';
-  # environment.etc."firejail/firefox-developer-edition.local".text = ''
-  #   whitelist ~/Music
-  #   noblacklist ~/Music
-  #   whitelist ''${HOME}/.gnupg
-  #   noblacklist ''${HOME}/.gnupg
-  #   dbus-user.talk org.freedesktop.Notifications
-  #   dbus-user.talk org.freedesktop.ScreenSaver
-  #   dbus-user.talk org.freedesktop.portal.Desktop
-  #   dbus-user.talk org.freedesktop.portal.Fcitx
-  #   ignore noroot
-  #   ignore nou2f
-  # '';
-
   security = {
     rtkit.enable = true;
     polkit.enable = true;

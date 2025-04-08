@@ -23,18 +23,12 @@ in
           nix-flatpak.nixosModules.nix-flatpak
         ]
         ++ [
-          ./nixos/disko.nix
           ./nixos/configuration.nix
-          ./nixos/home-manager.nix
           {
+            nixpkgs = config.nixpkgsConfig;
             home-manager = {
               sharedModules = config.homeManagerModules;
               extraSpecialArgs = { inherit inputs; };
-            };
-            home-manager.users.dauliac = {
-              imports = [
-                ./home-manager/profiles/dauliac.nix
-              ];
             };
           }
         ];
