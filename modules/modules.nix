@@ -44,6 +44,7 @@ in
           catppuccin.homeManagerModules.catppuccin
           nixvim.homeManagerModules.nixvim
           hyprpanel.homeManagerModules.hyprpanel
+          nix-flatpak.homeManagerModules.nix-flatpak
         ]
         ++ [
           ./home-manager/home.nix

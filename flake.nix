@@ -16,6 +16,10 @@
       url = "github:guibou/nixGL";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    system-manager = {
+      url = "github:numtide/system-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     sops-nix.url = "github:Mic92/sops-nix";
     nix-index-db = {
       url = "github:Mic92/nix-index-database";
@@ -46,7 +50,6 @@
       url = "github:FeiyouG/commander.nvim";
       flake = false;
     };
-    zen-browser.url = "github:MarceColl/zen-browser-flake";
     treefmt-nix.url = "github:numtide/treefmt-nix";
     hyprpanel = {
       url = "github:Jas-SinghFSU/HyprPanel";

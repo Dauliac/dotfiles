@@ -44,6 +44,26 @@
       path = config.sops.secrets.git.path;
     }
   ];
+  services.flatpak = {
+    packages = [
+      {
+        appId = "com.slack.Slack";
+        origin = "flathub";
+      }
+      {
+        appId = "app.zen_browser.zen";
+        origin = "flathub";
+      }
+      {
+        appId = "io.appflowy.AppFlowy";
+        origin = "flathub";
+      }
+      {
+        appId = "dev.vencord.Vesktop";
+        origin = "flathub";
+      }
+    ];
+  };
   sops = {
     secrets = {
       git = {
@@ -71,6 +91,26 @@
         path = "/home/juliendauliac/.config/glab-cli/config.yml";
         format = "binary";
       };
+      ovpn_client_ca = {
+          sopsFile = ./openvpn/ca.enc.crt;
+          path = "/home/juliendauliac/.config/openvpn/client/ca.crt";
+          format = "binary";
+        };
+        ovpn_client_cert = {
+          sopsFile = ./openvpn/client.enc.crt;
+          path = "/home/juliendauliac/.config/openvpn/client09202.crt";
+          format = "binary";
+        };
+        ovpn_client_key = {
+          sopsFile = ./openvpn/client.enc.key;
+          path = "/home/juliendauliac/.config/openvpn/client/client09202.key";
+          format = "binary";
+        };
+        ovpn_client_config = {
+          sopsFile = ./openvpn/client.enc.ovpn;
+          path = "/home/juliendauliac/.config/openvpn/client/config.ovpn";
+          format = "binary";
+        };
     };
   };
 }
