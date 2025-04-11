@@ -3,26 +3,29 @@
     sops.age.keyFile = "/home/juliendauliac/.config/sops/age/dotfiles.txt";
     # TODO: move it into home-manager
     sops.secrets = {
-        dauliac_hashed_password = {};
+        ovpn_client_ca = {
+          sopsFile = ./openvpn/ca.enc.crt;
+          path = "/etc/openvpn/client/ca.crt";
+          owner = "juliendauliac";
+          format = "binary";
+        };
+        ovpn_client_cert = {
+          sopsFile = ./openvpn/client.enc.crt;
+          path = "/etc/openvpn/client/client09202.crt";
+          owner = "juliendauliac";
+          format = "binary";
+        };
+        ovpn_client_key = {
+          sopsFile = ./openvpn/client.enc.key;
+          path = "/etc/openvpn/client/client09202.key";
+          owner = "juliendauliac";
+          format = "binary";
+        };
+        ovpn_client_config = {
+          sopsFile = ./openvpn/client.enc.ovpn;
+          owner = "juliendauliac";
+          path = "/etc/openvpn/client/config.ovpn";
+          format = "binary";
+        };
     };
-    # sops.secrets = {
-    #     ssh_private_key = {
-    #         sopsFile = ./id_ed25519.enc;
-    #         type = "binary";
-    #         owner = "juliendauliac";
-    #         path = "/home/juliendauliac/.ssh/id_ed25519"; 
-    #     };
-    #     ssh_public_key = {
-    #         sopsFile = ./id_ed25519.enc.pub;
-    #         type = "binary";
-    #         owner = "juliendauliac";
-    #         path = "/home/juliendauliac/.ssh/id_ed25519.pub"; 
-    #     };
-    #     age_key  = {
-    #         sopsFile = ./age.key;
-    #         type = "binary";
-    #         owner = "juliendauliac";
-    #         path = "/home/juliendauliac/.ssh/id_ed25519.pub"; 
-    #     };
-    # };
 }

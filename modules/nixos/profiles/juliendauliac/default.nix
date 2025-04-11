@@ -1,4 +1,4 @@
-{inputs, ...}: 
+{inputs, ...}:
 {
     # TODO: add disko for lusk setup
     imports = [
@@ -9,8 +9,6 @@
         ./flatpak.nix
         ./desktop.nix
         ./secrets.nix
-        # ../../../home-manager/home.nix
-        # TODO: add secrets into repo ./secrets.nix
     ];
     config = {
         networking.hostName = "manomano";

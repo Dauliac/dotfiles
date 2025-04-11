@@ -76,6 +76,10 @@
         appId = "io.appflowy.AppFlowy";
         origin = "flathub";
       }
+      {
+        appId = "dev.vencord.Vesktop";
+        origin = "flathub";
+      }
     ];
     overrides = {
       global = {

@@ -48,7 +48,7 @@ let
     # TODO: only install if we are not in nixOs profile
     # firefox-devedition # Firefox browser
     system76-keyboard-configurator
-    vencord
+    vesktop
     protonvpn-gui
     proton-pass
   ];

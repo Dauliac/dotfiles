@@ -5,7 +5,7 @@
 }:
 {
   boot = {
-    kernelPackages = pkgs.linuxKernel.packages.linux_6_1;
+    kernelPackages = pkgs.linuxPackages_latest;
     plymouth.enable = true;
     loader.systemd-boot.configurationLimit = 5;
     loader.efi.canTouchEfiVariables = true;

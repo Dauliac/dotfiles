@@ -20,7 +20,7 @@ in
           overlays = [ inputs.nixGL.overlay ];
         };
       }
-      ./profiles/${userOne}.nix
+      ./profiles/${userOne}
       {
         home.username = userOne;
         home.homeDirectory = "/home/${userOne}/";
@@ -37,7 +37,7 @@ in
           overlays = [ inputs.nixGL.overlay ];
         };
       }
-      ./profiles/${userTwo}.nix
+      ./profiles/${userTwo}
       {
         home.username = userTwo;
         home.homeDirectory = "/home/${userTwo}/";

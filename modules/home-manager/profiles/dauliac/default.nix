@@ -5,20 +5,9 @@
 }:
 {
   imports = [
-    ../desktop
+    ../../desktop
   ];
   xdg.mime.enable = true;
-  xdg.mimeApps = {
-    enable = true;
-    defaultApplications = {
-      "inode/directory" = [ "org.gnome.Nautilus.desktop" ];
-      "audio/*" = [ "vlc.desktop" ];
-      "x-scheme-handler/http" = "zen.desktop"; # Replace with the actual file name
-      "x-scheme-handler/https" = "zen.desktop"; # Replace with the actual file name
-      "text/html" = "zen.desktop";
-    };
-  };
-
   home.activation.setupEtc = config.lib.dag.entryAfter [ "writeBoundary" ] ''
     /run/current-system/sw/bin/systemctl start --user sops-nix
   '';
@@ -59,7 +48,7 @@
       sonic-pi
       system76-firmware
       rclone
-      vencord
+      vesktop
       ncpamixer
       pavucontrol
       pulsemixer

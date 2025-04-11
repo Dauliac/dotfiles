@@ -19,29 +19,29 @@ _: {
       # systemd.enable = true;
       hyprland.enable = true;
       overwrite.enable = true;
-      theme = "catppuccin_mocha";
-      layout = {
-        "bar.layouts" = {
-          "0" = {
-            left = [
-              "dashboard"
-              "workspaces"
-            ];
-            middle = [
-              "media"
-            ];
-            right = [
-              "volume"
-              "network"
-              "bluetooth"
-              "systray"
-              "clock"
-              "notifications"
-              "battery"
-            ];
-          };
-        };
-      };
+      # theme = "catppuccin_mocha";
+      # layout = {
+      #   "bar.layouts" = {
+      #     "0" = {
+      #       left = [
+      #         "dashboard"
+      #         "workspaces"
+      #       ];
+      #       middle = [
+      #         "media"
+      #       ];
+      #       right = [
+      #         "volume"
+      #         "network"
+      #         "bluetooth"
+      #         "systray"
+      #         "clock"
+      #         "notifications"
+      #         "battery"
+      #       ];
+      #     };
+      #   };
+      # };
       settings = {
         bar.launcher.autoDetectIcon = true;
         bar.workspaces.show_icons = true;

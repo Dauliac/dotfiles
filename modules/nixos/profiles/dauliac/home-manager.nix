@@ -3,7 +3,7 @@ _: {
     useGlobalPkgs = true;
     users.dauliac = {
       imports = [
-        ../../../home-manager/profiles/dauliac.nix
+        ../../../home-manager/profiles/dauliac
       ];
     };
   };
