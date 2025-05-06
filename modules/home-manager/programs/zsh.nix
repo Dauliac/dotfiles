@@ -30,6 +30,9 @@
         export OPENAI_KEY=$(cat $SECRET_OPENAI_PATH)
         export OPENAI_API_KEY=$(cat $SECRET_OPENAI_PATH)
       fi
+      if command -v mise &> /dev/null; then
+        eval "$(mise activate zsh)"
+      fi
     '';
     prezto = {
       enable = true;

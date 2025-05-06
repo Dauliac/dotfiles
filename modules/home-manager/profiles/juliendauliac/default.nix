@@ -3,13 +3,34 @@
   pkgs,
   ...
 }:
+let
+  nixGL = pkgs.nixgl.nixGLIntel;
+  nixGlWrapper =
+    pkg:
+    pkgs.buildEnv {
+      name = "nixGL-${pkg.name}";
+      paths =
+        [ pkg ]
+        ++ (map (
+          bin:
+          pkgs.hiPrio (
+            pkgs.writeShellScriptBin bin ''
+              exec -a "$0" "${nixGL}/bin/nixGLIntel" "${pkg}/bin/${bin}" "$@"
+            ''
+          )
+        ) (builtins.attrNames (builtins.readDir "${pkg}/bin")));
+    };
+in
 {
-  imports = [
-    ../../desktop
-  ];
-  home.activation.setupEtc = config.lib.dag.entryAfter [ "writeBoundary" ] ''
-    /run/current-system/sw/bin/systemctl start --user sops-nix
-  '';
+  home.sessionVariables = {
+    XDG_DATA_DIRS = "$XDG_DATA_DIRS:/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share";
+    NPM_CONFIG_PREFIX="$XDG_DATA_HOME/npm-packages";
+    PATH = "$PATH:$NPM_CONFIG_PREFIX/bin/";
+  };
+  # programs.mise = {
+  #   enable = true;
+  #   enableZshIntegration = true;
+  # };
   home.packages = with pkgs; [
     awscli2
     cloudflared
@@ -18,15 +39,16 @@
     glab
     google-chrome
     k9s
+    docker-compose
     kubecm
     kubectl
     kubelogin
     kubelogin-oidc
-    mise
     okta-aws-cli
     pdm
     pipx
-    python312 # Python
+    python312
+    python313Packages.virtualenv
     terraform
     terragrunt
     vault
@@ -35,6 +57,13 @@
     skopeo
     lazydocker
     pnpm_10
+    kubernetes-helm
+    oha
+    slack
+    kubernetes-helmPlugins.helm-diff
+    pre-commit
+    vesktop
+    ruby
   ];
   home.sessionVariables = {
     AWS_DEFAULT_PROFILE = "manomano-support";
@@ -44,7 +73,9 @@
       path = config.sops.secrets.git.path;
     }
   ];
+  programs.wezterm.package = nixGlWrapper pkgs.wezterm;
   services.flatpak = {
+    enable = true;
     packages = [
       {
         appId = "com.slack.Slack";

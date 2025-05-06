@@ -14,9 +14,11 @@ _: {
           age
           go-task
           ssh-to-age
+          # nixGL
           inputs'.home-manager.packages.home-manager
           inputs'.disko.packages.disko
           inputs'.nix-fast-build.packages.nix-fast-build
+          inputs'.system-manager.packages.default
         ];
         devShellHook = ''
           export SOPS_AGE_KEY_FILE=~/.config/sops/age/dotfiles.txt

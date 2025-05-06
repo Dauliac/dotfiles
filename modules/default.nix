@@ -1,10 +1,10 @@
 { ... }:
 {
   imports = [
-    ./nixos
-    ./home-manager
+    ./nixos.nix
+    ./home-manager.nix
     ./build-system
     ./modules.nix
-    ./system-manager
+    ./system-manager.nix
   ];
 }

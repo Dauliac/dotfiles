@@ -23,7 +23,7 @@ in
           nix-flatpak.nixosModules.nix-flatpak
         ]
         ++ [
-          ./nixos/configuration.nix
+          ./nixos
           {
             nixpkgs = config.nixpkgsConfig;
             home-manager = {
@@ -41,13 +41,13 @@ in
         [
           nix-index-db.hmModules.nix-index
           sops-nix.homeManagerModules.sops
-          catppuccin.homeManagerModules.catppuccin
+          catppuccin.homeModules.catppuccin
           nixvim.homeManagerModules.nixvim
           hyprpanel.homeManagerModules.hyprpanel
           nix-flatpak.homeManagerModules.nix-flatpak
         ]
         ++ [
-          ./home-manager/home.nix
+          ./home-manager
         ];
     };
     nixpkgsConfig = mkOption {
@@ -55,7 +55,7 @@ in
       default = {
         config = {
           allowUnfree = true;
-          allowBroken = true;
+          # allowBroken = true;
         };
         overlays = with inputs; [
           hyprpanel.overlay
@@ -70,6 +70,11 @@ in
         import inputs.nixpkgs {
           inherit system;
         }
-        // config.nixpkgsConfig;
+        // {
+          config = config.nixpkgsConfig.config;
+          overlays = config.nixpkgsConfig.overlays ++ [
+            inputs.nixGL.overlay
+          ];
+        };
     };
 }

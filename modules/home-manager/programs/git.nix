@@ -3,6 +3,9 @@
   programs.git = {
     enable = true;
     userName = config.home.username;
+    lfs = {
+      enable = true;
+    };
     aliases = {
       convco = "!GIT_EDITOR='convco commit' git commit";
       st = "status -sb";
@@ -37,6 +40,12 @@
     extraConfig = {
       core = {
         editor = "nvim";
+      };
+      commit = {
+        gpgsign = true;
+      };
+      tag = {
+        gpgSign = true;
       };
       push = {
         autoSetupRemote = true;

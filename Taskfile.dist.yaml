@@ -57,6 +57,11 @@ tasks:
     desc: Install project
     cmds:
       - sudo nixos-rebuild --flake . switch
+  install:pro:
+    silent: true
+    cmds:
+      - |
+        sudo system-manager switch --flake .
   install:home-manager:pro:
     silent: true
     desc: Install project
@@ -64,7 +69,6 @@ tasks:
       - |
         home-manager switch \
           --flake .
-          switch
         fc-cache -f -v
   test:
     silent: true

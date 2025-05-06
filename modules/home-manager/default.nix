@@ -1,47 +1,23 @@
+{ config, ... }:
 {
-  inputs,
-  config,
-  ...
-}:
-let
-  inherit (inputs.home-manager.lib) homeManagerConfiguration;
-  pkgs = inputs.nixpkgs.legacyPackages.x86_64-linux;
-  userOne = "jdauliac";
-  userTwo = "juliendauliac";
-in
-{
-  flake.homeConfigurations.${userOne} = homeManagerConfiguration {
-    inherit pkgs;
-    extraSpecialArgs = { inherit inputs; };
-    modules = config.homeManagerModules ++ [
-      {
-        nixpkgs = {
-          inherit (config.nixpkgsConfig) config;
-          overlays = [ inputs.nixGL.overlay ];
-        };
-      }
-      ./profiles/${userOne}
-      {
-        home.username = userOne;
-        home.homeDirectory = "/home/${userOne}/";
-      }
-    ];
-  };
-  flake.homeConfigurations.${userTwo} = homeManagerConfiguration {
-    inherit pkgs;
-    extraSpecialArgs = { inherit inputs; };
-    modules = config.homeManagerModules ++ [
-      {
-        nixpkgs = {
-          inherit (config.nixpkgsConfig) config;
-          overlays = [ inputs.nixGL.overlay ];
-        };
-      }
-      ./profiles/${userTwo}
-      {
-        home.username = userTwo;
-        home.homeDirectory = "/home/${userTwo}/";
-      }
-    ];
+  imports = [
+    ./aliases.nix
+    ./packages.nix
+    ./programs
+    ./secrets.nix
+    ./theme.nix
+  ];
+  config = {
+    home.stateVersion = "24.11";
+    home.enableNixpkgsReleaseCheck = false;
+    home.file."${config.xdg.configHome}" = {
+      source = ./xdg-config;
+      recursive = true;
+    };
+    fonts.fontconfig.enable = true;
+    xdg.enable = true;
+    home.sessionVariables = {
+      BROWSER = "zen";
+    };
   };
 }

@@ -49,6 +49,7 @@ in
       cmp-nvim-lsp.enable = true;
       cmp-path.enable = true;
       cmp.enable = true;
+      cmp-dap.enable = true;
       comment.enable = true;
       # copilot-cmp.enable = true;
       # copilot-lua.enable = true;
@@ -73,6 +74,13 @@ in
       undotree.enable = true;
       vim-surround.enable = true;
       web-devicons.enable = true;
+      dap.enable = true;
+      # dap-rr.enable = true;
+      # dap-go.enable = true;
+      # dap-python.enable = true;
+      # dap-ui.enable = true;
+      # dap-virtual-text.enable = true;
+      neotest.enable = true;
     };
     extraPlugins = with pkgs.vimPlugins; [
       barbar-nvim
@@ -96,9 +104,6 @@ in
       noice-nvim
       nui-nvim
       null-ls-nvim
-      nvim-dap
-      nvim-dap-ui
-      nvim-dap-virtual-text
       nvim-hlslens
       nvim-lspconfig
       nvim-neoclip-lua
@@ -115,6 +120,10 @@ in
       tailwind-tools-nvim
       tailwindcss-colors-nvim
       telescope-dap-nvim
+      nvim-dap-virtual-text
+      nvim-dap-go
+      nvim-dap-ui
+      nvim-dap-rr
       telescope-nvim
       vim-gitgutter
       vim-helm

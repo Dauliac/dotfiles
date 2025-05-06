@@ -66,20 +66,30 @@ require("lspconfig").lua_ls.setup({
 	-- on_attach = require("lsp-format").on_attach,
 })
 
-require("lspconfig").volar.setup({
-	filetypes = {
-		"javascript",
-		"json",
-		"vue",
-	},
+-- require("lspconfig").volar.setup({
+-- 	filetypes = {
+-- 		"javascript",
+-- 		"json",
+-- 		"vue",
+-- 	},
+-- 	capabilities = capabilities,
+-- 	-- on_attach = require("lsp-format").on_attach,
+-- 	init_options = {
+-- 		typescript = {
+-- 			tsdk = "${pkgs.nodePackages.typescript}/lib/node_modules/typescript/lib",
+-- 		},
+-- 	},
+-- })
+
+require'lspconfig'.vtsls.setup({
 	capabilities = capabilities,
-	-- on_attach = require("lsp-format").on_attach,
-	init_options = {
-		typescript = {
-			tsdk = "${pkgs.nodePackages.typescript}/lib/node_modules/typescript/lib",
-		},
-	},
 })
+
+require'lspconfig'.ts_ls.setup({
+	capabilities = capabilities,
+})
+
+-- require'lspconfig'.graphql.setup{}
 
 vim.g.rustaceanvim = {
 	tools = {
@@ -262,14 +272,14 @@ require("lspconfig").typos.setup({
 	capabilities = capabilities,
 })
 
--- require("lspconfig").harper_ls.setup {
--- 	capabilities = capabilities,
---   settings = {
---     ["harper-ls"] = {
---       userDictPath = "~/dict.txt"
---     }
---   },
--- }
+require("lspconfig").harper_ls.setup {
+	capabilities = capabilities,
+  settings = {
+    ["harper-ls"] = {
+      userDictPath = "~/dict.txt"
+    }
+  },
+}
 
 require("lspconfig").gitlab_ci_ls.setup({
 	capabilities = capabilities,

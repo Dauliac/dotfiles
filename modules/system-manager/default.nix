@@ -1,11 +1,13 @@
 { lib, pkgs, ... }: {
   config = {
-    nixpkgs.hostPlatform = "aarch64-linux";
+    system-manager.allowAnyDistro = true;
+    nixpkgs.hostPlatform = "x86_64-linux";
     environment = {
       systemPackages = with pkgs; [
         docker
         apparmor-parser
         apparmor-utils
+        hyprland
       ];
     };
     systemd.services = {

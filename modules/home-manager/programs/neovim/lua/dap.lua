@@ -36,3 +36,5 @@ vim.fn.sign_define("DapBreakpoint", { text = "🔴", texthl = "", linehl = "", n
 vim.fn.sign_define("DapStopped", { text = "⏩", texthl = "", linehl = "", numhl = "" })
 
 require("dap.ext.vscode").load_launchjs(nil, { lldb = { "rust" } })
+require('dap-go').setup()
+require("nvim-dap-virtual-text").setup()

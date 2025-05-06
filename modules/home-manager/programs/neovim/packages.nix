@@ -46,5 +46,9 @@
     xsel
     yaml-language-server
     gitlab-ci-ls
+    typescript-language-server
+    # graphql-language-service-cli
+    harper
+    vtsls
   ];
 }
