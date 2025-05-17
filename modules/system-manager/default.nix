@@ -1,4 +1,9 @@
-{ lib, pkgs, ... }: {
+{
+  lib,
+  pkgs,
+  ...
+}:
+{
   config = {
     system-manager.allowAnyDistro = true;
     nixpkgs.hostPlatform = "x86_64-linux";
@@ -22,13 +27,15 @@
         serviceConfig = {
           Type = "notify";
           Environment = [
-            "PATH=${lib.makeBinPath [
-              pkgs.docker
-              pkgs.apparmor-parser
-              pkgs.apparmor-utils
-              pkgs.coreutils
-              pkgs.kmod
-            ]}:/usr/bin:/sbin"
+            "PATH=${
+              lib.makeBinPath [
+                pkgs.docker
+                pkgs.apparmor-parser
+                pkgs.apparmor-utils
+                pkgs.coreutils
+                pkgs.kmod
+              ]
+            }:/usr/bin:/sbin"
           ];
           ExecStart = "${pkgs.docker}/bin/dockerd";
           ExecStartPost = [

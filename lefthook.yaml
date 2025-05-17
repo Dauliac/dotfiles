@@ -10,7 +10,7 @@ pre-commit:
       run: nix fmt
     build:
       tags: build
-      run: nix-fast-build --skip-cached --flake ".#packages"
+      run: task build
 pre-push:
   parallel: true
   commands:

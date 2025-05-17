@@ -71,7 +71,7 @@ in
           inherit system;
         }
         // {
-          config = config.nixpkgsConfig.config;
+          inherit (config.nixpkgsConfig) config;
           overlays = config.nixpkgsConfig.overlays ++ [
             inputs.nixGL.overlay
           ];

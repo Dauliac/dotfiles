@@ -24,7 +24,7 @@ in
 {
   home.sessionVariables = {
     XDG_DATA_DIRS = "$XDG_DATA_DIRS:/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share";
-    NPM_CONFIG_PREFIX="$XDG_DATA_HOME/npm-packages";
+    NPM_CONFIG_PREFIX = "$XDG_DATA_HOME/npm-packages";
     PATH = "$PATH:$NPM_CONFIG_PREFIX/bin/";
   };
   # programs.mise = {
@@ -70,7 +70,7 @@ in
   };
   programs.git.includes = [
     {
-      path = config.sops.secrets.git.path;
+      inherit (config.sops.secrets.git) path;
     }
   ];
   programs.wezterm.package = nixGlWrapper pkgs.wezterm;
@@ -123,25 +123,25 @@ in
         format = "binary";
       };
       ovpn_client_ca = {
-          sopsFile = ./openvpn/ca.enc.crt;
-          path = "/home/juliendauliac/.config/openvpn/client/ca.crt";
-          format = "binary";
-        };
-        ovpn_client_cert = {
-          sopsFile = ./openvpn/client.enc.crt;
-          path = "/home/juliendauliac/.config/openvpn/client09202.crt";
-          format = "binary";
-        };
-        ovpn_client_key = {
-          sopsFile = ./openvpn/client.enc.key;
-          path = "/home/juliendauliac/.config/openvpn/client/client09202.key";
-          format = "binary";
-        };
-        ovpn_client_config = {
-          sopsFile = ./openvpn/client.enc.ovpn;
-          path = "/home/juliendauliac/.config/openvpn/client/config.ovpn";
-          format = "binary";
-        };
+        sopsFile = ./openvpn/ca.enc.crt;
+        path = "/home/juliendauliac/.config/openvpn/client/ca.crt";
+        format = "binary";
+      };
+      ovpn_client_cert = {
+        sopsFile = ./openvpn/client.enc.crt;
+        path = "/home/juliendauliac/.config/openvpn/client09202.crt";
+        format = "binary";
+      };
+      ovpn_client_key = {
+        sopsFile = ./openvpn/client.enc.key;
+        path = "/home/juliendauliac/.config/openvpn/client/client09202.key";
+        format = "binary";
+      };
+      ovpn_client_config = {
+        sopsFile = ./openvpn/client.enc.ovpn;
+        path = "/home/juliendauliac/.config/openvpn/client/config.ovpn";
+        format = "binary";
+      };
     };
   };
 }

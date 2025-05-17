@@ -27,25 +27,7 @@ tasks:
         sudo sbctl create-keys
   build:
     cmds:
-      - task: build:home-manager:nix-os
-      - task: build:nix-os
-        # - nix build '.#dev.driverInteractive'
-  build:nix-os:
-    silent: true
-    desc: Install project
-    sources:
-      - ./flake.nix
-      - ./modules/nixos/**/*.nix
-    cmds:
-      - nix build .#nixosConfigurations.manomano.config.system.build.toplevel
-  build:home-manager:nix-os:
-    silent: true
-    desc: Install project
-    cmds:
-      - home-manager --flake . build
-    sources:
-      - ./flake.nix
-      - ./modules/home-manager/**/*.nix
+      - nix-fast-build --skip-cached --flake ".#packages"
   install:disko:
     cmds:
       - disko-install --flake '.#nixos' --disk backup '/dev/nvme1n1'

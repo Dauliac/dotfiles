@@ -56,7 +56,7 @@
   environment.variables = {
     VDPAU_DRIVER = lib.mkIf config.hardware.graphics.enable (lib.mkDefault "va_gl");
     LIBVA_DRIVER_NAME = "iHD";
-    PATH="$HOME/.local/bin/:$PATH";
+    PATH = "$HOME/.local/bin/:$PATH";
   };
   programs.gnupg.agent = {
     enable = true;

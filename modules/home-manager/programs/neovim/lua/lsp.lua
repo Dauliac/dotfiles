@@ -81,11 +81,11 @@ require("lspconfig").lua_ls.setup({
 -- 	},
 -- })
 
-require'lspconfig'.vtsls.setup({
+require("lspconfig").vtsls.setup({
 	capabilities = capabilities,
 })
 
-require'lspconfig'.ts_ls.setup({
+require("lspconfig").ts_ls.setup({
 	capabilities = capabilities,
 })
 
@@ -272,14 +272,14 @@ require("lspconfig").typos.setup({
 	capabilities = capabilities,
 })
 
-require("lspconfig").harper_ls.setup {
+require("lspconfig").harper_ls.setup({
 	capabilities = capabilities,
-  settings = {
-    ["harper-ls"] = {
-      userDictPath = "~/dict.txt"
-    }
-  },
-}
+	settings = {
+		["harper-ls"] = {
+			userDictPath = "~/dict.txt",
+		},
+	},
+})
 
 require("lspconfig").gitlab_ci_ls.setup({
 	capabilities = capabilities,

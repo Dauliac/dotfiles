@@ -3,7 +3,7 @@
   imports = [
     ./nixos.nix
     ./home-manager.nix
-    ./build-system
+    ./flake-parts
     ./modules.nix
     ./system-manager.nix
   ];
