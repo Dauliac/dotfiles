@@ -21,14 +21,18 @@ in
           name = "home-manager-system";
           buildCommand = ''
             cp -r ${builtins.head cfg.flake.homeConfigurations.juliendauliac.activation-script.all} $out
-            touch $out
           '';
         };
         homeManagerDauliac = pkgs.stdenv.mkDerivation {
           name = "home-manager-system";
           buildCommand = ''
             cp -r ${builtins.head cfg.flake.homeConfigurations.dauliac.activation-script.all} $out
-            # touch $out
+          '';
+        };
+        systemML-PF59GCGW = pkgs.stdenv.mkDerivation {
+          name = "home-manager-system";
+          buildCommand = ''
+            cp -r ${builtins.head cfg.flake.systemConfigs.ML-PF59GCGW.config.build.toplevel.all} $out
           '';
         };
         default = config.packages.nixos;
