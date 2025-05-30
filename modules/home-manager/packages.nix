@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-let
+{ pkgs, ... }: let
   cli = with pkgs; [
     go-task
     ghq
@@ -18,8 +17,6 @@ let
     systemctl-tui # Cool tui
     speedtest-go # network speed test
     age # encryption
-    eza # TODO: check how to upgrade home-manager to use eza configs
-    yazi # file manager
     gptcommit
     # nerd-fonts.iosevka
     (nerdfonts.override {

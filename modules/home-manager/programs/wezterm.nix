@@ -48,6 +48,7 @@ _: {
       config.default_cursor_style = "SteadyBar"
       config.hide_tab_bar_if_only_one_tab = true
       config.hide_mouse_cursor_when_typing = false
+      config.audible_bell = "Disabled"
 
       return config
     '';
