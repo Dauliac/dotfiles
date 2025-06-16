@@ -18,6 +18,9 @@ let
     name = "commander";
     src = "${inputs.commander-nvim.outPath}";
     doCheck = false;
+  claude-code-nvim = pkgs.vimUtils.buildVimPlugin {
+    name = "claude-code";
+    src = "${inputs.claude-code-nvim.outPath}";
   };
 in
 {
@@ -83,6 +86,7 @@ in
     };
     extraPlugins = with pkgs.vimPlugins; [
       barbar-nvim
+      claude-code-nvim
       catppuccin-nvim
       commander-nvim
       crates-nvim
@@ -174,8 +178,10 @@ in
       dofile("${./lua/hlslens.lua}")
       dofile("${./lua/indent-blankline-nvim.lua}")
       dofile("${./lua/init.lua}")
-      -- dofile("${./lua/keymap.lua}")
+      dofile("${./lua/keymap.lua}")
+      dofile("${./lua/claude.lua}")
       dofile("${./lua/lazygit.lua}")
+      dofile("${./lua/localconfig.lua}")
       dofile("${./lua/lsp-colors.lua}")
       dofile("${./lua/lsp-lens.lua}")
       dofile("${./lua/lsp.lua}")

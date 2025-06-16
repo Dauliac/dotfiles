@@ -264,10 +264,37 @@ vim.api.nvim_create_autocmd("FileType", {
 	command = "LspRestart",
 })
 
+-- DOCS: https://github.com/Ruixi-rebirth/flakes/blob/c92a50a4d20dcddfe9d2af803318351ddb9f40a6/.nvim.lua#L25
+local nixos_options_expr =
+  'let flake = builtins.getFlake ("git+file://" + toString ./.); in flake.nixosConfigurations.k-on.options // flake.nixosConfigurations.LAPTOP.options'
+local home_manager_options_expr = nixos_options_expr .. ".home-manager.users.type.getSubOptions [ ]"
+local flake_parts_options_expr =
+  'let flake = builtins.getFlake ("git+file://" + toString ./.); in flake.debug.options // flake.currentSystem.options'
 require("lspconfig").nixd.setup({
 	capabilities = capabilities,
+  cmd = { "nixd" },
+  settings = {
+    nixd = {
+      nixpkgs = {
+        expr = 'import (builtins.getFlake ("git+file://" + toString ./.)).inputs.nixpkgs { }',
+      },
+      formatting = {
+        command = { "nix fmt" },
+      },
+      options = {
+        -- nixos = {
+        --   expr = nixos_options_expr,
+        -- },
+        -- home_manager = {
+        --   expr = home_manager_options_expr,
+        -- },
+        flake_parts = {
+          expr = flake_parts_options_expr,
+        },
+      },
+    },
+  },
 })
-
 require("lspconfig").typos.setup({
 	capabilities = capabilities,
 })

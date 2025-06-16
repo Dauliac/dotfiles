@@ -159,6 +159,10 @@ local function set_neoclip_keymaps()
 	end, { desc = "Neoclip: [c]lipboard manager" })
 end
 
+local function claude_code()
+  vim.keymap.set('n', '<leader>cc', '<cmd>ClaudeCode<CR>', { desc = 'Toggle Claude Code' })
+end
+
 local function set_keymaps()
 	vim.g.mapleader = ","
 
@@ -176,6 +180,7 @@ local function set_keymaps()
 	set_todo_comments_keymap()
 	set_trouble_keymap()
 	set_undotree_keymap()
+  claude_code()
 	set_hlslens()
 	set_sops_keymaps()
 	set_neoclip_keymaps()

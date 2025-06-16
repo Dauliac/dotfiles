@@ -15,6 +15,8 @@
     ./zsh.nix
     ./eza.nix
     ./yazi.nix
+    ./kubecolor.nix
+    ./go.nix
   ];
   programs.home-manager.enable = true;
   # NOTE: fast cd
@@ -36,10 +38,35 @@
   };
   programs.k9s = {
     enable = true;
-    settings = {
-      k9s = {
-        body.bgColor = "default";
+    plugin = {
+      plugins = {
+      debug = {
+        shortCut = "Shift-D";
+        description = "Add debug container";
+        scopes = [ "containers" ];
+        command = "kubectl";
+        background = false;
+        args = [
+          "debug"
+          "-it"
+          "--context"
+          "$CONTEXT"
+          "-n"
+          "$NAMESPACE"
+          "$POD"
+          "--target"
+          "$NAME"
+          "--image=nicolaka/netshoot:v0.13"
+          "--share-processes"
+          "--"
+          "bash"
+        ];
+      };
       };
     };
   };
+  programs.btop = {
+    enable = true;
+  };
+
 }

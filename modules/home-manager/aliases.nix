@@ -15,5 +15,6 @@
     work = "cd $(${pkgs.ghq}/bin/ghq root)/$(${pkgs.ghq}/bin/ghq list | fzf)";
     speedtest = "${pkgs.speedtest-go}/bin/peedtest-go";
     commit = "${pkgs.convco}/bin/convco commit";
+    tree = "${pkgs.eza}/bin/eza -T";
   };
 }

@@ -3,6 +3,7 @@ _: {
     enable = true;
     # cursors.enable = true;
     flavor = "mocha";
-    #k9s.transparent = true;
+    k9s.transparent = true;
+    # btop.enable = true;
   };
 }

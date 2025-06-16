@@ -27,6 +27,11 @@ let
     unzip
     comma
     claude-code
+    postgresql_16
+    pgcli
+    # claude-code # BUG: why ?
+    # python313Packages.ipython
+    asdf
   ];
   tui = with pkgs; [
     bluetuith

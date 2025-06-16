@@ -85,6 +85,22 @@
         "type": "github"
       }
     },
+    "claude-code-nvim": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1749595024,
+        "narHash": "sha256-jKWm3lN5nyZ1BsIKMFt4EQhb0n+iyEyOw79Rj/A3yZI=",
+        "owner": "greggh",
+        "repo": "claude-code.nvim",
+        "rev": "275c47615f4424a0329290ce1d0c18a8320fd8b0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "greggh",
+        "repo": "claude-code.nvim",
+        "type": "github"
+      }
+    },
     "comin": {
       "inputs": {
         "nixpkgs": [
@@ -638,6 +654,7 @@
     "root": {
       "inputs": {
         "catppuccin": "catppuccin",
+        "claude-code-nvim": "claude-code-nvim",
         "comin": "comin",
         "commander-nvim": "commander-nvim",
         "disko": "disko",

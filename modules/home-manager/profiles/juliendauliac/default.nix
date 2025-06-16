@@ -27,10 +27,10 @@ in
     NPM_CONFIG_PREFIX = "$XDG_DATA_HOME/npm-packages";
     PATH = "$PATH:$NPM_CONFIG_PREFIX/bin/";
   };
-  # programs.mise = {
-  #   enable = true;
-  #   enableZshIntegration = true;
-  # };
+  programs.mise = {
+    enable = true;
+    enableZshIntegration = true;
+  };
   home.packages = with pkgs; [
     awscli2
     cloudflared
@@ -45,6 +45,7 @@ in
     kubelogin
     kubelogin-oidc
     okta-aws-cli
+    granted
     pdm
     pipx
     python312
