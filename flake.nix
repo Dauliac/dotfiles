@@ -1,15 +1,21 @@
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
-    flake-parts.url = "github:hercules-ci/flake-parts";
-    nix-fast-build.url = "github:Mic92/nix-fast-build";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+    flake-parts = {
+      url = "github:hercules-ci/flake-parts";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nix-fast-build = {
+      url = "github:Mic92/nix-fast-build";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     home-manager = {
-      url = "github:nix-community/home-manager/release-24.11";
+      url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixGL = {
@@ -25,14 +31,13 @@
       url = "github:Mic92/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    catppuccin.url = "github:catppuccin/nix";
-    nixvim = {
-      url = "github:nix-community/nixvim/nixos-24.11";
+    catppuccin = {
+      url = "github:catppuccin/nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    sonicpi-nvim = {
-      url = "github:magicmonty/sonicpi.nvim";
-      flake = false;
+    nixvim = {
+      url = "github:nix-community/nixvim/nixos-25.05";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     lanzaboote = {
       url = "github:nix-community/lanzaboote";
@@ -46,11 +51,10 @@
       url = "github:someone-stole-my-name/yaml-companion.nvim";
       flake = false;
     };
-    commander-nvim = {
-      url = "github:FeiyouG/commander.nvim";
-      flake = false;
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
-    treefmt-nix.url = "github:numtide/treefmt-nix";
     hyprpanel = {
       url = "github:Jas-SinghFSU/HyprPanel";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -59,7 +63,10 @@
       url = "github:nlewo/comin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=v0.6.0";
+    nix-flatpak = {
+      url = "github:gmodena/nix-flatpak/?ref=v0.6.0";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs =
     inputs@{ flake-parts, ... }:

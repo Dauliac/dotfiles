@@ -1,4 +1,5 @@
-{ pkgs, ... }: let
+{ pkgs, ... }:
+let
   cli = with pkgs; [
     go-task
     ghq
@@ -18,13 +19,13 @@
     speedtest-go # network speed test
     age # encryption
     gptcommit
-    # nerd-fonts.iosevka
-    (nerdfonts.override {
-      fonts = [
-        "FiraMono"
-        "Iosevka"
-      ];
-    })
+    nerd-fonts.iosevka
+    # (nerdfonts.override {
+    #   fonts = [
+    #     "FiraMono"
+    #     "Iosevka"
+    #   ];
+    # })
     yt-dlp
     git-absorb
     git-gamble

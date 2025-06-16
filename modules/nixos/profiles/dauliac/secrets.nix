@@ -1,3 +1,3 @@
 _: {
-  sops.age.keyFile = "/home/juliendauliac/.config/sops/age/dotfiles.txt";
+  sops.age.keyFile = "/home/dauliac/.config/sops/age/dotfiles.txt";
 }

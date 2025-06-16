@@ -41,12 +41,6 @@
       core = {
         editor = "nvim";
       };
-      commit = {
-        gpgsign = true;
-      };
-      tag = {
-        gpgSign = true;
-      };
       push = {
         autoSetupRemote = true;
         default = "current";

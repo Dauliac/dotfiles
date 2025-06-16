@@ -4,21 +4,15 @@
   ...
 }:
 let
-  sonicpi-nvim = pkgs.vimUtils.buildVimPlugin {
-    name = "sonicpi";
-    src = "${inputs.sonicpi-nvim.outPath}";
-  };
   lsp-lens-nvim = pkgs.vimUtils.buildVimPlugin {
     name = "lsp-lens-nvim";
     src = "${inputs.lsp-lens-nvim.outPath}";
+    doCheck = false;
   };
   yaml-companion-nvim = pkgs.vimUtils.buildVimPlugin {
     name = "yaml-companion-nvim";
     src = "${inputs.yaml-companion-nvim.outPath}";
-  };
-  commander-nvim = pkgs.vimUtils.buildVimPlugin {
-    name = "commander";
-    src = "${inputs.commander-nvim.outPath}";
+    doCheck = false;
   };
 in
 {
@@ -51,8 +45,8 @@ in
       cmp.enable = true;
       cmp-dap.enable = true;
       comment.enable = true;
-      # copilot-cmp.enable = true;
-      # copilot-lua.enable = true;
+      copilot-cmp.enable = false;
+      copilot-lua.enable = false;
       dressing.enable = true;
       flash.enable = true;
       fzf-lua.enable = true;
@@ -85,7 +79,6 @@ in
     extraPlugins = with pkgs.vimPlugins; [
       barbar-nvim
       catppuccin-nvim
-      commander-nvim
       crates-nvim
       diffview-nvim
       firenvim
@@ -113,7 +106,6 @@ in
       registers-nvim
       rust-tools-nvim
       rustaceanvim
-      sonicpi-nvim
       sqlite-lua
       ssr-nvim
       substitute-nvim
@@ -164,7 +156,6 @@ in
       dofile("${./lua/autopair.lua}")
       dofile("${./lua/catppuccin.lua}")
       dofile("${./lua/cmp.lua}")
-      dofile("${./lua/commander.lua}")
       dofile("${./lua/comment.lua}")
       dofile("${./lua/dap.lua}")
       dofile("${./lua/dressing.lua}")
@@ -195,9 +186,6 @@ in
       dofile("${./lua/treesitter.lua}")
       dofile("${./lua/which-key.lua}")
       dofile("${./lua/tailwind.lua}")
-      require("sonicpi").setup({
-        server_dir = "${pkgs.sonic-pi}/app/server",
-      })
     '';
   };
 }

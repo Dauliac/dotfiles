@@ -19,7 +19,7 @@
       zle -N edit-command-line
       bindkey -M vicmd e edit-command-line
     '';
-    initExtra = ''
+    initContent = ''
       # Set the default shell to zsh
       # Source all files into XDG_SECRET_HOME
       if [[ -d ''${XDG_SECRET_HOME} ]]; then
