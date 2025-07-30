@@ -105,6 +105,22 @@
         "type": "github"
       }
     },
+    "commander-nvim": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1717816527,
+        "narHash": "sha256-eXOHR+lwHVJze6jvFuDlvcUtFSpV8EJqlWvXLRWeCNI=",
+        "owner": "FeiyouG",
+        "repo": "commander.nvim",
+        "rev": "84101e8eb1613a72bbdec655b734f891d8a00694",
+        "type": "github"
+      },
+      "original": {
+        "owner": "FeiyouG",
+        "repo": "commander.nvim",
+        "type": "github"
+      }
+    },
     "crane": {
       "locked": {
         "lastModified": 1748970125,
@@ -623,6 +639,7 @@
       "inputs": {
         "catppuccin": "catppuccin",
         "comin": "comin",
+        "commander-nvim": "commander-nvim",
         "disko": "disko",
         "flake-parts": "flake-parts",
         "home-manager": "home-manager",

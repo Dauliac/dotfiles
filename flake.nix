@@ -55,6 +55,10 @@
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    commander-nvim = {
+      url = "github:FeiyouG/commander.nvim";
+      flake = false;
+    };
     hyprpanel = {
       url = "github:Jas-SinghFSU/HyprPanel";
       inputs.nixpkgs.follows = "nixpkgs";

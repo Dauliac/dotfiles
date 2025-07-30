@@ -14,6 +14,11 @@ let
     src = "${inputs.yaml-companion-nvim.outPath}";
     doCheck = false;
   };
+  commander-nvim = pkgs.vimUtils.buildVimPlugin {
+    name = "commander";
+    src = "${inputs.commander-nvim.outPath}";
+    doCheck = false;
+  };
 in
 {
   imports = [
@@ -69,16 +74,17 @@ in
       vim-surround.enable = true;
       web-devicons.enable = true;
       dap.enable = true;
-      # dap-rr.enable = true;
-      # dap-go.enable = true;
-      # dap-python.enable = true;
-      # dap-ui.enable = true;
-      # dap-virtual-text.enable = true;
+      dap-rr.enable = true;
+      dap-go.enable = true;
+      dap-python.enable = true;
+      dap-ui.enable = true;
+      dap-virtual-text.enable = true;
       neotest.enable = true;
     };
     extraPlugins = with pkgs.vimPlugins; [
       barbar-nvim
       catppuccin-nvim
+      commander-nvim
       crates-nvim
       diffview-nvim
       firenvim
@@ -156,6 +162,7 @@ in
       dofile("${./lua/autopair.lua}")
       dofile("${./lua/catppuccin.lua}")
       dofile("${./lua/cmp.lua}")
+      dofile("${./lua/commander.lua}")
       dofile("${./lua/comment.lua}")
       dofile("${./lua/dap.lua}")
       dofile("${./lua/dressing.lua}")

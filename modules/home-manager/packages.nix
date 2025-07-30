@@ -20,18 +20,13 @@ let
     age # encryption
     gptcommit
     nerd-fonts.iosevka
-    # (nerdfonts.override {
-    #   fonts = [
-    #     "FiraMono"
-    #     "Iosevka"
-    #   ];
-    # })
     yt-dlp
     git-absorb
     git-gamble
     convco
     unzip
     comma
+    claude-code
   ];
   tui = with pkgs; [
     bluetuith
