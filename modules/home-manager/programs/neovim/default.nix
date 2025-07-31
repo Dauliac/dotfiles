@@ -17,9 +17,6 @@ let
     name = "commander";
     src = "${inputs.commander-nvim.outPath}";
     doCheck = false;
-  claude-code-nvim = pkgs.vimUtils.buildVimPlugin {
-    name = "claude-code";
-    src = "${inputs.claude-code-nvim.outPath}";
   };
 in
 {
