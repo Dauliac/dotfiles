@@ -1,6 +1,6 @@
 require("nvim-treesitter.configs").setup({
-	highlight = {
-		enable = true,
-		disable = {},
-	},
+  highlight = {
+    enable = true,
+    disable = {},
+  },
 })

@@ -30,6 +30,7 @@
     python311Packages.pynvim
     ripgrep
     rust-analyzer
+    clippy
     rustfmt
     harper
     shellcheck

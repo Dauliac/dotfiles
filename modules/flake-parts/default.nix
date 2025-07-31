@@ -7,4 +7,5 @@
     ./dev.nix
     # ./test.nix
   ];
+  debug = true;
 }

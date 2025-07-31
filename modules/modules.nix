@@ -1,8 +1,7 @@
-{
-  inputs,
-  lib,
-  config,
-  ...
+{ inputs
+, lib
+, config
+, ...
 }:
 let
   inherit (lib) mdDoc mkOption;
@@ -43,7 +42,7 @@ in
           sops-nix.homeManagerModules.sops
           catppuccin.homeModules.catppuccin
           nixvim.homeManagerModules.nixvim
-          hyprpanel.homeManagerModules.hyprpanel
+          # hyprpanel.homeManagerModules.hyprpanel
           nix-flatpak.homeManagerModules.nix-flatpak
         ]
         ++ [
@@ -58,7 +57,7 @@ in
           # allowBroken = true;
         };
         overlays = with inputs; [
-          hyprpanel.overlay
+          # hyprpanel.overlay
         ];
       };
     };
@@ -67,9 +66,10 @@ in
     { system, ... }:
     {
       _module.args.pkgs =
-        import inputs.nixpkgs {
-          inherit system;
-        }
+        import inputs.nixpkgs
+          {
+            inherit system;
+          }
         // {
           inherit (config.nixpkgsConfig) config;
           overlays = config.nixpkgsConfig.overlays ++ [

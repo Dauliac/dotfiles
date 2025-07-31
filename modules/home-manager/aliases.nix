@@ -16,5 +16,6 @@
     speedtest = "${pkgs.speedtest-go}/bin/peedtest-go";
     commit = "${pkgs.convco}/bin/convco commit";
     tree = "${pkgs.eza}/bin/eza -T";
+    history = "${pkgs.mcfly}/bin/mcfly dump | ${pkgs.jq}/bin/jq";
   };
 }

@@ -4,10 +4,9 @@ let
 in
 {
   config.perSystem =
-    {
-      pkgs,
-      config,
-      ...
+    { pkgs
+    , config
+    , ...
     }:
     {
       packages = {

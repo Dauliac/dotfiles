@@ -1,9 +1,9 @@
-_: {
+{ ... }: {
   catppuccin = {
     enable = true;
-    # cursors.enable = true;
+    cursors.enable = true;
     flavor = "mocha";
     k9s.transparent = true;
-    # btop.enable = true;
+    btop.enable = true;
   };
 }

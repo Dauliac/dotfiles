@@ -18,7 +18,6 @@ let
     systemctl-tui # Cool tui
     speedtest-go # network speed test
     age # encryption
-    gptcommit
     nerd-fonts.iosevka
     yt-dlp
     git-absorb
@@ -29,9 +28,20 @@ let
     claude-code
     postgresql_16
     pgcli
-    # claude-code # BUG: why ?
-    # python313Packages.ipython
     asdf
+    claude-code
+    jless
+    skaffold
+    atlas
+    clickhouse
+    entr
+    cargo-tarpaulin
+    (pkgs.wrapHelm pkgs.kubernetes-helm {
+      plugins = [
+        pkgs.kubernetes-helmPlugins.helm-diff
+        pkgs.kubernetes-helmPlugins.helm-secrets
+      ];
+    })
   ];
   tui = with pkgs; [
     bluetuith
@@ -40,7 +50,7 @@ let
   gui = with pkgs; [
     sniffnet
     # TODO: add override if we are in nixOs profile Signal client
-    signal-desktop
+    # signal-desktop
     # TODO: fix unfree packages
     # rustdesk # Remote desktop
     # TODO: only install if we are not in nixOs profile

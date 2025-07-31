@@ -1,4 +1,4 @@
-_: {
+{...}: {
   services.comin = {
     enable = true;
     remotes = [

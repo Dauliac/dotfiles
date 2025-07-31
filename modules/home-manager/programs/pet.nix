@@ -1,4 +1,4 @@
-_: {
+{...}: {
   programs.pet = {
     enable = true;
     snippets = [

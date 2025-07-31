@@ -1,7 +1,6 @@
-{
-  config,
-  pkgs,
-  ...
+{ config
+, pkgs
+, ...
 }:
 let
   nixGL = pkgs.nixgl.nixGLIntel;
@@ -11,14 +10,16 @@ let
       name = "nixGL-${pkg.name}";
       paths =
         [ pkg ]
-        ++ (map (
-          bin:
-          pkgs.hiPrio (
-            pkgs.writeShellScriptBin bin ''
-              exec -a "$0" "${nixGL}/bin/nixGLIntel" "${pkg}/bin/${bin}" "$@"
-            ''
+        ++ (map
+          (
+            bin:
+            pkgs.hiPrio (
+              pkgs.writeShellScriptBin bin ''
+                exec -a "$0" "${nixGL}/bin/nixGLIntel" "${pkg}/bin/${bin}" "$@"
+              ''
+            )
           )
-        ) (builtins.attrNames (builtins.readDir "${pkg}/bin")));
+          (builtins.attrNames (builtins.readDir "${pkg}/bin")));
     };
 in
 {
@@ -36,9 +37,9 @@ in
     cloudflared
     cloudlens
     fluxcd
+    jetbrains.pycharm-professional
     glab
     google-chrome
-    k9s
     docker-compose
     kubecm
     kubectl
@@ -58,13 +59,14 @@ in
     skopeo
     lazydocker
     pnpm_10
-    kubernetes-helm
     oha
     slack
-    kubernetes-helmPlugins.helm-diff
     pre-commit
     vesktop
     ruby
+    just
+    dbeaver-bin
+    vector
   ];
   home.sessionVariables = {
     AWS_DEFAULT_PROFILE = "manomano-support";

@@ -1,7 +1,6 @@
-{
-  inputs,
-  pkgs,
-  ...
+{ inputs
+, pkgs
+, ...
 }:
 let
   lsp-lens-nvim = pkgs.vimUtils.buildVimPlugin {
@@ -53,8 +52,8 @@ in
       cmp.enable = true;
       cmp-dap.enable = true;
       comment.enable = true;
-      copilot-cmp.enable = false;
-      copilot-lua.enable = false;
+      copilot-cmp.enable = true;
+      copilot-lua.enable = true;
       dressing.enable = true;
       flash.enable = true;
       fzf-lua.enable = true;
@@ -70,7 +69,40 @@ in
       nvim-autopairs.enable = true;
       spider.enable = true;
       todo-comments.enable = true;
-      treesitter.enable = true;
+      treesitter = {
+        enable = true;
+        settings = {
+          auto_install = false;
+          ensure_installed = "all";
+          highlight = {
+            additional_vim_regex_highlighting = true;
+            custom_captures = { };
+            disable = [
+              "ipkgs"
+            ];
+            enable = true;
+          };
+          # ignore_install = [
+          #   "ipkgs"
+          # ];
+          incremental_selection = {
+            enable = true;
+            keymaps = {
+              init_selection = false;
+              node_decremental = "grm";
+              node_incremental = "grn";
+              scope_incremental = "grc";
+            };
+          };
+          indent = {
+            enable = true;
+          };
+          parser_install_dir = {
+            __raw = "vim.fs.joinpath(vim.fn.stdpath('data'), 'treesitter')";
+          };
+          sync_install = false;
+        };
+      };
       trim.enable = true;
       trouble.enable = true;
       undotree.enable = true;
@@ -83,10 +115,14 @@ in
       dap-ui.enable = true;
       dap-virtual-text.enable = true;
       neotest.enable = true;
+      rustaceanvim = {
+        enable = true;
+        autoLoad = true;
+
+      };
     };
     extraPlugins = with pkgs.vimPlugins; [
       barbar-nvim
-      claude-code-nvim
       catppuccin-nvim
       commander-nvim
       crates-nvim
@@ -114,8 +150,6 @@ in
       nvim-spectre
       plenary-nvim
       registers-nvim
-      rust-tools-nvim
-      rustaceanvim
       sqlite-lua
       ssr-nvim
       substitute-nvim
@@ -179,7 +213,6 @@ in
       dofile("${./lua/indent-blankline-nvim.lua}")
       dofile("${./lua/init.lua}")
       dofile("${./lua/keymap.lua}")
-      dofile("${./lua/claude.lua}")
       dofile("${./lua/lazygit.lua}")
       dofile("${./lua/localconfig.lua}")
       dofile("${./lua/lsp-colors.lua}")

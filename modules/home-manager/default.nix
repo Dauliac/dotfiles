@@ -15,7 +15,7 @@
       recursive = true;
     };
     fonts.fontconfig.enable = true;
-    xdg.enable = true;
+    # xdg.enable = true;
     home.sessionVariables = {
       BROWSER = "zen";
     };

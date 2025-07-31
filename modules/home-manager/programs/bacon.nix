@@ -1,0 +1,5 @@
+{ ... }: {
+  programs.bacon = {
+    enable = true;
+  };
+}
