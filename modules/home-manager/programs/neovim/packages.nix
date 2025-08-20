@@ -6,26 +6,20 @@
     editorconfig-checker
     fd
     ghq
-    gopls
+    # gopls
     hadolint
     helm-ls
     lazygit
-    ltex-ls
-    lua-language-server
+    # ltex-ls
+    # lua-language-server
     markdown-oxide
-    nil
-    nixd
     nixfmt-rfc-style
     nixpkgs-fmt
-    nodePackages."@volar/vue-language-server"
-    nodePackages.bash-language-server
-    nodePackages.dockerfile-language-server-nodejs
+    # nodePackages."@volar/vue-language-server"
+    # nodePackages.bash-language-server
+    # nodePackages.dockerfile-language-server-nodejs
     nodePackages.prettier
     nodePackages.typescript
-    php83Packages.phan
-    php83Packages.php-codesniffer
-    php83Packages.phpstan
-    phpactor
     pyright
     python311Packages.pynvim
     ripgrep
@@ -38,18 +32,18 @@
     shfmt
     stylua
     supercollider
-    svelte-language-server
-    tailwindcss-language-server
+    # svelte-language-server
+    # tailwindcss-language-server
     terraform-ls
     typos
-    vscode-extensions.llvm-org.lldb-vscode
-    vscode-langservers-extracted
+    # vscode-extensions.llvm-org.lldb-vscode
+    # vscode-langservers-extracted
     xsel
-    yaml-language-server
-    gitlab-ci-ls
-    typescript-language-server
+    # yaml-language-server
+    # gitlab-ci-ls
+    # typescript-language-server
     # graphql-language-service-cli
     harper
-    vtsls
+    # vtsls
   ];
 }

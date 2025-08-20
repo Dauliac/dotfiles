@@ -2,9 +2,7 @@ require("catppuccin").setup({
 	transparent_background = true,
 })
 
--- if vim.g.started_by_firenvim == false then
 vim.cmd.colorscheme("catppuccin-mocha")
--- end
 
 vim.cmd("highlight normal guibg=none ctermbg=none")
 vim.cmd("highlight nontext guibg=none ctermbg=none")

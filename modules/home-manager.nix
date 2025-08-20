@@ -1,6 +1,7 @@
 {
   inputs,
   config,
+  lib,
   ...
 }:
 let
@@ -30,7 +31,12 @@ in
     modules = config.homeManagerModules ++ [
       {
         nixpkgs = {
-          inherit (config.nixpkgsConfig) config;
+          # TODO: Fix unfree config
+          # inherit (config.nixpkgsConfig) config;
+          config = {
+            allowUnfree = true;
+            # allowBroken = true;
+          };
           overlays = config.nixpkgsConfig.overlays ++ (with inputs; [ nixGL.overlay ]);
         };
       }

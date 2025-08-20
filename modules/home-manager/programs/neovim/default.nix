@@ -1,13 +1,9 @@
-{ inputs
-, pkgs
-, ...
+{
+  inputs,
+  pkgs,
+  ...
 }:
 let
-  lsp-lens-nvim = pkgs.vimUtils.buildVimPlugin {
-    name = "lsp-lens-nvim";
-    src = "${inputs.lsp-lens-nvim.outPath}";
-    doCheck = false;
-  };
   yaml-companion-nvim = pkgs.vimUtils.buildVimPlugin {
     name = "yaml-companion-nvim";
     src = "${inputs.yaml-companion-nvim.outPath}";
@@ -23,6 +19,7 @@ in
   imports = [
     ./opts.nix
     ./packages.nix
+    ./lsp.nix
   ];
   home.sessionVariables = {
     VISUAL = "nvim";
@@ -32,73 +29,112 @@ in
     defaultEditor = true;
     viAlias = true;
     vimAlias = true;
-    colorscheme = "catppuccin-mocha";
     globals.mapleader = ",";
+    colorschemes.catppuccin.enable = true;
     clipboard = {
       register = "unnamedplus";
       providers.wl-copy.enable = true;
     };
     plugins = {
       ccc.enable = true;
+      # claude-code.enable = true;
       cmp-buffer.enable = true;
       cmp-cmdline.enable = true;
       cmp-conventionalcommits.enable = true;
-      cmp-emoji.enable = true;
-      cmp-nvim-lsp.enable = true;
-      cmp-path.enable = true;
-      cmp.enable = true;
       cmp-dap.enable = true;
+      cmp-emoji.enable = true;
+      cmp-git.enable = true;
+      cmp-look.enable = true;
+      cmp-nvim-lsp.enable = true;
+      cmp-nvim-lua.enable = true;
+      cmp-path.enable = true;
+      cmp-spell.enable = true;
+      cmp-treesitter.enable = true;
+      cmp_luasnip.enable = true;
+      cmp_yanky.enable = true;
+      luasnip.enable = true;
+      yanky.enable = true;
+      lazygit.enable = true;
+      committia.enable = true;
+      cmp = {
+        enable = true;
+        autoEnableSources = true;
+        settings.sources = [
+          { name = "nvim_lsp"; }
+          { name = "path"; }
+          { name = "buffer"; }
+          { name = "treesitter"; }
+          { name = "spell"; }
+          { name = "git"; }
+          { name = "emoji"; }
+          { name = "dap"; }
+          { name = "look"; }
+          { name = "luasnip"; }
+          { name = "yanky"; }
+          { name = "nvim_lua"; }
+          { name = "conventionalcommits"; }
+          { name = "copilot"; }
+        ];
+      };
       comment.enable = true;
       copilot-cmp.enable = true;
       copilot-lua.enable = true;
+      distant.enable = true;
       dressing.enable = true;
+      diagram.enable = true;
       flash.enable = true;
+      lint.enable = true;
       fzf-lua.enable = true;
       goyo.enable = true;
       lsp-format.enable = true;
       lsp-lines.enable = true;
       lsp.enable = true;
       lspkind.enable = true;
-      lspsaga.enable = true;
-      # neo-tree.enable = true;
+      modicator.enable = true;
+      navic.enable = true;
       neogit.enable = true;
       noice.enable = true;
+      telescope = {
+        enable = true;
+        extensions = {
+          fzf-native.enable = true;
+        };
+      };
       nvim-autopairs.enable = true;
+      neotest = {
+        enable = true;
+        adapters = {
+          go.enable = true;
+          rust.enable = true;
+          jest.enable = true;
+          bash.enable = true;
+        };
+      };
       spider.enable = true;
       todo-comments.enable = true;
       treesitter = {
         enable = true;
-        settings = {
-          auto_install = false;
-          ensure_installed = "all";
-          highlight = {
-            additional_vim_regex_highlighting = true;
-            custom_captures = { };
-            disable = [
-              "ipkgs"
-            ];
-            enable = true;
-          };
-          # ignore_install = [
-          #   "ipkgs"
-          # ];
-          incremental_selection = {
-            enable = true;
-            keymaps = {
-              init_selection = false;
-              node_decremental = "grm";
-              node_incremental = "grn";
-              scope_incremental = "grc";
-            };
-          };
-          indent = {
-            enable = true;
-          };
-          parser_install_dir = {
-            __raw = "vim.fs.joinpath(vim.fn.stdpath('data'), 'treesitter')";
-          };
-          sync_install = false;
-        };
+        settings.highlight.enable = true;
+        grammarPackages = with pkgs.vimPlugins.nvim-treesitter.builtGrammars; [
+          bash
+          json
+          rust
+          go
+          typescript
+          lua
+          make
+          python
+          cue
+          markdown
+          nix
+          regex
+          toml
+          vim
+          vimdoc
+          xml
+          yaml
+          vrl
+        ];
       };
       trim.enable = true;
       trouble.enable = true;
@@ -106,129 +142,48 @@ in
       vim-surround.enable = true;
       web-devicons.enable = true;
       dap.enable = true;
+      neoscroll.enable = true;
       dap-rr.enable = true;
       dap-go.enable = true;
       dap-python.enable = true;
       dap-ui.enable = true;
       dap-virtual-text.enable = true;
-      neotest.enable = true;
+      diffview.enable = true;
+      spectre.enable = true;
+      yazi.enable = true;
+      barbar.enable = true;
+      glow.enable = true;
+      gitmessenger.enable = true;
+      lualine.enable = true;
+      indent-blankline.enable = true;
       rustaceanvim = {
         enable = true;
-        autoLoad = true;
-
       };
+      crates.enable = true;
+      nui.enable = true;
+      which-key.enable = true;
+      gitgutter.enable = true;
+      gitsigns.enable = true;
     };
     extraPlugins = with pkgs.vimPlugins; [
-      barbar-nvim
-      catppuccin-nvim
       commander-nvim
-      crates-nvim
-      diffview-nvim
-      firenvim
-      gitsigns-nvim
-      glow-nvim
-      indent-blankline-nvim-lua
-      lazygit-nvim
-      lsp-colors-nvim
-      lsp-inlayhints-nvim
-      lsp-lens-nvim
-      lsp-status-nvim
-      lualine-lsp-progress
-      lualine-nvim
       neodev-nvim
-      neoscroll-nvim
-      noice-nvim
-      nui-nvim
-      null-ls-nvim
       nvim-hlslens
-      nvim-lspconfig
-      nvim-neoclip-lua
       nvim-sops
-      nvim-spectre
       plenary-nvim
-      registers-nvim
-      sqlite-lua
       ssr-nvim
       substitute-nvim
-      tailwind-tools-nvim
-      tailwindcss-colors-nvim
-      telescope-dap-nvim
-      nvim-dap-virtual-text
-      nvim-dap-go
-      nvim-dap-ui
-      nvim-dap-rr
-      telescope-nvim
-      vim-gitgutter
       vim-helm
-      which-key-nvim
       yaml-companion-nvim
-      yazi-nvim
-      (nvim-treesitter.withPlugins (p: [
-        p.javascript
-        p.typescript
-        p.lua
-        p.html
-        p.bash
-        p.css
-        p.jsdoc
-        p.nix
-        p.scss
-        p.tsx
-        p.rust
-        p.yaml
-        p.json
-        p.dockerfile
-        p.gomod
-        p.puppet
-        p.scss
-        p.sql
-        p.terraform
-        p.jsonnet
-        p.markdown
-        p.python
-        p.helm
-        p.vim
-        p.vimdoc
-        p.php
-        p.vue
-      ]))
     ];
     extraConfigLua = ''
-      dofile("${./lua/autopair.lua}")
       dofile("${./lua/catppuccin.lua}")
-      dofile("${./lua/cmp.lua}")
       dofile("${./lua/commander.lua}")
-      dofile("${./lua/comment.lua}")
-      dofile("${./lua/dap.lua}")
       dofile("${./lua/dressing.lua}")
-      dofile("${./lua/doge.lua}")
-      dofile("${./lua/filetree.lua}")
       dofile("${./lua/fzf.lua}")
-      dofile("${./lua/gitsigns.lua}")
-      dofile("${./lua/glow.lua}")
-      dofile("${./lua/hlslens.lua}")
-      dofile("${./lua/indent-blankline-nvim.lua}")
       dofile("${./lua/init.lua}")
       dofile("${./lua/keymap.lua}")
-      dofile("${./lua/lazygit.lua}")
-      dofile("${./lua/localconfig.lua}")
-      dofile("${./lua/lsp-colors.lua}")
-      dofile("${./lua/lsp-lens.lua}")
-      dofile("${./lua/lsp.lua}")
-      dofile("${./lua/lspkind.lua}")
-      dofile("${./lua/lualine.lua}")
-      dofile("${./lua/neoclip.lua}")
-      dofile("${./lua/neoscroll.lua}")
-      dofile("${./lua/noice.lua}")
-      dofile("${./lua/notify.lua}")
-      dofile("${./lua/null-ls.lua}")
-      dofile("${./lua/saga.lua}")
       dofile("${./lua/sops.lua}")
-      dofile("${./lua/telescope.lua}")
-      dofile("${./lua/todo-comments.lua}")
-      dofile("${./lua/treesitter.lua}")
-      dofile("${./lua/which-key.lua}")
-      dofile("${./lua/tailwind.lua}")
     '';
   };
 }

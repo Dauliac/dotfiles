@@ -1,0 +1,4273 @@
+{
+  "title": "[PULSE] [OBS] Vector aggregators (K8S daemonset)",
+  "description": "## Title\n\nDescribe this dashboard. Add links to other dashboards, monitors, wikis,  and docs to help your teammates. Markdown is supported.\n\n- [This might link to a dashboard](#)\n- [This might link to a wiki](#) (cloned) (cloned)",
+  "widgets": [
+    {
+      "id": 5765033546032930,
+      "definition": {
+        "title": "Vector versions",
+        "title_size": "16",
+        "title_align": "left",
+        "type": "query_table",
+        "requests": [
+          {
+            "queries": [
+              {
+                "query": "sum:kubernetes.containers.running{$env,$service,$region} by {image_tag}",
+                "data_source": "metrics",
+                "name": "query1",
+                "aggregator": "avg"
+              }
+            ],
+            "response_format": "scalar",
+            "sort": {
+              "count": 500,
+              "order_by": [
+                {
+                  "type": "formula",
+                  "index": 0,
+                  "order": "desc"
+                }
+              ]
+            },
+            "formulas": [
+              {
+                "cell_display_mode": "bar",
+                "formula": "query1"
+              }
+            ]
+          }
+        ],
+        "has_search_bar": "auto"
+      },
+      "layout": {
+        "x": 0,
+        "y": 0,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "id": 4043888804145088,
+      "definition": {
+        "title": "Pods by Vector versions",
+        "title_size": "16",
+        "title_align": "left",
+        "show_legend": true,
+        "legend_layout": "horizontal",
+        "legend_columns": [
+          "avg",
+          "min",
+          "max",
+          "value",
+          "sum"
+        ],
+        "type": "timeseries",
+        "requests": [
+          {
+            "formulas": [
+              {
+                "formula": "query1"
+              }
+            ],
+            "queries": [
+              {
+                "query": "sum:kubernetes.containers.running{$env,$service,$region, kube_container_name:vector} by {image_tag}",
+                "data_source": "metrics",
+                "name": "query1"
+              }
+            ],
+            "response_format": "timeseries",
+            "style": {
+              "palette": "semantic",
+              "line_type": "solid",
+              "line_width": "normal"
+            },
+            "display_type": "area"
+          }
+        ],
+        "yaxis": {
+          "include_zero": true,
+          "scale": "linear",
+          "label": "",
+          "min": "auto",
+          "max": "auto"
+        },
+        "markers": []
+      },
+      "layout": {
+        "x": 2,
+        "y": 0,
+        "width": 3,
+        "height": 2
+      }
+    },
+    {
+      "id": 1062962699133720,
+      "definition": {
+        "title": "Errors count",
+        "title_size": "16",
+        "title_align": "left",
+        "type": "query_table",
+        "requests": [
+          {
+            "queries": [
+              {
+                "query": "sum:vector.vector_component_errors.count{$env,$service,$region} by {component_kind,component_id,error_type,stage}.as_count()",
+                "data_source": "metrics",
+                "name": "query1",
+                "aggregator": "sum"
+              }
+            ],
+            "response_format": "scalar",
+            "sort": {
+              "count": 500,
+              "order_by": [
+                {
+                  "type": "formula",
+                  "index": 0,
+                  "order": "desc"
+                }
+              ]
+            },
+            "formulas": [
+              {
+                "cell_display_mode": "bar",
+                "formula": "query1"
+              }
+            ]
+          }
+        ],
+        "has_search_bar": "auto"
+      },
+      "layout": {
+        "x": 5,
+        "y": 0,
+        "width": 4,
+        "height": 4
+      }
+    },
+    {
+      "id": 1393311470748608,
+      "definition": {
+        "title": "Errors count",
+        "title_size": "16",
+        "title_align": "left",
+        "show_legend": true,
+        "legend_layout": "auto",
+        "legend_columns": [
+          "avg",
+          "min",
+          "max",
+          "value",
+          "sum"
+        ],
+        "type": "timeseries",
+        "requests": [
+          {
+            "formulas": [
+              {
+                "formula": "query1"
+              }
+            ],
+            "queries": [
+              {
+                "query": "sum:vector.vector_component_errors.count{$env,$service,$region} by {component_kind,component_id,host}.as_count()",
+                "data_source": "metrics",
+                "name": "query1"
+              }
+            ],
+            "response_format": "timeseries",
+            "style": {
+              "palette": "red",
+              "line_type": "solid",
+              "line_width": "normal"
+            },
+            "display_type": "bars"
+          }
+        ],
+        "yaxis": {
+          "include_zero": true,
+          "scale": "linear",
+          "label": "",
+          "min": "auto",
+          "max": "auto"
+        },
+        "markers": []
+      },
+      "layout": {
+        "x": 9,
+        "y": 0,
+        "width": 3,
+        "height": 2
+      }
+    },
+    {
+      "id": 5910137498469462,
+      "definition": {
+        "title": "Monitors",
+        "type": "manage_status",
+        "display_format": "countsAndList",
+        "color_preference": "text",
+        "hide_zero_counts": true,
+        "show_status": true,
+        "last_triggered_format": "relative",
+        "query": "tag:project:vector AND tag:($region) AND tag:($env) AND (tag:$service) ",
+        "sort": "status,asc",
+        "count": 50,
+        "start": 0,
+        "summary_type": "monitors",
+        "show_priority": false,
+        "show_last_triggered": false
+      },
+      "layout": {
+        "x": 0,
+        "y": 2,
+        "width": 5,
+        "height": 4
+      }
+    },
+    {
+      "id": 5068481235822098,
+      "definition": {
+        "title": "Pending pods",
+        "title_size": "16",
+        "title_align": "left",
+        "show_legend": true,
+        "legend_layout": "horizontal",
+        "legend_columns": [
+          "avg",
+          "min",
+          "max",
+          "value",
+          "sum"
+        ],
+        "type": "timeseries",
+        "requests": [
+          {
+            "formulas": [
+              {
+                "formula": "query2"
+              }
+            ],
+            "queries": [
+              {
+                "query": "sum:kubernetes_state.pod.status_phase{$env, $region, $service, pod_phase:pending} by {host}.fill(zero)",
+                "data_source": "metrics",
+                "name": "query2"
+              }
+            ],
+            "response_format": "timeseries",
+            "style": {
+              "palette": "semantic",
+              "line_type": "solid",
+              "line_width": "normal"
+            },
+            "display_type": "bars"
+          }
+        ],
+        "yaxis": {
+          "include_zero": true,
+          "scale": "linear",
+          "label": "",
+          "min": "auto",
+          "max": "auto"
+        },
+        "markers": []
+      },
+      "layout": {
+        "x": 9,
+        "y": 2,
+        "width": 3,
+        "height": 2
+      }
+    },
+    {
+      "id": 4312761761708298,
+      "definition": {
+        "title": "Dropped logs",
+        "title_size": "16",
+        "title_align": "left",
+        "type": "query_value",
+        "requests": [
+          {
+            "response_format": "scalar",
+            "queries": [
+              {
+                "query": "sum:vector.vector_component_discarded_events.count{$env,$service,intentional:false,$region}.as_count()",
+                "data_source": "metrics",
+                "name": "query1",
+                "aggregator": "sum"
+              }
+            ],
+            "formulas": [
+              {
+                "formula": "default_zero(query1)"
+              }
+            ],
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "palette": "black_on_light_red",
+                "value": 0
+              },
+              {
+                "comparator": "=",
+                "palette": "white_on_green",
+                "value": 0
+              }
+            ]
+          }
+        ],
+        "autoscale": true,
+        "custom_unit": "drop",
+        "precision": 2,
+        "timeseries_background": {
+          "yaxis": {
+            "include_zero": true
+          },
+          "type": "area"
+        }
+      },
+      "layout": {
+        "x": 5,
+        "y": 4,
+        "width": 1,
+        "height": 2
+      }
+    },
+    {
+      "id": 5832477850590728,
+      "definition": {
+        "title": "Dropped logs (more than 0 is critical)",
+        "title_size": "16",
+        "title_align": "left",
+        "show_legend": true,
+        "legend_layout": "auto",
+        "legend_columns": [
+          "avg",
+          "min",
+          "max",
+          "value",
+          "sum"
+        ],
+        "type": "timeseries",
+        "requests": [
+          {
+            "formulas": [
+              {
+                "formula": "query1"
+              }
+            ],
+            "queries": [
+              {
+                "query": "sum:vector.vector_component_discarded_events.count{$env,$service,intentional:false,$region} by {intentional,component_kind,component_id}.as_rate()",
+                "data_source": "metrics",
+                "name": "query1"
+              }
+            ],
+            "response_format": "timeseries",
+            "style": {
+              "palette": "red",
+              "line_type": "solid",
+              "line_width": "thick"
+            },
+            "display_type": "line"
+          }
+        ],
+        "yaxis": {
+          "include_zero": true,
+          "scale": "linear",
+          "label": "",
+          "min": "auto",
+          "max": "auto"
+        },
+        "markers": []
+      },
+      "layout": {
+        "x": 6,
+        "y": 4,
+        "width": 3,
+        "height": 2
+      }
+    },
+    {
+      "id": 8413615229924270,
+      "definition": {
+        "title": "Total pods & pods with errors ",
+        "title_size": "16",
+        "title_align": "left",
+        "show_legend": true,
+        "legend_layout": "horizontal",
+        "legend_columns": [
+          "avg",
+          "min",
+          "max",
+          "value",
+          "sum"
+        ],
+        "type": "timeseries",
+        "requests": [
+          {
+            "formulas": [
+              {
+                "alias": "pods count with errors",
+                "formula": "count_nonzero(query1)"
+              }
+            ],
+            "queries": [
+              {
+                "query": "max:vector.vector_component_errors.count{$env,$service,$region} by {component_kind,component_id,host}.as_count()",
+                "data_source": "metrics",
+                "name": "query1"
+              }
+            ],
+            "response_format": "timeseries",
+            "style": {
+              "palette": "red",
+              "line_type": "solid",
+              "line_width": "normal"
+            },
+            "display_type": "bars"
+          },
+          {
+            "formulas": [
+              {
+                "style": {
+                  "palette": "green"
+                },
+                "alias": "total pods count",
+                "formula": "count_nonzero(query2)"
+              }
+            ],
+            "queries": [
+              {
+                "query": "sum:vector.vector_utilization{$env,$service,$region} by {host}",
+                "data_source": "metrics",
+                "name": "query2"
+              }
+            ],
+            "response_format": "timeseries",
+            "style": {
+              "palette": "red",
+              "line_type": "solid",
+              "line_width": "normal"
+            },
+            "display_type": "line"
+          }
+        ],
+        "yaxis": {
+          "include_zero": true,
+          "scale": "linear",
+          "label": "",
+          "min": "auto",
+          "max": "auto"
+        },
+        "markers": []
+      },
+      "layout": {
+        "x": 9,
+        "y": 4,
+        "width": 3,
+        "height": 2
+      }
+    },
+    {
+      "id": 4742016406586669,
+      "definition": {
+        "title": "",
+        "type": "treemap",
+        "requests": [
+          {
+            "response_format": "scalar",
+            "queries": [
+              {
+                "data_source": "logs",
+                "name": "query1",
+                "indexes": [
+                  "*"
+                ],
+                "compute": {
+                  "aggregation": "count"
+                },
+                "group_by": [
+                  {
+                    "facet": "@__vector_aggregators_prerouting_key",
+                    "limit": 10,
+                    "sort": {
+                      "order": "desc",
+                      "aggregation": "count"
+                    }
+                  }
+                ],
+                "search": {
+                  "query": "$env kube_cluster_name:* $region"
+                },
+                "storage": "hot"
+              }
+            ],
+            "style": {
+              "palette": "semantic"
+            },
+            "formulas": [
+              {
+                "formula": "query1"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 6,
+        "width": 12,
+        "height": 2
+      }
+    },
+    {
+      "id": 4864995173029610,
+      "definition": {
+        "title": "[Vector] disk buffers summary",
+        "background_color": "vivid_purple",
+        "show_title": true,
+        "type": "group",
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 8356144046153784,
+            "definition": {
+              "type": "image",
+              "url": "https://avatars.githubusercontent.com/u/16866914?s=200&v=4",
+              "sizing": "contain",
+              "margin": "md",
+              "has_background": false,
+              "has_border": true,
+              "vertical_align": "center",
+              "horizontal_align": "center"
+            },
+            "layout": {
+              "x": 0,
+              "y": 0,
+              "width": 1,
+              "height": 2
+            }
+          },
+          {
+            "id": 480211747099958,
+            "definition": {
+              "title": "[Aggregator sink]  Buffer usage (disk)",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "toplist",
+              "requests": [
+                {
+                  "response_format": "scalar",
+                  "queries": [
+                    {
+                      "query": "max:vector.vector_buffer_events{$env,$service,component_kind:sink,component_id:aggregator_sink,$region}",
+                      "data_source": "metrics",
+                      "name": "query1",
+                      "aggregator": "max"
+                    },
+                    {
+                      "query": "max:vector.vector_buffer_max_byte_size{$env,$service,component_id:aggregator_sink,component_kind:sink,$region}",
+                      "data_source": "metrics",
+                      "name": "query2",
+                      "aggregator": "max"
+                    }
+                  ],
+                  "conditional_formats": [
+                    {
+                      "comparator": "<",
+                      "palette": "white_on_green",
+                      "value": 1
+                    },
+                    {
+                      "comparator": ">",
+                      "palette": "white_on_red",
+                      "value": 50
+                    },
+                    {
+                      "comparator": ">",
+                      "palette": "white_on_yellow",
+                      "value": 1
+                    }
+                  ],
+                  "formulas": [
+                    {
+                      "formula": "(query1 / query2) * 100"
+                    }
+                  ],
+                  "sort": {
+                    "count": 10,
+                    "order_by": [
+                      {
+                        "type": "formula",
+                        "index": 0,
+                        "order": "desc"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "style": {
+                "display": {
+                  "type": "flat"
+                }
+              }
+            },
+            "layout": {
+              "x": 1,
+              "y": 0,
+              "width": 2,
+              "height": 2
+            }
+          },
+          {
+            "id": 6454995661573164,
+            "definition": {
+              "title": "[Aggregator sink] buffer bytes size (log scale)",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "legend_layout": "vertical",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "queries": [
+                    {
+                      "query": "sum:vector.vector_buffer_byte_size{$env,$service,component_id:aggregator_sink,component_kind:sink,$region} by {availability-zone,host,component_id}",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "style": {
+                    "palette": "semantic",
+                    "line_type": "solid",
+                    "line_width": "thin"
+                  },
+                  "display_type": "line"
+                },
+                {
+                  "formulas": [
+                    {
+                      "alias": "disk buffer max bytes",
+                      "style": {
+                        "palette": "warm",
+                        "palette_index": 5
+                      },
+                      "formula": "query0"
+                    },
+                    {
+                      "alias": "1%",
+                      "style": {
+                        "palette": "green",
+                        "palette_index": 4
+                      },
+                      "formula": "query0 * 0.01"
+                    },
+                    {
+                      "alias": "10%",
+                      "style": {
+                        "palette": "purple",
+                        "palette_index": 2
+                      },
+                      "formula": "query0 * 0.1"
+                    },
+                    {
+                      "alias": "50%",
+                      "style": {
+                        "palette": "warm",
+                        "palette_index": 1
+                      },
+                      "formula": "query0 * 0.5"
+                    }
+                  ],
+                  "queries": [
+                    {
+                      "data_source": "metrics",
+                      "name": "query0",
+                      "query": "max:vector.vector_buffer_max_byte_size{$env,$service,component_id:aggregator_sink,component_kind:sink,$region}"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "style": {
+                    "palette": "red",
+                    "line_type": "dashed",
+                    "line_width": "normal"
+                  },
+                  "display_type": "line"
+                }
+              ],
+              "yaxis": {
+                "include_zero": false,
+                "scale": "log",
+                "label": "",
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 3,
+              "y": 0,
+              "width": 3,
+              "height": 2
+            }
+          },
+          {
+            "id": 7484904327593602,
+            "definition": {
+              "title": "[Aggregator sink] buffer bytes size (linear scale)",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "legend_layout": "vertical",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "queries": [
+                    {
+                      "query": "sum:vector.vector_buffer_byte_size{$env,$service,component_id:aggregator_sink,component_kind:sink,$region} by {component_kind,availability-zone,host,component_id}",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "style": {
+                    "palette": "semantic",
+                    "line_type": "solid",
+                    "line_width": "thin"
+                  },
+                  "display_type": "line"
+                },
+                {
+                  "formulas": [
+                    {
+                      "alias": "disk buffer max bytes",
+                      "style": {
+                        "palette": "warm",
+                        "palette_index": 5
+                      },
+                      "formula": "query0"
+                    }
+                  ],
+                  "queries": [
+                    {
+                      "data_source": "metrics",
+                      "name": "query0",
+                      "query": "max:vector.vector_buffer_max_byte_size{$env,$service,component_id:aggregator_sink,component_kind:sink,$region}"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "style": {
+                    "palette": "red",
+                    "line_type": "dashed",
+                    "line_width": "thick"
+                  },
+                  "display_type": "line"
+                }
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "",
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 0,
+              "y": 2,
+              "width": 6,
+              "height": 2
+            }
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 0,
+        "width": 6,
+        "height": 6
+      }
+    },
+    {
+      "id": 8143505296282970,
+      "definition": {
+        "title": "Memory summary",
+        "show_title": true,
+        "type": "group",
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 7583256515472012,
+            "definition": {
+              "title": "Memory usage %",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "toplist",
+              "requests": [
+                {
+                  "response_format": "scalar",
+                  "queries": [
+                    {
+                      "query": "avg:kubernetes.memory.usage_pct{$env,$service,$region} by {pod_name}",
+                      "data_source": "metrics",
+                      "name": "query2",
+                      "aggregator": "avg"
+                    }
+                  ],
+                  "conditional_formats": [
+                    {
+                      "comparator": "<",
+                      "palette": "white_on_green",
+                      "value": 60
+                    },
+                    {
+                      "comparator": ">",
+                      "palette": "custom_bg",
+                      "custom_bg_color": "#e9ec32",
+                      "value": 60
+                    },
+                    {
+                      "comparator": ">",
+                      "palette": "white_on_yellow",
+                      "value": 80
+                    },
+                    {
+                      "comparator": ">",
+                      "palette": "white_on_red",
+                      "value": 90
+                    },
+                    {
+                      "comparator": ">",
+                      "palette": "custom_bg",
+                      "custom_bg_color": "#570000",
+                      "value": 95
+                    }
+                  ],
+                  "formulas": [
+                    {
+                      "formula": "query2"
+                    }
+                  ],
+                  "sort": {
+                    "count": 10,
+                    "order_by": [
+                      {
+                        "type": "formula",
+                        "index": 0,
+                        "order": "desc"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "style": {}
+            },
+            "layout": {
+              "x": 0,
+              "y": 0,
+              "width": 2,
+              "height": 2
+            }
+          },
+          {
+            "id": 2856477909170886,
+            "definition": {
+              "title": "Max Memory Used (%)",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query2"
+                    }
+                  ],
+                  "queries": [
+                    {
+                      "query": "max:kubernetes.memory.usage_pct{$env,$service,$region} by {pod_name}",
+                      "data_source": "metrics",
+                      "name": "query2"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "thin"
+                  },
+                  "display_type": "line"
+                }
+              ],
+              "yaxis": {
+                "include_zero": false,
+                "scale": "pow"
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 2,
+              "y": 0,
+              "width": 4,
+              "height": 2
+            }
+          }
+        ]
+      },
+      "layout": {
+        "x": 6,
+        "y": 0,
+        "width": 6,
+        "height": 3
+      }
+    },
+    {
+      "id": 1344359853460086,
+      "definition": {
+        "title": "Network summary",
+        "show_title": true,
+        "type": "group",
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 2331467054022048,
+            "definition": {
+              "title": "Network in & out (bytes per sec)",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "legend_layout": "vertical",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "anomalies(query0, 'basic', 6)"
+                    }
+                  ],
+                  "queries": [
+                    {
+                      "data_source": "metrics",
+                      "name": "query0",
+                      "query": "max:kubernetes.network.tx_bytes{$env,$service,$region} by {pod_name}"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "line"
+                }
+              ],
+              "yaxis": {
+                "include_zero": false
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 0,
+              "y": 0,
+              "width": 3,
+              "height": 2
+            }
+          },
+          {
+            "id": 1576766805244336,
+            "definition": {
+              "title": "packets drop",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    },
+                    {
+                      "formula": "query2"
+                    }
+                  ],
+                  "queries": [
+                    {
+                      "query": "max:kubernetes.network.rx_dropped{$service,$env,$region} by {host}",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    },
+                    {
+                      "query": "max:kubernetes.network.tx_dropped{$service,$env,$region} by {host}",
+                      "data_source": "metrics",
+                      "name": "query2"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "style": {
+                    "palette": "red",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "line"
+                }
+              ]
+            },
+            "layout": {
+              "x": 3,
+              "y": 0,
+              "width": 3,
+              "height": 2
+            }
+          }
+        ]
+      },
+      "layout": {
+        "x": 6,
+        "y": 3,
+        "width": 6,
+        "height": 3
+      }
+    },
+    {
+      "id": 3508439326232276,
+      "definition": {
+        "title": "CPU summary",
+        "show_title": true,
+        "type": "group",
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 7012786935450548,
+            "definition": {
+              "title": "Average CPU usage",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "toplist",
+              "requests": [
+                {
+                  "response_format": "scalar",
+                  "queries": [
+                    {
+                      "query": "avg:kubernetes.cpu.usage.total{$env,$service,$region} by {pod_name}",
+                      "data_source": "metrics",
+                      "name": "query1",
+                      "aggregator": "avg"
+                    }
+                  ],
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "sort": {
+                    "count": 500,
+                    "order_by": [
+                      {
+                        "type": "formula",
+                        "index": 0,
+                        "order": "desc"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "style": {}
+            },
+            "layout": {
+              "x": 0,
+              "y": 0,
+              "width": 2,
+              "height": 2
+            }
+          },
+          {
+            "id": 171056213022796,
+            "definition": {
+              "title": "Average total CPU usage",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query0"
+                    },
+                    {
+                      "alias": "limit",
+                      "style": {
+                        "palette": "orange",
+                        "palette_index": 6
+                      },
+                      "formula": "query1"
+                    }
+                  ],
+                  "queries": [
+                    {
+                      "data_source": "metrics",
+                      "name": "query0",
+                      "query": "avg:kubernetes.cpu.usage.total{$env,$service,$region} by {pod_name}"
+                    },
+                    {
+                      "data_source": "metrics",
+                      "name": "query1",
+                      "query": "avg:kubernetes.cpu.limits{$env,$service,$region}"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "line"
+                }
+              ],
+              "yaxis": {
+                "min": "0"
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 2,
+              "y": 0,
+              "width": 4,
+              "height": 2
+            }
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 0,
+        "width": 6,
+        "height": 3
+      }
+    },
+    {
+      "id": 3215951802544854,
+      "definition": {
+        "title": "Transforms send duration seconds",
+        "title_size": "16",
+        "title_align": "left",
+        "show_legend": true,
+        "legend_layout": "horizontal",
+        "legend_columns": [
+          "avg",
+          "min",
+          "max",
+          "value",
+          "sum"
+        ],
+        "type": "timeseries",
+        "requests": [
+          {
+            "formulas": [
+              {
+                "formula": "query2 / query1"
+              }
+            ],
+            "queries": [
+              {
+                "query": "sum:vector.vector_buffer_send_duration_seconds.sum{$env,$service,$region ,component_kind:transform} by {component_id,host}.as_count()",
+                "data_source": "metrics",
+                "name": "query2"
+              },
+              {
+                "query": "sum:vector.vector_buffer_send_duration_seconds.count{$env,$service,$region ,component_kind:transform} by {component_id,host}.as_count()",
+                "data_source": "metrics",
+                "name": "query1"
+              }
+            ],
+            "response_format": "timeseries",
+            "style": {
+              "palette": "semantic",
+              "line_type": "solid",
+              "line_width": "normal"
+            },
+            "display_type": "line"
+          }
+        ],
+        "yaxis": {
+          "include_zero": true,
+          "scale": "linear",
+          "label": "",
+          "min": "auto",
+          "max": "auto"
+        },
+        "markers": []
+      },
+      "layout": {
+        "x": 6,
+        "y": 0,
+        "width": 3,
+        "height": 3
+      }
+    },
+    {
+      "id": 8925898880582454,
+      "definition": {
+        "title": "Sinks send duration seconds",
+        "title_size": "16",
+        "title_align": "left",
+        "show_legend": true,
+        "legend_layout": "horizontal",
+        "legend_columns": [
+          "avg",
+          "min",
+          "max",
+          "value",
+          "sum"
+        ],
+        "type": "timeseries",
+        "requests": [
+          {
+            "formulas": [
+              {
+                "formula": "query2 / query1"
+              }
+            ],
+            "queries": [
+              {
+                "query": "sum:vector.vector_buffer_send_duration_seconds.sum{$env,$service,$region ,component_kind:sink} by {component_id,host}.as_count()",
+                "data_source": "metrics",
+                "name": "query2"
+              },
+              {
+                "query": "sum:vector.vector_buffer_send_duration_seconds.count{$env,$service,$region, component_kind:sink} by {component_id,host}.as_count()",
+                "data_source": "metrics",
+                "name": "query1"
+              }
+            ],
+            "response_format": "timeseries",
+            "style": {
+              "palette": "semantic",
+              "line_type": "solid",
+              "line_width": "normal"
+            },
+            "display_type": "line"
+          }
+        ],
+        "yaxis": {
+          "include_zero": true,
+          "scale": "linear",
+          "label": "",
+          "min": "auto",
+          "max": "auto"
+        },
+        "markers": []
+      },
+      "layout": {
+        "x": 9,
+        "y": 0,
+        "width": 3,
+        "height": 3
+      }
+    },
+    {
+      "id": 3840635287733076,
+      "definition": {
+        "title": "CPU details",
+        "banner_img": "https://live.staticflickr.com/2619/4231114748_c09b5edd49_b.jpg",
+        "show_title": true,
+        "type": "group",
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 2251833794724358,
+            "definition": {
+              "type": "note",
+              "content": "A ratio from 0 to 1 of the load on a component.  \n- 0 would indicate a completely idle component that is simply waiting for input. \n- 1 would indicate a that is never idle",
+              "background_color": "yellow",
+              "font_size": "14",
+              "text_align": "left",
+              "vertical_align": "center",
+              "show_tick": true,
+              "tick_pos": "50%",
+              "tick_edge": "right",
+              "has_padding": true
+            },
+            "layout": {
+              "x": 0,
+              "y": 0,
+              "width": 4,
+              "height": 2
+            }
+          },
+          {
+            "id": 8662215510302522,
+            "definition": {
+              "title": "component load %",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": true,
+              "legend_layout": "horizontal",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1 * 100"
+                    }
+                  ],
+                  "queries": [
+                    {
+                      "query": "avg:vector.vector_utilization{$env,$service,$region} by {component_id}",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "style": {
+                    "palette": "semantic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "line"
+                }
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "",
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 4,
+              "y": 0,
+              "width": 8,
+              "height": 2
+            }
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 17,
+        "width": 12,
+        "height": 5
+      }
+    },
+    {
+      "id": 1698644428785576,
+      "definition": {
+        "title": "Memory details",
+        "banner_img": "https://img.freepik.com/premium-photo/computer-memory-ram-motherboard-close-up-system-main-memory-random-access-memory-onboard-computer-detail-computer-components-ddr3-ddr4-ddr5_150455-1326.jpg?w=1380",
+        "show_title": true,
+        "type": "group",
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 2898794972819030,
+            "definition": {
+              "title": "[Internal metrics prometheus exporter sink] buffer size",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "legend_layout": "vertical",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "queries": [
+                    {
+                      "query": "sum:vector.vector_buffer_events{$env,$service,component_id:internal_metrics*,component_kind:sink,$region} by {component_id}",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "style": {
+                    "palette": "cool",
+                    "line_type": "solid",
+                    "line_width": "thin"
+                  },
+                  "display_type": "line"
+                },
+                {
+                  "formulas": [
+                    {
+                      "alias": "disk buffer max events",
+                      "formula": "query0"
+                    }
+                  ],
+                  "queries": [
+                    {
+                      "data_source": "metrics",
+                      "name": "query0",
+                      "query": "max:vector.vector_buffer_max_event_size{$env,$service,component_id:internal_metrics*,component_kind:sink,$region} by {component_id}"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "style": {
+                    "palette": "red",
+                    "line_type": "dashed",
+                    "line_width": "thick"
+                  },
+                  "display_type": "line"
+                }
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "",
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 0,
+              "y": 0,
+              "width": 12,
+              "height": 2
+            }
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 22,
+        "width": 12,
+        "height": 5
+      }
+    },
+    {
+      "id": 8656649656800068,
+      "definition": {
+        "title": "Disk details",
+        "background_color": "orange",
+        "show_title": true,
+        "type": "group",
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 7164286838802644,
+            "definition": {
+              "title": "Disks % usage",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1 / query2 * 100"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "queries": [
+                    {
+                      "query": "sum:system.disk.used{$env,service:logs,$service,$region} by {device,host,component}",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    },
+                    {
+                      "query": "sum:system.disk.total{$env,service:logs,$service,$region} by {device,host,component}",
+                      "data_source": "metrics",
+                      "name": "query2"
+                    }
+                  ],
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "line"
+                }
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "",
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": [
+                {
+                  "label": "80 < y < 90",
+                  "value": "80 < y < 90",
+                  "display_type": "warning dashed"
+                },
+                {
+                  "label": "90 < y < 100",
+                  "value": "90 < y < 100",
+                  "display_type": "error dashed"
+                }
+              ]
+            },
+            "layout": {
+              "x": 0,
+              "y": 0,
+              "width": 6,
+              "height": 3
+            }
+          },
+          {
+            "id": 8555874541752820,
+            "definition": {
+              "title": "inodes used %",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": true,
+              "legend_layout": "horizontal",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1 / query2 * 100"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "queries": [
+                    {
+                      "query": "avg:system.fs.inodes.used{$env,$service,service:logs,$region} by {device,component,host}",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    },
+                    {
+                      "query": "avg:system.fs.inodes.total{$env,$service,service:logs,$region} by {device,component,host}",
+                      "data_source": "metrics",
+                      "name": "query2"
+                    }
+                  ],
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "line"
+                }
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "",
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": [
+                {
+                  "label": "80 < y < 90",
+                  "value": "80 < y < 90",
+                  "display_type": "warning dashed"
+                },
+                {
+                  "label": "90 < y < 100",
+                  "value": "90 < y < 100",
+                  "display_type": "error dashed"
+                }
+              ]
+            },
+            "layout": {
+              "x": 6,
+              "y": 0,
+              "width": 6,
+              "height": 3
+            }
+          },
+          {
+            "id": 8375874167762160,
+            "definition": {
+              "title": "I/O read kb/s",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "queries": [
+                    {
+                      "query": "max:system.io.rkb_s{$env,$service,service:logs,device:nvme*,$region} by {host,component,device}",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "line"
+                }
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "",
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 0,
+              "y": 3,
+              "width": 6,
+              "height": 2
+            }
+          },
+          {
+            "id": 7669967105898766,
+            "definition": {
+              "title": "I/O write kb/s",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "queries": [
+                    {
+                      "query": "max:system.io.wkb_s{$env,$service,service:logs,$region} by {host,component,device}",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "line"
+                }
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "",
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 6,
+              "y": 3,
+              "width": 6,
+              "height": 2
+            }
+          },
+          {
+            "id": 4875258649360092,
+            "definition": {
+              "title": "EBS: Read Ops rate",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "per_second(query1)"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "queries": [
+                    {
+                      "query": "sum:aws.ebs.volume_read_ops{$env,$service,project:logs,$region} by {host}",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "bars"
+                }
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "",
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 0,
+              "y": 5,
+              "width": 4,
+              "height": 2
+            }
+          },
+          {
+            "id": 9,
+            "definition": {
+              "title": "EBS: Write Ops rate",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "per_second(query1)"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "queries": [
+                    {
+                      "query": "sum:aws.ebs.volume_write_ops{$env,$service,project:logs,$region} by {host}",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "bars"
+                }
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "",
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 4,
+              "y": 5,
+              "width": 4,
+              "height": 2
+            }
+          },
+          {
+            "id": 2636181171521164,
+            "definition": {
+              "title": "EBS: Average IO time/min",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "60 - query1"
+                    }
+                  ],
+                  "queries": [
+                    {
+                      "query": "avg:aws.ebs.volume_idle_time{$env,$service,$region} by {availability-zone,host}",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "line"
+                }
+              ]
+            },
+            "layout": {
+              "x": 8,
+              "y": 5,
+              "width": 4,
+              "height": 2
+            }
+          },
+          {
+            "id": 1601175688776820,
+            "definition": {
+              "title": "I/O wait (ms)",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "queries": [
+                    {
+                      "query": "avg:system.io.await{$env,service:logs*,$service,$region} by {host,component}",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "line"
+                }
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "",
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 0,
+              "y": 7,
+              "width": 4,
+              "height": 2
+            }
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 27,
+        "width": 12,
+        "height": 10
+      }
+    },
+    {
+      "id": 3085879051669610,
+      "definition": {
+        "title": "[Vector] Sinks details",
+        "banner_img": "https://cdn.vectorstock.com/i/1000x1000/21/45/sink-icon-set-vector-16582145.webp",
+        "show_title": true,
+        "type": "group",
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 201548160699516,
+            "definition": {
+              "type": "image",
+              "url": "https://avatars.githubusercontent.com/u/16866914?s=200&v=4",
+              "sizing": "contain",
+              "margin": "md",
+              "has_background": false,
+              "has_border": true,
+              "vertical_align": "center",
+              "horizontal_align": "center"
+            },
+            "layout": {
+              "x": 0,
+              "y": 0,
+              "width": 1,
+              "height": 6
+            }
+          },
+          {
+            "id": 915905138034230,
+            "definition": {
+              "title": "[Aggregator sink]  last month events bytes sent ",
+              "title_size": "16",
+              "title_align": "left",
+              "time": {
+                "live_span": "1mo"
+              },
+              "type": "query_value",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "response_format": "scalar",
+                  "queries": [
+                    {
+                      "query": "sum:vector.vector_component_sent_event_bytes.count{$env,$service,component_kind:sink,component_name:aggregator_sink,$region}.as_count().rollup(sum, 86400)",
+                      "data_source": "metrics",
+                      "name": "query1",
+                      "aggregator": "sum"
+                    }
+                  ],
+                  "conditional_formats": [
+                    {
+                      "comparator": ">",
+                      "value": 0,
+                      "palette": "custom_bg",
+                      "custom_bg_color": "#6d20ac"
+                    }
+                  ]
+                }
+              ],
+              "autoscale": true,
+              "precision": 2
+            },
+            "layout": {
+              "x": 1,
+              "y": 0,
+              "width": 3,
+              "height": 2
+            }
+          },
+          {
+            "id": 1543267402601324,
+            "definition": {
+              "title": "[Aggregator Sink] Events ratio  sink / source",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "legend_layout": "vertical",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "alias": "% logs events to vector aggregator",
+                      "formula": "((query1 / query2)) * 100"
+                    }
+                  ],
+                  "queries": [
+                    {
+                      "query": "sum:vector.vector_component_received_events.count{$env,$service,component_kind:sink,component_id:aggregator_sink,$region}.as_count().rollup(sum, 60)",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    },
+                    {
+                      "query": "sum:vector.vector_component_received_events.count{$env,$service,component_kind:source,component_id:source_*,$region}.as_count().rollup(sum, 60)",
+                      "data_source": "metrics",
+                      "name": "query2"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "style": {
+                    "palette": "purple",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "bars"
+                }
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "",
+                "min": "auto",
+                "max": "100"
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 4,
+              "y": 0,
+              "width": 4,
+              "height": 2
+            }
+          },
+          {
+            "id": 4707275904334510,
+            "definition": {
+              "title": "[Aggregator Sink] events bytes sent per day",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "legend_layout": "vertical",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "time": {
+                "live_span": "1mo"
+              },
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "alias": "bytes",
+                      "formula": "query1"
+                    }
+                  ],
+                  "queries": [
+                    {
+                      "query": "sum:vector.vector_component_sent_event_bytes.count{$env,$service,component_kind:sink,component_id:aggregator_sink,$region} by {availability-zone}.as_count().rollup(sum, 86400)",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "style": {
+                    "palette": "purple",
+                    "line_type": "solid",
+                    "line_width": "thin"
+                  },
+                  "display_type": "bars"
+                },
+                {
+                  "on_right_yaxis": true,
+                  "formulas": [
+                    {
+                      "alias": "events",
+                      "style": {
+                        "palette": "classic",
+                        "palette_index": 3
+                      },
+                      "formula": "query0"
+                    }
+                  ],
+                  "queries": [
+                    {
+                      "data_source": "metrics",
+                      "name": "query0",
+                      "query": "sum:vector.vector_component_sent_events.count{$env,$service,component_kind:sink,component_id:aggregator_sink,$region}.as_count().rollup(sum, 86400)"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "dotted",
+                    "line_width": "normal"
+                  },
+                  "display_type": "line"
+                }
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "",
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 8,
+              "y": 0,
+              "width": 4,
+              "height": 2
+            }
+          },
+          {
+            "id": 2135421005035462,
+            "definition": {
+              "title": "[Aggregator Sink] events received/s",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "legend_layout": "vertical",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "alias": "received",
+                      "formula": "query1"
+                    },
+                    {
+                      "alias": "sent",
+                      "formula": "-query2"
+                    }
+                  ],
+                  "queries": [
+                    {
+                      "query": "sum:vector.vector_component_received_events.count{$env,$service,component_kind:sink,component_id:aggregator_sink,$region} by {host}.as_rate()",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    },
+                    {
+                      "query": "sum:vector.vector_component_sent_events.count{$env,$service,component_kind:sink,component_id:aggregator_sink,$region} by {host}.as_rate()",
+                      "data_source": "metrics",
+                      "name": "query2"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "style": {
+                    "palette": "cool",
+                    "line_type": "solid",
+                    "line_width": "thin"
+                  },
+                  "display_type": "line"
+                }
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "",
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 1,
+              "y": 2,
+              "width": 5,
+              "height": 2
+            }
+          },
+          {
+            "id": 258174713690162,
+            "definition": {
+              "title": "[Aggregator Sink] events received bytes/s",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "legend_layout": "vertical",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "alias": "received",
+                      "formula": "query1"
+                    },
+                    {
+                      "alias": "sent",
+                      "formula": "-query2"
+                    }
+                  ],
+                  "queries": [
+                    {
+                      "query": "avg:vector.vector_component_received_event_bytes.count{$env,$service,component_kind:sink,component_id:aggregator_sink,$region} by {host}.as_rate()",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    },
+                    {
+                      "query": "avg:vector.vector_component_sent_event_bytes.count{$env,$service,component_kind:sink,component_id:aggregator_sink,$region} by {host}.as_rate()",
+                      "data_source": "metrics",
+                      "name": "query2"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "style": {
+                    "palette": "purple",
+                    "line_type": "solid",
+                    "line_width": "thin"
+                  },
+                  "display_type": "line"
+                }
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "",
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 6,
+              "y": 2,
+              "width": 6,
+              "height": 2
+            }
+          },
+          {
+            "id": 694512540699734,
+            "definition": {
+              "title": "[Aggregator Sink] events received",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "legend_layout": "vertical",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "alias": "received",
+                      "formula": "query1"
+                    },
+                    {
+                      "alias": "sent",
+                      "formula": "-query2"
+                    }
+                  ],
+                  "queries": [
+                    {
+                      "query": "max:vector.vector_component_received_events.count{$env,$service,component_kind:sink,component_id:aggregator_sink,$region} by {component_id}.as_rate()",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    },
+                    {
+                      "query": "sum:vector.vector_component_received_events.count{$env,$service,component_kind:sink,component_id:aggregator_sink,$region} by {component_id}.as_rate()",
+                      "data_source": "metrics",
+                      "name": "query2"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "style": {
+                    "palette": "cool",
+                    "line_type": "solid",
+                    "line_width": "thin"
+                  },
+                  "display_type": "line"
+                }
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "",
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 1,
+              "y": 4,
+              "width": 5,
+              "height": 2
+            }
+          },
+          {
+            "id": 1238940344033625,
+            "definition": {
+              "title": "[Internal metrics prometheus exporter sink] buffer size",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "legend_layout": "vertical",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "queries": [
+                    {
+                      "query": "sum:vector.vector_buffer_events{$env,$service,component_id:internal_metrics*,component_kind:sink,$region} by {component_id}",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "style": {
+                    "palette": "cool",
+                    "line_type": "solid",
+                    "line_width": "thin"
+                  },
+                  "display_type": "line"
+                },
+                {
+                  "formulas": [
+                    {
+                      "alias": "disk buffer max events",
+                      "formula": "query0"
+                    }
+                  ],
+                  "queries": [
+                    {
+                      "data_source": "metrics",
+                      "name": "query0",
+                      "query": "max:vector.vector_buffer_max_event_size{$env,$service,component_id:internal_metrics*,component_kind:sink,$region} by {component_id}"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "style": {
+                    "palette": "red",
+                    "line_type": "dashed",
+                    "line_width": "thick"
+                  },
+                  "display_type": "line"
+                }
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "",
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 0,
+              "y": 6,
+              "width": 12,
+              "height": 2
+            }
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 0,
+        "width": 12,
+        "height": 11,
+        "is_column_break": true
+      }
+    },
+    {
+      "id": 2201958710086870,
+      "definition": {
+        "title": "[Vector] Filters component",
+        "background_color": "purple",
+        "show_title": true,
+        "type": "group",
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 1653076193757058,
+            "definition": {
+              "title": "Logs events received by components",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "query_table",
+              "requests": [
+                {
+                  "response_format": "scalar",
+                  "queries": [
+                    {
+                      "query": "sum:vector.vector_component_sent_events.count{($env AND $service AND component_type:filter) AND component_type:filter AND $region} by {component_id}.as_count()",
+                      "data_source": "metrics",
+                      "name": "query2",
+                      "aggregator": "sum"
+                    },
+                    {
+                      "query": "sum:vector.vector_component_received_events.count{($env AND $service AND component_type:filter) AND component_type:filter AND $region} by {component_id}.as_count()",
+                      "data_source": "metrics",
+                      "name": "query3",
+                      "aggregator": "sum"
+                    },
+                    {
+                      "query": "sum:vector.vector_component_discarded_events.count{($env AND $service AND component_type:filter) AND component_type:filter AND $region} by {component_id}.as_count()",
+                      "data_source": "metrics",
+                      "name": "query4",
+                      "aggregator": "sum"
+                    }
+                  ],
+                  "sort": {
+                    "count": 500,
+                    "order_by": [
+                      {
+                        "type": "formula",
+                        "index": 0,
+                        "order": "desc"
+                      }
+                    ]
+                  },
+                  "formulas": [
+                    {
+                      "alias": "Sent events",
+                      "cell_display_mode": "bar",
+                      "formula": "query2"
+                    },
+                    {
+                      "cell_display_mode": "bar",
+                      "alias": "Received events",
+                      "formula": "query3"
+                    },
+                    {
+                      "cell_display_mode": "number",
+                      "alias": "Discarded events",
+                      "formula": "query4"
+                    },
+                    {
+                      "alias": "discarded events %",
+                      "cell_display_mode": "number",
+                      "conditional_formats": [
+                        {
+                          "comparator": ">",
+                          "palette": "custom_bg",
+                          "custom_bg_color": "#00f03c",
+                          "value": 70
+                        },
+                        {
+                          "comparator": ">",
+                          "palette": "custom_bg",
+                          "custom_bg_color": "#2f8340",
+                          "value": 50
+                        },
+                        {
+                          "comparator": ">",
+                          "palette": "custom_bg",
+                          "custom_bg_color": "#c0ffb8",
+                          "value": 20
+                        }
+                      ],
+                      "formula": "(query4 / (query2 + query4)) * 100"
+                    },
+                    {
+                      "alias": "computed discared events",
+                      "cell_display_mode": "number",
+                      "formula": "-(query2 - query3)"
+                    },
+                    {
+                      "alias": "computed discarded events %",
+                      "cell_display_mode": "number",
+                      "conditional_formats": [
+                        {
+                          "comparator": ">",
+                          "palette": "custom_bg",
+                          "custom_bg_color": "#00f03c",
+                          "value": 70
+                        },
+                        {
+                          "comparator": ">",
+                          "palette": "custom_bg",
+                          "custom_bg_color": "#2f8340",
+                          "value": 50
+                        },
+                        {
+                          "comparator": ">",
+                          "palette": "custom_bg",
+                          "custom_bg_color": "#c0ffb8",
+                          "value": 20
+                        }
+                      ],
+                      "formula": "(1 - (query2 / query3)) * 100"
+                    }
+                  ]
+                }
+              ],
+              "has_search_bar": "auto"
+            },
+            "layout": {
+              "x": 0,
+              "y": 0,
+              "width": 12,
+              "height": 2
+            }
+          },
+          {
+            "id": 4971319672133754,
+            "definition": {
+              "title": "[logs filters] Filtered logs events %",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "((query2 / (query2 + query1)) * 100)"
+                    }
+                  ],
+                  "queries": [
+                    {
+                      "query": "sum:vector.vector_component_discarded_events.count{$env,$service,component_type:filter,intentional:true,$region} by {component_id}.as_rate()",
+                      "data_source": "metrics",
+                      "name": "query2"
+                    },
+                    {
+                      "query": "sum:vector.vector_component_received_events.count{$env,$service,component_type:filter,$region} by {component_id}.as_rate()",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "style": {
+                    "palette": "semantic",
+                    "line_type": "solid",
+                    "line_width": "thin"
+                  },
+                  "display_type": "line"
+                }
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "",
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 0,
+              "y": 2,
+              "width": 5,
+              "height": 2
+            }
+          },
+          {
+            "id": 5266531939116654,
+            "definition": {
+              "title": "[logs filters] Filtered logs events / s",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "legend_layout": "vertical",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "alias": "removed events",
+                      "formula": "query1"
+                    }
+                  ],
+                  "queries": [
+                    {
+                      "query": "sum:vector.vector_component_discarded_events.count{$env,$service,intentional:true,$region} by {component_id}.as_rate()",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "style": {
+                    "palette": "semantic",
+                    "line_type": "solid",
+                    "line_width": "thin"
+                  },
+                  "display_type": "line"
+                }
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "",
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 5,
+              "y": 2,
+              "width": 7,
+              "height": 2
+            }
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 11,
+        "width": 12,
+        "height": 5
+      }
+    },
+    {
+      "id": 8248875079983996,
+      "definition": {
+        "title": "[Vector] Sources",
+        "background_color": "purple",
+        "show_title": true,
+        "type": "group",
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 3877907622295642,
+            "definition": {
+              "type": "image",
+              "url": "https://avatars.githubusercontent.com/u/16866914?s=200&v=4",
+              "sizing": "contain",
+              "margin": "md",
+              "has_background": false,
+              "has_border": true,
+              "vertical_align": "center",
+              "horizontal_align": "center"
+            },
+            "layout": {
+              "x": 0,
+              "y": 0,
+              "width": 1,
+              "height": 7
+            }
+          },
+          {
+            "id": 2621742724753960,
+            "definition": {
+              "title": "[Vector Source] events received/s",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "legend_layout": "vertical",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "alias": "event received",
+                      "formula": "query2"
+                    },
+                    {
+                      "alias": "events sent",
+                      "formula": "-query1"
+                    }
+                  ],
+                  "queries": [
+                    {
+                      "query": "max:vector.vector_component_received_events.count{$env,$service,component_kind:source,component_id:source_*,$region} by {component_id}.as_rate()",
+                      "data_source": "metrics",
+                      "name": "query2"
+                    },
+                    {
+                      "query": "sum:vector.vector_component_sent_events.count{$env,$service,component_kind:source,component_id:source_*,$region} by {component_id}.as_rate()",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "style": {
+                    "palette": "cool",
+                    "line_type": "solid",
+                    "line_width": "thin"
+                  },
+                  "display_type": "line"
+                }
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "",
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 1,
+              "y": 0,
+              "width": 5,
+              "height": 2
+            }
+          },
+          {
+            "id": 8833852824874274,
+            "definition": {
+              "title": "[Vector Source] events received bytes/s",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "legend_layout": "vertical",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "alias": "events bytes received",
+                      "formula": "query1"
+                    },
+                    {
+                      "alias": "events bytes sent",
+                      "formula": "-query2"
+                    }
+                  ],
+                  "queries": [
+                    {
+                      "query": "sum:vector.vector_component_received_event_bytes.count{$env,$service,component_kind:source,component_id:source_*,$region} by {component_id}.as_rate()",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    },
+                    {
+                      "query": "sum:vector.vector_component_sent_event_bytes.count{$env,$service,component_kind:source,component_id:source_*,$region} by {component_id}.as_rate()",
+                      "data_source": "metrics",
+                      "name": "query2"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "style": {
+                    "palette": "purple",
+                    "line_type": "solid",
+                    "line_width": "thin"
+                  },
+                  "display_type": "line"
+                }
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "",
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 6,
+              "y": 0,
+              "width": 6,
+              "height": 2
+            }
+          },
+          {
+            "id": 2249396468773776,
+            "definition": {
+              "title": "[Vector source] lag time seconds (Time difference when Vector ingests an event and the timestamp of the event itself)",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "legend_layout": "vertical",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "(query2 / 1000000000) / query1"
+                    }
+                  ],
+                  "queries": [
+                    {
+                      "query": "sum:vector.vector_source_lag_time_seconds.sum{$env,$service,component_id:source_*,$region} by {component_id,component_kind}.as_count()",
+                      "data_source": "metrics",
+                      "name": "query2"
+                    },
+                    {
+                      "query": "sum:vector.vector_source_lag_time_seconds.count{$env,$service,component_id:source_*,$region} by {component_id,component_kind}.as_count()",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "style": {
+                    "palette": "green",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "line"
+                }
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "",
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 1,
+              "y": 2,
+              "width": 11,
+              "height": 2
+            }
+          },
+          {
+            "id": 966858247750583,
+            "definition": {
+              "title": "[Vector Source] [aggregators-kong only] TCP bytes received/s",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "alias": "event received",
+                      "formula": "query2"
+                    }
+                  ],
+                  "queries": [
+                    {
+                      "query": "sum:vector.vector_component_received_event_bytes.count{$env,$service,component_kind:source,component_id:source_tcp_*,$region} by {component_id}.as_rate().rollup(avg, 30)",
+                      "data_source": "metrics",
+                      "name": "query2"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "style": {
+                    "palette": "cool",
+                    "line_type": "solid",
+                    "line_width": "thin"
+                  },
+                  "display_type": "area"
+                }
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "",
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 1,
+              "y": 4,
+              "width": 11,
+              "height": 3
+            }
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 16,
+        "width": 12,
+        "height": 8
+      }
+    },
+    {
+      "id": 2027893449221924,
+      "definition": {
+        "title": "Internal metrics: Vector events",
+        "background_color": "purple",
+        "show_title": true,
+        "type": "group",
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 260799886040380,
+            "definition": {
+              "type": "image",
+              "url": "https://cdn-icons-png.flaticon.com/512/494/494940.png",
+              "sizing": "contain",
+              "margin": "md",
+              "has_background": false,
+              "has_border": true,
+              "vertical_align": "center",
+              "horizontal_align": "center"
+            },
+            "layout": {
+              "x": 0,
+              "y": 0,
+              "width": 1,
+              "height": 8
+            }
+          },
+          {
+            "id": 5530015315376731,
+            "definition": {
+              "title": "Vector: total received events",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "query_value",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "response_format": "scalar",
+                  "queries": [
+                    {
+                      "query": "sum:vector.vector_component_received_events.count{$env,$service,component_id:internal_metrics,$region}.as_count()",
+                      "data_source": "metrics",
+                      "name": "query1",
+                      "aggregator": "sum"
+                    }
+                  ]
+                }
+              ],
+              "autoscale": true,
+              "precision": 0
+            },
+            "layout": {
+              "x": 1,
+              "y": 0,
+              "width": 2,
+              "height": 1
+            }
+          },
+          {
+            "id": 5762759252340668,
+            "definition": {
+              "title": "Vector: internal metrics cardinality",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "legend_layout": "vertical",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "queries": [
+                    {
+                      "query": "sum:vector.vector_internal_metrics_cardinality{$env,$service,$region} by {host,availability-zone}",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "style": {
+                    "palette": "cool",
+                    "line_type": "solid",
+                    "line_width": "thin"
+                  },
+                  "display_type": "area"
+                }
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "",
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 3,
+              "y": 0,
+              "width": 4,
+              "height": 2
+            }
+          },
+          {
+            "id": 7004273677756930,
+            "definition": {
+              "title": "Sink: vector requests/s by component ",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "legend_layout": "vertical",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "queries": [
+                    {
+                      "query": "sum:vector.vector_requests_received.count{$env,$service,component_id:internal_metrics,$region}.as_rate()",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "style": {
+                    "palette": "purple",
+                    "line_type": "solid",
+                    "line_width": "thin"
+                  },
+                  "display_type": "area"
+                }
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "",
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 7,
+              "y": 0,
+              "width": 5,
+              "height": 2
+            }
+          },
+          {
+            "id": 4299287492321700,
+            "definition": {
+              "title": "Vector: total sent events",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "query_value",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "response_format": "scalar",
+                  "queries": [
+                    {
+                      "query": "sum:vector.vector_component_sent_events.count{$env,$service,component_id:internal_metrics,$region}.as_count()",
+                      "data_source": "metrics",
+                      "name": "query1",
+                      "aggregator": "sum"
+                    }
+                  ]
+                }
+              ],
+              "autoscale": true,
+              "precision": 0
+            },
+            "layout": {
+              "x": 1,
+              "y": 1,
+              "width": 2,
+              "height": 1
+            }
+          },
+          {
+            "id": 2208824786254246,
+            "definition": {
+              "title": "Source lag time (Time difference when Vector ingests an event and the timestamp of the event itself)",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "legend_layout": "vertical",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "(query2 / 1000000000) / query1"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "queries": [
+                    {
+                      "query": "sum:vector.vector_source_lag_time_seconds.count{$env,$service,component_id:vector_metrics,$region}.as_count()",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    },
+                    {
+                      "query": "sum:vector.vector_source_lag_time_seconds.sum{$env,$service,component_id:vector_metrics,$region}.as_count()",
+                      "data_source": "metrics",
+                      "name": "query2"
+                    }
+                  ],
+                  "style": {
+                    "palette": "purple",
+                    "line_type": "solid",
+                    "line_width": "thin"
+                  },
+                  "display_type": "line"
+                }
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "",
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 1,
+              "y": 2,
+              "width": 11,
+              "height": 2
+            }
+          },
+          {
+            "id": 3750187744731346,
+            "definition": {
+              "title": "Source: events received (internal metrics)",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "legend_layout": "vertical",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "queries": [
+                    {
+                      "query": "max:vector.vector_component_received_events.count{$env,$service,component_kind:source,component_name:vector_metrics,$region} by {component_name,component_kind,availability-zone}.as_rate()",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "style": {
+                    "palette": "cool",
+                    "line_type": "solid",
+                    "line_width": "thin"
+                  },
+                  "display_type": "area"
+                }
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "",
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 1,
+              "y": 4,
+              "width": 5,
+              "height": 2
+            }
+          },
+          {
+            "id": 7950002902986872,
+            "definition": {
+              "title": "Source: events sent (internal metrics)",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "legend_layout": "vertical",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "queries": [
+                    {
+                      "query": "sum:vector.vector_component_sent_events.count{$env,$service,component_kind:source,component_name:vector_metrics,$region} by {component_name,component_kind,availability-zone}.as_rate()",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "style": {
+                    "palette": "cool",
+                    "line_type": "solid",
+                    "line_width": "thin"
+                  },
+                  "display_type": "area"
+                }
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "",
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 6,
+              "y": 4,
+              "width": 6,
+              "height": 2
+            }
+          },
+          {
+            "id": 5651276953581686,
+            "definition": {
+              "title": "Source: events received bytes (internal metrics)",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "legend_layout": "vertical",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "queries": [
+                    {
+                      "query": "sum:vector.vector_component_received_event_bytes.count{$env,$service,component_kind:source,component_name:vector_metrics,$region} by {component_name,component_kind,availability-zone}.as_rate()",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "style": {
+                    "palette": "purple",
+                    "line_type": "solid",
+                    "line_width": "thin"
+                  },
+                  "display_type": "area"
+                }
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "",
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 1,
+              "y": 6,
+              "width": 5,
+              "height": 2
+            }
+          },
+          {
+            "id": 6009551441109796,
+            "definition": {
+              "title": "Source: events sent bytes(internal metrics)",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "legend_layout": "vertical",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "queries": [
+                    {
+                      "query": "max:vector.vector_component_sent_event_bytes.count{$env,$service,component_kind:source,component_name:vector_metrics,$region} by {component_name,component_kind,availability-zone}.as_rate()",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "style": {
+                    "palette": "purple",
+                    "line_type": "solid",
+                    "line_width": "thin"
+                  },
+                  "display_type": "area"
+                }
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "",
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 6,
+              "y": 6,
+              "width": 6,
+              "height": 2
+            }
+          },
+          {
+            "id": 6769708069378234,
+            "definition": {
+              "type": "image",
+              "url": "https://cdn-icons-png.flaticon.com/512/2211/2211642.png",
+              "sizing": "contain",
+              "margin": "md",
+              "has_background": false,
+              "has_border": true,
+              "vertical_align": "center",
+              "horizontal_align": "center"
+            },
+            "layout": {
+              "x": 0,
+              "y": 8,
+              "width": 1,
+              "height": 6
+            }
+          },
+          {
+            "id": 4688482791741040,
+            "definition": {
+              "title": "Transform: events received (internal metrics)",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "legend_layout": "vertical",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "queries": [
+                    {
+                      "query": "max:vector.vector_component_received_events.count{$env,$service,component_kind:transform,component_name:remap_vector_metrics,$region} by {component_name,component_kind,availability-zone}.as_rate()",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "style": {
+                    "palette": "cool",
+                    "line_type": "solid",
+                    "line_width": "thin"
+                  },
+                  "display_type": "area"
+                }
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "",
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 1,
+              "y": 8,
+              "width": 5,
+              "height": 2
+            }
+          },
+          {
+            "id": 2805321326327754,
+            "definition": {
+              "title": "Transform: events sent (internal metrics)",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "legend_layout": "vertical",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "queries": [
+                    {
+                      "query": "sum:vector.vector_component_sent_events.count{$env,$service,component_kind:transform,component_name:remap_vector_metrics,$region} by {component_name,component_kind,availability-zone}.as_rate()",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "style": {
+                    "palette": "cool",
+                    "line_type": "solid",
+                    "line_width": "thin"
+                  },
+                  "display_type": "area"
+                }
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "",
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 6,
+              "y": 8,
+              "width": 6,
+              "height": 2
+            }
+          },
+          {
+            "id": 5984911421865014,
+            "definition": {
+              "title": "Sink: events received (internal metrics)",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "legend_layout": "vertical",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "queries": [
+                    {
+                      "query": "max:vector.vector_component_received_events.count{$env,$service,component_kind:sink,component_name:internal_metrics,$region} by {component_name,component_kind,availability-zone}.as_rate()",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "style": {
+                    "palette": "cool",
+                    "line_type": "solid",
+                    "line_width": "thin"
+                  },
+                  "display_type": "area"
+                }
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "",
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 1,
+              "y": 10,
+              "width": 6,
+              "height": 2
+            }
+          },
+          {
+            "id": 4268208841648216,
+            "definition": {
+              "title": "Sink: events sent (internal metrics)",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "legend_layout": "vertical",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "queries": [
+                    {
+                      "query": "sum:vector.vector_component_sent_events.count{$env,$service,component_kind:sink,component_name:internal_metrics,$region} by {component_name,component_kind,availability-zone}.as_rate()",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "style": {
+                    "palette": "cool",
+                    "line_type": "solid",
+                    "line_width": "thin"
+                  },
+                  "display_type": "area"
+                }
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "",
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 7,
+              "y": 10,
+              "width": 5,
+              "height": 2
+            }
+          },
+          {
+            "id": 2886588283392730,
+            "definition": {
+              "title": "Sink: events sent (internal metrics)",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "legend_layout": "vertical",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "queries": [
+                    {
+                      "query": "sum:vector.vector_component_sent_event_bytes.count{$env,$service,component_kind:sink,component_name:internal_metrics,$region} by {component_name,component_kind,availability-zone}.as_rate()",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "style": {
+                    "palette": "purple",
+                    "line_type": "solid",
+                    "line_width": "thin"
+                  },
+                  "display_type": "area"
+                }
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "",
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 1,
+              "y": 12,
+              "width": 6,
+              "height": 2
+            }
+          },
+          {
+            "id": 6531818444815014,
+            "definition": {
+              "title": "Sink: events received bytes (internal metrics)",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "legend_layout": "vertical",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "queries": [
+                    {
+                      "query": "sum:vector.vector_component_received_event_bytes.count{$env,$service,component_kind:sink,component_name:internal_metrics,$region} by {component_name,component_kind,availability-zone}.as_rate()",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "style": {
+                    "palette": "purple",
+                    "line_type": "solid",
+                    "line_width": "thin"
+                  },
+                  "display_type": "area"
+                }
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "",
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 7,
+              "y": 12,
+              "width": 5,
+              "height": 2
+            }
+          },
+          {
+            "id": 8275341075754978,
+            "definition": {
+              "type": "image",
+              "url": "https://cdn-icons-png.flaticon.com/512/2456/2456984.png",
+              "sizing": "contain",
+              "margin": "md",
+              "has_background": false,
+              "has_border": true,
+              "vertical_align": "center",
+              "horizontal_align": "center"
+            },
+            "layout": {
+              "x": 0,
+              "y": 14,
+              "width": 1,
+              "height": 3
+            }
+          },
+          {
+            "id": 1210741655546140,
+            "definition": {
+              "title": "Filtering Ratio",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "legend_layout": "vertical",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "(1 - query1 / query2) * 100"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "queries": [
+                    {
+                      "query": "sum:vector.vector_component_sent_events.count{$env,$service,service:logs,component_kind:sink,component_name:internal_metrics,$region}.as_count()",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    },
+                    {
+                      "query": "sum:vector.vector_component_sent_events.count{$env,$service,service:logs,component_kind:source,component_name:vector_metrics,$region}.as_count()",
+                      "data_source": "metrics",
+                      "name": "query2"
+                    }
+                  ],
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "bars"
+                }
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "",
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 1,
+              "y": 14,
+              "width": 11,
+              "height": 2
+            }
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 24,
+        "width": 12,
+        "height": 18
+      }
+    },
+    {
+      "id": 168362499913936,
+      "definition": {
+        "title": "Log Routing",
+        "show_title": true,
+        "type": "group",
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 2476412423186886,
+            "definition": {
+              "title": "",
+              "type": "treemap",
+              "requests": [
+                {
+                  "queries": [
+                    {
+                      "data_source": "metrics",
+                      "name": "query1",
+                      "query": "sum:vector.vector_component_sent_events.count{$env,$region, $service, !output:_default,component_kind:transform ,!component_type:aws_ec2_metadata} by {component_id,output}.as_count()",
+                      "aggregator": "avg"
+                    }
+                  ],
+                  "response_format": "scalar",
+                  "style": {
+                    "palette": "datadog16"
+                  },
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ]
+                }
+              ]
+            },
+            "layout": {
+              "x": 0,
+              "y": 0,
+              "width": 12,
+              "height": 4
+            }
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 42,
+        "width": 12,
+        "height": 5
+      }
+    },
+    {
+      "id": 6424606376089335,
+      "definition": {
+        "title": "Vector Components Error Counts",
+        "title_size": "16",
+        "title_align": "left",
+        "type": "query_table",
+        "requests": [
+          {
+            "queries": [
+              {
+                "data_source": "metrics",
+                "name": "query1",
+                "query": "sum:vector.vector_component_errors.count{$env, $service, $region} by {component_kind,component_type,component_id}.as_count()",
+                "aggregator": "sum"
+              }
+            ],
+            "response_format": "scalar",
+            "sort": {
+              "count": 500,
+              "order_by": [
+                {
+                  "type": "formula",
+                  "index": 0,
+                  "order": "desc"
+                }
+              ]
+            },
+            "formulas": [
+              {
+                "cell_display_mode": "bar",
+                "alias": "COMPONENT_ERROR_COUNT",
+                "formula": "query1"
+              }
+            ]
+          }
+        ],
+        "has_search_bar": "auto"
+      },
+      "layout": {
+        "x": 0,
+        "y": 0,
+        "width": 12,
+        "height": 3
+      }
+    },
+    {
+      "id": 4953332699857677,
+      "definition": {
+        "title": "Network Overall",
+        "show_title": true,
+        "type": "group",
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 7838085483376720,
+            "definition": {
+              "title": "Network in & out (bytes per sec)",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "legend_layout": "vertical",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query0"
+                    }
+                  ],
+                  "queries": [
+                    {
+                      "data_source": "metrics",
+                      "name": "query0",
+                      "query": "max:kubernetes.network.tx_bytes{$env,$service,$region} by {pod_name}"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "bars"
+                }
+              ],
+              "yaxis": {
+                "include_zero": false
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 0,
+              "y": 0,
+              "width": 6,
+              "height": 4
+            }
+          },
+          {
+            "id": 6835423447506777,
+            "definition": {
+              "title": "NLB Processed Bytes",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "queries": [
+                    {
+                      "data_source": "metrics",
+                      "name": "query1",
+                      "query": "sum:aws.applicationelb.processed_bytes{project:logs*, $env} by {availabilityzone}.as_rate()"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "style": {
+                    "palette": "dog_classic",
+                    "order_by": "values",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "bars"
+                }
+              ]
+            },
+            "layout": {
+              "x": 6,
+              "y": 0,
+              "width": 6,
+              "height": 4
+            }
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 50,
+        "width": 12,
+        "height": 5
+      }
+    }
+  ],
+  "template_variables": [
+    {
+      "name": "env",
+      "prefix": "env",
+      "available_values": [],
+      "default": "prd"
+    },
+    {
+      "name": "service",
+      "prefix": "service",
+      "available_values": [
+        "infra-vector-aggregatorskong",
+        "infra-vector-aggregators"
+      ],
+      "default": "infra-vector-aggregators"
+    },
+    {
+      "name": "region",
+      "prefix": "region",
+      "available_values": [
+        "eu-west-3",
+        "eu-north-1"
+      ],
+      "default": "eu-west-3"
+    }
+  ],
+  "layout_type": "ordered",
+  "notify_list": [],
+  "template_variable_presets": [
+    {
+      "name": "Integration",
+      "template_variables": [
+        {
+          "name": "env",
+          "value": "int"
+        },
+        {
+          "name": "component",
+          "value": "vector-aggregator"
+        },
+        {
+          "name": "service",
+          "value": "eu-west-3*"
+        },
+        {
+          "name": "availability-zone",
+          "value": "*"
+        }
+      ]
+    },
+    {
+      "name": "Integration",
+      "template_variables": [
+        {
+          "name": "env",
+          "value": "int"
+        }
+      ]
+    },
+    {
+      "name": "Production",
+      "template_variables": [
+        {
+          "name": "env",
+          "value": "prd"
+        }
+      ]
+    },
+    {
+      "name": "Staging",
+      "template_variables": [
+        {
+          "name": "env",
+          "value": "stg"
+        }
+      ]
+    },
+    {
+      "name": "Support",
+      "template_variables": [
+        {
+          "name": "env",
+          "value": "support"
+        }
+      ]
+    }
+  ],
+  "reflow_type": "fixed",
+  "tags": [
+    "team:pulse"
+  ]
+}

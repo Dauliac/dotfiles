@@ -282,6 +282,55 @@ local function todo_keymaps()
 	}
 end
 
+local function cmp_keymaps()
+	local cat = "CMP"
+	local cmp = require("cmp")
+	return {
+		{
+			desc = "Confirm completion",
+			cmd = cmp.mapping.confirm({ select = true }),
+			keys = { "i", "<CR>" },
+			cat = cat,
+		},
+		{
+			desc = "Next completion item",
+			cmd = cmp.mapping.select_next_item(),
+			keys = { "i", "<Tab>" },
+			cat = cat,
+		},
+		{
+			desc = "Previous completion item",
+			cmd = cmp.mapping.select_prev_item(),
+			keys = { "i", "<S-Tab>" },
+			cat = cat,
+		},
+		{
+			desc = "Scroll docs down",
+			cmd = cmp.mapping.scroll_docs(4),
+			keys = { "i", "<C-f>" },
+			cat = cat,
+		},
+		{
+			desc = "Scroll docs up",
+			cmd = cmp.mapping.scroll_docs(-4),
+			keys = { "i", "<C-b>" },
+			cat = cat,
+		},
+		{
+			desc = "Complete",
+			cmd = cmp.mapping.complete(),
+			keys = { "i", "<C-Space>" },
+			cat = cat,
+		},
+		{
+			desc = "Close completion",
+			cmd = cmp.mapping.close(),
+			keys = { "i", "<C-e>" },
+			cat = cat,
+		},
+	}
+end
+
 local function misc_keymaps()
 	return {
 		{
@@ -326,6 +375,7 @@ commander.add(merge_keymaps({
 	trouble_keymaps,
 	dap_keymaps,
 	todo_keymaps,
+	cmp_keymaps,
 	misc_keymaps,
 	telescope_keymaps,
 }))

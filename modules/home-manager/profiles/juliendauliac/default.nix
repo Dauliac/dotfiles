@@ -1,6 +1,7 @@
-{ config
-, pkgs
-, ...
+{
+  config,
+  pkgs,
+  ...
 }:
 let
   nixGL = pkgs.nixgl.nixGLIntel;
@@ -10,16 +11,14 @@ let
       name = "nixGL-${pkg.name}";
       paths =
         [ pkg ]
-        ++ (map
-          (
-            bin:
-            pkgs.hiPrio (
-              pkgs.writeShellScriptBin bin ''
-                exec -a "$0" "${nixGL}/bin/nixGLIntel" "${pkg}/bin/${bin}" "$@"
-              ''
-            )
+        ++ (map (
+          bin:
+          pkgs.hiPrio (
+            pkgs.writeShellScriptBin bin ''
+              exec -a "$0" "${nixGL}/bin/nixGLIntel" "${pkg}/bin/${bin}" "$@"
+            ''
           )
-          (builtins.attrNames (builtins.readDir "${pkg}/bin")));
+        ) (builtins.attrNames (builtins.readDir "${pkg}/bin")));
     };
 in
 {
@@ -67,6 +66,9 @@ in
     just
     dbeaver-bin
     vector
+    jetbrains.goland
+    jetbrains.pycharm-professional
+    yq
   ];
   home.sessionVariables = {
     AWS_DEFAULT_PROFILE = "manomano-support";

@@ -25,7 +25,6 @@ let
     convco
     unzip
     comma
-    claude-code
     postgresql_16
     pgcli
     asdf

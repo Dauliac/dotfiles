@@ -18,7 +18,6 @@
       scrolloff = 0;
       undofile = true;
       incsearch = true;
-      updatetime = 50;
       splitbelow = true;
       splitright = true;
       sessionoptions = "tabpages,globals";

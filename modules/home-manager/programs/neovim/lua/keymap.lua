@@ -28,7 +28,9 @@ local function set_fzf_keymap()
 end
 
 local function set_nvim_tree_keymap()
-	vim.keymap.set("n", "<leader>e", ":Yazi<CR>", { desc = "Toggle Nvim tree", noremap = true, silent = true })
+  vim.keymap.set("n", "<leader>-", function()
+	  require("yazi").yazi()
+  end)
 end
 
 local function set_spectre_keymap()
@@ -153,12 +155,6 @@ local function set_sops_keymaps()
 	end, { desc = "Sops: [D]ecrypt file" })
 end
 
-local function set_neoclip_keymaps()
-	vim.keymap.set("n", "<leader>c", function()
-		vim.cmd.Telescope("neoclip")
-	end, { desc = "Neoclip: [c]lipboard manager" })
-end
-
 local function claude_code()
   vim.keymap.set('n', '<leader>cc', '<cmd>ClaudeCode<CR>', { desc = 'Toggle Claude Code' })
 end
@@ -183,7 +179,6 @@ local function set_keymaps()
   claude_code()
 	set_hlslens()
 	set_sops_keymaps()
-	set_neoclip_keymaps()
 end
 return {
 	set_keymaps(),
