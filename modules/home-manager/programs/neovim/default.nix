@@ -73,14 +73,15 @@ in
           { name = "yanky"; }
           { name = "nvim_lua"; }
           { name = "conventionalcommits"; }
-          { name = "copilot"; }
+          # { name = "copilot"; }
         ];
       };
       comment.enable = true;
-      copilot-cmp.enable = true;
-      copilot-lua.enable = true;
+      # copilot-cmp.enable = true;
+      # copilot-lua.enable = true;
       distant.enable = true;
       dressing.enable = true;
+      image.enable = true;
       diagram.enable = true;
       flash.enable = true;
       lint.enable = true;

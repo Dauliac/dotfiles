@@ -44,6 +44,7 @@
     # typescript-language-server
     # graphql-language-service-cli
     harper
+    mermaid-cli
     # vtsls
   ];
 }

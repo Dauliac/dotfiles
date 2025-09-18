@@ -9,23 +9,24 @@ let
     pkg:
     pkgs.buildEnv {
       name = "nixGL-${pkg.name}";
-      paths =
-        [ pkg ]
-        ++ (map (
-          bin:
-          pkgs.hiPrio (
-            pkgs.writeShellScriptBin bin ''
-              exec -a "$0" "${nixGL}/bin/nixGLIntel" "${pkg}/bin/${bin}" "$@"
-            ''
-          )
-        ) (builtins.attrNames (builtins.readDir "${pkg}/bin")));
+      paths = [
+        pkg
+      ]
+      ++ (map (
+        bin:
+        pkgs.hiPrio (
+          pkgs.writeShellScriptBin bin ''
+            exec -a "$0" "${nixGL}/bin/nixGLIntel" "${pkg}/bin/${bin}" "$@"
+          ''
+        )
+      ) (builtins.attrNames (builtins.readDir "${pkg}/bin")));
     };
 in
 {
   home.sessionVariables = {
     XDG_DATA_DIRS = "$XDG_DATA_DIRS:/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share";
     NPM_CONFIG_PREFIX = "$XDG_DATA_HOME/npm-packages";
-    PATH = "$PATH:$NPM_CONFIG_PREFIX/bin/";
+    PATH = "$PATH:$NPM_CONFIG_PREFIX/bin/:$HOME/${config.programs.go.goBin}";
   };
   programs.mise = {
     enable = true;
@@ -69,15 +70,29 @@ in
     jetbrains.goland
     jetbrains.pycharm-professional
     yq
+    ansible
   ];
+
+  home.shellAliases = {
+    vault_all = ''
+      for ENV in int stg prd support ist; do
+        export VAULT_ADDR=https://vault-eu-west-3.\$ENV.manomano.com
+        export VAULT_\$ENV_TOKEN=\$(vault login -token-only -path=sso -method=oidc role=sre | grep hvs)
+      done'';
+  };
   home.sessionVariables = {
     AWS_DEFAULT_PROFILE = "manomano-support";
   };
-  programs.git.includes = [
-    {
-      inherit (config.sops.secrets.git) path;
-    }
-  ];
+
+  programs.git.extraConfig = {
+    include = {
+      inherit (config.sops.secrets.gitDauliac) path;
+    };
+    "includeIf \"gitdir:**/*manomano*/**\"" = {
+      inherit (config.sops.secrets.gitJulienDauliac) path;
+    };
+  };
+
   programs.wezterm.package = nixGlWrapper pkgs.wezterm;
   services.flatpak = {
     enable = true;
@@ -102,11 +117,6 @@ in
   };
   sops = {
     secrets = {
-      git = {
-        sopsFile = ./gitconfig.enc.ini;
-        path = "/home/juliendauliac/.config/git/secrets";
-        format = "ini";
-      };
       aws = {
         sopsFile = ./aws-config.enc.toml;
         path = "/home/juliendauliac/.aws/config";
