@@ -28,9 +28,9 @@ local function set_fzf_keymap()
 end
 
 local function set_nvim_tree_keymap()
-  vim.keymap.set("n", "<leader>-", function()
-	  require("yazi").yazi()
-  end)
+	vim.keymap.set("n", "<leader>-", function()
+		require("yazi").yazi()
+	end)
 end
 
 local function set_spectre_keymap()
@@ -156,7 +156,7 @@ local function set_sops_keymaps()
 end
 
 local function claude_code()
-  vim.keymap.set('n', '<leader>cc', '<cmd>ClaudeCode<CR>', { desc = 'Toggle Claude Code' })
+	vim.keymap.set("n", "<leader>cc", "<cmd>ClaudeCode<CR>", { desc = "Toggle Claude Code" })
 end
 
 local function set_keymaps()
@@ -176,7 +176,7 @@ local function set_keymaps()
 	set_todo_comments_keymap()
 	set_trouble_keymap()
 	set_undotree_keymap()
-  claude_code()
+	claude_code()
 	set_hlslens()
 	set_sops_keymaps()
 end

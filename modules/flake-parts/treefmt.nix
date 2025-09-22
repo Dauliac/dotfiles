@@ -1,6 +1,7 @@
-{ ... }: {
+_:
+{
   config.perSystem =
-    { ... }:
+    _:
     {
       treefmt = {
         programs = {

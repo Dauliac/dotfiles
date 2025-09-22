@@ -1,9 +1,11 @@
-{ ... }: {
+_:
+{
   config.perSystem =
-    { config
-    , inputs'
-    , pkgs
-    , ...
+    {
+      config,
+      inputs',
+      pkgs,
+      ...
     }:
     {
       devShells.default = pkgs.mkShell {

@@ -1,4 +1,5 @@
-{...}: {
+_:
+{
   home-manager = {
     useGlobalPkgs = true;
     users.dauliac = {

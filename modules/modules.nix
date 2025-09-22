@@ -1,7 +1,8 @@
-{ inputs
-, lib
-, config
-, ...
+{
+  inputs,
+  lib,
+  config,
+  ...
 }:
 let
   inherit (lib) mdDoc mkOption;
@@ -66,10 +67,9 @@ in
     { system, ... }:
     {
       _module.args.pkgs =
-        import inputs.nixpkgs
-          {
-            inherit system;
-          }
+        import inputs.nixpkgs {
+          inherit system;
+        }
         // {
           inherit (config.nixpkgsConfig) config;
           overlays = config.nixpkgsConfig.overlays ++ [

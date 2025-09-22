@@ -76,8 +76,8 @@ in
   home.shellAliases = {
     vault_all = ''
       for ENV in int stg prd support ist; do
-        export VAULT_ADDR=https://vault-eu-west-3.\$ENV.manomano.com
-        export VAULT_\$ENV_TOKEN=\$(vault login -token-only -path=sso -method=oidc role=sre | grep hvs)
+        export VAULT_ADDR=https://vault-eu-west-3.$ENV.manomano.com
+        export VAULT_''${ENV}_TOKEN=$(vault login -token-only -path=sso -method=oidc role=sre | grep hvs)
       done'';
   };
   home.sessionVariables = {
@@ -158,5 +158,11 @@ in
         format = "binary";
       };
     };
+  };
+
+  nix.gc = {
+    automatic = true;
+    frequency = "weekly";
+    options = "--delete-older-than 30d";
   };
 }
