@@ -57,9 +57,6 @@ in
           allowUnfree = true;
           # allowBroken = true;
         };
-        overlays = with inputs; [
-          # hyprpanel.overlay
-        ];
       };
     };
   };

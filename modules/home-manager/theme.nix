@@ -1,5 +1,4 @@
-_:
-{
+_: {
   catppuccin = {
     enable = true;
     cursors.enable = true;

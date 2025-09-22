@@ -1,5 +1,4 @@
-_:
-{
+_: {
   programs.nixvim = {
     opts = {
       cc = "120";

@@ -85,63 +85,59 @@ in
           "$mod, mouse:273, resizewindow"
           "$mod ALT, mouse:272, resizewindow"
         ];
-        bind =
-          let
-            monocle = "dwindle:no_gaps_when_only";
-          in
-          [
-            # NOTE: compositor commands
-            "$mod SHIFT, E, exec, pkill Hyprland"
-            "$mod, Q, killactive,"
-            "$mod ,B,exec,$BROWSER"
-            "$mod, r, exec, ${config.programs.tofi.package}/bin/tofi-drun | xargs hyprctl dispatch exec --"
-            "$mod, f, fullscreen,"
-            "$mod, G, togglegroup,"
-            "$mod SHIFT, N, changegroupactive, f"
-            "$mod SHIFT, P, changegroupactive, b"
-            "$mod, R, togglesplit,"
-            "$mod, T, togglefloating,"
-            "$mod, P, pseudo,"
-            "$mod ALT, right, resizeactive, 10 0"
-            "$mod ALT, left, resizeactive, -10 0"
-            "$mod ALT, up, resizeactive, 0 -10"
-            "$mod ALT, down, resizeactive, 0 10"
-            "$mod SHIFT, right, movewindow, 10 0"
-            "$mod SHIFT, left, movewindow, -10 0"
-            "$mod SHIFT, up, movewindow, 0 -10"
-            "$mod SHIFT, down, movewindow, 0 10"
-            "$mod CTRL, right, swapwindow, r"
-            "$mod CTRL, left, swapwindow, l"
-            "$mod CTRL, up, swapwindow, u"
-            "$mod CTRL, down, swapwindow, d"
-            "$mod, Return, exec, ${pkgs.wezterm}/bin/wezterm"
-            "$mod, Escape, exec, wlogout -p layer-shell"
-            "$mod, L, exec, loginctl lock-session"
-            # select area to perform OCR on
-            # "$mod, O, exec, run-as-service wl-ocr"
-            # move focus
-            "$mod, left, movefocus, l"
-            "$mod, right, movefocus, r"
-            "$mod, up, movefocus, u"
-            "$mod, down, movefocus, d"
-            "$mod, h, movefocus, l"
-            "$mod, l, movefocus, r"
-            "$mod, k, movefocus, u"
-            "$mod, j, movefocus, d"
-            # special workspace
-            "$mod SHIFT, grave, movetoworkspace, special"
-            "$mod, grave, togglespecialworkspace, eDP-1"
-            # cycle workspaces
-            "$mod, bracketleft, workspace, m-1"
-            "$mod, bracketright, workspace, m+1"
-            # cycle monitors
-            "$mod SHIFT, bracketleft, focusmonitor, l"
-            "$mod SHIFT, bracketright, focusmonitor, r"
-            # send focused workspace to left/right monitors
-            "$mod SHIFT ALT, bracketleft, movecurrentworkspacetomonitor, l"
-            "$mod SHIFT ALT, bracketright, movecurrentworkspacetomonitor, r"
-          ]
-          ++ workspaces;
+        bind = [
+          # NOTE: compositor commands
+          "$mod SHIFT, E, exec, pkill Hyprland"
+          "$mod, Q, killactive,"
+          "$mod ,B,exec,$BROWSER"
+          "$mod, r, exec, ${config.programs.tofi.package}/bin/tofi-drun | xargs hyprctl dispatch exec --"
+          "$mod, f, fullscreen,"
+          "$mod, G, togglegroup,"
+          "$mod SHIFT, N, changegroupactive, f"
+          "$mod SHIFT, P, changegroupactive, b"
+          "$mod, R, togglesplit,"
+          "$mod, T, togglefloating,"
+          "$mod, P, pseudo,"
+          "$mod ALT, right, resizeactive, 10 0"
+          "$mod ALT, left, resizeactive, -10 0"
+          "$mod ALT, up, resizeactive, 0 -10"
+          "$mod ALT, down, resizeactive, 0 10"
+          "$mod SHIFT, right, movewindow, 10 0"
+          "$mod SHIFT, left, movewindow, -10 0"
+          "$mod SHIFT, up, movewindow, 0 -10"
+          "$mod SHIFT, down, movewindow, 0 10"
+          "$mod CTRL, right, swapwindow, r"
+          "$mod CTRL, left, swapwindow, l"
+          "$mod CTRL, up, swapwindow, u"
+          "$mod CTRL, down, swapwindow, d"
+          "$mod, Return, exec, ${pkgs.wezterm}/bin/wezterm"
+          "$mod, Escape, exec, wlogout -p layer-shell"
+          "$mod, L, exec, loginctl lock-session"
+          # select area to perform OCR on
+          # "$mod, O, exec, run-as-service wl-ocr"
+          # move focus
+          "$mod, left, movefocus, l"
+          "$mod, right, movefocus, r"
+          "$mod, up, movefocus, u"
+          "$mod, down, movefocus, d"
+          "$mod, h, movefocus, l"
+          "$mod, l, movefocus, r"
+          "$mod, k, movefocus, u"
+          "$mod, j, movefocus, d"
+          # special workspace
+          "$mod SHIFT, grave, movetoworkspace, special"
+          "$mod, grave, togglespecialworkspace, eDP-1"
+          # cycle workspaces
+          "$mod, bracketleft, workspace, m-1"
+          "$mod, bracketright, workspace, m+1"
+          # cycle monitors
+          "$mod SHIFT, bracketleft, focusmonitor, l"
+          "$mod SHIFT, bracketright, focusmonitor, r"
+          # send focused workspace to left/right monitors
+          "$mod SHIFT ALT, bracketleft, movecurrentworkspacetomonitor, l"
+          "$mod SHIFT ALT, bracketright, movecurrentworkspacetomonitor, r"
+        ]
+        ++ workspaces;
 
         bindr = [
           "$mod, r, exec, ${config.programs.rofi.package}/bin/tofi-drun | xargs hyprctl dispatch exec --"

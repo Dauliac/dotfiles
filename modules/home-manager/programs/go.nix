@@ -1,5 +1,4 @@
-_:
-{
+_: {
   programs.go = {
     enable = true;
     goBin = ".local/bin.go";

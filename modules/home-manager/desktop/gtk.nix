@@ -1,5 +1,4 @@
-_:
-{
+_: {
   gtk = {
     # enable = true;
     # font = {

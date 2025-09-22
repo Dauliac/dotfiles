@@ -69,7 +69,6 @@ let
     };
   };
   main = mkConfig "/dev/nvme0n1";
-  backup = mkConfig "/dev/nvme1n1";
 in
 {
   imports = [

@@ -1,5 +1,4 @@
-_:
-{
+_: {
   sops = {
     defaultSopsFile = ../../secrets.yaml;
     secrets.openai_key = { };
