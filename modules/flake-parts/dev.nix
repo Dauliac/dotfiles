@@ -19,8 +19,8 @@ _: {
             # nixGL
             inputs'.home-manager.packages.home-manager
             inputs'.disko.packages.disko
-            inputs'.nix-fast-build.packages.nix-fast-build
             inputs'.system-manager.packages.default
+            inputs'.omnix.packages.default
             config.treefmt.build.wrapper
           ]
           ++ (lib.attrValues config.treefmt.build.programs);

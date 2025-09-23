@@ -57,6 +57,8 @@ in
           allowUnfree = true;
           # allowBroken = true;
         };
+        overlays = [
+        ];
       };
     };
   };

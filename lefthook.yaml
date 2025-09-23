@@ -16,4 +16,4 @@ pre-push:
   commands:
     check:
       tags: nix checks
-      run: nix-fast-build --skip-cached --flake ".#checks"
+      run: om ci
