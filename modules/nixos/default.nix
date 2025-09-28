@@ -6,14 +6,19 @@
 }:
 {
   imports = [
-    ./hardening.nix
-    ./secrets.nix
-    ./boot.nix
     ./bluetooth.nix
-    ./locales.nix
-    ./sound.nix
-    ./theme.nix
+    ./boot.nix
     ./comin.nix
+    ./desktop.nix
+    ./gaming.nix
+    ./hardening.nix
+    ./home-manager.nix
+    ./locales.nix
+    ./secrets.nix
+    ./sound.nix
+    ./secrets.nix
+    ./theme.nix
+    ./users.nix
   ];
   networking.networkmanager.enable = true;
   services.upower.enable = true;

@@ -282,54 +282,8 @@ local function todo_keymaps()
 	}
 end
 
-local function cmp_keymaps()
-	local cat = "CMP"
-	local cmp = require("cmp")
-	return {
-		{
-			desc = "Confirm completion",
-			cmd = cmp.mapping.confirm({ select = true }),
-			keys = { "i", "<CR>" },
-			cat = cat,
-		},
-		{
-			desc = "Next completion item",
-			cmd = cmp.mapping.select_next_item(),
-			keys = { "i", "<Tab>" },
-			cat = cat,
-		},
-		{
-			desc = "Previous completion item",
-			cmd = cmp.mapping.select_prev_item(),
-			keys = { "i", "<S-Tab>" },
-			cat = cat,
-		},
-		{
-			desc = "Scroll docs down",
-			cmd = cmp.mapping.scroll_docs(4),
-			keys = { "i", "<C-f>" },
-			cat = cat,
-		},
-		{
-			desc = "Scroll docs up",
-			cmd = cmp.mapping.scroll_docs(-4),
-			keys = { "i", "<C-b>" },
-			cat = cat,
-		},
-		{
-			desc = "Complete",
-			cmd = cmp.mapping.complete(),
-			keys = { "i", "<C-Space>" },
-			cat = cat,
-		},
-		{
-			desc = "Close completion",
-			cmd = cmp.mapping.close(),
-			keys = { "i", "<C-e>" },
-			cat = cat,
-		},
-	}
-end
+-- CMP keymaps removed - now handled by nixvim configuration in default.nix
+-- This avoids fallback function conflicts with commander plugin
 
 local function misc_keymaps()
 	return {
@@ -356,6 +310,86 @@ local function misc_keymaps()
 			keys = { "n", "<leader>g" },
 			cat = "git",
 		},
+		{
+			desc = "Open file manager (Yazi)",
+			cmd = function()
+				require("yazi").yazi()
+			end,
+			keys = { "n", "<leader>-" },
+			cat = "file",
+		},
+		{
+			desc = "Toggle Claude Code",
+			cmd = "<cmd>ClaudeCode<CR>",
+			keys = { "n", "<leader>cc" },
+			cat = "ai",
+		},
+	}
+end
+
+local function sops_keymaps()
+	local cat = "sops"
+	return {
+		{
+			desc = "Sops: Encrypt file",
+			cmd = vim.cmd.SopsEncrypt,
+			keys = { "n", "<leader>se" },
+			cat = cat,
+		},
+		{
+			desc = "Sops: Decrypt file",
+			cmd = vim.cmd.SopsDecrypt,
+			keys = { "n", "<leader>sd" },
+			cat = cat,
+		},
+	}
+end
+
+local function hlslens_keymaps()
+	local cat = "search"
+	return {
+		{
+			desc = "Next search result (enhanced)",
+			cmd = [[<Cmd>execute('normal! ' . v:count1 . 'n')<CR><Cmd>lua require('hlslens').start()<CR>]],
+			keys = { "n", "n" },
+			cat = cat,
+		},
+		{
+			desc = "Previous search result (enhanced)",
+			cmd = [[<Cmd>execute('normal! ' . v:count1 . 'N')<CR><Cmd>lua require('hlslens').start()<CR>]],
+			keys = { "n", "N" },
+			cat = cat,
+		},
+		{
+			desc = "Search word under cursor (enhanced)",
+			cmd = [[*<Cmd>lua require('hlslens').start()<CR>]],
+			keys = { "n", "*" },
+			cat = cat,
+		},
+		{
+			desc = "Search word under cursor backward (enhanced)",
+			cmd = [[#<Cmd>lua require('hlslens').start()<CR>]],
+			keys = { "n", "#" },
+			cat = cat,
+		},
+		{
+			desc = "Search word under cursor partial (enhanced)",
+			cmd = [[g*<Cmd>lua require('hlslens').start()<CR>]],
+			keys = { "n", "g*" },
+			cat = cat,
+		},
+		{
+			desc = "Search word under cursor partial backward (enhanced)",
+			cmd = [[g#<Cmd>lua require('hlslens').start()<CR>]],
+			keys = { "n", "g#" },
+			cat = cat,
+		},
+		{
+			desc = "Clear search highlights",
+			cmd = "<Cmd>noh<CR>",
+			keys = { "n", "<Leader>l" },
+			cat = cat,
+		},
 	}
 end
 
@@ -375,7 +409,8 @@ commander.add(merge_keymaps({
 	trouble_keymaps,
 	dap_keymaps,
 	todo_keymaps,
-	cmp_keymaps,
 	misc_keymaps,
 	telescope_keymaps,
+	sops_keymaps,
+	hlslens_keymaps,
 }))

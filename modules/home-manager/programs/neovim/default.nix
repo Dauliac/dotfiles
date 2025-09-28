@@ -59,22 +59,56 @@ in
       cmp = {
         enable = true;
         autoEnableSources = true;
-        settings.sources = [
-          { name = "nvim_lsp"; }
-          { name = "path"; }
-          { name = "buffer"; }
-          { name = "treesitter"; }
-          { name = "spell"; }
-          { name = "git"; }
-          { name = "emoji"; }
-          { name = "dap"; }
-          { name = "look"; }
-          { name = "luasnip"; }
-          { name = "yanky"; }
-          { name = "nvim_lua"; }
-          { name = "conventionalcommits"; }
-          # { name = "copilot"; }
-        ];
+        settings = {
+          sources = [
+            { name = "nvim_lsp"; }
+            { name = "path"; }
+            { name = "buffer"; }
+            { name = "treesitter"; }
+            { name = "spell"; }
+            { name = "git"; }
+            { name = "emoji"; }
+            { name = "dap"; }
+            { name = "look"; }
+            { name = "luasnip"; }
+            { name = "yanky"; }
+            { name = "nvim_lua"; }
+            { name = "conventionalcommits"; }
+            # { name = "copilot"; }
+          ];
+          mapping = {
+            "<Tab>" = ''
+              cmp.mapping(function(fallback)
+                if cmp.visible() then
+                  cmp.select_next_item()
+                elseif require('luasnip').expand_or_jumpable() then
+                  require('luasnip').expand_or_jump()
+                else
+                  fallback()
+                end
+              end, { 'i', 's' })
+            '';
+            "<S-Tab>" = ''
+              cmp.mapping(function(fallback)
+                if cmp.visible() then
+                  cmp.select_prev_item()
+                elseif require('luasnip').jumpable(-1) then
+                  require('luasnip').jump(-1)
+                else
+                  fallback()
+                end
+              end, { 'i', 's' })
+            '';
+            "<C-Space>" = "cmp.mapping.complete()";
+            "<C-e>" = "cmp.mapping.abort()";
+            "<CR>" = ''
+              cmp.mapping.confirm({
+                behavior = cmp.ConfirmBehavior.Replace,
+                select = false
+              })
+            '';
+          };
+        };
       };
       comment.enable = true;
       # copilot-cmp.enable = true;

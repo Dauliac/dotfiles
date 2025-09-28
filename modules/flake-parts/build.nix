@@ -14,7 +14,7 @@ in
         nixos = pkgs.stdenv.mkDerivation {
           name = "nixos-system";
           buildCommand = ''
-            cp -r ${cfg.flake.nixosConfigurations.nixos.config.system.build.toplevel} $out
+            cp -r ${cfg.flake.nixosConfigurations.spongebob.config.system.build.toplevel} $out
           '';
         };
         homeManagerJulienDauliac = pkgs.stdenv.mkDerivation {

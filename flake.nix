@@ -3,7 +3,6 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-auth.url = "github:numtide/nix-auth";
     disko = {
@@ -70,7 +69,6 @@
     };
     nix-flatpak = {
       url = "github:gmodena/nix-flatpak/?ref=v0.6.0";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
   outputs =

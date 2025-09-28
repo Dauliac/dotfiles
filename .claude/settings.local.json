@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "WebFetch(domain:nix-community.github.io)"
+      "WebFetch(domain:nix-community.github.io)",
+      "WebFetch(domain:raw.githubusercontent.com)"
     ],
     "deny": []
   }

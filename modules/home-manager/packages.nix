@@ -35,6 +35,7 @@ let
     clickhouse
     entr
     cargo-tarpaulin
+    devenv
     (pkgs.wrapHelm pkgs.kubernetes-helm {
       plugins = [
         pkgs.kubernetes-helmPlugins.helm-diff

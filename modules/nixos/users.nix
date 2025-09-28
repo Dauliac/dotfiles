@@ -6,7 +6,7 @@
 {
   users.users.dauliac = {
     isNormalUser = true;
-    description = "juliendauliac";
+    description = "Main user";
     extraGroups = [
       "networkmanager"
       "wheel"

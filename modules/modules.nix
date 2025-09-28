@@ -39,7 +39,7 @@ in
       default =
         with inputs;
         [
-          nix-index-db.hmModules.nix-index
+          nix-index-db.homeModules.nix-index
           sops-nix.homeManagerModules.sops
           catppuccin.homeModules.catppuccin
           nixvim.homeManagerModules.nixvim
