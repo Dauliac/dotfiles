@@ -28,9 +28,6 @@ tasks:
   build:
     cmds:
       - nix-fast-build --skip-cached --flake ".#packages"
-  install:disko:
-    cmds:
-      - disko-install --flake '.#nixos' --disk backup '/dev/nvme1n1'
   install:home-manager:
     cmds:
       - home-manager --flake '.' switch

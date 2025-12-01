@@ -1,6 +1,6 @@
 _:
 let
-  path = "/home/dauliac/ghq/github.com/Dauliac/dotfiles/modules/home-manager/desktop/wallpaper.jpg";
+  path = toString ./wallpaper.jpg;
 in
 {
   services.hyprpaper = {

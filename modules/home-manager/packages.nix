@@ -37,7 +37,6 @@ let
     clickhouse
     entr
     cargo-tarpaulin
-    devenv
     (pkgs.wrapHelm pkgs.kubernetes-helm {
       plugins = [
         pkgs.kubernetes-helmPlugins.helm-diff
@@ -52,15 +51,14 @@ let
   gui = with pkgs; [
     sniffnet
     # TODO: add override if we are in nixOs profile Signal client
-    # signal-desktop
     # TODO: fix unfree packages
     # rustdesk # Remote desktop
     # TODO: only install if we are not in nixOs profile
     # firefox-devedition # Firefox browser
     system76-keyboard-configurator
-    vesktop
     protonvpn-gui
     proton-pass
+    discord
   ];
 in
 {

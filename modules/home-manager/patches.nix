@@ -1,4 +1,4 @@
-{ lib, ... }:
+_:
 {
   # Stubs for programs to satisfy catppuccin module requirements
   options.programs = {

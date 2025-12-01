@@ -8,7 +8,7 @@ _: {
       servers = {
         gopls = {
           enable = true;
-          settings = {
+          config = {
             gopls = {
               analyses.unusedparams = true;
               staticcheck = true;
@@ -19,7 +19,7 @@ _: {
 
         lua_ls = {
           enable = true;
-          settings = {
+          config = {
             Lua = {
               diagnostics.globals = [ "vim" ];
             };

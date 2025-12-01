@@ -9,7 +9,7 @@
     ./patches.nix
   ];
   config = {
-    home.stateVersion = "24.11";
+    home.stateVersion = "25.05";
     home.enableNixpkgsReleaseCheck = false;
     home.file."${config.xdg.configHome}" = {
       source = ./xdg-config;

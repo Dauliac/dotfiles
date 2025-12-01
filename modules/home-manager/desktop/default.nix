@@ -5,5 +5,6 @@
     ./widgets.nix
     ./gtk.nix
     ./wallpaper.nix
+    ./niri
   ];
 }

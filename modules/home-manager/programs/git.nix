@@ -39,7 +39,7 @@ _: {
         "*.iso"
         ".claude/settings.local.json"
       ];
-      extraConfig = {
+      settings = {
         core = {
           editor = "nvim";
         };

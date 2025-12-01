@@ -129,6 +129,16 @@ in
         path = "/home/juliendauliac/.aws/config";
         format = "binary";
       };
+      gitJulienDauliac = {
+        sopsFile = ../dauliac/gitconfig.enc.ini;
+        path = "/home/juliendauliac/.config/git/juliendauliac.secrets.ini";
+        format = "ini";
+      };
+      gitDauliac = {
+        sopsFile = ./profiles/dauliac/gitconfig.enc.ini;
+        path = "/home/juliendauliac/.config/git/dauliac.secrets.ini";
+        format = "ini";
+      };
       sshIdRsa = {
         sopsFile = ./id_rsa.enc;
         path = "/home/juliendauliac/.ssh/id_rsa";

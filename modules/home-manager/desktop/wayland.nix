@@ -40,21 +40,12 @@ in
         "$mod" = "SUPER";
         monitor =
           let
-            default = rec {
-              description = "Chimei Innolux Corporation 0x1408";
-              width = 1920;
-              height = 1080;
-              verticalPosition = 0;
-              horizontalPosition = 0;
-              positionConfig = builtins.toString horizontalPosition + "x" + builtins.toString verticalPosition;
-              config = "desc:${description},preferred,${default.positionConfig},1";
-            };
             topLarge = rec {
               description = "Beihai Century Joint Innovation Technology Co.Ltd CS2900";
               width = 2560;
               height = 1080;
-              verticalPosition = -height;
-              horizontalPosition = -(width - default.width);
+              verticalPosition = 0;
+              horizontalPosition = 0;
               positionConfig = builtins.toString horizontalPosition + "x" + builtins.toString verticalPosition;
               config = "desc:${description},preferred,${topLarge.positionConfig},1";
             };
@@ -62,8 +53,8 @@ in
               description = "Lenovo Group Limited LEN T24i-20 VNA4HXH3";
               width = 1080;
               height = 1920;
-              verticalPosition = -topLarge.height;
-              horizontalPosition = default.width;
+              verticalPosition = 0;
+              horizontalPosition = topLarge.width;
               positionConfig =
                 builtins.toString leftVertical.horizontalPosition
                 + "x"
@@ -72,7 +63,6 @@ in
             };
           in
           [
-            default.config
             topLarge.config
             leftVertical.config
           ];

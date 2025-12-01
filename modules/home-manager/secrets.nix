@@ -4,15 +4,15 @@
     age.keyFile = "${config.home.homeDirectory}/.config/sops/age/dotfiles.txt";
     defaultSopsFile = ../../secrets.yaml;
     secrets = {
-      gitJulienDauliac = {
-        sopsFile = ./profiles/juliendauliac/gitconfig.enc.ini;
-        path = "/home/juliendauliac/.config/git/juliendauliac.secrets.ini";
-        format = "ini";
+      sshKey = {
+        sopsFile = ./profiles/dauliac/id_ed25519.enc;
+        path = "/home/dauliac/.ssh/id_ed25519";
+        format = "binary";
       };
-      gitDauliac = {
-        sopsFile = ./profiles/dauliac/gitconfig.enc.ini;
-        path = "/home/juliendauliac/.config/git/dauliac.secrets.ini";
-        format = "ini";
+      sshPubKey = {
+        sopsFile = ./profiles/dauliac/id_ed25519.enc.pub;
+        path = "/home/dauliac/.ssh/id_ed25519.pub";
+        format = "binary";
       };
     };
   };

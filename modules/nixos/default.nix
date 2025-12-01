@@ -12,7 +12,6 @@
     ./desktop.nix
     ./gaming.nix
     ./hardening.nix
-    ./home-manager.nix
     ./locales.nix
     ./secrets.nix
     ./sound.nix
@@ -53,9 +52,9 @@
     htop
     pipewire.jack
     sbctl
-    jdk21
+    # jdk21
     wl-clipboard
-    firefox
+    # firefox
   ];
   environment.variables = {
     VDPAU_DRIVER = lib.mkIf config.hardware.graphics.enable (lib.mkDefault "va_gl");
@@ -75,10 +74,6 @@
     packages = [
       {
         appId = "app.zen_browser.zen";
-        origin = "flathub";
-      }
-      {
-        appId = "io.appflowy.AppFlowy";
         origin = "flathub";
       }
       {
@@ -102,7 +97,7 @@
       };
     };
   };
-  system.stateVersion = "24.11";
+  system.stateVersion = "25.05";
   virtualisation = {
     waydroid.enable = true;
     podman = {

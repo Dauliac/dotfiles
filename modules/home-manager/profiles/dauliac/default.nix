@@ -1,9 +1,29 @@
-{ pkgs, ... }:
+{
+  pkgs,
+  config,
+  ...
+}:
 {
   imports = [
     ../../desktop
   ];
   xdg.mime.enable = true;
+  sops = {
+    secrets = {
+      gitDauliac = {
+        sopsFile = ./gitconfig.enc.ini;
+        # TODO: define global option that allow to manage main user
+        path = "/home/dauliac/.config/git/dauliac.secrets.ini";
+        format = "ini";
+      };
+    };
+  };
+  programs.git.extraConfig = {
+    include = {
+      inherit (config.sops.secrets.gitDauliac) path;
+    };
+  };
+
   home.packages =
     let
       music = with pkgs; [
@@ -22,7 +42,6 @@
         cardinal # NOTE: modular synth
         drumkv1
         gnaural
-        ChowKick
         drumgizmo
       ];
       videoGames = with pkgs; [
@@ -40,16 +59,16 @@
       termusic
       system76-firmware
       rclone
-      vesktop
       ncpamixer
       pavucontrol
       pulsemixer
-      whatsie
+      # whatsie # Removed: uses qtwebengine which is heavy to build
       gparted
       xdg-desktop-portal
       xdg-desktop-portal-gtk
       libreoffice
-      google-chrome
+      # google-chrome
+      signal-desktop
     ]
     ++ music
     ++ videoGames;

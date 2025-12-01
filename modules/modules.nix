@@ -14,13 +14,13 @@ in
       default =
         with inputs;
         [
-          disko.nixosModules.disko
-          home-manager.nixosModules.home-manager
-          sops-nix.nixosModules.sops
-          lanzaboote.nixosModules.lanzaboote
           catppuccin.nixosModules.catppuccin
           comin.nixosModules.comin
+          home-manager.nixosModules.home-manager
+          #lanzaboote.nixosModules.lanzaboote
           nix-flatpak.nixosModules.nix-flatpak
+          nur.modules.nixos.default
+          sops-nix.nixosModules.sops
         ]
         ++ [
           ./nixos
@@ -42,9 +42,10 @@ in
           nix-index-db.homeModules.nix-index
           sops-nix.homeManagerModules.sops
           catppuccin.homeModules.catppuccin
-          nixvim.homeManagerModules.nixvim
+          nixvim.homeModules.nixvim
           # hyprpanel.homeManagerModules.hyprpanel
           nix-flatpak.homeManagerModules.nix-flatpak
+          betterfox-nix.modules.homeManager.betterfox
         ]
         ++ [
           ./home-manager

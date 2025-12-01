@@ -18,7 +18,6 @@ _: {
             ssh-to-age
             # nixGL
             inputs'.home-manager.packages.home-manager
-            inputs'.disko.packages.disko
             inputs'.system-manager.packages.default
             config.treefmt.build.wrapper
           ]
