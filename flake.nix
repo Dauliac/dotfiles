@@ -1,6 +1,6 @@
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
     };
@@ -11,12 +11,8 @@
     };
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     home-manager = {
-      url = "github:nix-community/home-manager/release-25.05";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    omnix = {
-      url = "github:juspay/omnix";
-      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:nix-community/home-manager/release-25.11";
+      # inputs.nixpkgs.follows = "nixpkgs";
     };
     nixGL = {
       url = "github:guibou/nixGL";
@@ -33,10 +29,10 @@
     };
     catppuccin = {
       url = "github:catppuccin/nix";
-      inputs.nixpkgs.follows = "nixpkgs";
+      # inputs.nixpkgs.follows = "nixpkgs";
     };
     nixvim = {
-      url = "github:nix-community/nixvim/nixos-25.05";
+      url = "github:nix-community/nixvim/nixos-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     lanzaboote = {
@@ -69,6 +65,9 @@
     };
     nix-flatpak = {
       url = "github:gmodena/nix-flatpak/?ref=v0.6.0";
+    };
+    direnv-instant = {
+      url = "github:Mic92/direnv-instant";
     };
   };
   outputs =

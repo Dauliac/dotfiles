@@ -6,6 +6,7 @@
     ./programs
     ./secrets.nix
     ./theme.nix
+    ./patches.nix
   ];
   config = {
     home.stateVersion = "24.11";

@@ -14,6 +14,15 @@ _: {
               content = {
                 type = "filesystem";
                 format = "vfat";
+                mountpoint = "/boot/efi";
+                mountOptions = [ "defaults" "fmask=0077" "dmask=0077" ];
+              };
+            };
+            boot = {
+              size = "1G";
+              content = {
+                type = "filesystem";
+                format = "ext4";
                 mountpoint = "/boot";
                 mountOptions = [ "defaults" ];
               };

@@ -1,5 +1,8 @@
 { pkgs, ... }:
 let
+  ai = with pkgs; [
+    claude-code
+  ];
   cli = with pkgs; [
     go-task
     ghq
@@ -28,7 +31,6 @@ let
     postgresql_16
     pgcli
     asdf
-    claude-code
     jless
     skaffold
     atlas
@@ -62,5 +64,5 @@ let
   ];
 in
 {
-  home.packages = cli ++ gui ++ tui;
+  home.packages = cli ++ gui ++ tui ++ ai;
 }

@@ -2,6 +2,7 @@ _: {
   programs.zsh = {
     enable = true;
     enableCompletion = true;
+    dotDir = ".config/zsh";
     autosuggestion = {
       enable = true;
     };

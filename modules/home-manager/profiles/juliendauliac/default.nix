@@ -23,14 +23,20 @@ let
     };
 in
 {
+  imports = [
+    ../../desktop
+  ];
   home.sessionVariables = {
     XDG_DATA_DIRS = "$XDG_DATA_DIRS:/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share";
     NPM_CONFIG_PREFIX = "$XDG_DATA_HOME/npm-packages";
     PATH = "$PATH:$NPM_CONFIG_PREFIX/bin/:$HOME/${config.programs.go.goBin}";
   };
   programs.mise = {
-    enable = true;
+    enable = false;
     enableZshIntegration = true;
+    settings = {
+      experimental = true;
+    };
   };
   home.packages = with pkgs; [
     awscli2
@@ -71,6 +77,7 @@ in
     jetbrains.pycharm-professional
     yq
     ansible
+    minio-client
   ];
 
   home.shellAliases = {
