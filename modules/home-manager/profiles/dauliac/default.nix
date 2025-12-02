@@ -16,9 +16,19 @@
         path = "/home/dauliac/.config/git/dauliac.secrets.ini";
         format = "ini";
       };
+      sshKey = {
+        sopsFile = ./id_ed25519d_ed25519.enc;
+        path = "/home/dauliac/.ssh/id_ed25519";
+        format = "binary";
+      };
+      sshPubKey = {
+        sopsFile = ./id_ed25519.enc.pub;
+        path = "/home/dauliac/.ssh/id_ed25519.pub";
+        format = "binary";
+      };
     };
   };
-  programs.git.extraConfig = {
+  programs.git.settings = {
     include = {
       inherit (config.sops.secrets.gitDauliac) path;
     };

@@ -39,7 +39,7 @@
   };
   programs.k9s = {
     enable = true;
-    plugin = {
+    plugins = {
       plugins = {
         debug = {
           shortCut = "Shift-D";

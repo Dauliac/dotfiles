@@ -18,7 +18,7 @@
             services.comin = {
               enable = lib.mkForce false;
             };
-            services.displayManager.ly.enable = lib.mkForce false;
+            services.greetd.enable = lib.mkForce false;
             services.openssh.settings.PermitRootLogin = "yes";
             services.xserver.displayManager.autoLogin.enable = true;
             services.xserver.displayManager.autoLogin.user = "dauliac";

@@ -1,5 +1,13 @@
-_: {
-  services.displayManager.ly.enable = true;
+{ pkgs, ... }: {
+  services.greetd = {
+    enable = true;
+    settings = {
+      default_session = {
+        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd sway";
+        user = "greeter";
+      };
+    };
+  };
   programs = {
     niri.enable = true;
   };

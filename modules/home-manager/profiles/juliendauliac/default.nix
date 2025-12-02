@@ -32,11 +32,11 @@ in
     PATH = "$PATH:$NPM_CONFIG_PREFIX/bin/:$HOME/${config.programs.go.goBin}";
   };
   programs.mise = {
-    enable = false;
+    enable = true;
     enableZshIntegration = true;
-    settings = {
-      experimental = true;
-    };
+    # settings = {
+    #   experimental = true;
+    # };
   };
   home.packages = with pkgs; [
     awscli2
@@ -91,7 +91,7 @@ in
     AWS_DEFAULT_PROFILE = "manomano-support";
   };
 
-  programs.git.extraConfig = {
+  programs.git.settings = {
     include = {
       inherit (config.sops.secrets.gitDauliac) path;
     };
@@ -130,12 +130,12 @@ in
         format = "binary";
       };
       gitJulienDauliac = {
-        sopsFile = ../dauliac/gitconfig.enc.ini;
+        sopsFile = ./gitconfig.enc.ini;
         path = "/home/juliendauliac/.config/git/juliendauliac.secrets.ini";
         format = "ini";
       };
       gitDauliac = {
-        sopsFile = ./profiles/dauliac/gitconfig.enc.ini;
+        sopsFile = ../dauliac/gitconfig.enc.ini;
         path = "/home/juliendauliac/.config/git/dauliac.secrets.ini";
         format = "ini";
       };
