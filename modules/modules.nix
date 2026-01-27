@@ -57,8 +57,13 @@ in
         config = {
           allowUnfree = true;
           # allowBroken = true;
+          permittedInsecurePackages = [
+            "qtwebengine-5.15.19"
+          ];
         };
         overlays = [
+          (import ./packages)
+          inputs.nixGL.overlay
         ];
       };
     };
@@ -66,15 +71,9 @@ in
   config.perSystem =
     { system, ... }:
     {
-      _module.args.pkgs =
-        import inputs.nixpkgs {
-          inherit system;
-        }
-        // {
-          inherit (config.nixpkgsConfig) config;
-          overlays = config.nixpkgsConfig.overlays ++ [
-            inputs.nixGL.overlay
-          ];
-        };
+      _module.args.pkgs = import inputs.nixpkgs {
+        inherit system;
+        inherit (config.nixpkgsConfig) config overlays;
+      };
     };
 }

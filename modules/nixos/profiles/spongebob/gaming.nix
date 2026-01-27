@@ -1,5 +1,4 @@
-_:
-{
+_: {
   hardware = {
     nvidia = {
       modesetting.enable = true;

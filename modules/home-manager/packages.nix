@@ -2,6 +2,9 @@
 let
   ai = with pkgs; [
     claude-code
+    codemap
+    codemap-mcp
+    anytype-cli
   ];
   cli = with pkgs; [
     go-task
@@ -47,6 +50,7 @@ let
   tui = with pkgs; [
     bluetuith
     pulsemixer
+    stu
   ];
   gui = with pkgs; [
     sniffnet

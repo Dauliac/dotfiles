@@ -38,12 +38,8 @@ tasks:
       - sudo nixos-rebuild --flake . switch
   install:pro:
     silent: true
-    env:
-      SYSTEM_MANAGER_PATH:
-        sh: whereis system-manager
     cmds:
-      - |
-        sudo $SYSTEM_MANAGER_PATH switch --flake .
+      - system-manager switch --flake '.' --sudo
       - task: install:home-manager:pro
   install:home-manager:pro:
     silent: true
@@ -53,6 +49,8 @@ tasks:
         home-manager switch \
           --flake .
         fc-cache -f -v
+      - |
+        claude mcp add --transport stdio codemap -- codemap-mcp
   test:
     silent: true
     cmds:

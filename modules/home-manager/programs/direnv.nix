@@ -1,7 +1,7 @@
-_:
-{
+_: {
   # imports = [ inputs.direnv-instant.homeModules.direnv-instant ];
   # programs.direnv-instant.enable = true;
+  # services.lorri.enable = true;
   programs.direnv = {
     enable = true;
     # nix-direnv.enable = true;

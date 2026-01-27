@@ -1,5 +1,6 @@
 {
   config,
+  lib,
   pkgs,
   ...
 }:
@@ -7,19 +8,53 @@ let
   nixGL = pkgs.nixgl.nixGLIntel;
   nixGlWrapper =
     pkg:
-    pkgs.buildEnv {
+    let
+      binaries = builtins.filter (name: name != ".ghostty-wrapped" && !pkgs.lib.hasPrefix "." name) (
+        builtins.attrNames (builtins.readDir "${pkg}/bin")
+      );
+    in
+    pkgs.symlinkJoin {
       name = "nixGL-${pkg.name}";
-      paths = [
-        pkg
-      ]
-      ++ (map (
-        bin:
-        pkgs.hiPrio (
-          pkgs.writeShellScriptBin bin ''
-            exec -a "$0" "${nixGL}/bin/nixGLIntel" "${pkg}/bin/${bin}" "$@"
-          ''
-        )
-      ) (builtins.attrNames (builtins.readDir "${pkg}/bin")));
+      paths = [ pkg ];
+      nativeBuildInputs = [ pkgs.makeWrapper ];
+      postBuild = ''
+        # Wrap each binary with nixGL
+        for bin in ${builtins.concatStringsSep " " binaries}; do
+          rm -f "$out/bin/$bin"
+          makeWrapper "${nixGL}/bin/nixGLIntel" "$out/bin/$bin" \
+            --add-flags "${pkg}/bin/$bin"
+        done
+
+        # Patch systemd service files to use wrapped binary
+        if [ -d "$out/share/systemd/user" ]; then
+          for f in "$out/share/systemd/user"/*.service; do
+            if [ -f "$f" ]; then
+              rm -f "$f"
+              sed "s|${pkg}/bin/|$out/bin/|g" "${pkg}/share/systemd/user/$(basename "$f")" > "$f"
+            fi
+          done
+        fi
+
+        # Patch dbus service files
+        if [ -d "$out/share/dbus-1/services" ]; then
+          for f in "$out/share/dbus-1/services"/*.service; do
+            if [ -f "$f" ]; then
+              rm -f "$f"
+              sed "s|${pkg}/bin/|$out/bin/|g" "${pkg}/share/dbus-1/services/$(basename "$f")" > "$f"
+            fi
+          done
+        fi
+
+        # Patch desktop files
+        if [ -d "$out/share/applications" ]; then
+          for f in "$out/share/applications"/*.desktop; do
+            if [ -f "$f" ]; then
+              rm -f "$f"
+              sed "s|${pkg}/bin/|$out/bin/|g" "${pkg}/share/applications/$(basename "$f")" > "$f"
+            fi
+          done
+        fi
+      '';
     };
 in
 {
@@ -43,7 +78,7 @@ in
     cloudflared
     cloudlens
     fluxcd
-    jetbrains.pycharm-professional
+    jetbrains.pycharm
     glab
     google-chrome
     docker-compose
@@ -68,16 +103,18 @@ in
     oha
     slack
     pre-commit
-    vesktop
     ruby
     just
+    (nixGlWrapper prismlauncher)
     dbeaver-bin
     vector
     jetbrains.goland
-    jetbrains.pycharm-professional
+    jetbrains.pycharm
     yq
     ansible
     minio-client
+    # cue
+    gemini-cli-bin
   ];
 
   home.shellAliases = {
@@ -92,15 +129,37 @@ in
   };
 
   programs.git.settings = {
+    # Default: personal Dauliac account (bypass agent to use correct key)
+    core.sshCommand = "SSH_AUTH_SOCK= ssh -i ~/.ssh/id_ed25519.perso -o IdentitiesOnly=yes";
     include = {
       inherit (config.sops.secrets.gitDauliac) path;
     };
+    # Work: juliendauliac account with id_rsa key
     "includeIf \"gitdir:**/*manomano*/**\"" = {
       inherit (config.sops.secrets.gitJulienDauliac) path;
     };
   };
 
+  # Work git config with different SSH key
+  home.file.".config/git/manomano-ssh.inc".text = ''
+    [core]
+      sshCommand = ssh -i ~/.ssh/id_rsa -o IdentitiesOnly=yes
+  '';
+
+  programs.git.includes = [
+    {
+      condition = "gitdir:**/*manomano*/**";
+      path = "~/.config/git/manomano-ssh.inc";
+    }
+  ];
+
+  # Include work SSH config
+  programs.ssh.includes = [ "config-mm" ];
+
   programs.wezterm.package = nixGlWrapper pkgs.wezterm;
+  programs.alacritty.package = nixGlWrapper pkgs.alacritty;
+  programs.ghostty.package = nixGlWrapper pkgs.ghostty;
+  programs.kitty.package = nixGlWrapper pkgs.kitty;
   services.flatpak = {
     enable = true;
     packages = [
@@ -113,10 +172,6 @@ in
         origin = "flathub";
       }
       {
-        appId = "io.appflowy.AppFlowy";
-        origin = "flathub";
-      }
-      {
         appId = "dev.vencord.Vesktop";
         origin = "flathub";
       }
@@ -124,10 +179,20 @@ in
   };
   sops = {
     secrets = {
+      # context7 = {
+      #   sopsFile = ./aws-config.enc.toml;
+      #   path = "/home/juliendauliac/.config/secrets/context7";
+      #   format = "env";
+      # };
       aws = {
         sopsFile = ./aws-config.enc.toml;
         path = "/home/juliendauliac/.aws/config";
         format = "binary";
+      };
+      gitJulienDauliacRoot = {
+        sopsFile = ./gitconfig.root.enc.ini;
+        path = "/home/juliendauliac/.gitconfig";
+        format = "ini";
       };
       gitJulienDauliac = {
         sopsFile = ./gitconfig.enc.ini;
@@ -147,6 +212,17 @@ in
       sshIdRsaPub = {
         sopsFile = ./id_rsa.enc.pub;
         path = "/home/juliendauliac/.ssh/id_rsa.pub";
+        format = "binary";
+      };
+      # Personal SSH key (Dauliac account)
+      sshIdPerso = {
+        sopsFile = ../dauliac/id_ed25519.enc;
+        path = "/home/juliendauliac/.ssh/id_ed25519.perso";
+        format = "binary";
+      };
+      sshIdPersoPub = {
+        sopsFile = ../dauliac/id_ed25519.enc.pub;
+        path = "/home/juliendauliac/.ssh/id_ed25519.perso.pub";
         format = "binary";
       };
       glab = {
@@ -179,7 +255,9 @@ in
 
   nix.gc = {
     automatic = true;
-    frequency = "weekly";
+    dates = "weekly";
     options = "--delete-older-than 30d";
   };
+
+  programs.hyprpanel.enable = lib.mkForce false;
 }

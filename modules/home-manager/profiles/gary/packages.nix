@@ -4,7 +4,7 @@
     stremio
     vlc
     prismlauncher
-    ryujinx
+    ryubing
     shadps4
     google-chrome
     k9s

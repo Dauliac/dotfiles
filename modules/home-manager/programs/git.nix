@@ -10,7 +10,7 @@ _: {
       lfs = {
         enable = true;
       };
-      aliases = {
+      settings.alias = {
         convco = "!GIT_EDITOR='convco commit' git commit";
         st = "status -sb";
         br = "branch -a";
@@ -38,6 +38,8 @@ _: {
         "*.img"
         "*.iso"
         ".claude/settings.local.json"
+        "_bmad"
+        "_bmad-output"
       ];
       settings = {
         core = {

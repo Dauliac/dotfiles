@@ -3,21 +3,26 @@
   imports = [
     ./alacritty.nix
     ./bat.nix
+    ./claude.nix
     ./direnv.nix
     ./git.nix
     ./history.nix
     ./lazygit.nix
     ./neovim
     ./pet.nix
+    ./ssh.nix
     ./starship.nix
+    ./kitty.nix
     ./wezterm.nix
     ./zellij.nix
     ./zsh.nix
     ./eza.nix
     ./yazi.nix
+    ./ghostty.nix
     ./kubecolor.nix
     ./go.nix
     ./bacon.nix
+    ./pueue.nix
   ];
   programs.home-manager.enable = true;
   # NOTE: fast cd

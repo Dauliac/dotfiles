@@ -3,6 +3,7 @@ _: {
     treefmt = {
       programs = {
         shfmt.enable = true;
+        rustfmt.enable = true;
         shellcheck.enable = true;
         alejandra.enable = true;
         nixfmt.enable = true;

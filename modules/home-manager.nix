@@ -29,15 +29,7 @@ in
     extraSpecialArgs = { inherit inputs; };
     modules = config.homeManagerModules ++ [
       {
-        nixpkgs = {
-          # TODO: Fix unfree config
-          # inherit (config.nixpkgsConfig) config;
-          config = {
-            allowUnfree = true;
-            # allowBroken = true;
-          };
-          overlays = config.nixpkgsConfig.overlays ++ (with inputs; [ nixGL.overlay ]);
-        };
+        nixpkgs = config.nixpkgsConfig;
       }
       ./home-manager/profiles/${userTwo}
       {

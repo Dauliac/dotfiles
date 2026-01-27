@@ -3,18 +3,42 @@
   pkgs,
   ...
 }:
+let
+  # Create the niri desktop file as a derivation
+  niriDesktopFile = pkgs.writeText "niri.desktop" ''
+    [Desktop Entry]
+    Name=Niri
+    Comment=A scrollable-tiling Wayland compositor
+    Exec=/home/juliendauliac/.nix-profile/bin/niri-session
+    Type=Application
+  '';
+in
 {
   config = {
     system-manager.allowAnyDistro = true;
     nixpkgs.hostPlatform = "x86_64-linux";
+
+    # Nix daemon settings
+    nix.settings = {
+      # Allow netrc file in sandbox for private Maven/Artifactory authentication
+      extra-sandbox-paths = [ "/etc/nix/netrc" ];
+    };
     environment = {
       systemPackages = with pkgs; [
         docker
         apparmor-parser
         apparmor-utils
         hyprland
+        niri
       ];
     };
+
+    # Create Niri session file for GDM
+    # C+ = copy file, replace if exists
+    systemd.tmpfiles.rules = [
+      "C+ /usr/share/wayland-sessions/niri.desktop 0644 root root - ${niriDesktopFile}"
+    ];
+
     systemd.services = {
       docker = {
         enable = true;

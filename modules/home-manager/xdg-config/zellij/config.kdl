@@ -295,6 +295,8 @@ keybinds clear-defaults=true {
     }
 }
 
+show_startup_tips false
+
 pane_frames false
 theme "gruvbox-dark"
 mouse_mode true

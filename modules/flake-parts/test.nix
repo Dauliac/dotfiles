@@ -20,9 +20,9 @@
             };
             services.greetd.enable = lib.mkForce false;
             services.openssh.settings.PermitRootLogin = "yes";
-            services.xserver.displayManager.autoLogin.enable = true;
-            services.xserver.displayManager.autoLogin.user = "dauliac";
-            services.xserver.displayManager.gdm.enable = lib.mkForce false;
+            services.displayManager.autoLogin.enable = true;
+            services.displayManager.autoLogin.user = "dauliac";
+            services.displayManager.gdm.enable = lib.mkForce false;
 
             virtualisation = {
               graphics = true;

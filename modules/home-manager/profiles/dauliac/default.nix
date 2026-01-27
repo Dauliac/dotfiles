@@ -17,7 +17,7 @@
         format = "ini";
       };
       sshKey = {
-        sopsFile = ./id_ed25519d_ed25519.enc;
+        sopsFile = ./id_ed25519.enc;
         path = "/home/dauliac/.ssh/id_ed25519";
         format = "binary";
       };

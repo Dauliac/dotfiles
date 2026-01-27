@@ -198,7 +198,17 @@ in
       nui.enable = true;
       which-key.enable = true;
       gitgutter.enable = true;
-      gitsigns.enable = true;
+      gitsigns = {
+        enable = true;
+        settings = {
+          current_line_blame = true;
+          current_line_blame_opts = {
+            virt_text = true;
+            virt_text_pos = "eol";
+            delay = 300;
+          };
+        };
+      };
     };
     extraPlugins = with pkgs.vimPlugins; [
       commander-nvim
