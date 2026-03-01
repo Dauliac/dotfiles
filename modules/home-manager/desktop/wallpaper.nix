@@ -1,20 +1,30 @@
-_:
+{ lib, ... }:
 let
-  path = toString ./wallpaper.jpg;
+  wallpaperPath = ./wallpaper.jpg;
 in
 {
-  services.hyprpaper = {
-    enable = true;
-    settings = {
-      ipc = "on";
-      splash = false;
-      splash_offset = 2.0;
-      preload = [
-        path
-      ];
-      wallpaper = [
-        ",${path}"
-      ];
-    };
-  };
+  config.dotfiles.home.sharedModules = lib.mkAfter [
+    (
+      _:
+      let
+        path = toString wallpaperPath;
+      in
+      {
+        services.hyprpaper = {
+          enable = true;
+          settings = {
+            ipc = "on";
+            splash = false;
+            splash_offset = 2.0;
+            preload = [
+              path
+            ];
+            wallpaper = [
+              ",${path}"
+            ];
+          };
+        };
+      }
+    )
+  ];
 }

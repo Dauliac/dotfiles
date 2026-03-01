@@ -1,6 +1,11 @@
-_: {
-  programs.hyprland = {
-    enable = true;
-    xwayland.enable = true;
-  };
+{ lib, ... }:
+{
+  config.dotfiles.nixos.sharedModules = lib.mkAfter [
+    (_: {
+      programs.hyprland = {
+        enable = true;
+        xwayland.enable = true;
+      };
+    })
+  ];
 }

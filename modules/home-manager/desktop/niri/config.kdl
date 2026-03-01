@@ -42,11 +42,23 @@ input {
     // Setting max-scroll-amount="0%" makes it work only on windows already fully on screen.
     // focus-follows-mouse max-scroll-amount="0%"
 }
-output "HDMI-A-1" {
-    mode "1920x1080@72"
+output "DVI-I-1" {
+    mode "2560x1080"
     scale 1
     transform "normal"
-    position x=1280 y=0
+    position x=0 y=0
+}
+output "DVI-I-2" {
+    mode "1920x1080"
+    scale 1
+    transform "90"
+    position x=2560 y=0
+}
+output "eDP-1" {
+    mode "1920x1200"
+    scale 1
+    transform "normal"
+    position x=640 y=1080
 }
 overview {
     zoom 0.45
@@ -168,10 +180,6 @@ animations {
 }
 
 window-rule {
-  opacity 0.65
-}
-
-window-rule {
     // This regular expression is intentionally made as specific as possible,
     // since this is the default config, and we want no false positives.
     // You can get away with just app-id="wezterm" if you want.
@@ -245,8 +253,16 @@ window-rule {
 }
 
 
-// This line starts waybar, a commonly used bar for Wayland compositors.
-spawn-at-startup "waybar"
+// After niri sets WAYLAND_DISPLAY, propagate it to D-Bus and start portals fresh
+// Stop any failed/stuck portals first, then start properly
+spawn-sh-at-startup "sleep 2 && systemctl --user stop xdg-desktop-portal xdg-desktop-portal-gtk 2>/dev/null; dbus-update-activation-environment --systemd WAYLAND_DISPLAY DISPLAY XDG_CURRENT_DESKTOP && systemctl --user start xdg-desktop-portal-gtk && systemctl --user start xdg-desktop-portal"
+
+// Desktop shell (bar, launcher, notifications, control center)
+// noctalia-shell is started via systemd user service (programs.noctalia-shell.systemd.enable = true)
+
+// X11 app support via XWayland
+spawn-at-startup "xwayland-satellite"
+
 spawn-at-startup "bitwarden"
 spawn-sh-at-startup "waypaper --random"
 spawn-at-startup "obs"
@@ -265,7 +281,7 @@ binds {
     Mod+Shift+Slash { show-hotkey-overlay; }
     Mod+Shift+O hotkey-overlay-title="toggle opacity" { toggle-window-rule-opacity; }
 
-    Mod+W hotkey-overlay-title="toggle waybar" repeat=false { spawn-sh "pkill -SIGUSR1 waybar || waybar"; }
+    Mod+W hotkey-overlay-title="toggle noctalia" repeat=false { spawn-sh "pkill -f noctalia-shell || noctalia-shell"; }
 
     // Suggested binds for running programs: terminal, app launcher, screen locker.
     Mod+T hotkey-overlay-title="Open a Terminal " { spawn "ghostty"; }

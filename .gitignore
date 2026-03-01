@@ -2,3 +2,5 @@ result*
 .direnv/
 .task/
 .nixos-test-history
+.ezci/
+*.qcow2

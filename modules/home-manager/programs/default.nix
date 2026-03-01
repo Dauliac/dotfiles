@@ -1,113 +1,95 @@
-{ ... }:
+# Base home-manager programs - auto-imported by import-tree
+# No imports needed - other modules are automatically discovered
+{ lib, ... }:
 {
-  imports = [
-    ./alacritty.nix
-    ./bat.nix
-    ./claude.nix
-    ./direnv.nix
-    ./git.nix
-    ./history.nix
-    ./lazygit.nix
-    ./neovim
-    ./pet.nix
-    ./ssh.nix
-    ./starship.nix
-    ./kitty.nix
-    ./wezterm.nix
-    ./zellij.nix
-    ./zsh.nix
-    ./eza.nix
-    ./yazi.nix
-    ./ghostty.nix
-    ./kubecolor.nix
-    ./go.nix
-    ./bacon.nix
-    ./pueue.nix
-  ];
-  programs.home-manager.enable = true;
-  # NOTE: fast cd
-  programs.zoxide = {
-    enable = true;
-    enableZshIntegration = true;
-  };
-  # NOTE: cheat sheet
-  programs.tealdeer = {
-    enable = true;
-  };
-  # NOTE: cheat sheet
-  programs.navi = {
-    enable = true;
-    enableZshIntegration = true;
-  };
-  programs.jq = {
-    enable = true;
-  };
-  programs.k9s = {
-    enable = true;
-    plugins = {
-      plugins = {
-        debug = {
-          shortCut = "Shift-D";
-          description = "Add debug container";
-          scopes = [ "containers" ];
-          command = "kubectl";
-          background = false;
-          args = [
-            "debug"
-            "-it"
-            "--context"
-            "$CONTEXT"
-            "-n"
-            "$NAMESPACE"
-            "$POD"
-            "--target"
-            "$NAME"
-            "--image=nicolaka/netshoot:v0.13"
-            "--share-processes"
-            "--"
-            "bash"
-          ];
-        };
-        jqlogs = {
-          shortCut = "Ctrl-J";
-          confirm = false;
-          description = "Logs (jq)";
-          scopes = [ "pod" ];
-          command = "sh";
-          background = false;
-          args = [
-            "-c"
-            "kubectl logs -f $NAME -n $NAMESPACE --context $CONTEXT |jq -SR '. as $line | try (fromjson) catch $line'"
-          ];
-        };
-        jqlogsd = {
-          shortCut = "Ctrl-J";
-          confirm = false;
-          description = "Logs (jq)";
-          scopes = [ "deployment" ];
-          command = "sh";
-          background = false;
-          args = [
-            "-c"
-            "kubectl logs -f deployment/$NAME -n $NAMESPACE --context $CONTEXT |jq -SR '. as $line | try (fromjson) catch $line'"
-          ];
-        };
-        jqlogss = {
-          shortCut = "Ctrl-J";
-          confirm = false;
-          description = "Logs (jq)";
-          scopes = [ "service" ];
-          command = "sh";
-          background = false;
-          args = [
-            "-c"
-            "kubectl logs -f service/$NAME -n $NAMESPACE --context $CONTEXT |jq -SR '. as $line | try (fromjson) catch $line'"
-          ];
+  config.dotfiles.home.sharedModules = lib.mkAfter [
+    (_: {
+      programs.home-manager.enable = true;
+      # NOTE: fast cd
+      programs.zoxide = {
+        enable = true;
+        enableZshIntegration = true;
+      };
+      # NOTE: cheat sheet
+      programs.tealdeer = {
+        enable = true;
+      };
+      # NOTE: cheat sheet
+      programs.navi = {
+        enable = true;
+        enableZshIntegration = true;
+      };
+      programs.jq = {
+        enable = true;
+      };
+      programs.k9s = {
+        enable = true;
+        plugins = {
+          plugins = {
+            debug = {
+              shortCut = "Shift-D";
+              description = "Add debug container";
+              scopes = [ "containers" ];
+              command = "kubectl";
+              background = false;
+              args = [
+                "debug"
+                "-it"
+                "--context"
+                "$CONTEXT"
+                "-n"
+                "$NAMESPACE"
+                "$POD"
+                "--target"
+                "$NAME"
+                "--image=nicolaka/netshoot:v0.13"
+                "--share-processes"
+                "--"
+                "bash"
+              ];
+            };
+            jqlogs = {
+              shortCut = "Ctrl-J";
+              confirm = false;
+              description = "Logs (jq)";
+              scopes = [ "pod" ];
+              command = "sh";
+              background = false;
+              args = [
+                "-c"
+                "kubectl logs -f $NAME -n $NAMESPACE --context $CONTEXT |jq -SR '. as $line | try (fromjson) catch $line'"
+              ];
+            };
+            jqlogsd = {
+              shortCut = "Ctrl-J";
+              confirm = false;
+              description = "Logs (jq)";
+              scopes = [ "deployment" ];
+              command = "sh";
+              background = false;
+              args = [
+                "-c"
+                "kubectl logs -f deployment/$NAME -n $NAMESPACE --context $CONTEXT |jq -SR '. as $line | try (fromjson) catch $line'"
+              ];
+            };
+            jqlogss = {
+              shortCut = "Ctrl-J";
+              confirm = false;
+              description = "Logs (jq)";
+              scopes = [ "service" ];
+              command = "sh";
+              background = false;
+              args = [
+                "-c"
+                "kubectl logs -f service/$NAME -n $NAMESPACE --context $CONTEXT |jq -SR '. as $line | try (fromjson) catch $line'"
+              ];
+            };
+          };
         };
       };
-    };
-  };
-  programs.btop = {
-    enable = true;
-  };
+      programs.btop = {
+        enable = true;
+      };
+    })
+  ];
 }

@@ -1,6 +1,11 @@
-_: {
-  catppuccin = {
-    enable = true;
-    flavor = "mocha";
-  };
+{ lib, ... }:
+{
+  config.dotfiles.nixos.sharedModules = lib.mkAfter [
+    (_: {
+      catppuccin = {
+        enable = true;
+        flavor = "mocha";
+      };
+    })
+  ];
 }

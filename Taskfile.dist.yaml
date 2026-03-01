@@ -36,11 +36,6 @@ tasks:
     desc: Install project
     cmds:
       - sudo nixos-rebuild --flake . switch
-  install:pro:
-    silent: true
-    cmds:
-      - system-manager switch --flake '.' --sudo
-      - task: install:home-manager:pro
   install:home-manager:pro:
     silent: true
     desc: Install project
@@ -49,8 +44,15 @@ tasks:
         home-manager switch \
           --flake .
         fc-cache -f -v
+        gtk-update-icon-cache
+        update-desktop-database
       - |
         claude mcp add --transport stdio codemap -- codemap-mcp
+  install:pro:
+    silent: true
+    cmds:
+      - system-manager switch --flake '.' --sudo
+      - task: install:home-manager:pro
   test:
     silent: true
     cmds:

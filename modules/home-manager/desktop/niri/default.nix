@@ -1,244 +1,217 @@
-{ pkgs, ... }:
+{ lib, ... }:
 let
-  nixGL = pkgs.nixgl.nixGLIntel;
-
-  # Wrapped niri binary with nixGL
-  niriWithGL = pkgs.writeShellScriptBin "niri" ''
-    exec ${nixGL}/bin/nixGLIntel ${pkgs.niri}/bin/niri "$@"
-  '';
-
-  # Session script that sets up environment and launches niri
-  niriSession = pkgs.writeShellScriptBin "niri-session" ''
-    # Source home-manager environment for PATH
-    if [ -f "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
-      . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
-    fi
-
-    # Add home-manager profile to PATH
-    export PATH="$HOME/.nix-profile/bin:$PATH"
-
-    export XDG_SESSION_TYPE=wayland
-    export XDG_SESSION_DESKTOP=niri
-    export XDG_CURRENT_DESKTOP=niri
-
-    # For screen sharing
-    export XDG_CURRENT_DESKTOP=niri:GNOME
-
-    exec ${nixGL}/bin/nixGLIntel ${pkgs.niri}/bin/niri
-  '';
+  configDir = ./.;
 in
 {
-  xdg.configFile."niri/config.kdl".source = ./config.kdl;
-  xdg.configFile."swaylock/config".source = ./mocha.conf;
-  # home.file.".local/bin/nws.sh".source = ./nws.sh;
+  config.dotfiles.home.sharedModules = lib.mkAfter [
+    (
+      { pkgs, ... }:
+      let
+        nixGL = pkgs.nixgl.nixGLIntel;
 
-  # Niri-related packages
-  home.packages = with pkgs; [
-    # Compositor (wrapped with nixGL)
-    niriWithGL
-    niriSession
+        # Wrapped niri binary with nixGL
+        niriWithGL = pkgs.writeShellScriptBin "niri" ''
+          exec ${nixGL}/bin/nixGLIntel ${pkgs.niri}/bin/niri "$@"
+        '';
 
-    # Bar
-    waybar
+        # Session script that sets up environment and launches niri (matches NixOS setup)
+        niriSession = pkgs.writeShellScriptBin "niri-session" ''
+          # Source home-manager environment for PATH
+          if [ -f "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
+            . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+          fi
 
-    # Launchers and utilities
-    wofi
-    swaylock-effects
-    swayidle
-    wlogout
-    waypaper
+          # Add home-manager profile to PATH
+          export PATH="$HOME/.nix-profile/bin:$PATH"
 
-    # Screen sharing / portals
-    xdg-desktop-portal-gnome
-    xdg-desktop-portal-gtk
+          # XDG environment
+          export XDG_SESSION_TYPE=wayland
+          export XDG_SESSION_DESKTOP=niri
+          export XDG_CURRENT_DESKTOP=niri
+          export XDG_RUNTIME_DIR="''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
 
-    # Notifications
-    mako
+          # Wayland display
+          export WAYLAND_DISPLAY="''${WAYLAND_DISPLAY:-wayland-1}"
 
-    # Clipboard
-    wl-clipboard
-    cliphist
+          # For Electron/Chromium apps on Wayland
+          export NIXOS_OZONE_WL=1
 
-    # Screenshot
-    grim
-    slurp
+          # Cursor settings
+          export XCURSOR_THEME="''${XCURSOR_THEME:-default}"
+          export XCURSOR_SIZE="''${XCURSOR_SIZE:-24}"
 
-    # Media/audio control
-    playerctl
-    brightnessctl
-    pamixer
+          # D-Bus session
+          export DBUS_SESSION_BUS_ADDRESS="unix:path=$XDG_RUNTIME_DIR/bus"
 
-    # Wallpaper
-    swaybg
+          # Start D-Bus user session if not running
+          if ! ${pkgs.systemd}/bin/systemctl --user is-active --quiet dbus.socket; then
+            ${pkgs.systemd}/bin/systemctl --user start dbus.socket
+          fi
+
+          # KEY STEP: Import environment into D-Bus activation environment
+          # This is what NixOS does - propagates env vars to D-Bus for portals
+          ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd \
+            PATH DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE \
+            XDG_SESSION_DESKTOP XDG_RUNTIME_DIR DBUS_SESSION_BUS_ADDRESS \
+            NIXOS_OZONE_WL XCURSOR_THEME XCURSOR_SIZE
+
+          # Also import into systemd user manager
+          ${pkgs.systemd}/bin/systemctl --user import-environment \
+            PATH DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE \
+            XDG_SESSION_DESKTOP XDG_RUNTIME_DIR DBUS_SESSION_BUS_ADDRESS \
+            NIXOS_OZONE_WL XCURSOR_THEME XCURSOR_SIZE
+
+          # Start graphical-session.target (required for portals and other services)
+          ${pkgs.systemd}/bin/systemctl --user start graphical-session.target
+
+          exec ${nixGL}/bin/nixGLIntel ${pkgs.niri}/bin/niri
+        '';
+      in
+      {
+        xdg.configFile."niri/config.kdl".source = configDir + "/config.kdl";
+        xdg.configFile."swaylock/config".source = configDir + "/mocha.conf";
+
+        # Portal configuration for Niri - use gtk for everything
+        # gnome portal requires gnome-shell which isn't running
+        xdg.configFile."xdg-desktop-portal/portals.conf".text = ''
+          [preferred]
+          default=gtk
+          org.freedesktop.impl.portal.Screenshot=gtk
+          org.freedesktop.impl.portal.ScreenCast=gtk
+          org.freedesktop.impl.portal.Settings=gtk
+          org.freedesktop.impl.portal.Background=gtk
+          org.freedesktop.impl.portal.Inhibit=gtk
+          org.freedesktop.impl.portal.FileChooser=gtk
+          org.freedesktop.impl.portal.AppChooser=gtk
+          org.freedesktop.impl.portal.Notification=gtk
+          org.freedesktop.impl.portal.Wallpaper=gtk
+          org.freedesktop.impl.portal.Secret=gnome-keyring
+        '';
+
+        # Noctalia shell (replaces waybar, mako, wofi, etc.)
+        programs.noctalia-shell = {
+          enable = true;
+          systemd.enable = true; # Use systemd to properly start noctalia-shell with correct PATH
+          settings = {
+            bar = {
+              position = "left";
+              opacity = 0.9;
+              widgetsLeft = [
+                "Launcher"
+                "Tray"
+              ];
+              widgetsCenter = [ "Workspace" ];
+              widgetsRight = [
+                "Clock"
+                "NotificationHistory"
+                "Battery"
+                "Volume"
+                "Brightness"
+                "ControlCenter"
+              ];
+            };
+            general = {
+              animationSpeed = 1.0;
+              shadow = true;
+              font = "Iosevka Nerd Font";
+              monoFont = "Iosevka Nerd Font Mono";
+              clipboardHistory = true;
+              volumeOverride = true;
+            };
+            plugins = {
+              states = {
+                "privacy-indicator" = true;
+                "assistant-panel" = true;
+                "catwalk" = true;
+                "screen-recorder" = true;
+                "screenshot" = true;
+                "weekly-calendar" = true;
+                "hyprland-steam-overlay" = true;
+                "fancy-audiovisualizer" = true;
+                "clipper" = true;
+              };
+            };
+          };
+          # Catppuccin Mocha color scheme
+          colors = {
+            mPrimary = "#cba6f7";
+            mOnPrimary = "#1e1e2e";
+            mPrimaryContainer = "#45475a";
+            mOnPrimaryContainer = "#cdd6f4";
+            mSecondary = "#89b4fa";
+            mOnSecondary = "#1e1e2e";
+            mSecondaryContainer = "#313244";
+            mOnSecondaryContainer = "#cdd6f4";
+            mTertiary = "#f5c2e7";
+            mOnTertiary = "#1e1e2e";
+            mTertiaryContainer = "#45475a";
+            mOnTertiaryContainer = "#cdd6f4";
+            mError = "#f38ba8";
+            mOnError = "#1e1e2e";
+            mErrorContainer = "#45475a";
+            mOnErrorContainer = "#f38ba8";
+            mSurface = "#1e1e2e";
+            mOnSurface = "#cdd6f4";
+            mOnSurfaceVariant = "#a6adc8";
+            mSurfaceContainerLowest = "#11111b";
+            mSurfaceContainerLow = "#181825";
+            mSurfaceContainer = "#1e1e2e";
+            mSurfaceContainerHigh = "#313244";
+            mSurfaceContainerHighest = "#45475a";
+            mSurfaceBright = "#585b70";
+            mSurfaceDim = "#11111b";
+            mInverseSurface = "#cdd6f4";
+            mInverseOnSurface = "#1e1e2e";
+            mInversePrimary = "#7c3aed";
+            mOutline = "#6c7086";
+            mOutlineVariant = "#45475a";
+            mShadow = "#00000066";
+            mScrim = "#000000";
+
+            mPrimaryHover = "#b4befe";
+            mSecondaryHover = "#74c7ec";
+            mTertiaryHover = "#f5c2e7";
+            mErrorHover = "#eba0ac";
+            mSurfaceHover = "#313244";
+          };
+        };
+
+        # Niri-related packages
+        home.packages = with pkgs; [
+          # Compositor (wrapped with nixGL)
+          niriWithGL
+          niriSession
+
+          # Launchers and utilities
+          swaylock-effects
+          swayidle
+          wlogout
+          waypaper
+
+          # Screen sharing / portals
+          xdg-desktop-portal
+          xdg-desktop-portal-gtk
+
+          # Clipboard
+          wl-clipboard
+          cliphist
+
+          # Screenshot
+          grim
+          slurp
+
+          # Media/audio control
+          playerctl
+          brightnessctl
+          pamixer
+
+          # Wallpaper
+          swaybg
+
+          # X11 app support
+          xwayland-satellite
+        ];
+      }
+    )
   ];
-
-  # Waybar configuration for Niri
-  programs.waybar = {
-    enable = true;
-    settings = {
-      mainBar = {
-        layer = "top";
-        position = "top";
-        height = 30;
-        spacing = 4;
-
-        modules-left = [
-          "niri/workspaces"
-          "niri/window"
-        ];
-        modules-center = [ "clock" ];
-        modules-right = [
-          "pulseaudio"
-          "network"
-          "cpu"
-          "memory"
-          "temperature"
-          "tray"
-        ];
-
-        "niri/workspaces" = {
-          format = "{icon}";
-          format-icons = {
-            "1" = "1";
-            "brow" = "";
-            "term" = "";
-            "4" = "4";
-            "5" = "5";
-            "6" = "6";
-            "7" = "7";
-            "obs" = "";
-            "oss" = "";
-          };
-          on-click = "activate";
-        };
-
-        "niri/window" = {
-          format = "{}";
-          max-length = 50;
-        };
-
-        clock = {
-          format = "{:%H:%M}";
-          format-alt = "{:%Y-%m-%d %H:%M}";
-          tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
-        };
-
-        cpu = {
-          format = " {usage}%";
-          tooltip = true;
-        };
-
-        memory = {
-          format = " {}%";
-        };
-
-        temperature = {
-          critical-threshold = 80;
-          format = " {temperatureC}°C";
-        };
-
-        network = {
-          format-wifi = " {signalStrength}%";
-          format-ethernet = " {ipaddr}";
-          format-disconnected = "⚠ Disconnected";
-          tooltip-format = "{ifname}: {ipaddr}";
-        };
-
-        pulseaudio = {
-          format = "{icon} {volume}%";
-          format-muted = " muted";
-          format-icons = {
-            default = [
-              ""
-              ""
-              ""
-            ];
-          };
-          on-click = "pavucontrol";
-        };
-
-        tray = {
-          spacing = 10;
-        };
-      };
-    };
-
-    style = ''
-      * {
-        font-family: "Iosevka Nerd Font", monospace;
-        font-size: 14px;
-      }
-
-      window#waybar {
-        background-color: rgba(30, 30, 46, 0.9);
-        color: #cdd6f4;
-        border-bottom: 2px solid #45475a;
-      }
-
-      #workspaces button {
-        padding: 0 8px;
-        color: #6c7086;
-        background: transparent;
-        border-radius: 4px;
-      }
-
-      #workspaces button.active {
-        color: #cba6f7;
-        background: rgba(203, 166, 247, 0.2);
-      }
-
-      #workspaces button:hover {
-        background: rgba(108, 112, 134, 0.3);
-      }
-
-      #clock,
-      #cpu,
-      #memory,
-      #temperature,
-      #network,
-      #pulseaudio,
-      #tray {
-        padding: 0 10px;
-        margin: 4px 2px;
-        background-color: rgba(69, 71, 90, 0.5);
-        border-radius: 4px;
-      }
-
-      #clock {
-        color: #89b4fa;
-      }
-
-      #cpu {
-        color: #f38ba8;
-      }
-
-      #memory {
-        color: #fab387;
-      }
-
-      #temperature {
-        color: #f9e2af;
-      }
-
-      #temperature.critical {
-        color: #f38ba8;
-      }
-
-      #network {
-        color: #a6e3a1;
-      }
-
-      #pulseaudio {
-        color: #cba6f7;
-      }
-
-      #tray {
-        color: #cdd6f4;
-      }
-    '';
-  };
-
-  # Note: mako package is included above for Niri, but service is not enabled
-  # to avoid conflict with hyprpanel (used with Hyprland)
-  # To use mako with Niri, start it manually: mako &
 }
