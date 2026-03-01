@@ -73,6 +73,12 @@
             server_port = 8123;
             ip_ban_enabled = true;
             login_attempts_threshold = 5;
+            # Trust nginx reverse proxy
+            use_x_forwarded_for = true;
+            trusted_proxies = [
+              "127.0.0.1"
+              "::1"
+            ];
           };
 
           # ============================================
