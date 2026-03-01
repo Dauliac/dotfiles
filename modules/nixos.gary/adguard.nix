@@ -1,28 +1,61 @@
 # AdGuard Home DNS ad-blocking service
-# Configuration comes from dotfiles.gary options
+# Defines options AND implementation together
 { lib, ... }:
+let
+  inherit (lib) mkOption mkEnableOption types mkIf mkAfter;
+in
 {
-  config.dotfiles.nixos.hostModules.gary = lib.mkAfter [
+  # ════════════════════════════════════════════
+  # OPTIONS
+  # ════════════════════════════════════════════
+  options.dotfiles.gary.adguard = {
+    enable = mkEnableOption "AdGuard Home DNS";
+
+    port = mkOption {
+      type = types.port;
+      default = 3000;
+      description = "Web UI port";
+    };
+
+    dnsPort = mkOption {
+      type = types.port;
+      default = 53;
+      description = "DNS port";
+    };
+
+    upstreamDNS = mkOption {
+      type = types.listOf types.str;
+      default = [
+        "https://dns.cloudflare.com/dns-query"
+        "https://dns.google/dns-query"
+        "1.1.1.1"
+        "8.8.8.8"
+      ];
+      description = "Upstream DNS servers";
+    };
+  };
+
+  # ════════════════════════════════════════════
+  # IMPLEMENTATION
+  # ════════════════════════════════════════════
+  config.dotfiles.nixos.hostModules.gary = mkAfter [
     (
       { config, ... }:
       let
-        cfg = config.dotfiles.gary;
+        cfg = config.dotfiles.gary.adguard;
       in
-      lib.mkIf cfg.adguard.enable {
+      mkIf cfg.enable {
         services.adguardhome = {
           enable = true;
           openFirewall = true;
-          port = 3000;
+          port = cfg.port;
 
           settings = {
             dns = {
               bind_hosts = [ "0.0.0.0" ];
-              port = 53;
-              upstream_dns = cfg.adguard.upstreamDNS;
-              bootstrap_dns = [
-                "1.1.1.1"
-                "8.8.8.8"
-              ];
+              port = cfg.dnsPort;
+              upstream_dns = cfg.upstreamDNS;
+              bootstrap_dns = [ "1.1.1.1" "8.8.8.8" ];
               upstream_mode = "parallel";
               cache_size = 4194304;
               cache_ttl_min = 300;
@@ -34,10 +67,9 @@
               filtering_enabled = true;
               safe_search.enabled = false;
               parental.enabled = false;
-              # rewrites are added by reverse-proxy.nix or acme.nix
             };
 
-            http.address = "0.0.0.0:3000";
+            http.address = "0.0.0.0:${toString cfg.port}";
 
             statistics = {
               enabled = true;
@@ -47,11 +79,10 @@
         };
 
         networking.firewall = {
-          allowedTCPPorts = [ 53 ];
-          allowedUDPPorts = [ 53 ];
+          allowedTCPPorts = [ cfg.dnsPort ];
+          allowedUDPPorts = [ cfg.dnsPort ];
         };
 
-        # Use local DNS for this machine
         networking.nameservers = lib.mkDefault [ "127.0.0.1" ];
       }
     )

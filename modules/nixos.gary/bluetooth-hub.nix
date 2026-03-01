@@ -1,44 +1,75 @@
 # Bluetooth audio hub configuration
 # Makes gary act as a Bluetooth audio receiver
-# Configuration comes from dotfiles.gary options
+# Defines options AND implementation together
 { lib, ... }:
+let
+  inherit (lib) mkOption mkEnableOption types mkIf mkAfter;
+in
 {
-  config.dotfiles.nixos.hostModules.gary = lib.mkAfter [
+  # ════════════════════════════════════════════
+  # OPTIONS
+  # ════════════════════════════════════════════
+  options.dotfiles.gary.bluetooth = {
+    enable = mkEnableOption "Bluetooth audio hub";
+
+    deviceName = mkOption {
+      type = types.str;
+      default = "Gary Audio Hub";
+      description = "Bluetooth device name shown to other devices";
+    };
+
+    alwaysDiscoverable = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Keep device always discoverable";
+    };
+
+    codecs = mkOption {
+      type = types.listOf types.str;
+      default = [
+        "sbc"
+        "sbc_xq"
+        "aac"
+        "ldac"
+        "aptx"
+        "aptx_hd"
+        "aptx_ll"
+        "aptx_ll_duplex"
+      ];
+      description = "Enabled Bluetooth audio codecs";
+    };
+  };
+
+  # ════════════════════════════════════════════
+  # IMPLEMENTATION
+  # ════════════════════════════════════════════
+  config.dotfiles.nixos.hostModules.gary = mkAfter [
     (
       { config, pkgs, ... }:
       let
-        cfg = config.dotfiles.gary;
+        cfg = config.dotfiles.gary.bluetooth;
       in
-      lib.mkIf cfg.bluetooth.enable {
-        # Enhanced Bluetooth configuration for audio hub
+      mkIf cfg.enable {
         hardware.bluetooth = {
           enable = true;
           powerOnBoot = true;
           settings = {
             General = {
-              # Enable A2DP sink (receive audio)
               Enable = "Source,Sink,Media,Socket";
-
-              # Make discoverable and pairable
-              Discoverable = true;
-              DiscoverableTimeout = 0;
+              Discoverable = cfg.alwaysDiscoverable;
+              DiscoverableTimeout = if cfg.alwaysDiscoverable then 0 else 180;
               Pairable = true;
               PairableTimeout = 0;
-
-              # Device name from options
-              Name = cfg.bluetooth.deviceName;
-              Class = "0x20041C"; # Audio device class
-
+              Name = cfg.deviceName;
+              Class = "0x20041C";
               Experimental = true;
               FastConnectable = true;
               MultiProfile = "multiple";
             };
-
             Policy.AutoEnable = true;
           };
         };
 
-        # PipeWire configuration for Bluetooth audio
         services.pipewire = {
           enable = true;
           wireplumber = {
@@ -49,16 +80,7 @@
                   "bluez5.enable-sbc-xq" = true;
                   "bluez5.enable-msbc" = true;
                   "bluez5.enable-hw-volume" = true;
-                  "bluez5.codecs" = [
-                    "sbc"
-                    "sbc_xq"
-                    "aac"
-                    "ldac"
-                    "aptx"
-                    "aptx_hd"
-                    "aptx_ll"
-                    "aptx_ll_duplex"
-                  ];
+                  "bluez5.codecs" = cfg.codecs;
                   "bluez5.roles" = [
                     "a2dp_sink"
                     "a2dp_source"
@@ -78,16 +100,13 @@
                   ];
                 };
               };
-              "11-audio-routing" = {
-                "wireplumber.settings" = {
-                  "bluetooth.autoswitch-to-headset-profile" = false;
-                };
+              "11-audio-routing"."wireplumber.settings" = {
+                "bluetooth.autoswitch-to-headset-profile" = false;
               };
             };
           };
         };
 
-        # Bluetooth and audio management tools
         environment.systemPackages = with pkgs; [
           bluez
           bluez-tools
@@ -96,10 +115,7 @@
           pwvucontrol
         ];
 
-        users.users.gary.extraGroups = [
-          "audio"
-          "bluetooth"
-        ];
+        users.users.gary.extraGroups = [ "audio" "bluetooth" ];
 
         systemd.services.bluetooth = {
           wantedBy = [ "multi-user.target" ];

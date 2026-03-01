@@ -1,14 +1,51 @@
 # Home Assistant smart home automation
-# Configuration comes from dotfiles.gary options
+# Defines options AND implementation together
 { lib, ... }:
+let
+  inherit (lib) mkOption mkEnableOption types mkIf mkAfter;
+in
 {
-  config.dotfiles.nixos.hostModules.gary = lib.mkAfter [
+  # ════════════════════════════════════════════
+  # OPTIONS
+  # ════════════════════════════════════════════
+  options.dotfiles.gary.homeAssistant = {
+    enable = mkEnableOption "Home Assistant";
+
+    timezone = mkOption {
+      type = types.str;
+      default = "Europe/Paris";
+      description = "Timezone for Home Assistant";
+    };
+
+    homeName = mkOption {
+      type = types.str;
+      default = "Home";
+      description = "Name of your home";
+    };
+
+    latitude = mkOption {
+      type = types.nullOr types.float;
+      default = null;
+      description = "Home latitude for sun-based automations";
+    };
+
+    longitude = mkOption {
+      type = types.nullOr types.float;
+      default = null;
+      description = "Home longitude for sun-based automations";
+    };
+  };
+
+  # ════════════════════════════════════════════
+  # IMPLEMENTATION
+  # ════════════════════════════════════════════
+  config.dotfiles.nixos.hostModules.gary = mkAfter [
     (
       { config, ... }:
       let
-        cfg = config.dotfiles.gary;
+        cfg = config.dotfiles.gary.homeAssistant;
       in
-      lib.mkIf cfg.homeAssistant.enable {
+      mkIf cfg.enable {
         services.home-assistant = {
           enable = true;
           openFirewall = true;
@@ -60,9 +97,9 @@
 
         config = {
           homeassistant = {
-            name = cfg.homeAssistant.homeName;
+            name = cfg.homeName;
             unit_system = "metric";
-            time_zone = cfg.homeAssistant.timezone;
+            time_zone = cfg.timezone;
             # Customize entity names and icons
             customize = {
               "light.living_room" = {
