@@ -1,21 +1,32 @@
+# Home-manager configuration for gary host
+# Passes NixOS-level config (like services) to home-manager
+{ lib, ... }:
 {
-  lib,
-  ...
-}:
-{
-  # Configure home-manager users for gary host
-  # The actual home-manager modules are passed via home-manager.sharedModules
-  # in nixos-configurations.nix (from config.dotfiles.home.sharedModules)
   config.dotfiles.nixos.hostModules.gary = lib.mkAfter [
-    (_: {
-      # Users gary and dauliac get sharedModules automatically
-      # home.stateVersion is required
-      home-manager.users.gary = {
-        home.stateVersion = "25.05";
-      };
-      home-manager.users.dauliac = {
-        home.stateVersion = "25.05";
-      };
-    })
+    (
+      { config, ... }:
+      let
+        cfg = config.dotfiles.gary;
+        enabledServices = lib.filterAttrs (_: svc: svc.enable) cfg.services;
+      in
+      {
+        home-manager.users.gary = {
+          home.stateVersion = "25.05";
+
+          # Pass NixOS services to Firefox bookmarks
+          dotfiles.gary.firefox = {
+            enable = true;
+            localServices = enabledServices;
+            domain = if cfg.acme.enable then cfg.domain.public else cfg.domain.local;
+            useTLS = cfg.acme.enable;
+            scale = "3"; # HiDPI scaling
+          };
+        };
+
+        home-manager.users.dauliac = {
+          home.stateVersion = "25.05";
+        };
+      }
+    )
   ];
 }
