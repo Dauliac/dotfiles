@@ -104,11 +104,15 @@
           };
         };
 
-        # Useful tools for Bluetooth management
+        # Useful tools for Bluetooth and audio management
         environment.systemPackages = with pkgs; [
           bluez
           bluez-tools
           bluetuith # TUI Bluetooth manager
+
+          # Audio routing GUI
+          helvum # Visual PipeWire patchbay - drag & drop audio routing
+          pwvucontrol # Modern PipeWire volume control
         ];
 
         # Ensure user can manage Bluetooth
