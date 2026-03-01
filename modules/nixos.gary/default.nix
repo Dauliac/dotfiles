@@ -16,9 +16,9 @@
   config.dotfiles.gary = {
     # Network (from options.nix)
     network = {
-      lanIP = "192.168.1.100"; # ← Change to gary's actual IP
-      interface = "wlp0s20f3"; # ← Change to actual interface (ip link)
-      gateway = "192.168.1.1";
+      lanIP = "10.10.0.12";
+      interface = "wlp0s20f3";
+      gateway = "10.10.0.1";
     };
 
     # Domains (from options.nix)
@@ -56,7 +56,7 @@
     # Bluetooth audio hub (from bluetooth-hub.nix)
     bluetooth = {
       enable = true;
-      deviceName = "Gary Audio Hub";
+      deviceName = "Gary 🐌";
     };
 
     # Services for reverse proxy (from services.nix)
