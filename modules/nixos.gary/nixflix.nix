@@ -36,7 +36,13 @@
         };
 
         # Media streaming
-        jellyfin.enable = true;
+        jellyfin = {
+          enable = true;
+          users.admin = {
+            policy.isAdministrator = true;
+            password = { _secret = config.sops.secrets.jellyfin-admin-password.path; };
+          };
+        };
 
         # Media requests
         jellyseerr = {

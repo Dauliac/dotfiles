@@ -1,72 +1,22 @@
 # Centralized reverse proxy for all services
 # Uses nginx with local DNS via AdGuard Home
+# Configuration comes from dotfiles.gary options
 { lib, ... }:
 {
   config.dotfiles.nixos.hostModules.gary = lib.mkAfter [
     (
       { config, ... }:
       let
-        # Local domain for all services
-        domain = "gary.local";
-
-        # Service definitions: name -> { port, description }
-        services = {
-          # Home Automation
-          hass = {
-            port = 8123;
-            description = "Home Assistant";
-            extraConfig = ''
-              proxy_set_header Upgrade $http_upgrade;
-              proxy_set_header Connection "upgrade";
-            '';
-          };
-          adguard = {
-            port = 3000;
-            description = "AdGuard Home DNS";
-          };
-
-          # Media - Nixflix stack
-          jellyfin = {
-            port = 8096;
-            description = "Jellyfin Media Server";
-            extraConfig = ''
-              proxy_buffering off;
-            '';
-          };
-          jellyseerr = {
-            port = 5055;
-            description = "Jellyseerr Requests";
-          };
-          sonarr = {
-            port = 8989;
-            description = "Sonarr TV Shows";
-          };
-          radarr = {
-            port = 7878;
-            description = "Radarr Movies";
-          };
-          lidarr = {
-            port = 8686;
-            description = "Lidarr Music";
-          };
-          prowlarr = {
-            port = 9696;
-            description = "Prowlarr Indexers";
-          };
-
-          # Audio
-          # pipewire = {
-          #   port = 4713;
-          #   description = "PipeWire Remote";
-          # };
-        };
+        cfg = config.dotfiles.gary;
+        domain = cfg.domain.local;
+        enabledServices = lib.filterAttrs (_: svc: svc.enable) cfg.services;
 
         # Generate nginx virtual host for a service
-        mkVirtualHost = name: cfg: {
-          "${name}.${domain}" = {
+        mkVirtualHost = name: svc: {
+          "${svc.subdomain}.${domain}" = {
             forceSSL = false;
             locations."/" = {
-              proxyPass = "http://127.0.0.1:${toString cfg.port}";
+              proxyPass = "http://127.0.0.1:${toString svc.port}";
               proxyWebsockets = true;
               extraConfig =
                 ''
@@ -75,31 +25,30 @@
                   proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
                   proxy_set_header X-Forwarded-Proto $scheme;
                 ''
-                + (cfg.extraConfig or "");
+                + svc.extraNginxConfig;
             };
           };
         };
 
-        # Generate all virtual hosts
-        virtualHosts = lib.foldl' (acc: name: acc // mkVirtualHost name services.${name}) { } (
-          lib.attrNames services
+        virtualHosts = lib.foldl' (acc: name: acc // mkVirtualHost name enabledServices.${name}) { } (
+          lib.attrNames enabledServices
         );
 
         # Generate DNS rewrites for AdGuard Home
-        dnsRewrites = lib.mapAttrsToList (name: _: {
-          domain = "${name}.${domain}";
-          answer = "127.0.0.1";
-        }) services;
+        dnsRewrites = lib.mapAttrsToList (name: svc: {
+          domain = "${svc.subdomain}.${domain}";
+          answer = cfg.network.lanIP;
+        }) enabledServices;
       in
       {
-        # Nginx reverse proxy
-        services.nginx = {
+        # Only enable if ACME is disabled (use acme.nix for TLS)
+        services.nginx = lib.mkIf (!cfg.acme.enable) {
           enable = true;
           recommendedProxySettings = true;
           recommendedOptimisation = true;
           recommendedGzipSettings = true;
 
-          # Landing page with links to all services
+          # Landing page
           virtualHosts."${domain}" = {
             default = true;
             locations."/" = {
@@ -122,46 +71,37 @@
                   <div class="services">
                     ${lib.concatStringsSep "\n" (
                       lib.mapAttrsToList (
-                        name: cfg:
-                        "<a href=\"http://${name}.${domain}\"><strong>${cfg.description}</strong><div class=\"desc\">${name}.${domain}</div></a>"
-                      ) services
+                        name: svc:
+                        "<a href=\"http://${svc.subdomain}.${domain}\"><strong>${svc.description}</strong><div class=\"desc\">${svc.subdomain}.${domain}</div></a>"
+                      ) enabledServices
                     )}
                   </div>
                 </body>
                 </html>'
               '';
-              extraConfig = ''
-                default_type text/html;
-              '';
+              extraConfig = "default_type text/html;";
             };
           };
 
-          # All service virtual hosts
-          virtualHosts = virtualHosts;
+          inherit virtualHosts;
         };
 
-        # AdGuard Home DNS rewrites for local domain resolution
-        services.adguardhome.settings.filtering = {
-          rewrites = dnsRewrites ++ [
-            # Main domain
+        # AdGuard DNS rewrites for local domain resolution
+        services.adguardhome.settings.filtering.rewrites = lib.mkIf cfg.adguard.enable (
+          dnsRewrites
+          ++ [
             {
               domain = domain;
-              answer = "127.0.0.1";
+              answer = cfg.network.lanIP;
             }
-            # Wildcard for any new services
             {
               domain = "*.${domain}";
-              answer = "127.0.0.1";
+              answer = cfg.network.lanIP;
             }
-          ];
-        };
+          ]
+        );
 
-        # Open HTTP port
-        networking.firewall.allowedTCPPorts = [ 80 ];
-
-        # Ensure nginx can connect to all services
-        systemd.services.nginx.wants =
-          lib.mapAttrsToList (name: _: "${name}.service") services;
+        networking.firewall.allowedTCPPorts = lib.mkIf (!cfg.acme.enable) [ 80 ];
       }
     )
   ];

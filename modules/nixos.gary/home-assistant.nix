@@ -1,12 +1,19 @@
+# Home Assistant smart home automation
+# Configuration comes from dotfiles.gary options
 { lib, ... }:
 {
   config.dotfiles.nixos.hostModules.gary = lib.mkAfter [
-    (_: {
-      services.home-assistant = {
-        enable = true;
-        openFirewall = true; # Opens port 8123
+    (
+      { config, ... }:
+      let
+        cfg = config.dotfiles.gary;
+      in
+      lib.mkIf cfg.homeAssistant.enable {
+        services.home-assistant = {
+          enable = true;
+          openFirewall = true;
 
-        extraComponents = [
+          extraComponents = [
           # Lights
           "hue" # Philips Hue
           "yeelight" # Xiaomi Yeelight
@@ -53,9 +60,9 @@
 
         config = {
           homeassistant = {
-            name = "Home";
+            name = cfg.homeAssistant.homeName;
             unit_system = "metric";
-            time_zone = "Europe/Paris";
+            time_zone = cfg.homeAssistant.timezone;
             # Customize entity names and icons
             customize = {
               "light.living_room" = {
@@ -606,8 +613,9 @@
         openFirewall = true;
       };
 
-      # For Bluetooth support
-      hardware.bluetooth.enable = lib.mkDefault true;
-    })
+        # For Bluetooth support
+        hardware.bluetooth.enable = lib.mkDefault true;
+      }
+    )
   ];
 }
