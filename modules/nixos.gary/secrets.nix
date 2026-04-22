@@ -1,17 +1,15 @@
-{ lib, ... }:
 {
-  config.dotfiles.nixos.hostModules.gary = lib.mkAfter [
-    (_: {
-      sops = {
-        secrets.gary_hashed_password = { };
-        # Nixflix API keys
-        secrets.sonarr-api-key = { };
-        secrets.radarr-api-key = { };
-        secrets.lidarr-api-key = { };
-        secrets.prowlarr-api-key = { };
-        secrets.jellyseerr-api-key = { };
-        secrets.jellyfin-admin-password = { };
-      };
-    })
-  ];
+  flake.modules.nixos.gary-secrets = {
+    sops.secrets.gary_hashed_password = {
+      sopsFile = ../../secrets/passwords/gary.enc;
+      format = "json";
+      key = "data";
+    };
+    sops.secrets.sonarr-api-key = { };
+    sops.secrets.radarr-api-key = { };
+    sops.secrets.lidarr-api-key = { };
+    sops.secrets.prowlarr-api-key = { };
+    sops.secrets.jellyseerr-api-key = { };
+    sops.secrets.jellyfin-admin-password = { };
+  };
 }

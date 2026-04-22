@@ -1,13 +1,10 @@
-{ lib, ... }:
 {
-  config.dotfiles.nixos.sharedModules = lib.mkAfter [
-    (_: {
-      sops = {
-        age.keyFile = "/home/dauliac/.config/sops/age/dotfiles.txt";
-        defaultSopsFile = ../../secrets.yaml;
-        secrets.openai_key = { };
-        secrets.dauliac_hashed_password = { };
-      };
-    })
-  ];
+  flake.modules.nixos.secrets = {
+    sops = {
+      age.keyFile = "/home/dauliac/.config/sops/age/dotfiles.txt";
+      defaultSopsFile = ../../secrets.yaml;
+      secrets.openai_key = { };
+      secrets.dauliac_hashed_password = { };
+    };
+  };
 }

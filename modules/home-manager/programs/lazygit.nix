@@ -1,11 +1,8 @@
-{ lib, ... }:
 {
-  config.dotfiles.home.sharedModules = lib.mkAfter [
-    (_: {
-      programs.lazygit = {
-        enable = true;
-        settings = { };
-      };
-    })
-  ];
+  flake.modules.homeManager.lazygit = {
+    programs.lazygit = {
+      enable = true;
+      settings = { };
+    };
+  };
 }

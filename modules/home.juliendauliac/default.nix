@@ -1,247 +1,246 @@
-# Home-manager configuration for user: juliendauliac
-# Auto-imported by import-tree - no imports needed
-{ lib, ... }:
+{ inputs, ... }:
 let
   secretsDir = ./.;
   dauliacSecretsDir = ../home.dauliac;
 in
 {
-  # Set GPU wrapper type for this user (non-NixOS system)
-  config.dotfiles.gpu = {
-    enable = true;
-    wrapperType = "intel";
-  };
+  flake.modules.homeManager.user-juliendauliac =
+    {
+      config,
+      lib,
+      pkgs,
+      ...
+    }:
+    let
+      nixGlWrapper = config.systemConstants.nixgl.wrapPackage { inherit pkgs; };
+      proprietaryEnabled = config.systemConstants.proprietary.enable;
+    in
+    {
+      imports = with inputs.self.modules.homeManager; [
+        base
+        aliases
+        packages
+        programs-base
+        secrets
+        theme
+        ai
+        bacon
+        bat
+        direnv
+        eza
+        git
+        go
+        history
+        kubecolor
+        lazygit
+        neovim
+        neovim-lsp
+        neovim-opts
+        neovim-packages
+        pet
+        pueue
+        ssh
+        starship
+        terminal-multiplexer
+        alacritty
+        ghostty
+        kitty
+        wezterm
+        tmux
+        yazi
+        zsh
+      ] ++ [
+        inputs.self.modules.generic.nixgl-wrapper
+        inputs.self.modules.generic.proprietary-flag
+      ];
 
-  config.dotfiles.home.userModules.juliendauliac = lib.mkAfter [
-    (
-      {
-        config,
-        lib,
-        pkgs,
-        nixGlWrapper,
-        proprietaryEnabled,
-        ...
-      }:
-      {
-        # Enable generic Linux target for non-NixOS systems (Ubuntu)
-        targets.genericLinux.enable = true;
+      systemConstants.nixgl.wrapperType = lib.mkDefault "intel";
 
-        # Add flatpak paths to XDG data dirs (complements xdg.systemDirs.data from shared config)
-        xdg.systemDirs.data = [
-          "/var/lib/flatpak/exports/share"
-          "${config.home.homeDirectory}/.local/share/flatpak/exports/share"
+      targets.genericLinux.enable = true;
+
+      xdg.systemDirs.data = [
+        "/var/lib/flatpak/exports/share"
+        "${config.home.homeDirectory}/.local/share/flatpak/exports/share"
+      ];
+
+      home.sessionVariables = {
+        NPM_CONFIG_PREFIX = "$XDG_DATA_HOME/npm-packages";
+        PATH = "$HOME/.local/bin:$HOME/ghq/git.manomano.tech/julien.dauliac/cimera/cli/target/release:$PATH:$NPM_CONFIG_PREFIX/bin/:$HOME/${config.programs.go.goBin}";
+        AWS_DEFAULT_PROFILE = "manomano-support";
+      };
+
+      programs.zsh.initContent = ''
+        if command -v cimera &> /dev/null; then
+          eval "$(cimera activate zsh)"
+        fi
+      '';
+
+      programs.mise = {
+        enable = true;
+        enableZshIntegration = true;
+      };
+
+      home.packages =
+        with pkgs;
+        [
+          awscli2
+          cloudflared
+          cloudlens
+          fluxcd
+          glab
+          docker
+          docker-compose
+          kubecm
+          kubectl
+          kubelogin
+          kubelogin-oidc
+          okta-aws-cli
+          granted
+          pdm
+          pipx
+          python312
+          python313Packages.virtualenv
+          terraform
+          terragrunt
+          vault
+          vsh
+          nodejs_20
+          skopeo
+          lazydocker
+          pnpm_10
+          pre-commit
+          ruby
+          just
+          yq
+          amazon-ecr-credential-helper
+          (nixGlWrapper prismlauncher)
+        ]
+        ++ lib.optionals proprietaryEnabled [
+          chromium
+          dbeaver-bin
+          gemini-cli-bin
         ];
 
-        home.sessionVariables = {
-          NPM_CONFIG_PREFIX = "$XDG_DATA_HOME/npm-packages";
-          PATH = "$HOME/ghq/git.manomano.tech/julien.dauliac/ezci/cli/target/release:$PATH:$NPM_CONFIG_PREFIX/bin/:$HOME/${config.programs.go.goBin}";
-          AWS_DEFAULT_PROFILE = "manomano-support";
-        };
+      home.shellAliases = {
+        vault_all = ''
+          for ENV in int stg prd support ist; do
+            export VAULT_ADDR=https://vault-eu-west-3.$ENV.manomano.com
+            export VAULT_''${ENV}_TOKEN=$(vault login -token-only -path=sso -method=oidc role=sre | grep hvs)
+          done'';
+      };
 
-        programs.zsh.initContent = ''
-          if command -v ezci &> /dev/null; then
-            eval "$(ezci activate zsh)"
-          fi
+      programs.git.settings = {
+        core.sshCommand = "SSH_AUTH_SOCK= ssh -i ~/.ssh/id_ed25519.perso -o IdentitiesOnly=yes";
+        include.path = config.sops.secrets.gitDauliac.path;
+        "includeIf \"gitdir:**/*manomano*/**\"".path = config.sops.secrets.gitJulienDauliac.path;
+      };
 
-          # export ANTHROPIC_API_KEY="$(cat ${config.sops.secrets.claude_api_key.path})"
-        '';
+      home.file.".config/git/manomano-ssh.inc".text = ''
+        [core]
+          sshCommand = ssh -i ~/.ssh/id_rsa -o IdentitiesOnly=yes
+      '';
 
-        programs.mise = {
-          enable = true;
-          enableZshIntegration = true;
-        };
+      programs.git.includes = [
+        {
+          condition = "gitdir:**/*manomano*/**";
+          path = "~/.config/git/manomano-ssh.inc";
+        }
+      ];
 
-        home.packages =
-          with pkgs;
-          [
-            awscli2
-            cloudflared
-            cloudlens
-            fluxcd
-            glab
-            docker
-            docker-compose
-            kubecm
-            kubectl
-            kubelogin
-            kubelogin-oidc
-            okta-aws-cli
-            granted
-            pdm
-            pipx
-            python312
-            python313Packages.virtualenv
-            terraform
-            terragrunt
-            vault
-            vsh
-            nodejs_20
-            skopeo
-            lazydocker
-            pnpm_10
-            oha
-            pre-commit
-            ruby
-            just
-            vector
-            yq
-            ansible
-            minio-client
-            amazon-ecr-credential-helper
-            (nixGlWrapper prismlauncher)
-          ]
-          ++ lib.optionals proprietaryEnabled [
-            # Proprietary software
-            google-chrome
-            slack
-            dbeaver-bin
-            jetbrains.goland
-            jetbrains.pycharm
-            gemini-cli-bin
-          ];
+      programs.ssh.includes = [ "config-mm" ];
 
-        home.shellAliases = {
-          vault_all = ''
-            for ENV in int stg prd support ist; do
-              export VAULT_ADDR=https://vault-eu-west-3.$ENV.manomano.com
-              export VAULT_''${ENV}_TOKEN=$(vault login -token-only -path=sso -method=oidc role=sre | grep hvs)
-            done'';
-        };
+      programs.alacritty.package = nixGlWrapper pkgs.alacritty;
+      programs.kitty.package = nixGlWrapper pkgs.kitty;
 
-        programs.git.settings = {
-          # Default: personal Dauliac account (bypass agent to use correct key)
-          core.sshCommand = "SSH_AUTH_SOCK= ssh -i ~/.ssh/id_ed25519.perso -o IdentitiesOnly=yes";
-          include = {
-            inherit (config.sops.secrets.gitDauliac) path;
-          };
-          # Work: juliendauliac account with id_rsa key
-          "includeIf \"gitdir:**/*manomano*/**\"" = {
-            inherit (config.sops.secrets.gitJulienDauliac) path;
-          };
-        };
-
-        # Work git config with different SSH key
-        home.file.".config/git/manomano-ssh.inc".text = ''
-          [core]
-            sshCommand = ssh -i ~/.ssh/id_rsa -o IdentitiesOnly=yes
-        '';
-
-        programs.git.includes = [
+      services.flatpak = {
+        enable = true;
+        packages = lib.optionals proprietaryEnabled [
           {
-            condition = "gitdir:**/*manomano*/**";
-            path = "~/.config/git/manomano-ssh.inc";
+            appId = "com.slack.Slack";
+            origin = "flathub";
+          }
+          {
+            appId = "app.zen_browser.zen";
+            origin = "flathub";
+          }
+          {
+            appId = "dev.vencord.Vesktop";
+            origin = "flathub";
           }
         ];
+      };
 
-        # Include work SSH config
-        programs.ssh.includes = [ "config-mm" ];
-
-        programs.wezterm.package = nixGlWrapper pkgs.wezterm;
-        programs.alacritty.package = nixGlWrapper pkgs.alacritty;
-        programs.ghostty.package = nixGlWrapper pkgs.ghostty;
-        programs.kitty.package = nixGlWrapper pkgs.kitty;
-
-        services.flatpak = {
-          enable = true;
-          packages = lib.optionals proprietaryEnabled [
-            {
-              appId = "com.slack.Slack";
-              origin = "flathub";
-            }
-            {
-              appId = "app.zen_browser.zen";
-              origin = "flathub";
-            }
-            {
-              appId = "dev.vencord.Vesktop";
-              origin = "flathub";
-            }
-          ];
+      sops.secrets = {
+        claude_api_key = {
+          format = "yaml";
+          sopsFile = ./secrets.enc.yaml;
         };
-
-        sops = {
-          secrets = {
-            claude_api_key = {
-              format = "yaml";
-              sopsFile = ./secrets.enc.yaml;
-            };
-            aws = {
-              sopsFile = secretsDir + "/aws-config.enc.toml";
-              path = "/home/juliendauliac/.aws/config";
-              format = "binary";
-            };
-            gitJulienDauliacRoot = {
-              sopsFile = secretsDir + "/gitconfig.root.enc.ini";
-              path = "/home/juliendauliac/.gitconfig";
-              format = "ini";
-            };
-            gitJulienDauliac = {
-              sopsFile = secretsDir + "/gitconfig.enc.ini";
-              path = "/home/juliendauliac/.config/git/juliendauliac.secrets.ini";
-              format = "ini";
-            };
-            gitDauliac = {
-              sopsFile = dauliacSecretsDir + "/gitconfig.enc.ini";
-              path = "/home/juliendauliac/.config/git/dauliac.secrets.ini";
-              format = "ini";
-            };
-            sshIdRsa = {
-              sopsFile = secretsDir + "/id_rsa.enc";
-              path = "/home/juliendauliac/.ssh/id_rsa";
-              format = "binary";
-            };
-            sshIdRsaPub = {
-              sopsFile = secretsDir + "/id_rsa.enc.pub";
-              path = "/home/juliendauliac/.ssh/id_rsa.pub";
-              format = "binary";
-            };
-            # Personal SSH key (Dauliac account)
-            sshIdPerso = {
-              sopsFile = dauliacSecretsDir + "/id_ed25519.enc";
-              path = "/home/juliendauliac/.ssh/id_ed25519.perso";
-              format = "binary";
-            };
-            sshIdPersoPub = {
-              sopsFile = dauliacSecretsDir + "/id_ed25519.enc.pub";
-              path = "/home/juliendauliac/.ssh/id_ed25519.perso.pub";
-              format = "binary";
-            };
-            glab = {
-              sopsFile = secretsDir + "/glab-config.enc";
-              path = "/home/juliendauliac/.config/glab-cli/config.yml";
-              format = "binary";
-            };
-            ovpn_client_ca = {
-              sopsFile = secretsDir + "/openvpn/ca.enc.crt";
-              path = "/home/juliendauliac/.config/openvpn/client/ca.crt";
-              format = "binary";
-            };
-            ovpn_client_cert = {
-              sopsFile = secretsDir + "/openvpn/client.enc.crt";
-              path = "/home/juliendauliac/.config/openvpn/client09202.crt";
-              format = "binary";
-            };
-            ovpn_client_key = {
-              sopsFile = secretsDir + "/openvpn/client.enc.key";
-              path = "/home/juliendauliac/.config/openvpn/client/client09202.key";
-              format = "binary";
-            };
-            ovpn_client_config = {
-              sopsFile = secretsDir + "/openvpn/client.enc.ovpn";
-              path = "/home/juliendauliac/.config/openvpn/client/config.ovpn";
-              format = "binary";
-            };
-          };
+        gitJulienDauliacRoot = {
+          sopsFile = secretsDir + "/gitconfig.root.enc.ini";
+          path = "/home/juliendauliac/.gitconfig";
+          format = "ini";
         };
-
-        nix.gc = {
-          automatic = true;
-          dates = "weekly";
-          options = "--delete-older-than 30d";
+        gitJulienDauliac = {
+          sopsFile = secretsDir + "/gitconfig.enc.ini";
+          path = "/home/juliendauliac/.config/git/juliendauliac.secrets.ini";
+          format = "ini";
         };
+        gitDauliac = {
+          sopsFile = dauliacSecretsDir + "/gitconfig.enc.ini";
+          path = "/home/juliendauliac/.config/git/dauliac.secrets.ini";
+          format = "ini";
+        };
+        sshIdRsa = {
+          sopsFile = secretsDir + "/id_ed25519.enc";
+          path = "/home/juliendauliac/.ssh/id_ed25519";
+          format = "binary";
+        };
+        sshIdRsaPub = {
+          sopsFile = secretsDir + "/id_ed25519.pub.enc";
+          path = "/home/juliendauliac/.ssh/id_ed25519.pub";
+          format = "binary";
+        };
+        sshIdPerso = {
+          sopsFile = dauliacSecretsDir + "/id_ed25519.enc";
+          path = "/home/juliendauliac/.ssh/id_ed25519.perso";
+          format = "binary";
+        };
+        sshIdPersoPub = {
+          sopsFile = dauliacSecretsDir + "/id_ed25519.enc.pub";
+          path = "/home/juliendauliac/.ssh/id_ed25519.perso.pub";
+          format = "binary";
+        };
+        ovpn_client_ca = {
+          sopsFile = secretsDir + "/openvpn/ca.enc.crt";
+          path = "/home/juliendauliac/.config/openvpn/client/ca.crt";
+          format = "binary";
+        };
+        ovpn_client_cert = {
+          sopsFile = secretsDir + "/openvpn/client.enc.crt";
+          path = "/home/juliendauliac/.config/openvpn/client09202.crt";
+          format = "binary";
+        };
+        ovpn_client_key = {
+          sopsFile = secretsDir + "/openvpn/client.enc.key";
+          path = "/home/juliendauliac/.config/openvpn/client/client09202.key";
+          format = "binary";
+        };
+        ovpn_client_config = {
+          sopsFile = secretsDir + "/openvpn/client.enc.ovpn";
+          path = "/home/juliendauliac/.config/openvpn/client/config.ovpn";
+          format = "binary";
+        };
+      };
 
-        programs.hyprpanel.enable = lib.mkForce false;
-      }
-    )
-  ];
+      nix.gc = {
+        automatic = true;
+        dates = "weekly";
+        options = "--delete-older-than 30d";
+      };
+
+      programs.hyprpanel.enable = lib.mkForce false;
+      programs.tofi.enable = lib.mkForce false;
+      services.hyprpaper.enable = lib.mkForce false;
+      wayland.windowManager.hyprland.enable = lib.mkForce false;
+    };
 }

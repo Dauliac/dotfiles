@@ -1,19 +1,11 @@
-{ lib, ... }:
+{ inputs, ... }:
 {
-  config.dotfiles.nixos.hostModules.spongebob = lib.mkAfter [
-    (
-      { config, ... }:
-      {
-        home-manager = {
-          useGlobalPkgs = true;
-          users.dauliac = {
-            imports =
-              config.dotfiles.home.externalModules
-              ++ config.dotfiles.home.sharedModules
-              ++ (config.dotfiles.home.userModules.dauliac or [ ]);
-          };
-        };
-      }
-    )
-  ];
+  flake.modules.nixos.spongebob-home-manager = {
+    home-manager = {
+      useGlobalPkgs = true;
+      useUserPackages = true;
+      extraSpecialArgs = { inherit inputs; };
+      users.dauliac.imports = [ inputs.self.modules.homeManager.user-dauliac ];
+    };
+  };
 }

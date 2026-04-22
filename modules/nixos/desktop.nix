@@ -1,11 +1,8 @@
-{ lib, ... }:
 {
-  config.dotfiles.nixos.sharedModules = lib.mkAfter [
-    (_: {
-      programs.hyprland = {
-        enable = true;
-        xwayland.enable = true;
-      };
-    })
-  ];
+  flake.modules.nixos.desktop = {
+    programs.hyprland = {
+      enable = true;
+      xwayland.enable = true;
+    };
+  };
 }

@@ -30,19 +30,18 @@ tasks:
       - nix-fast-build --skip-cached --flake ".#packages"
   install:home-manager:
     cmds:
-      - home-manager --flake '.' switch
+      - nh home switch .
   install:nix-os:
     silent: true
     desc: Install project
     cmds:
-      - sudo nixos-rebuild --flake . switch
+      - nh os switch .
   install:home-manager:pro:
     silent: true
     desc: Install project
     cmds:
       - |
-        home-manager switch \
-          --flake .
+        nh home switch .
         fc-cache -f -v
         gtk-update-icon-cache
         update-desktop-database

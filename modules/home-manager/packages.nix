@@ -1,15 +1,8 @@
-{ lib, ... }:
 {
-  config.dotfiles.home.sharedModules = lib.mkAfter [
-    (
-      { pkgs, ... }:
-      let
-        ai = with pkgs; [
-          # claude-code is provided by programs.claude-code in claude.nix
-          codemap
-          codemap-mcp
-          anytype-cli
-        ];
+  flake.modules.homeManager.packages =
+    { pkgs, ... }:
+    let
+        # AI packages are managed in modules/home-manager/ai/
         cli = with pkgs; [
           go-task
           ghq
@@ -35,15 +28,15 @@
           convco
           unzip
           comma
-          postgresql_16
+          # postgresql_16
           pgcli
           asdf
           jless
-          skaffold
-          atlas
-          clickhouse
+          # skaffold
+          # atlas
+          # clickhouse
           entr
-          cargo-tarpaulin
+          # cargo-tarpaulin
           mitmproxy
           (pkgs.wrapHelm pkgs.kubernetes-helm {
             plugins = [
@@ -52,7 +45,7 @@
             ];
           })
           # Nix tooling
-          nx # nix wrapper with better alternatives
+          # nx # nix wrapper with better alternatives
           neix # fast package search
           nix-output-monitor # pretty build output
           nix-tree # dependency browser
@@ -79,15 +72,13 @@
           # TODO: only install if we are not in nixOs profile
           # firefox-devedition # Firefox browser
           system76-keyboard-configurator
-          protonvpn-gui
-          proton-pass
-          discord
+          # protonvpn-gui
+          # proton-pass
+          # discord
           muffon
         ];
-      in
-      {
-        home.packages = cli ++ gui ++ tui ++ ai;
-      }
-    )
-  ];
+    in
+    {
+      home.packages = cli ++ gui ++ tui;
+    };
 }

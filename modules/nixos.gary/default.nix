@@ -1,75 +1,98 @@
-# NixOS configuration for host: gary
-#
-# This file sets values for all gary options.
-# Options are defined in their respective modules:
-#   - options.nix      → network, domain, media (shared)
-#   - services.nix     → service definitions for reverse proxy
-#   - adguard.nix      → dotfiles.gary.adguard.*
-#   - acme.nix         → dotfiles.gary.acme.*
-#   - bluetooth-hub.nix → dotfiles.gary.bluetooth.*
-#   - home-assistant.nix → dotfiles.gary.homeAssistant.*
-{ lib, ... }:
+{ inputs, ... }:
 {
-  # ════════════════════════════════════════════
-  # CONFIGURATION VALUES
-  # ════════════════════════════════════════════
-  config.dotfiles.gary = {
-    # Network (from options.nix)
-    network = {
-      lanIP = "10.10.0.12";
-      interface = "wlp0s20f3";
-      gateway = "10.10.0.1";
-    };
+  flake.modules.nixos.host-gary =
+    {
+      config,
+      lib,
+      ...
+    }:
+    {
+      imports = with inputs.self.modules.nixos; [
+        base
+        bluetooth
+        boot
+        comin
+        desktop
+        hardening
+        locales
+        secrets
+        sound
+        theme
+        users
 
-    # Domains (from options.nix)
-    domain = {
-      public = "j4rd1.cloud";
-      local = "gary.local";
-    };
+        gary-boot
+        gary-gaming
+        gary-gnome
+        gary-hardware
+        gary-home-manager
+        gary-nixflix
+        gary-secrets
+        gary-sleep
+        gary-ssh
+        gary-users
 
-    # Media directories (from options.nix)
-    media = {
-      dataDir = "/data/media";
-      stateDir = "/data/.state";
-    };
+        gary-acme
+        gary-adguard
+        gary-bluetooth-hub
+        gary-home-assistant
+        gary-airplay
+        gary-airplay-uxplay
+        gary-airplay-shairport
+        gary-reverse-proxy
+      ] ++ [
+        inputs.self.modules.generic.gary-constants
+        inputs.self.modules.generic.proprietary-flag
+      ];
 
-    # ACME/TLS (from acme.nix)
-    acme = {
-      enable = true; # Set false for HTTP-only local network
-      email = "admin@j4rd1.cloud";
-      dnsProvider = "cloudflare"; # Your DNS provider
-      useStaging = false; # Set true for testing
-    };
-
-    # Home Assistant (from home-assistant.nix)
-    homeAssistant = {
-      enable = true;
-      timezone = "Europe/Paris";
-      homeName = "Home";
-    };
-
-    # AdGuard DNS (from adguard.nix)
-    adguard = {
-      enable = true;
-    };
-
-    # Bluetooth audio hub (from bluetooth-hub.nix)
-    bluetooth = {
-      enable = true;
-      deviceName = "Gary 🐌";
-    };
-
-    # Services for reverse proxy (from services.nix)
-    # Defaults are already set, override here if needed:
-    # services.lidarr.enable = false;
-  };
-
-  # ════════════════════════════════════════════
-  # HOST CONFIGURATION
-  # ════════════════════════════════════════════
-  config.dotfiles.nixos.hostModules.gary = lib.mkAfter [
-    (_: {
       networking.hostName = "gary";
-    })
-  ];
+
+      virtualisation.vmVariant = {
+        systemConstants.gary.featureFlags.acme = lib.mkForce false;
+        systemConstants.gary.featureFlags.reverseProxy = lib.mkForce true;
+
+        networking.extraHosts =
+          let
+            gary = config.systemConstants.gary;
+            domain = gary.domain.public;
+            localDomain = gary.domain.local;
+            enabledServices = lib.filterAttrs (_: svc: svc.enable) gary.services;
+          in
+          lib.concatStringsSep "\n" (
+            [
+              "127.0.0.1 ${domain}"
+              "127.0.0.1 ${localDomain}"
+            ]
+            ++ (lib.mapAttrsToList (_: svc: "127.0.0.1 ${svc.subdomain}.${domain}") enabledServices)
+            ++ (lib.mapAttrsToList (_: svc: "127.0.0.1 ${svc.subdomain}.${localDomain}") enabledServices)
+          );
+
+        sops.defaultSopsFile = lib.mkForce "/dev/null";
+        sops.validateSopsFiles = false;
+        sops.secrets = lib.mkForce {
+          dauliac_hashed_password = { };
+          gary_hashed_password = { };
+          dauliac_ssh_pub_key = { };
+        };
+
+        # nixflix is disabled via featureFlags.nixflix = false (see gary-constants);
+        # VM overrides re-enable here once the upstream input is fixed.
+
+        users.users.dauliac = {
+          hashedPasswordFile = lib.mkForce null;
+          initialPassword = lib.mkForce "test";
+        };
+        users.users.gary = {
+          hashedPasswordFile = lib.mkForce null;
+          initialPassword = lib.mkForce "test";
+        };
+
+        system.activationScripts.dauliacAuthorizedKeys = lib.mkForce "";
+
+        virtualisation = {
+          memorySize = 4096;
+          cores = 4;
+          graphics = true;
+        };
+      };
+    };
 }

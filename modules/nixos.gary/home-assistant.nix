@@ -1,52 +1,12 @@
-# Home Assistant smart home automation
-# Defines options AND implementation together
-{ lib, ... }:
-let
-  inherit (lib) mkOption mkEnableOption types mkIf mkAfter;
-in
 {
-  # ════════════════════════════════════════════
-  # OPTIONS
-  # ════════════════════════════════════════════
-  options.dotfiles.gary.homeAssistant = {
-    enable = mkEnableOption "Home Assistant";
-
-    timezone = mkOption {
-      type = types.str;
-      default = "Europe/Paris";
-      description = "Timezone for Home Assistant";
-    };
-
-    homeName = mkOption {
-      type = types.str;
-      default = "Home";
-      description = "Name of your home";
-    };
-
-    latitude = mkOption {
-      type = types.nullOr types.float;
-      default = null;
-      description = "Home latitude for sun-based automations";
-    };
-
-    longitude = mkOption {
-      type = types.nullOr types.float;
-      default = null;
-      description = "Home longitude for sun-based automations";
-    };
-  };
-
-  # ════════════════════════════════════════════
-  # IMPLEMENTATION
-  # ════════════════════════════════════════════
-  config.dotfiles.nixos.hostModules.gary = mkAfter [
-    (
-      { config, ... }:
-      let
-        cfg = config.dotfiles.gary.homeAssistant;
-      in
-      mkIf cfg.enable {
-        services.home-assistant = {
+  flake.modules.nixos.gary-home-assistant =
+    { config, lib, ... }:
+    let
+      gary = config.systemConstants.gary;
+      cfg = gary.homeAssistant;
+    in
+    lib.mkIf gary.featureFlags.homeAssistant {
+      services.home-assistant = {
           enable = true;
           openFirewall = true;
 
@@ -650,9 +610,7 @@ in
         openFirewall = true;
       };
 
-        # For Bluetooth support
-        hardware.bluetooth.enable = lib.mkDefault true;
-      }
-    )
-  ];
+      # For Bluetooth support
+      hardware.bluetooth.enable = lib.mkDefault true;
+    };
 }

@@ -1,16 +1,33 @@
-# NixOS configuration for host: spongebob
-# Auto-imported by import-tree - no imports needed
-{ lib, ... }:
+{ inputs, ... }:
 {
-  config.dotfiles.nixos.hostModules.spongebob = lib.mkAfter [
-    (_: {
-      networking.hostName = "spongebob";
+  flake.modules.nixos.host-spongebob = {
+    imports = with inputs.self.modules.nixos; [
+      base
+      bluetooth
+      boot
+      comin
+      desktop
+      gaming
+      hardening
+      locales
+      secrets
+      sound
+      theme
+      users
 
-      fileSystems."/data" = {
-        device = "/dev/disk/by-label/data";
-        fsType = "ext4";
-        options = [ "noatime" ];
-      };
-    })
-  ];
+      spongebob-boot
+      spongebob-desktop
+      spongebob-gaming
+      spongebob-hardware
+      spongebob-home-manager
+    ];
+
+    networking.hostName = "spongebob";
+
+    fileSystems."/data" = {
+      device = "/dev/disk/by-label/data";
+      fsType = "ext4";
+      options = [ "noatime" ];
+    };
+  };
 }

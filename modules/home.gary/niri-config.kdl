@@ -1,0 +1,190 @@
+// Niri configuration for gary (TV setup)
+// High scale factor for comfortable TV viewing distance
+
+input {
+    keyboard {
+        xkb {
+            layout "us"
+        }
+        numlock
+    }
+    touchpad {
+        tap
+        natural-scroll
+    }
+    mouse {
+    }
+}
+
+// TV output - adjust output name if needed (run `niri msg outputs` to check)
+// Common TV outputs: HDMI-A-1, HDMI-1, DP-1
+output "HDMI-A-1" {
+    scale 2.0
+}
+output "HDMI-1" {
+    scale 2.0
+}
+output "DP-1" {
+    scale 2.0
+}
+
+overview {
+    zoom 0.45
+}
+
+layout {
+    gaps 10
+    center-focused-column "on-overflow"
+    always-center-single-column
+
+    focus-ring {
+        off
+    }
+
+    border {
+        off
+    }
+
+    shadow {
+        on
+        draw-behind-window true
+        softness 50
+        spread 5
+        offset x=0 y=5
+        color "#0007"
+    }
+    background-color "transparent"
+}
+
+hotkey-overlay {
+    skip-at-startup
+}
+
+screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
+
+animations {
+}
+
+window-rule {
+    geometry-corner-radius 8
+    clip-to-geometry true
+}
+
+// Open Firefox picture-in-picture as floating
+window-rule {
+    match title="Picture in picture"
+    open-floating true
+    default-floating-position x=100 y=100 relative-to="bottom-right"
+}
+
+// Workspaces
+workspace "1"
+workspace "media"
+workspace "browser"
+workspace "apps"
+
+// App rules
+window-rule {
+    match app-id=r#"chromium"#
+    open-maximized true
+    open-on-workspace "browser"
+}
+window-rule {
+    match app-id=r#"firefox"#
+    open-maximized true
+    open-on-workspace "browser"
+}
+window-rule {
+    match app-id=r#"steam"#
+    open-on-workspace "apps"
+}
+window-rule {
+    match app-id=r#"^Spotify$"#
+    open-on-workspace "media"
+}
+
+// Startup apps
+spawn-sh-at-startup "sleep 2 && systemctl --user stop xdg-desktop-portal xdg-desktop-portal-gtk 2>/dev/null; dbus-update-activation-environment --systemd WAYLAND_DISPLAY DISPLAY XDG_CURRENT_DESKTOP && systemctl --user start xdg-desktop-portal-gtk && systemctl --user start xdg-desktop-portal"
+
+spawn-at-startup "xwayland-satellite"
+spawn-at-startup "kdeconnect-indicator"
+
+binds {
+    Mod+Shift+Slash { show-hotkey-overlay; }
+
+    // Apps
+    Mod+T hotkey-overlay-title="Terminal" { spawn "ghostty"; }
+    Mod+B hotkey-overlay-title="Browser" { spawn "chromium"; }
+    Mod+E hotkey-overlay-title="Files" { spawn "nautilus"; }
+    Mod+D hotkey-overlay-title="Launcher" { spawn-sh "wofi --show drun"; }
+
+    // Volume (for TV remote / media keys)
+    XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05+"; }
+    XF86AudioLowerVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05-"; }
+    XF86AudioMute        allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"; }
+
+    // Media control
+    XF86AudioPlay        allow-when-locked=true { spawn-sh "playerctl play-pause"; }
+    XF86AudioNext        allow-when-locked=true { spawn-sh "playerctl next"; }
+    XF86AudioPrev        allow-when-locked=true { spawn-sh "playerctl previous"; }
+    XF86AudioStop        allow-when-locked=true { spawn-sh "playerctl stop"; }
+
+    Mod+TAB repeat=false { toggle-overview; }
+    Mod+Q repeat=false { close-window; }
+
+    // Navigation
+    Mod+Left  { focus-column-left; }
+    Mod+Down  { focus-window-or-workspace-down; }
+    Mod+Up    { focus-window-or-workspace-up; }
+    Mod+Right { focus-column-right; }
+    Mod+H     { focus-column-left; }
+    Mod+J     { focus-window-or-workspace-down; }
+    Mod+K     { focus-window-or-workspace-up; }
+    Mod+L     { focus-column-right; }
+
+    // Move windows
+    Mod+Ctrl+Left  { move-column-left; }
+    Mod+Ctrl+Down  { move-window-down; }
+    Mod+Ctrl+Up    { move-window-up; }
+    Mod+Ctrl+Right { move-column-right; }
+    Mod+Ctrl+H     { move-column-left; }
+    Mod+Ctrl+J     { move-window-down-or-to-workspace-down; }
+    Mod+Ctrl+K     { move-window-up-or-to-workspace-up; }
+    Mod+Ctrl+L     { move-column-right; }
+
+    // Workspaces
+    Mod+Page_Down      { focus-workspace-down; }
+    Mod+Page_Up        { focus-workspace-up; }
+    Mod+Ctrl+Page_Down { move-column-to-workspace-down; }
+    Mod+Ctrl+Page_Up   { move-column-to-workspace-up; }
+
+    Mod+1 { focus-workspace 1; }
+    Mod+2 { focus-workspace 2; }
+    Mod+3 { focus-workspace 3; }
+    Mod+4 { focus-workspace 4; }
+    Mod+Ctrl+1 { move-column-to-workspace 1; }
+    Mod+Ctrl+2 { move-column-to-workspace 2; }
+    Mod+Ctrl+3 { move-column-to-workspace 3; }
+    Mod+Ctrl+4 { move-column-to-workspace 4; }
+
+    // Window management
+    Mod+R { switch-preset-column-width; }
+    Mod+F { maximize-column; }
+    Mod+Shift+F { fullscreen-window; }
+    Mod+C { center-column; }
+    Mod+V { toggle-window-floating; }
+
+    Mod+Minus { set-column-width "-10%"; }
+    Mod+Equal { set-column-width "+10%"; }
+
+    Print { screenshot; }
+    Ctrl+Print { screenshot-screen; }
+
+    Mod+Escape allow-inhibiting=false { toggle-keyboard-shortcuts-inhibit; }
+    Mod+Shift+E { quit; }
+    Mod+Shift+P { power-off-monitors; }
+}
+
+layer-rule {
+    place-within-backdrop true
+}

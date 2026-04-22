@@ -1,10 +1,5 @@
-{ lib, ... }:
 {
-  config.dotfiles.home.sharedModules = lib.mkAfter [
-    (_: {
-      services.pueue = {
-        enable = true;
-      };
-    })
-  ];
+  flake.modules.homeManager.pueue = {
+    services.pueue.enable = false;
+  };
 }

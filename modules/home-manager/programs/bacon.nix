@@ -1,10 +1,5 @@
-{ lib, ... }:
 {
-  config.dotfiles.home.sharedModules = lib.mkAfter [
-    (_: {
-      programs.bacon = {
-        enable = true;
-      };
-    })
-  ];
+  flake.modules.homeManager.bacon = {
+    programs.bacon.enable = true;
+  };
 }

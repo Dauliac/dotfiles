@@ -1,57 +1,37 @@
-{ lib, ... }:
 {
-  config.dotfiles.home.sharedModules = lib.mkAfter [
-    (
-      { pkgs, ... }:
-      {
-        home.packages = with pkgs; [
-          alejandra
-          dotenv-linter
-          editorconfig-checker
-          fd
-          ghq
-          # gopls
-          hadolint
-          helm-ls
-          lazygit
-          # ltex-ls
-          # lua-language-server
-          markdown-oxide
-          nixfmt-rfc-style
-          nixpkgs-fmt
-          # nodePackages."@volar/vue-language-server"
-          # nodePackages.bash-language-server
-          # nodePackages.dockerfile-language-server-nodejs
-          nodePackages.prettier
-          nodePackages.typescript
-          pyright
-          python311Packages.pynvim
-          ripgrep
-          rust-analyzer
-          clippy
-          rustfmt
-          harper
-          shellcheck
-          shellharden
-          shfmt
-          stylua
-          supercollider
-          # svelte-language-server
-          # tailwindcss-language-server
-          terraform-ls
-          typos
-          # vscode-extensions.llvm-org.lldb-vscode
-          # vscode-langservers-extracted
-          xsel
-          # yaml-language-server
-          # gitlab-ci-ls
-          # typescript-language-server
-          # graphql-language-service-cli
-          harper
-          mermaid-cli
-          # vtsls
-        ];
-      }
-    )
-  ];
+  flake.modules.homeManager.neovim-packages =
+    { pkgs, ... }:
+    {
+      home.packages = with pkgs; [
+        alejandra
+        dotenv-linter
+        editorconfig-checker
+        fd
+        ghq
+        hadolint
+        helm-ls
+        lazygit
+        markdown-oxide
+        nixfmt-rfc-style
+        nixpkgs-fmt
+        nodePackages.prettier
+        nodePackages.typescript
+        pyright
+        python311Packages.pynvim
+        ripgrep
+        rust-analyzer
+        clippy
+        rustfmt
+        harper
+        shellcheck
+        shellharden
+        shfmt
+        stylua
+        supercollider
+        terraform-ls
+        typos
+        xsel
+        mermaid-cli
+      ];
+    };
 }

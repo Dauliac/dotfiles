@@ -1,14 +1,7 @@
-# Neovim configuration - auto-imported by import-tree
-# No imports needed - other neovim modules are automatically discovered
-{ lib, ... }:
+{ inputs, ... }:
 {
-  config.dotfiles.home.sharedModules = lib.mkAfter [
-    (
-      {
-        pkgs,
-        inputs,
-        ...
-      }:
+  flake.modules.homeManager.neovim =
+    { pkgs, ... }:
       let
         yaml-companion-nvim = pkgs.vimUtils.buildVimPlugin {
           name = "yaml-companion-nvim";
@@ -234,7 +227,5 @@
             dofile("${luaDir}/sops.lua")
           '';
         };
-      }
-    )
-  ];
+      };
 }

@@ -1,20 +1,16 @@
-# Nixflix media server configuration for gary
-{ lib, ... }:
 {
-  config.dotfiles.nixos.hostModules.gary = lib.mkAfter [
-    ({ config, ... }: {
+  flake.modules.nixos.gary-nixflix =
+    { config, lib, ... }:
+    lib.mkIf config.systemConstants.gary.featureFlags.nixflix {
       nixflix = {
         enable = true;
 
-        # Media and state directories
         mediaDir = "/data/media";
         stateDir = "/data/.state/nixflix";
 
-        # Infrastructure services
         nginx.enable = true;
         postgres.enable = true;
 
-        # Media management - Arr stack
         sonarr = {
           enable = true;
           config.apiKey = { _secret = config.sops.secrets.sonarr-api-key.path; };
@@ -35,7 +31,6 @@
           config.apiKey = { _secret = config.sops.secrets.prowlarr-api-key.path; };
         };
 
-        # Media streaming
         jellyfin = {
           enable = true;
           users.admin = {
@@ -44,12 +39,10 @@
           };
         };
 
-        # Media requests
-        jellyseerr = {
+        seerr = {
           enable = true;
           apiKey = { _secret = config.sops.secrets.jellyseerr-api-key.path; };
         };
       };
-    })
-  ];
+    };
 }

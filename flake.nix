@@ -29,7 +29,10 @@
       url = "github:numtide/system-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    sops-nix.url = "github:Mic92/sops-nix";
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nix-index-db = {
       url = "github:Mic92/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -68,14 +71,13 @@
     };
     noctalia = {
       url = "github:noctalia-dev/noctalia-shell";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     comin = {
       url = "github:nlewo/comin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nix-flatpak = {
-      url = "github:gmodena/nix-flatpak/?ref=v0.6.0";
-    };
+    nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=v0.6.0";
     nur = {
       url = "github:nix-community/NUR";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -100,6 +102,10 @@
       url = "github:natsukium/mcp-servers-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixflix = {
+      url = "github:kiriwalawren/nixflix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -109,43 +115,23 @@
       ...
     }:
     let
-      # Filter out paths that shouldn't be imported as flake-parts modules
+      # Filter out packages/ which contains overlays, not modules
       excludeFilter =
         path:
         let
           pathStr = builtins.toString path;
-          name = builtins.baseNameOf pathStr;
         in
-        # Exclude old profile directories (now using dot-notation aspects)
-        builtins.match ".*profiles.*" pathStr != null
-        # Exclude packages directory (contains overlays, not modules)
-        || builtins.match ".*/packages/.*" pathStr != null
-        # Exclude old flake-parts directory (now using per-system/)
-        || builtins.match ".*/flake-parts/.*" pathStr != null
-        # Exclude old system-manager/default.nix
-        || builtins.match ".*/system-manager/default\\.nix$" pathStr != null
-        # Exclude old top-level module files
-        || name == "modules.nix"
-        || name == "nixos.nix"
-        || name == "home-manager.nix"
-        || name == "system-manager.nix"
-        # Exclude options directory - we'll import it explicitly first
-        || builtins.match ".*/options/.*" pathStr != null;
+        builtins.match ".*/packages/.*" pathStr != null;
 
-      # Create the import-tree module for non-options content
       modulesTree = (import-tree.filterNot excludeFilter) ./modules;
-
-      # Import options tree separately to ensure it's loaded first
-      optionsTree = import-tree ./modules/options;
     in
     flake-parts.lib.mkFlake { inherit inputs; } {
       systems = [ "x86_64-linux" ];
 
-      # Import options first, then all other modules
       imports = [
+        inputs.flake-parts.flakeModules.modules
         inputs.flake-root.flakeModule
         inputs.home-manager.flakeModules.home-manager
-        optionsTree
         modulesTree
       ];
     };

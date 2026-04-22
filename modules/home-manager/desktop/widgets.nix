@@ -1,41 +1,38 @@
-{ lib, ... }:
 {
-  config.dotfiles.home.sharedModules = lib.mkAfter [
-    (_: {
-      programs = {
-        tofi = {
-          enable = true;
-          settings = {
-            height = "20%";
-            width = "35%";
-            border-width = 4;
-            corner-radius = 4;
-            font = "Iosevka Nerd Font";
-            font-size = 16;
-          };
+  flake.modules.homeManager.widgets = {
+    programs = {
+      tofi = {
+        enable = true;
+        settings = {
+          height = "20%";
+          width = "35%";
+          border-width = 4;
+          corner-radius = 4;
+          font = "Iosevka Nerd Font";
+          font-size = 16;
         };
-        hyprpanel = {
-          enable = true;
-          settings = {
-            bar.launcher.autoDetectIcon = true;
-            bar.workspaces.show_icons = true;
-            menus.clock = {
-              time = {
-                military = true;
-                hideSeconds = true;
-              };
-              weather.unit = "metric";
+      };
+      hyprpanel = {
+        enable = true;
+        settings = {
+          bar.launcher.autoDetectIcon = true;
+          bar.workspaces.show_icons = true;
+          menus.clock = {
+            time = {
+              military = true;
+              hideSeconds = true;
             };
-            menus.dashboard.directories.enabled = false;
-            menus.dashboard.stats.enable_gpu = true;
-            theme.bar.transparent = true;
-            theme.font = {
-              name = "Iosevka Nerd Font";
-              size = "16px";
-            };
+            weather.unit = "metric";
+          };
+          menus.dashboard.directories.enabled = false;
+          menus.dashboard.stats.enable_gpu = true;
+          theme.bar.transparent = true;
+          theme.font = {
+            name = "Iosevka Nerd Font";
+            size = "16px";
           };
         };
       };
-    })
-  ];
+    };
+  };
 }

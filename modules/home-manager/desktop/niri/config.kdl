@@ -263,6 +263,7 @@ spawn-sh-at-startup "sleep 2 && systemctl --user stop xdg-desktop-portal xdg-des
 // X11 app support via XWayland
 spawn-at-startup "xwayland-satellite"
 
+spawn-at-startup "kdeconnect-indicator"
 spawn-at-startup "bitwarden"
 spawn-sh-at-startup "waypaper --random"
 spawn-at-startup "obs"
