@@ -15,44 +15,69 @@ in
       nixGlWrapper = config.systemConstants.nixgl.wrapPackage { inherit pkgs; };
       proprietaryEnabled = config.systemConstants.proprietary.enable;
     in
+    let
+      cimera-wrapper = pkgs.writeShellScriptBin "cimera" ''
+        exec ${pkgs.nix}/bin/nix run "/home/juliendauliac/ghq/git.manomano.tech/julien.dauliac/cimera#build-cimera-rust" -- "$@"
+      '';
+    in
     {
-      imports = with inputs.self.modules.homeManager; [
-        base
-        aliases
-        packages
-        programs-base
-        secrets
-        theme
-        ai
-        bacon
-        bat
-        direnv
-        eza
-        git
-        go
-        history
-        kubecolor
-        lazygit
-        neovim
-        neovim-lsp
-        neovim-opts
-        neovim-packages
-        pet
-        pueue
-        ssh
-        starship
-        terminal-multiplexer
-        alacritty
-        ghostty
-        kitty
-        wezterm
-        tmux
-        yazi
-        zsh
-      ] ++ [
-        inputs.self.modules.generic.nixgl-wrapper
-        inputs.self.modules.generic.proprietary-flag
-      ];
+      imports =
+        with inputs.self.modules.homeManager;
+        [
+          base
+          aliases
+          packages
+          programs-base
+          secrets
+          theme
+          ai
+          bacon
+          bat
+          direnv
+          eza
+          git
+          go
+          history
+          kubecolor
+          lazygit
+          neovim
+          neovim-completion
+          neovim-dap
+          neovim-editing
+          neovim-git
+          neovim-lang-devops
+          neovim-lang-go
+          neovim-lang-lua
+          neovim-lang-misc
+          neovim-lang-nix
+          neovim-lang-python
+          neovim-lang-rust
+          neovim-lang-shell
+          neovim-lang-typescript
+          neovim-lang-web
+          neovim-lsp
+          neovim-lsp-plugins
+          neovim-navigation
+          neovim-opts
+          neovim-packages
+          neovim-ui
+          pet
+          pueue
+          ssh
+          starship
+          terminal-multiplexer
+          alacritty
+          ghostty
+          kitty
+          wezterm
+          tmux
+          yazi
+          zsh
+        ]
+        ++ [
+          inputs.self.modules.generic.nixgl-wrapper
+          inputs.self.modules.generic.proprietary-flag
+        ];
 
       systemConstants.nixgl.wrapperType = lib.mkDefault "intel";
 
@@ -65,7 +90,7 @@ in
 
       home.sessionVariables = {
         NPM_CONFIG_PREFIX = "$XDG_DATA_HOME/npm-packages";
-        PATH = "$HOME/.local/bin:$HOME/ghq/git.manomano.tech/julien.dauliac/cimera/cli/target/release:$PATH:$NPM_CONFIG_PREFIX/bin/:$HOME/${config.programs.go.goBin}";
+        PATH = "$HOME/.local/bin:$PATH:$NPM_CONFIG_PREFIX/bin/:$HOME/${config.programs.go.goBin}";
         AWS_DEFAULT_PROFILE = "manomano-support";
       };
 
@@ -85,11 +110,11 @@ in
         [
           awscli2
           cloudflared
-          cloudlens
-          fluxcd
+          gh
           glab
           docker
           docker-compose
+          k3d
           kubecm
           kubectl
           kubelogin
@@ -104,16 +129,15 @@ in
           terragrunt
           vault
           vsh
-          nodejs_20
           skopeo
           lazydocker
+          cimera-wrapper
           pnpm_10
           pre-commit
           ruby
           just
           yq
           amazon-ecr-credential-helper
-          (nixGlWrapper prismlauncher)
         ]
         ++ lib.optionals proprietaryEnabled [
           chromium
@@ -165,6 +189,10 @@ in
           }
           {
             appId = "dev.vencord.Vesktop";
+            origin = "flathub";
+          }
+          {
+            appId = "io.anytype.anytype";
             origin = "flathub";
           }
         ];

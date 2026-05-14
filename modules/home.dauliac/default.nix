@@ -35,9 +35,26 @@ in
         kubecolor
         lazygit
         neovim
+        neovim-completion
+        neovim-dap
+        neovim-editing
+        neovim-git
+        neovim-lang-devops
+        neovim-lang-go
+        neovim-lang-lua
+        neovim-lang-misc
+        neovim-lang-nix
+        neovim-lang-python
+        neovim-lang-rust
+        neovim-lang-shell
+        neovim-lang-typescript
+        neovim-lang-web
         neovim-lsp
+        neovim-lsp-plugins
+        neovim-navigation
         neovim-opts
         neovim-packages
+        neovim-ui
         pet
         pueue
         ssh
