@@ -92,10 +92,10 @@ local function fzf_keymaps()
 	}
 end
 
-local function nvim_tree_keymaps()
+local function neotree_keymaps()
 	return {
 		{
-			desc = "Toggle Nvim tree",
+			desc = "Toggle Neotree",
 			cmd = "<CMD>Neotree<CR>",
 			keys = { "n", "<leader>e" },
 		},
@@ -150,57 +150,51 @@ local function trouble_keymaps()
 	local cat = "Trouble"
 	return {
 		{
-			desc = "Trouble prefix",
-			cmd = function() end,
-			keys = { "n", "<leader>x" },
-			cat = cat,
-		},
-		{
-			desc = "Open trouble",
+			desc = "Toggle trouble diagnostics",
 			cmd = function()
-				require("trouble").open()
+				require("trouble").toggle("diagnostics")
 			end,
 			keys = { "n", "<leader>xx" },
 			cat = cat,
 		},
 		{
-			desc = "Open workspace trouble",
+			desc = "Toggle buffer diagnostics",
 			cmd = function()
-				require("trouble").open("workspace_diagnostics")
-			end,
-			keys = { "n", "<leader>xw" },
-			cat = cat,
-		},
-		{
-			desc = "Open document trouble",
-			cmd = function()
-				require("trouble").open("document_diagnostics")
+				require("trouble").toggle({ mode = "diagnostics", filter = { buf = 0 } })
 			end,
 			keys = { "n", "<leader>xd" },
 			cat = cat,
 		},
 		{
-			desc = "Open quickfix trouble",
+			desc = "Toggle quickfix",
 			cmd = function()
-				require("trouble").open("quickfix")
+				require("trouble").toggle("qflist")
 			end,
 			keys = { "n", "<leader>xl" },
 			cat = cat,
 		},
 		{
-			desc = "Open loclist trouble",
+			desc = "Toggle loclist",
 			cmd = function()
-				require("trouble").open("loclist")
+				require("trouble").toggle("loclist")
 			end,
 			keys = { "n", "<leader>xq" },
 			cat = cat,
 		},
 		{
-			desc = "Open LSP references trouble",
+			desc = "Toggle LSP references",
 			cmd = function()
-				require("trouble").open("lsp_references")
+				require("trouble").toggle("lsp_references")
 			end,
 			keys = { "n", "gR" },
+			cat = cat,
+		},
+		{
+			desc = "Toggle symbols",
+			cmd = function()
+				require("trouble").toggle("symbols")
+			end,
+			keys = { "n", "<leader>xs" },
 			cat = cat,
 		},
 	}
@@ -404,7 +398,7 @@ end
 vim.g.mapleader = ","
 commander.add(merge_keymaps({
 	fzf_keymaps,
-	nvim_tree_keymaps,
+	neotree_keymaps,
 	spectre_keymaps,
 	trouble_keymaps,
 	dap_keymaps,
