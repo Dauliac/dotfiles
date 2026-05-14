@@ -4,6 +4,7 @@
 {
   imports = [
     inputs.treefmt-nix.flakeModule
+    inputs.git-hooks.flakeModule
   ];
   debug = true;
 }
