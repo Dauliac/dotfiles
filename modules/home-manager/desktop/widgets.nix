@@ -8,7 +8,7 @@
           width = "35%";
           border-width = 4;
           corner-radius = 4;
-          font = "Iosevka Nerd Font";
+          # font and colors managed by stylix
           font-size = 16;
         };
       };
@@ -27,10 +27,7 @@
           menus.dashboard.directories.enabled = false;
           menus.dashboard.stats.enable_gpu = true;
           theme.bar.transparent = true;
-          theme.font = {
-            name = "Iosevka Nerd Font";
-            size = "16px";
-          };
+          # theme.font managed by stylix
         };
       };
     };

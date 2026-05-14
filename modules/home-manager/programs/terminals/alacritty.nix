@@ -3,7 +3,7 @@
     programs.alacritty = {
       enable = true;
       settings = {
-        font.normal.family = "Iosevka Nerd Font Mono";
+        # font and opacity managed by stylix
         selection.save_to_clipboard = true;
         window = {
           padding = {
@@ -11,7 +11,6 @@
             y = 3;
           };
           dynamic_padding = true;
-          opacity = 0.89;
         };
       };
     };

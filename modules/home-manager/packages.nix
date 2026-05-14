@@ -21,7 +21,7 @@
           systemctl-tui # Cool tui
           speedtest-go # network speed test
           age # encryption
-          nerd-fonts.iosevka
+          # nerd-fonts.iosevka managed by stylix
           yt-dlp
           git-absorb
           git-gamble
@@ -75,7 +75,6 @@
           # protonvpn-gui
           # proton-pass
           # discord
-          muffon
         ];
     in
     {

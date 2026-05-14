@@ -10,6 +10,7 @@ in
         inputs.nix-index-db.homeModules.nix-index
         inputs.sops-nix.homeManagerModules.sops
         inputs.catppuccin.homeModules.catppuccin
+        inputs.stylix.homeModules.stylix
         inputs.nixvim.homeModules.nixvim
         inputs.nix-flatpak.homeManagerModules.nix-flatpak
         inputs.betterfox-nix.modules.homeManager.betterfox

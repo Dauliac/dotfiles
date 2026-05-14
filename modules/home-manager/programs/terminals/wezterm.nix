@@ -31,13 +31,7 @@
         config.front_end = "WebGpu"
         config.enable_wayland = false
 
-        config.color_scheme = "Catppuccin Mocha (Gogh)"
-        config.window_background_opacity = 0.89
-        config.font = wezterm.font {
-           family = 'Iosevka Nerd Font Mono',
-           stretch = 'Expanded',
-           weight = 'Regular',
-        }
+        -- font, colors, and opacity managed by stylix
         config.default_cursor_style = "SteadyBar"
         config.hide_tab_bar_if_only_one_tab = true
         config.hide_mouse_cursor_when_typing = false
