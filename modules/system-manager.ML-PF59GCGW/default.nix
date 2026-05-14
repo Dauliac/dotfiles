@@ -26,6 +26,37 @@
       environment.etc."docker/daemon.json".text = builtins.toJSON {
         iptables = true;
         ip-forward = true;
+        dns = [ "8.8.8.8" "8.8.4.4" ];
+      };
+
+      # Fix UFW blocking Docker bridge traffic (inter-container + outbound NAT)
+      # Without this, k3d pods can't communicate or reach the internet
+      systemd.services.docker-bridge-fix = {
+        enable = true;
+        description = "Fix UFW/Docker bridge forwarding for k3d and Docker containers";
+        wantedBy = [ "multi-user.target" ];
+        after = [ "docker.service" ];
+        requires = [ "docker.service" ];
+        serviceConfig = {
+          Type = "oneshot";
+          RemainAfterExit = true;
+          ExecStart = pkgs.writeShellScript "docker-bridge-fix" ''
+            set -eu
+            export PATH="${lib.makeBinPath [ pkgs.iproute2 pkgs.iptables pkgs.gawk pkgs.procps ]}:$PATH"
+
+            # Disable bridge-nf-call-iptables so bridge traffic skips iptables/UFW
+            sysctl -w net.bridge.bridge-nf-call-iptables=0
+
+            # Allow forwarding in DOCKER-USER chain (Docker's intended place for custom rules)
+            for br in $(ip -o link show type bridge | awk -F': ' '{print $2}' | grep '^br-'); do
+              iptables -C DOCKER-USER -i "$br" -j ACCEPT 2>/dev/null || iptables -I DOCKER-USER -i "$br" -j ACCEPT
+              iptables -C DOCKER-USER -o "$br" -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT 2>/dev/null || iptables -I DOCKER-USER -o "$br" -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+            done
+
+            # NAT/masquerade for Docker network ranges going to the internet
+            iptables -t nat -C POSTROUTING -s 172.16.0.0/12 ! -o docker0 -j MASQUERADE 2>/dev/null || iptables -t nat -I POSTROUTING -s 172.16.0.0/12 ! -o docker0 -j MASQUERADE
+          '';
+        };
       };
 
       systemd.services.docker = {

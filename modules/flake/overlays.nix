@@ -31,6 +31,7 @@ in
       inputs.mcp-servers-nix.overlays.default # Provides individual mcp-server-* packages
       mcpServersCompatOverlay # Combines them into pkgs.mcp-servers for mcps.nix
       inputs.mcps.overlays.default
+      (final: _prev: { nh = inputs.nh.packages.${final.stdenv.hostPlatform.system}.default; })
       customPackagesOverlay
     ];
     description = "Overlays to apply to nixpkgs";

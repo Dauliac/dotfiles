@@ -222,6 +222,11 @@ WHICHKEYEOF
           ];
 
           extraConfig = ''
+            # Fix: home-manager binds "C-a send-prefix" in root table,
+            # which intercepts the prefix key. Remove it so C-a works as prefix.
+            unbind -n C-a
+            bind C-a send-prefix
+
             # True color support
             set -ag terminal-overrides ",xterm-256color:RGB"
             set -ag terminal-overrides ",alacritty:RGB"
