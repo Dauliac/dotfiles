@@ -47,11 +47,19 @@
             # Disable bridge-nf-call-iptables so bridge traffic skips iptables/UFW
             sysctl -w net.bridge.bridge-nf-call-iptables=0
 
-            # Allow forwarding in DOCKER-USER chain (Docker's intended place for custom rules)
             for br in $(ip -o link show type bridge | awk -F': ' '{print $2}' | grep '^br-'); do
+              # Allow forwarding in DOCKER-USER chain (Docker's intended place for custom rules)
               iptables -C DOCKER-USER -i "$br" -j ACCEPT 2>/dev/null || iptables -I DOCKER-USER -i "$br" -j ACCEPT
               iptables -C DOCKER-USER -o "$br" -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT 2>/dev/null || iptables -I DOCKER-USER -o "$br" -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+
+              # Allow forwarding in DOCKER-FORWARD chain (needed when FORWARD policy is DROP
+              # and Docker only adds ACCEPT for docker0, not custom bridges like k3d)
+              iptables -C DOCKER-FORWARD -i "$br" -j ACCEPT 2>/dev/null || iptables -I DOCKER-FORWARD -i "$br" -j ACCEPT
+              iptables -C DOCKER-FORWARD -o "$br" -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT 2>/dev/null || iptables -I DOCKER-FORWARD -o "$br" -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
             done
+
+            # Ensure DOCKER-USER chain returns to caller (empty chain = implicit DROP)
+            iptables -C DOCKER-USER -j RETURN 2>/dev/null || iptables -A DOCKER-USER -j RETURN
 
             # NAT/masquerade for Docker network ranges going to the internet
             iptables -t nat -C POSTROUTING -s 172.16.0.0/12 ! -o docker0 -j MASQUERADE 2>/dev/null || iptables -t nat -I POSTROUTING -s 172.16.0.0/12 ! -o docker0 -j MASQUERADE
