@@ -20,7 +20,6 @@
             ssh-to-age
             nix-output-monitor
             nh
-            inputs'.pinix.packages.default
             inputs'.home-manager.packages.home-manager
             inputs'.system-manager.packages.default
             config.treefmt.build.wrapper

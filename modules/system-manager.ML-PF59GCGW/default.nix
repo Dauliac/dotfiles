@@ -1,3 +1,4 @@
+{ inputs, ... }:
 {
   flake.modules.systemManager.host-ml-pf59gcgw =
     {
@@ -6,6 +7,10 @@
       ...
     }:
     {
+      imports = [
+        inputs.aws-nix-cache.systemManagerModules.default
+      ];
+
       system-manager.allowAnyDistro = true;
       nixpkgs.hostPlatform = "x86_64-linux";
 
@@ -14,11 +19,19 @@
         text = ''
           extra-sandbox-paths = /etc/nix/netrc
           trusted-users = root juliendauliac
+          !include /etc/nix/conf.d/substituters.conf
         '';
       };
 
+      services.aws-nix-cache = {
+        enable = true;
+        uid = 1001;
+        profile = "nix-cache";
+        region = "eu-west-3";
+      };
+
       environment.systemPackages = with pkgs; [
-        docker
+        docker_29
         apparmor-parser
         apparmor-utils
         earlyoom
@@ -78,6 +91,12 @@
         {"name": "vesktop", "type": "BG_CPUIO", "nice": 19, "ioclass": "idle"}
         {"name": "Discord", "type": "BG_CPUIO", "nice": 19, "ioclass": "idle"}
         {"name": "Vesktop", "type": "BG_CPUIO", "nice": 19, "ioclass": "idle"}
+      '';
+      environment.etc."ananicy.d/cargo.rules".text = ''
+        {"name": "cargo", "type": "BG_CPUIO", "nice": 15, "ioclass": "idle", "ionice": 7}
+        {"name": "cargo-clippy", "type": "BG_CPUIO", "nice": 15, "ioclass": "idle", "ionice": 7}
+        {"name": "rustc", "type": "BG_CPUIO", "nice": 15, "ioclass": "idle", "ionice": 7}
+        {"name": "rust-analyzer", "type": "BG_CPUIO", "nice": 15, "ioclass": "idle", "ionice": 7}
       '';
       environment.etc."ananicy.d/sentinelone.rules".text = ''
         {"name": "sentinelone-agent", "type": "BG_CPUIO", "nice": 19, "ioclass": "idle", "ionice": 7}
@@ -186,7 +205,7 @@
           Environment = [
             "PATH=${
               lib.makeBinPath [
-                pkgs.docker
+                pkgs.docker_29
                 pkgs.nftables
                 pkgs.apparmor-parser
                 pkgs.apparmor-utils
@@ -195,7 +214,7 @@
               ]
             }:/usr/bin:/sbin"
           ];
-          ExecStart = "${pkgs.docker}/bin/dockerd";
+          ExecStart = "${pkgs.docker_29}/bin/dockerd";
           ExecStartPost = [
             "${pkgs.coreutils}/bin/chmod 666 /var/run/docker.sock"
             "${pkgs.coreutils}/bin/chown root:docker /var/run/docker.sock"

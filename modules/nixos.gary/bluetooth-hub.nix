@@ -7,8 +7,8 @@
       ...
     }:
     let
-      gary = config.systemConstants.gary;
-      bluetooth = gary.bluetooth;
+      inherit (config.systemConstants) gary;
+      inherit (gary) bluetooth;
     in
     lib.mkIf gary.featureFlags.bluetoothHub {
       hardware.bluetooth = {
@@ -76,7 +76,10 @@
         pwvucontrol
       ];
 
-      users.users.gary.extraGroups = [ "audio" "bluetooth" ];
+      users.users.gary.extraGroups = [
+        "audio"
+        "bluetooth"
+      ];
 
       systemd.services.bluetooth = {
         wantedBy = [ "multi-user.target" ];

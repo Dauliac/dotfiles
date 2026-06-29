@@ -1,5 +1,4 @@
-{ lib, ... }:
-{
+_: {
   flake.modules.generic.gary-constants =
     { lib, ... }:
     {

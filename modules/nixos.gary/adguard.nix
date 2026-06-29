@@ -6,21 +6,24 @@
       ...
     }:
     let
-      gary = config.systemConstants.gary;
-      adguard = gary.adguard;
+      inherit (config.systemConstants) gary;
+      inherit (gary) adguard;
     in
     lib.mkIf gary.featureFlags.adguard {
       services.adguardhome = {
         enable = true;
         openFirewall = true;
-        port = adguard.port;
+        inherit (adguard) port;
 
         settings = {
           dns = {
             bind_hosts = [ "0.0.0.0" ];
             port = adguard.dnsPort;
             upstream_dns = adguard.upstreamDNS;
-            bootstrap_dns = [ "1.1.1.1" "8.8.8.8" ];
+            bootstrap_dns = [
+              "1.1.1.1"
+              "8.8.8.8"
+            ];
             upstream_mode = "parallel";
             cache_size = 4194304;
             cache_ttl_min = 300;
@@ -35,9 +38,9 @@
           };
 
           filters = lib.imap0 (i: filter: {
-            enabled = filter.enabled;
-            url = filter.url;
-            name = filter.name;
+            inherit (filter) enabled;
+            inherit (filter) url;
+            inherit (filter) name;
             id = i + 1;
           }) adguard.blocklists;
 

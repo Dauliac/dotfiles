@@ -13,4 +13,5 @@ in
   nx = final.callPackage ./nix-wrapper { };
   mermaid-ascii = final.callPackage ./mermaid-ascii.nix { };
   mmdr = final.callPackage ./mmdr.nix { };
+  datadog-pup = final.callPackage ./datadog-pup.nix { };
 }

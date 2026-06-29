@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+_:
 let
   wallpaperPath = ./desktop/wallpaper.jpg;
 in
@@ -48,8 +48,11 @@ in
         targets = {
           # Neovim has custom catppuccin lua config with transparency overrides
           nixvim.enable = false;
-          # Not running GNOME
+          # Not running GNOME desktop from Nix — managed by Ubuntu system
           gnome.enable = false;
+          # Disable KDE target — its XDG_CONFIG_DIRS override shadows /etc/xdg,
+          # which prevents gnome-session from finding SettingsDaemon autostart files
+          kde.enable = false;
         };
       };
 

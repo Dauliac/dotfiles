@@ -1,23 +1,26 @@
 {
   flake.modules.nixos.gary-airplay =
-    { config, lib, ... }:
+    {
+      config,
+      lib,
+      ...
+    }:
     lib.mkIf config.systemConstants.gary.featureFlags.airplay {
-    services.avahi = {
-      enable = true;
-      nssmdns4 = true;
-      publish = {
+      services.avahi = {
         enable = true;
-        addresses = true;
-        workstation = true;
-        userServices = true;
+        nssmdns4 = true;
+        publish = {
+          enable = true;
+          addresses = true;
+          workstation = true;
+          userServices = true;
+        };
       };
+
+      networking.firewall.allowedUDPPorts = [
+        5353
+      ];
+
+      users.users.gary.extraGroups = [ "audio" ];
     };
-
-    networking.firewall.allowedUDPPorts = [
-      5353
-    ];
-
-    users.users.gary.extraGroups = [ "audio" ];
-  };
 }
-

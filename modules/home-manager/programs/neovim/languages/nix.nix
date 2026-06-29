@@ -9,7 +9,10 @@
         lsp.servers = {
           nil_ls = {
             enable = true;
-            config.nil.diagnostics.ignored = [ "unused_binding" "unused_with" ];
+            config.nil.diagnostics.ignored = [
+              "unused_binding"
+              "unused_with"
+            ];
           };
           nixd = {
             enable = true;

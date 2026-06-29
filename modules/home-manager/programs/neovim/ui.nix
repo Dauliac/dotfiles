@@ -1,6 +1,6 @@
 {
   flake.modules.homeManager.neovim-ui =
-    { pkgs, ... }:
+    _:
     let
       luaDir = ./lua;
     in

@@ -10,50 +10,53 @@
       proprietaryEnabled = config.systemConstants.proprietary.enable;
     in
     {
-      imports = with inputs.self.modules.homeManager; [
-        base
-        aliases
-        packages
-        programs-base
-        secrets
-        theme
-        desktop
-        gtk
-        wallpaper
-        wayland
-        widgets
-        niri
-        noctalia
-        ai
-        bacon
-        bat
-        direnv
-        eza
-        git
-        go
-        history
-        kubecolor
-        lazygit
-        neovim
-        neovim-lsp
-        neovim-opts
-        neovim-packages
-        pet
-        pueue
-        ssh
-        starship
-        terminal-multiplexer
-        alacritty
-        ghostty
-        kitty
-        wezterm
-        tmux
-        yazi
-        zsh
-      ] ++ [
-        inputs.self.modules.generic.gary-constants
-        inputs.self.modules.generic.proprietary-flag
-      ];
+      imports =
+        with inputs.self.modules.homeManager;
+        [
+          base
+          aliases
+          packages
+          programs-base
+          secrets
+          theme
+          desktop
+          gtk
+          wallpaper
+          wayland
+          widgets
+          niri
+          noctalia
+          ai
+          bacon
+          bat
+          direnv
+          eza
+          git
+          go
+          history
+          kubecolor
+          lazygit
+          neovim
+          neovim-lsp
+          neovim-opts
+          neovim-packages
+          pet
+          pueue
+          ssh
+          starship
+          terminal-multiplexer
+          alacritty
+          ghostty
+          kitty
+          wezterm
+          tmux
+          yazi
+          zsh
+        ]
+        ++ [
+          inputs.self.modules.generic.gary-constants
+          inputs.self.modules.generic.proprietary-flag
+        ];
 
       home.stateVersion = "25.05";
 

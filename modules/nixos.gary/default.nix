@@ -7,42 +7,45 @@
       ...
     }:
     {
-      imports = with inputs.self.modules.nixos; [
-        base
-        bluetooth
-        boot
-        comin
-        desktop
-        hardening
-        locales
-        secrets
-        sound
-        theme
-        users
+      imports =
+        with inputs.self.modules.nixos;
+        [
+          base
+          bluetooth
+          boot
+          comin
+          desktop
+          hardening
+          locales
+          secrets
+          sound
+          theme
+          users
 
-        gary-boot
-        gary-gaming
-        gary-gnome
-        gary-hardware
-        gary-home-manager
-        gary-nixflix
-        gary-secrets
-        gary-sleep
-        gary-ssh
-        gary-users
+          gary-boot
+          gary-gaming
+          gary-gnome
+          gary-hardware
+          gary-home-manager
+          gary-nixflix
+          gary-secrets
+          gary-sleep
+          gary-ssh
+          gary-users
 
-        gary-acme
-        gary-adguard
-        gary-bluetooth-hub
-        gary-home-assistant
-        gary-airplay
-        gary-airplay-uxplay
-        gary-airplay-shairport
-        gary-reverse-proxy
-      ] ++ [
-        inputs.self.modules.generic.gary-constants
-        inputs.self.modules.generic.proprietary-flag
-      ];
+          gary-acme
+          gary-adguard
+          gary-bluetooth-hub
+          gary-home-assistant
+          gary-airplay
+          gary-airplay-uxplay
+          gary-airplay-shairport
+          gary-reverse-proxy
+        ]
+        ++ [
+          inputs.self.modules.generic.gary-constants
+          inputs.self.modules.generic.proprietary-flag
+        ];
 
       networking.hostName = "gary";
 
@@ -52,7 +55,7 @@
 
         networking.extraHosts =
           let
-            gary = config.systemConstants.gary;
+            inherit (config.systemConstants) gary;
             domain = gary.domain.public;
             localDomain = gary.domain.local;
             enabledServices = lib.filterAttrs (_: svc: svc.enable) gary.services;

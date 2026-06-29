@@ -6,8 +6,15 @@
       ...
     }:
     let
-      inherit (lib) mkIf filterAttrs mapAttrsToList foldl' attrNames concatStringsSep;
-      gary = config.systemConstants.gary;
+      inherit (lib)
+        mkIf
+        filterAttrs
+        mapAttrsToList
+        foldl'
+        attrNames
+        concatStringsSep
+        ;
+      inherit (config.systemConstants) gary;
       domain = gary.domain.local;
       enabledServices = filterAttrs (_: svc: svc.enable) gary.services;
 
@@ -22,12 +29,15 @@
               proxy_set_header X-Real-IP $remote_addr;
               proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
               proxy_set_header X-Forwarded-Proto $scheme;
-            '' + svc.extraNginxConfig;
+            ''
+            + svc.extraNginxConfig;
           };
         };
       };
 
-      serviceVirtualHosts = foldl' (acc: name: acc // mkVirtualHost name enabledServices.${name}) { } (attrNames enabledServices);
+      serviceVirtualHosts = foldl' (acc: name: acc // mkVirtualHost name enabledServices.${name}) { } (
+        attrNames enabledServices
+      );
 
       landingPageVirtualHost = {
         "${domain}" = {
@@ -50,9 +60,12 @@
               <body>
                 <h1>Gary Services</h1>
                 <div class="services">
-                  ${concatStringsSep "\n" (mapAttrsToList (_: svc:
-                    "<a href=\"http://${svc.subdomain}.${domain}\"><strong>${svc.description}</strong><div class=\"desc\">${svc.subdomain}.${domain}</div></a>"
-                  ) enabledServices)}
+                  ${concatStringsSep "\n" (
+                    mapAttrsToList (
+                      _: svc:
+                      "<a href=\"http://${svc.subdomain}.${domain}\"><strong>${svc.description}</strong><div class=\"desc\">${svc.subdomain}.${domain}</div></a>"
+                    ) enabledServices
+                  )}
                 </div>
               </body>
               </html>'
@@ -79,9 +92,16 @@
       };
 
       services.adguardhome.settings.filtering.rewrites = mkIf gary.featureFlags.adguard (
-        dnsRewrites ++ [
-          { domain = domain; answer = gary.network.lanIP; }
-          { domain = "*.${domain}"; answer = gary.network.lanIP; }
+        dnsRewrites
+        ++ [
+          {
+            inherit domain;
+            answer = gary.network.lanIP;
+          }
+          {
+            domain = "*.${domain}";
+            answer = gary.network.lanIP;
+          }
         ]
       );
 

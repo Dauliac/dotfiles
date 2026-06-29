@@ -16,7 +16,7 @@ let
         final.mcp-server-fetch
         final.mcp-server-filesystem
         final.mcp-server-git
-        final.mcp-server-time
+        # mcp-server-time removed: requires mcp>=1.23.0 but nixpkgs only has 1.15.0
         final.mcp-server-sequential-thinking
         final.mcp-server-memory
       ];
@@ -32,6 +32,7 @@ in
       mcpServersCompatOverlay # Combines them into pkgs.mcp-servers for mcps.nix
       inputs.mcps.overlays.default
       (final: _prev: { nh = inputs.nh.packages.${final.stdenv.hostPlatform.system}.default; })
+      (final: prev: { comma = prev.comma.override { nix = final.lix; }; })
       customPackagesOverlay
     ];
     description = "Overlays to apply to nixpkgs";

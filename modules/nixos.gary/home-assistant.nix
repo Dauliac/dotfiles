@@ -1,16 +1,20 @@
 {
   flake.modules.nixos.gary-home-assistant =
-    { config, lib, ... }:
+    {
+      config,
+      lib,
+      ...
+    }:
     let
-      gary = config.systemConstants.gary;
+      inherit (config.systemConstants) gary;
       cfg = gary.homeAssistant;
     in
     lib.mkIf gary.featureFlags.homeAssistant {
       services.home-assistant = {
-          enable = true;
-          openFirewall = true;
+        enable = true;
+        openFirewall = true;
 
-          extraComponents = [
+        extraComponents = [
           # Lights
           "hue" # Philips Hue
           "yeelight" # Xiaomi Yeelight
@@ -449,7 +453,10 @@
             {
               platform = "systemmonitor";
               resources = [
-                { type = "disk_use_percent"; arg = "/"; }
+                {
+                  type = "disk_use_percent";
+                  arg = "/";
+                }
                 { type = "memory_use_percent"; }
                 { type = "processor_use"; }
                 { type = "load_1m"; }
@@ -521,8 +528,14 @@
                   type = "entities";
                   title = "Quick Actions";
                   entities = [
-                    { entity = "script.good_morning"; name = "Good Morning"; }
-                    { entity = "script.good_night"; name = "Good Night"; }
+                    {
+                      entity = "script.good_morning";
+                      name = "Good Morning";
+                    }
+                    {
+                      entity = "script.good_night";
+                      name = "Good Night";
+                    }
                   ];
                 }
                 {

@@ -1,6 +1,6 @@
 {
   flake.modules.homeManager.starship-claude =
-    { pkgs, config, ... }:
+    { pkgs, ... }:
     let
       starship-claude-script = pkgs.writeShellApplication {
         name = "starship-claude";

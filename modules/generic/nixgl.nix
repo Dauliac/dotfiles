@@ -1,7 +1,10 @@
-{ lib, ... }:
-{
+_: {
   flake.modules.generic.nixgl-wrapper =
-    { lib, config, ... }:
+    {
+      lib,
+      config,
+      ...
+    }:
     {
       options.systemConstants.nixgl = {
         wrapperType = lib.mkOption {

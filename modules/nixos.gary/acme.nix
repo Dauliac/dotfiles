@@ -6,8 +6,15 @@
       ...
     }:
     let
-      inherit (lib) filterAttrs mapAttrsToList foldl' attrNames concatStringsSep mkIf;
-      gary = config.systemConstants.gary;
+      inherit (lib)
+        filterAttrs
+        mapAttrsToList
+        foldl'
+        attrNames
+        concatStringsSep
+        mkIf
+        ;
+      inherit (config.systemConstants) gary;
       domain = gary.domain.public;
       enabledServices = filterAttrs (_: svc: svc.enable) gary.services;
 
@@ -23,12 +30,15 @@
               proxy_set_header X-Real-IP $remote_addr;
               proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
               proxy_set_header X-Forwarded-Proto $scheme;
-            '' + svc.extraNginxConfig;
+            ''
+            + svc.extraNginxConfig;
           };
         };
       };
 
-      serviceVirtualHosts = foldl' (acc: name: acc // mkVirtualHost name enabledServices.${name}) { } (attrNames enabledServices);
+      serviceVirtualHosts = foldl' (acc: name: acc // mkVirtualHost name enabledServices.${name}) { } (
+        attrNames enabledServices
+      );
 
       landingPageVirtualHost = {
         "${domain}" = {
@@ -54,9 +64,12 @@
               <body>
                 <h1>Gary Services</h1>
                 <div class="services">
-                  ${concatStringsSep "\n" (mapAttrsToList (_: svc:
-                    "<a href=\"https://${svc.subdomain}.${domain}\"><strong>${svc.description}</strong><div class=\"desc\">${svc.subdomain}.${domain}</div></a>"
-                  ) enabledServices)}
+                  ${concatStringsSep "\n" (
+                    mapAttrsToList (
+                      _: svc:
+                      "<a href=\"https://${svc.subdomain}.${domain}\"><strong>${svc.description}</strong><div class=\"desc\">${svc.subdomain}.${domain}</div></a>"
+                    ) enabledServices
+                  )}
                 </div>
               </body>
               </html>'
@@ -81,7 +94,7 @@
         certs."${domain}" = {
           domain = "*.${domain}";
           extraDomainNames = [ domain ];
-          dnsProvider = gary.acme.dnsProvider;
+          inherit (gary.acme) dnsProvider;
           environmentFile = config.sops.secrets.${gary.acme.credentialsSecret}.path;
           server = mkIf gary.acme.useStaging "https://acme-staging-v02.api.letsencrypt.org/directory";
         };
@@ -99,13 +112,23 @@
       };
 
       services.adguardhome.settings.filtering.rewrites = mkIf gary.featureFlags.adguard (
-        dnsRewrites ++ [
-          { domain = domain; answer = gary.network.lanIP; }
-          { domain = "*.${domain}"; answer = gary.network.lanIP; }
+        dnsRewrites
+        ++ [
+          {
+            inherit domain;
+            answer = gary.network.lanIP;
+          }
+          {
+            domain = "*.${domain}";
+            answer = gary.network.lanIP;
+          }
         ]
       );
 
-      networking.firewall.allowedTCPPorts = [ 80 443 ];
+      networking.firewall.allowedTCPPorts = [
+        80
+        443
+      ];
 
       sops.secrets.${gary.acme.credentialsSecret} = {
         owner = "acme";

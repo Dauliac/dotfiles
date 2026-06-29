@@ -8,9 +8,9 @@
     }:
     let
       inherit (lib) mkIf mkForce optionals;
-      gary = config.systemConstants.gary;
-      audio = gary.airplay.audio;
-      deviceName = gary.airplay.deviceName;
+      inherit (config.systemConstants) gary;
+      inherit (gary.airplay) audio;
+      inherit (gary.airplay) deviceName;
     in
     lib.mkIf (gary.featureFlags.airplay && gary.featureFlags.airplayAudio) {
       nixpkgs.overlays = optionals audio.airplay2 [
@@ -31,22 +31,24 @@
         };
       };
 
-      environment.etc."shairport-sync.conf".source = mkForce (pkgs.writeText "shairport-sync.conf" ''
-        general = {
-          name = "${deviceName} Audio";
-          interpolation = "auto";
-          output_backend = "pw";
-          volume_range_db = ${toString audio.volumeRangeDb};
-        };
+      environment.etc."shairport-sync.conf".source = mkForce (
+        pkgs.writeText "shairport-sync.conf" ''
+          general = {
+            name = "${deviceName} Audio";
+            interpolation = "auto";
+            output_backend = "pw";
+            volume_range_db = ${toString audio.volumeRangeDb};
+          };
 
-        sessioncontrol = {
-          session_timeout = 20;
-        };
+          sessioncontrol = {
+            session_timeout = 20;
+          };
 
-        alsa = {
-          mixer_control_name = "Master";
-        };
-      '');
+          alsa = {
+            mixer_control_name = "Master";
+          };
+        ''
+      );
 
       services.shairport-sync = {
         enable = true;
@@ -66,7 +68,10 @@
       networking.firewall = {
         allowedTCPPorts = [ 5000 ];
         allowedUDPPortRanges = [
-          { from = 6001; to = 6011; }
+          {
+            from = 6001;
+            to = 6011;
+          }
         ];
       };
     };

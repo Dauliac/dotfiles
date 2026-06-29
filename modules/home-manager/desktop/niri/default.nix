@@ -1,9 +1,6 @@
 {
   flake.modules.homeManager.niri =
-    {
-      pkgs,
-      ...
-    }:
+    { pkgs, ... }:
     let
       configDir = ./.;
       nixGL = pkgs.nixgl.nixGLIntel;

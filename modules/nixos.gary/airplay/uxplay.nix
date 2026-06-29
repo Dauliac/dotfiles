@@ -8,9 +8,9 @@
     }:
     let
       inherit (lib) optionalString;
-      gary = config.systemConstants.gary;
+      inherit (config.systemConstants) gary;
       sm = gary.airplay.screenMirroring;
-      deviceName = gary.airplay.deviceName;
+      inherit (gary.airplay) deviceName;
     in
     lib.mkIf (gary.featureFlags.airplay && gary.featureFlags.airplayScreenMirroring) {
       environment.systemPackages = [
@@ -53,8 +53,14 @@
           7011
         ];
         allowedUDPPortRanges = [
-          { from = 6000; to = 6100; }
-          { from = 32768; to = 60999; }
+          {
+            from = 6000;
+            to = 6100;
+          }
+          {
+            from = 32768;
+            to = 60999;
+          }
         ];
       };
     };

@@ -15,11 +15,6 @@ in
       nixGlWrapper = config.systemConstants.nixgl.wrapPackage { inherit pkgs; };
       proprietaryEnabled = config.systemConstants.proprietary.enable;
     in
-    let
-      cimera-wrapper = pkgs.writeShellScriptBin "cimera" ''
-        exec ${pkgs.nix}/bin/nix run "/home/juliendauliac/ghq/git.manomano.tech/julien.dauliac/cimera#build-cimera-rust" -- "$@"
-      '';
-    in
     {
       imports =
         with inputs.self.modules.homeManager;
@@ -77,6 +72,7 @@ in
         ++ [
           inputs.self.modules.generic.nixgl-wrapper
           inputs.self.modules.generic.proprietary-flag
+          inputs.aws-nix-cache.homeManagerModules.default
         ];
 
       systemConstants.nixgl.wrapperType = lib.mkDefault "intel";
@@ -91,7 +87,7 @@ in
       home.sessionVariables = {
         NPM_CONFIG_PREFIX = "$XDG_DATA_HOME/npm-packages";
         PATH = "$HOME/.local/bin:$PATH:$NPM_CONFIG_PREFIX/bin/:$HOME/${config.programs.go.goBin}";
-        AWS_DEFAULT_PROFILE = "manomano-support";
+        AWS_DEFAULT_PROFILE = "corp-support";
       };
 
       programs.zsh.initContent = ''
@@ -105,14 +101,17 @@ in
         enableZshIntegration = true;
       };
 
-      home.packages =
+      home.packages = [
+        inputs.nix-auth.packages.${pkgs.system}.default
+      ]
+      ++ (
         with pkgs;
         [
           awscli2
           cloudflared
           gh
           glab
-          docker
+          docker_29
           docker-compose
           k3d
           kubecm
@@ -123,6 +122,7 @@ in
           granted
           pdm
           pipx
+          dive
           python312
           python313Packages.virtualenv
           terraform
@@ -131,24 +131,25 @@ in
           vsh
           skopeo
           lazydocker
-          cimera-wrapper
           pnpm_10
           pre-commit
           ruby
           just
           yq
           amazon-ecr-credential-helper
+          datadog-pup
         ]
         ++ lib.optionals proprietaryEnabled [
           chromium
           dbeaver-bin
           gemini-cli-bin
-        ];
+        ]
+      );
 
       home.shellAliases = {
         vault_all = ''
           for ENV in int stg prd support ist; do
-            export VAULT_ADDR=https://vault-eu-west-3.$ENV.manomano.com
+            export VAULT_ADDR=https://vault-eu-west-3.$ENV.corp.example
             export VAULT_''${ENV}_TOKEN=$(vault login -token-only -path=sso -method=oidc role=sre | grep hvs)
           done'';
       };
@@ -159,7 +160,7 @@ in
         "includeIf \"gitdir:**/*manomano*/**\"".path = config.sops.secrets.gitJulienDauliac.path;
       };
 
-      home.file.".config/git/manomano-ssh.inc".text = ''
+      home.file.".config/git/corp-ssh.inc".text = ''
         [core]
           sshCommand = ssh -i ~/.ssh/id_rsa -o IdentitiesOnly=yes
       '';
@@ -167,7 +168,7 @@ in
       programs.git.includes = [
         {
           condition = "gitdir:**/*manomano*/**";
-          path = "~/.config/git/manomano-ssh.inc";
+          path = "~/.config/git/corp-ssh.inc";
         }
       ];
 
@@ -260,10 +261,16 @@ in
         };
       };
 
+      services.aws-nix-cache = {
+        enable = true;
+        package = inputs.aws-nix-cache.packages.${pkgs.system}.default;
+        awsProfile = "corp-support";
+      };
+
       nix.gc = {
         automatic = true;
         dates = "weekly";
-        options = "--delete-older-than 30d";
+        options = "--delete-older-than 14d";
       };
 
       programs.hyprpanel.enable = lib.mkForce false;

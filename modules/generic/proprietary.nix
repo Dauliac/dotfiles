@@ -1,5 +1,4 @@
-{ lib, ... }:
-{
+_: {
   flake.modules.generic.proprietary-flag =
     { lib, ... }:
     {

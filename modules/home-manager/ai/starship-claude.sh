@@ -121,7 +121,7 @@ if [ -n "$payload" ]; then
 
   # Short model name with nerd font icon
   if [ -n "$raw_model" ]; then
-    if [[ "${BASH_VERSINFO[0]:-0}" -ge 4 ]]; then
+    if [[ ${BASH_VERSINFO[0]:-0} -ge 4 ]]; then
       lower_model="${raw_model,,}"
     else
       lower_model="$(printf '%s' "$raw_model" | tr '[:upper:]' '[:lower:]')"
@@ -187,11 +187,11 @@ if [ -n "$payload" ]; then
     [ -z "$resets_at" ] || [ "$resets_at" = "null" ] && return
     local now remaining days hours minutes
     now=$(date +%s)
-    remaining=$(( resets_at - now ))
+    remaining=$((resets_at - now))
     [ "$remaining" -le 0 ] && return
-    days=$(( remaining / 86400 ))
-    hours=$(( (remaining % 86400) / 3600 ))
-    minutes=$(( (remaining % 3600) / 60 ))
+    days=$((remaining / 86400))
+    hours=$(((remaining % 86400) / 3600))
+    minutes=$(((remaining % 3600) / 60))
     if [ "$days" -gt 0 ]; then
       printf '%dd %dh' "$days" "$hours"
     else
@@ -236,7 +236,7 @@ fi
 term_width=""
 parent_tty="$(ps -o tty= -p "$(ps -o ppid= -p $$)" 2>/dev/null | tr -d ' ')" || true
 if [ -n "$parent_tty" ] && [ "$parent_tty" != "??" ] && [ "$parent_tty" != "?" ]; then
-  w="$(stty size < "/dev/$parent_tty" 2>/dev/null | awk '{print $2}')" || true
+  w="$(stty size <"/dev/$parent_tty" 2>/dev/null | awk '{print $2}')" || true
   if [ -n "$w" ] && [ "$w" -gt 0 ] 2>/dev/null; then
     term_width=$((w - 6))
   fi

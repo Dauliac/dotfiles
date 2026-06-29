@@ -38,7 +38,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     catppuccin = {
-      url = "github:catppuccin/nix";
+      # Pinned: latest adds "antigravity" to supportedVscodes but home-manager lacks programs.antigravity
+      url = "github:catppuccin/nix/ba73719e673e7c2d89ac2f8df0bc0d48983e4907";
       # inputs.nixpkgs.follows = "nixpkgs";
     };
     stylix = {
@@ -118,8 +119,8 @@
       url = "github:viperML/nh";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    pinix = {
-      url = "github:remi-dupre/pinix";
+    aws-nix-cache = {
+      url = "github:Dauliac/aws-nix-cache";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
