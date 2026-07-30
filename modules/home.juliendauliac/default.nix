@@ -35,32 +35,15 @@ in
           history
           kubecolor
           lazygit
+          xi
           neovim
-          neovim-completion
-          neovim-dap
-          neovim-editing
-          neovim-git
-          neovim-lang-devops
-          neovim-lang-go
-          neovim-lang-lua
-          neovim-lang-misc
-          neovim-lang-nix
-          neovim-lang-python
-          neovim-lang-rust
-          neovim-lang-shell
-          neovim-lang-typescript
-          neovim-lang-web
-          neovim-lsp
-          neovim-lsp-plugins
-          neovim-navigation
-          neovim-opts
           neovim-packages
-          neovim-ui
           pet
           pueue
           ssh
           starship
           terminal-multiplexer
+          desktop
           alacritty
           ghostty
           kitty
@@ -73,6 +56,31 @@ in
           inputs.self.modules.generic.nixgl-wrapper
           inputs.self.modules.generic.proprietary-flag
           inputs.aws-nix-cache.homeManagerModules.default
+        ];
+
+      programs.nixvim.imports =
+        with inputs.self.modules.nixvim;
+        [
+          base
+          completion
+          dap
+          editing
+          git
+          lang-devops
+          lang-go
+          lang-lua
+          lang-misc
+          lang-nix
+          lang-python
+          lang-rust
+          lang-shell
+          lang-typescript
+          lang-web
+          lsp
+          lsp-plugins
+          navigation
+          opts
+          ui
         ];
 
       systemConstants.nixgl.wrapperType = lib.mkDefault "intel";
@@ -89,12 +97,6 @@ in
         PATH = "$HOME/.local/bin:$PATH:$NPM_CONFIG_PREFIX/bin/:$HOME/${config.programs.go.goBin}";
         AWS_DEFAULT_PROFILE = "corp-support";
       };
-
-      programs.zsh.initContent = ''
-        if command -v cimera &> /dev/null; then
-          eval "$(cimera activate zsh)"
-        fi
-      '';
 
       programs.mise = {
         enable = true;
@@ -272,6 +274,10 @@ in
         dates = "weekly";
         options = "--delete-older-than 14d";
       };
+
+      home.activation.postBuildHooks = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+        run ${pkgs.fontconfig}/bin/fc-cache -f
+      '';
 
       programs.hyprpanel.enable = lib.mkForce false;
       programs.tofi.enable = lib.mkForce false;

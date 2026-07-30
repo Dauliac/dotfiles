@@ -36,9 +36,8 @@
           history
           kubecolor
           lazygit
+          xi
           neovim
-          neovim-lsp
-          neovim-opts
           neovim-packages
           pet
           pueue
@@ -56,6 +55,14 @@
         ++ [
           inputs.self.modules.generic.gary-constants
           inputs.self.modules.generic.proprietary-flag
+        ];
+
+      programs.nixvim.imports =
+        with inputs.self.modules.nixvim;
+        [
+          base
+          lsp
+          opts
         ];
 
       home.stateVersion = "25.05";
