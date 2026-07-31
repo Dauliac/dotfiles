@@ -109,12 +109,12 @@
       environment.etc."systemd/system/sentinelone.service.d/50-resource-limits.conf" = {
         text = ''
           [Service]
-          # CPU: lowest priority, hard-capped to 2 of 16 cores
+          # CPU: lowest priority, hard-capped to 1 of 16 cores
           Nice=19
           CPUSchedulingPolicy=idle
-          CPUQuota=200%
+          CPUQuota=100%
           CPUWeight=1
-          AllowedCPUs=14-15
+          AllowedCPUs=15
 
           # I/O: idle class, minimum weight
           IOSchedulingClass=idle
