@@ -1,6 +1,7 @@
 {
   flake.modules.homeManager.tmux =
     {
+      config,
       pkgs,
       lib,
       ...
@@ -180,7 +181,7 @@
 
       programs.tmux = {
         enable = true;
-        shell = "${pkgs.zsh}/bin/zsh";
+        shell = config.systemConstants.shell.bin;
         terminal = "tmux-256color";
         prefix = "C-a";
         mouse = true;

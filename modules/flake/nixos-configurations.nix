@@ -46,7 +46,6 @@ let
         };
 
         users.users.root.openssh.authorizedKeys.keys = lib.mkForce [ vmSshPubKey ];
-        users.users.gary.openssh.authorizedKeys.keys = lib.mkForce [ vmSshPubKey ];
       };
     };
 
@@ -55,6 +54,7 @@ let
     inputs.nixpkgs.lib.nixosSystem {
       specialArgs = { inherit inputs; };
       modules = [
+        inputs.nlib.nixosModules.default
         config.flake.modules.nixos."host-${hostname}"
         vmModule
         {

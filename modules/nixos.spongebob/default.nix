@@ -10,6 +10,7 @@
       gaming
       hardening
       locales
+      xi
       secrets
       sound
       theme

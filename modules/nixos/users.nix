@@ -1,10 +1,6 @@
 {
   flake.modules.nixos.users =
-    {
-      config,
-      pkgs,
-      ...
-    }:
+    { config, ... }:
     {
       users.users.dauliac = {
         isNormalUser = true;
@@ -17,7 +13,7 @@
           "docker"
           "dialout"
         ];
-        shell = pkgs.zsh;
+        shell = config.systemConstants.shell.package;
         hashedPasswordFile = config.sops.secrets.dauliac_hashed_password.path;
       };
     };

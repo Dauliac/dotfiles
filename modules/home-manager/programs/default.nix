@@ -72,6 +72,36 @@
             "kubectl logs -f service/$NAME -n $NAMESPACE --context $CONTEXT |jq -SR '. as $line | try (fromjson) catch $line'"
           ];
         };
+        vcluster-list = {
+          shortCut = "v";
+          description = "vcluster list";
+          scopes = [ "all" ];
+          command = "bash";
+          background = false;
+          confirm = false;
+          args = [
+            "-c"
+            "vcluster list --context $CONTEXT | less -K -r"
+          ];
+        };
+        vcluster-connect = {
+          shortCut = "w";
+          description = "KC connect";
+          scopes = [ "secret" ];
+          command = "bash";
+          background = false;
+          confirm = false;
+          args = [
+            "-c"
+            ''
+              tmp=$(mktemp)
+              echo "kubectl get -n $NAMESPACE $NAME $RESOURCE_NAME --template='{{index .data "kubeconfig-vcluster"}}' | base64 -d" > /tmp/test
+              kubectl get -n $NAMESPACE $RESOURCE_NAME/$NAME --template='{{index .data "kubeconfig-vcluster"}}' | base64 -d > $tmp
+              k9s --kubeconfig $tmp
+              rm $tmp
+            ''
+          ];
+        };
       };
     };
     programs.btop.enable = true;

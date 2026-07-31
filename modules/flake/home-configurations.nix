@@ -19,6 +19,7 @@ let
       inherit pkgs;
       extraSpecialArgs = { inherit inputs; };
       modules = [
+        inputs.nlib.homeModules.default
         config.flake.modules.homeManager."user-${username}"
         {
           home = {

@@ -13,8 +13,8 @@
 #   why     -> nix why-depends with better formatting
 #   compare -> nvd (compare generations/closures)
 #   run     -> comma-like behavior
-#   os      -> nh os (better nixos-rebuild)
-#   home    -> nh home (better home-manager)
+#   os      -> xi os (better nixos-rebuild)
+#   home    -> xi home (better home-manager)
 #   locate  -> nix-locate (find package providing a file)
 #   health  -> flake-checker (flake.lock health checks)
 #   gc      -> nix-du + nix-collect-garbage (smart cleanup)
@@ -61,8 +61,8 @@ CODE QUALITY:
     health [path]        Check flake.lock health (flake-checker)
 
 SYSTEM MANAGEMENT:
-    os <cmd> [args...]   NixOS rebuild with nh (switch, boot, test...)
-    home <cmd> [args...] Home-manager with nh (switch, build...)
+    os <cmd> [args...]   NixOS rebuild with xi (switch, boot, test...)
+    home <cmd> [args...] Home-manager with xi (switch, build...)
     gc [--dry-run]       Smart garbage collection with size analysis
     clean                Alias for gc
 
@@ -107,7 +107,7 @@ show_version() {
   echo -e "  ${CYAN}statix${NC}        - $(statix --version 2>/dev/null || echo 'nix linter')"
   echo -e "  ${CYAN}deadnix${NC}       - $(deadnix --version 2>/dev/null || echo 'dead code finder')"
   echo -e "  ${CYAN}nix-diff${NC}      - derivation differ"
-  echo -e "  ${CYAN}nh${NC}            - $(nh --version 2>/dev/null || echo 'nix helper')"
+  echo -e "  ${CYAN}xi${NC}            - $(xi --version 2>/dev/null || echo 'nix helper')"
   echo -e "  ${CYAN}nix-locate${NC}    - $(nix-locate --version 2>/dev/null || echo 'file locator')"
   echo -e "  ${CYAN}flake-checker${NC} - $(flake-checker --version 2>/dev/null || echo 'flake health')"
   echo -e "  ${CYAN}nix-du${NC}        - $(nix-du --version 2>/dev/null || echo 'store analyzer')"
@@ -200,7 +200,7 @@ cmd_os() {
     echo "Commands: switch, boot, test, build, dry, repl"
     exit 1
   fi
-  nh os "$@"
+  xi os "$@"
 }
 
 cmd_home() {
@@ -209,7 +209,7 @@ cmd_home() {
     echo "Commands: switch, build"
     exit 1
   fi
-  nh home "$@"
+  xi home "$@"
 }
 
 cmd_comma() {

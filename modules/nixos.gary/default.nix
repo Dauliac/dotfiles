@@ -17,6 +17,7 @@
           desktop
           hardening
           locales
+          xi
           secrets
           sound
           theme

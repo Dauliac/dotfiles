@@ -34,7 +34,11 @@ in
     {
       xdg.configFile."niri/config.kdl".source = lib.mkForce (niriConfigDir + "/niri-config.kdl");
 
-      home.pointerCursor.size = lib.mkForce 48;
+      home.pointerCursor = {
+        size = lib.mkForce 48;
+        name = lib.mkDefault "catppuccin-mocha-dark-cursors";
+        package = lib.mkDefault pkgs.catppuccin-cursors.mochaDark;
+      };
 
       services.swayidle = {
         enable = true;

@@ -11,61 +11,6 @@ in
     }:
     {
       packages = {
-        # Nix wrapper with better alternatives
-        inherit (pkgs) nx;
-        inherit (pkgs) neix;
-
-        # Build all flake outputs using devour-flake with nix-output-monitor
-        # Usage: nix run .#build-all
-        build-all = pkgs.writeShellApplication {
-          name = "build-all";
-          runtimeInputs = with pkgs; [
-            nix
-            jq
-            nix-output-monitor
-            config.flake-root.package
-          ];
-          text = ''
-            set -euo pipefail
-            FLAKE_ROOT="$(flake-root)"
-            echo "Building all flake outputs from: $FLAKE_ROOT"
-            echo ""
-
-            # Use devour-flake with nix-output-monitor for nice TUI
-            # nom outputs TUI to stderr, so we capture stdout separately
-            RESULT=$(nom build github:srid/devour-flake#default \
-              --override-input flake "path:$FLAKE_ROOT" \
-              --no-link --print-out-paths)
-
-            echo ""
-            echo "Build complete! Output manifest: $RESULT"
-            echo ""
-            echo "Built outputs:"
-            jq -r 'to_entries[] | "\(.key):\n  \(.value.byName | keys | join(", "))"' "$RESULT"
-          '';
-        };
-
-        # CI script (no TUI, verbose logging)
-        ci = pkgs.writeShellApplication {
-          name = "ci-build-all";
-          runtimeInputs = with pkgs; [
-            nix
-            jq
-            config.flake-root.package
-          ];
-          text = ''
-            set -euo pipefail
-            FLAKE_ROOT="$(flake-root)"
-            echo "=== CI Build All ==="
-            echo "Building all flake outputs from: $FLAKE_ROOT"
-            echo ""
-
-            nix build github:srid/devour-flake#default \
-              --override-input flake "path:$FLAKE_ROOT" \
-              -L --no-link --print-out-paths "$@"
-          '';
-        };
-
         nixos = pkgs.stdenv.mkDerivation {
           name = "nixos-system";
           buildCommand = ''

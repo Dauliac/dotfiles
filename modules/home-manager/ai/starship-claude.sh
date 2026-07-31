@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # starship-claude - Use Starship for your Claude Code status line
 # Based on https://github.com/martinemde/starship-claude (MIT License, Martin Emde)
 

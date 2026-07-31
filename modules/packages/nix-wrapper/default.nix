@@ -10,7 +10,7 @@
   deadnix,
   nix-diff,
   comma,
-  nh,
+  xi,
   nix-index,
   flake-checker,
   nix-du,
@@ -29,7 +29,7 @@ writeShellApplication {
     deadnix
     nix-diff
     comma
-    nh
+    xi
     nix-index
     flake-checker
     nix-du

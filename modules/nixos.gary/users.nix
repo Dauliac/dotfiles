@@ -1,6 +1,6 @@
 {
   flake.modules.nixos.gary-users =
-    { pkgs, ... }:
+    { config, ... }:
     {
       users.groups.gary = { };
       users.users.gary = {
@@ -14,7 +14,7 @@
           "docker"
           "dialout"
         ];
-        shell = pkgs.zsh;
+        shell = config.systemConstants.shell.package;
       };
     };
 }

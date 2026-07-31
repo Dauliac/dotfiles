@@ -5,7 +5,7 @@
     import-tree.url = "github:vic/import-tree";
     nlib = {
       url = "github:Dauliac/nlib";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs-lib.follows = "nixpkgs";
     };
     nix-auth.url = "github:numtide/nix-auth";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
@@ -115,20 +115,24 @@
       url = "github:kiriwalawren/nixflix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nh = {
-      url = "github:viperML/nh";
-      inputs.nixpkgs.follows = "nixpkgs";
+    xi = {
+      url = "git+ssh://git@github.com/Dauliac/xi.git";
     };
     aws-nix-cache = {
       url = "github:Dauliac/aws-nix-cache";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # Nix packages for AI coding agents (herdr, beads, gascity, gastown, ...).
+    # Not following nixpkgs so the numtide binary cache substitutes cleanly.
+    llm-agents = {
+      url = "github:numtide/llm-agents.nix";
+    };
   };
 
   outputs =
     inputs@{
-      flake-parts,
       import-tree,
+      nlib,
       ...
     }:
     let
@@ -142,13 +146,17 @@
 
       modulesTree = (import-tree.filterNot excludeFilter) ./modules;
     in
-    flake-parts.lib.mkFlake { inherit inputs; } {
+    nlib.lib.mkFlake {
+      inherit inputs;
+      flake-parts = inputs.flake-parts;
+    } {
       systems = [ "x86_64-linux" ];
 
       imports = [
         inputs.flake-parts.flakeModules.modules
         inputs.flake-root.flakeModule
         inputs.home-manager.flakeModules.home-manager
+        inputs.xi.flakeModule
         modulesTree
       ];
     };

@@ -38,9 +38,9 @@ in
           xi
           neovim
           neovim-packages
+          sine
           pet
           pueue
-          ssh
           starship
           terminal-multiplexer
           desktop
@@ -94,14 +94,19 @@ in
 
       home.sessionVariables = {
         NPM_CONFIG_PREFIX = "$XDG_DATA_HOME/npm-packages";
-        PATH = "$HOME/.local/bin:$PATH:$NPM_CONFIG_PREFIX/bin/:$HOME/${config.programs.go.goBin}";
         AWS_DEFAULT_PROFILE = "corp-support";
       };
 
-      programs.mise = {
-        enable = true;
-        enableZshIntegration = true;
-      };
+      # Use home.sessionPath (home-manager's official mechanism) instead of
+      # rewriting PATH via sessionVariables — that overwrote $PATH and dropped
+      # /nix/var/nix/profiles/default/bin because targets.genericLinux only
+      # exposes ~/.nix-profile/bin, not the default profile.
+      home.sessionPath = [
+        "$HOME/.local/bin"
+        "$NPM_CONFIG_PREFIX/bin"
+        "$HOME/go/bin"
+        "/nix/var/nix/profiles/default/bin"
+      ];
 
       home.packages = [
         inputs.nix-auth.packages.${pkgs.system}.default
@@ -173,8 +178,6 @@ in
           path = "~/.config/git/corp-ssh.inc";
         }
       ];
-
-      programs.ssh.includes = [ "config-mm" ];
 
       programs.alacritty.package = nixGlWrapper pkgs.alacritty;
       programs.kitty.package = nixGlWrapper pkgs.kitty;

@@ -3,7 +3,7 @@ _: {
     { lib, ... }:
     {
       options.systemConstants.gary = lib.mkOption {
-        type = lib.types.attrsOf lib.types.unspecified;
+        type = lib.types.anything;
         default = { };
         description = "Gary host constants (domain, network, media, services, ...)";
       };

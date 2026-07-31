@@ -30,28 +30,17 @@ tasks:
       - nix-fast-build --skip-cached --flake ".#packages"
   install:home-manager:
     cmds:
-      - nh home switch .
+      - xi home switch .
   install:nix-os:
     silent: true
     desc: Install project
     cmds:
-      - nh os switch .
-  install:home-manager:pro:
-    silent: true
-    desc: Install project
-    cmds:
-      - |
-        nh home switch .
-        fc-cache -f -v
-        gtk-update-icon-cache
-        update-desktop-database
-      - |
-        claude mcp add --transport stdio codemap -- codemap-mcp
+      - xi os switch .
   install:pro:
     silent: true
+    desc: Install system-manager (includes home-manager)
     cmds:
-      - system-manager switch --flake '.' --sudo
-      - task: install:home-manager:pro
+      - xi system switch .
   test:
     silent: true
     cmds:

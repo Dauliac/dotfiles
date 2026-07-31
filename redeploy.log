@@ -1,0 +1,116 @@
+=== redeploy.sh started at 2026-07-31T15:44:14+02:00 ===
+sourced /etc/profile.d/nix.sh
+sourced /etc/profile.d/system-manager-path.sh
+PATH after sourcing:
+  /run/wrappers/bin
+  /etc/profiles/per-user/juliendauliac/bin
+  /run/system-manager/sw/bin
+  /home/juliendauliac/.nix-profile/bin
+  /nix/var/nix/profiles/default/bin
+  /nix/store/7hn39xnxhvn9vk2265is80jqcis69ywy-nix/bin
+  /home/juliendauliac/.local/share/mise/installs/amazon-ecr-credential-helper/latest
+  /home/juliendauliac/.local/share/mise/installs/awscli/latest/.mise-bins
+  /home/juliendauliac/.local/share/mise/installs/cloudflared/latest
+  /home/juliendauliac/.local/share/mise/installs/colima/latest
+  /home/juliendauliac/.local/share/mise/installs/docker-compose/latest
+  /home/juliendauliac/.local/share/mise/installs/glab/latest/bin
+  /home/juliendauliac/.local/share/mise/installs/k9s/latest
+  /home/juliendauliac/.local/share/mise/installs/kubectl/1.35
+  /home/juliendauliac/.local/share/mise/installs/kubectx/latest
+  /home/juliendauliac/.local/share/mise/installs/kubelogin/latest
+  /home/juliendauliac/.local/share/mise/installs/pdm/latest/bin
+  /home/juliendauliac/.local/share/mise/installs/pipx/latest/bin
+  /home/juliendauliac/.local/share/mise/installs/pipx-git-https-git-corp-tech-sre-ezsre-git/latest/bin
+  /home/juliendauliac/.local/share/mise/installs/pipx-pdm/latest/bin
+  /home/juliendauliac/.local/share/mise/installs/pipx-poetry/latest/bin
+  /home/juliendauliac/.local/share/mise/installs/poetry/latest/bin
+  /home/juliendauliac/.local/share/mise/installs/python/3.14/bin
+  /home/juliendauliac/.local/share/mise/installs/session-manager-plugin/latest/bin
+  /home/juliendauliac/.local/share/mise/installs/ubi-docker-buildx/latest
+  /home/juliendauliac/.local/share/mise/installs/usage/latest
+  /home/juliendauliac/.local/share/mise/installs/vault/2.0
+  /home/juliendauliac/.local/share/mise/installs/node/22/bin
+  /home/juliendauliac/.local/share/mise/installs/gitlab-ai-accelerate-agora/0.0.1-rc1
+  /home/juliendauliac/.nix-profile/bin
+  /nix/var/nix/profiles/default/bin
+  /usr/local/bin
+  /usr/local/sbin
+  /nix/store/vpdsw0nnvmsyfvcr5pa5agn4n9cljli9-nix/bin
+  /home/juliendauliac/.local/bin
+  /usr/sbin
+  /usr/bin
+  /sbin
+  /bin
+  /usr/games
+  /usr/local/games
+  /snap/bin
+  /home/juliendauliac/.local/share/npm-packages/bin/
+  /home/juliendauliac/_mkMergedOptionModule
+xi not available locally — running via nix run from GitHub
+fetching github input 'github:Dauliac/xi'
+[32m>[0m Building system-manager configuration
+[?25l[?2026h[1m⏱ 0s[0m[?2026l[?2026h[1G[2K[1m⏱ 0s[0m[?2026l[?2026h[1G[2K[1m⏱ 0s[0m[?2026l[?2026h[1G[2K[1m⏱ 0s[0m[?2026l[?2026h[1G[2K[1m⏱ 0s[0m[?2026l[?2026h[1G[2K[1m⏱ 0s[0m[?2026l[?2026h[1G[2K[1m⏱ 0s[0m[?2026l[?2026h[1G[2K[31;1merror:[0m
+       … while evaluating a branch condition
+         [34;1mat [35;1m/nix/store/m4v2ffki47sfyk51m63429gw1fh7wl9q-source/nix/lib.nix:131:11[0m:
+          130|           in
+          131|           if failedAssertions != [ ] then
+             |           [31;1m^[0m
+          132|             throw "\nFailed assertions:\n${lib.concatStringsSep "\n" (map (x: "- ${x}") failedAssertions)}"
+
+       … while calling the '[35;1mmap[0m' builtin
+         [34;1mat [35;1m/nix/store/m4v2ffki47sfyk51m63429gw1fh7wl9q-source/nix/lib.nix:129:32[0m:
+          128|           let
+          129|             failedAssertions = map (x: x.message) (lib.filter (x: !x.assertion) config.assertions);
+             |                                [31;1m^[0m
+          130|           in
+
+       … while evaluating the option `assertions':
+
+       … while evaluating definitions from `/nix/store/y9jlpk6lrhf7lhnj9b486fzdps88pdid-source/nixos/common.nix':
+
+       [35;1m(stack trace truncated; use '--show-trace' to show the full, detailed trace)[0m
+
+       [31;1merror:[0m undefined variable '[35;1msine[0m'
+       [34;1mat [35;1m/nix/store/q07x8lgchizw8jdnankj4i9r5h79dsyi-source/modules/home.juliendauliac/default.nix:41:11[0m:
+           40|           neovim-packages
+           41|           sine
+             |           [31;1m^[0m
+           42|           pet
+┏━[1;31m 1 Errors: [0m
+┃ [31;1merror:[0m
+┃        … while evaluating a branch condition
+┃          [34;1mat [35;1m/nix/store/m4v2ffki47sfyk51m63429gw1fh7wl9q-source/nix/lib.nix:131:11[0m:
+┃           130|           in
+┃           131|           if failedAssertions != [ ] then
+┃              |           [31;1m^[0m
+┃           132|             throw "\nFailed assertions:\n${lib.concatStringsSep "\n" (map (x: "- ${x}") failedAssertions)}"
+┃ 
+┃        … while calling the '[35;1mmap[0m' builtin
+┃          [34;1mat [35;1m/nix/store/m4v2ffki47sfyk51m63429gw1fh7wl9q-source/nix/lib.nix:129:32[0m:
+┃           128|           let
+┃           129|             failedAssertions = map (x: x.message) (lib.filter (x: !x.assertion) config.assertions);
+┃              |                                [31;1m^[0m
+┃           130|           in
+┃ 
+┃        … while evaluating the option `assertions':
+┃ 
+┃        … while evaluating definitions from `/nix/store/y9jlpk6lrhf7lhnj9b486fzdps88pdid-source/nixos/common.nix':
+┃ 
+┃        [35;1m(stack trace truncated; use '--show-trace' to show the full, detailed trace)[0m
+┃ 
+┃        [31;1merror:[0m undefined variable '[35;1msine[0m'
+┃        [34;1mat [35;1m/nix/store/q07x8lgchizw8jdnankj4i9r5h79dsyi-source/modules/home.juliendauliac/default.nix:41:11[0m:
+┃            40|           neovim-packages
+┃            41|           sine
+┃              |           [31;1m^[0m
+┃            42|           pet[0m
+┣━━━                                                            
+┗━ ∑ [1m[31m⚠ Exited with 1 errors reported by nix at 15:44:19 after 0s[0m[0m[?2026l[?25h
+Error: 
+   0: [91mFailed to build system-manager configuration[0m
+   1: [91mCommand exited with status ExitStatus(Exited(1))[0m
+
+Location:
+   [35mcrates/xi-core/src/command.rs[0m:[35m1089[0m
+=== redeploy.sh exited with 1 ===
+log written to redeploy.log

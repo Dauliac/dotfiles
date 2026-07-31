@@ -37,9 +37,9 @@ in
         xi
         neovim
         neovim-packages
+        sine
         pet
         pueue
-        ssh
         starship
         terminal-multiplexer
         alacritty

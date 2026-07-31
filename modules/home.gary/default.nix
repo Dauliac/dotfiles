@@ -41,7 +41,6 @@
           neovim-packages
           pet
           pueue
-          ssh
           starship
           terminal-multiplexer
           alacritty

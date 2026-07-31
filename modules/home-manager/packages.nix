@@ -54,7 +54,7 @@
         statix # nix linter
         deadnix # dead code finder
         nix-diff # derivation differ
-        nh # nix helper
+        # xi is provided by programs.xi module
         flake-checker # flake health checks
         nix-du # store space analyzer
         nurl # generate fetchers from URLs

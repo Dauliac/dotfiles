@@ -9,6 +9,7 @@
     }:
     {
       imports = [
+        inputs.self.modules.nixos.shell
         # inputs.catppuccin.nixosModules.catppuccin  # blocked: upstream uses services.displayManager.generic (newer nixpkgs)
         inputs.comin.nixosModules.comin
         inputs.home-manager.nixosModules.home-manager
@@ -64,7 +65,6 @@
         enable = true;
         enableSSHSupport = true;
       };
-      programs.zsh.enable = true;
       networking.firewall.enable = true;
       services.logrotate.checkConfig = false;
       services.flatpak = {
