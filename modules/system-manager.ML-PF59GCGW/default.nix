@@ -9,19 +9,40 @@
     {
       imports = [
         inputs.aws-nix-cache.systemManagerModules.default
+        inputs.self.modules.systemManager.nix-throttle
       ];
 
       system-manager.allowAnyDistro = true;
       nixpkgs.hostPlatform = "x86_64-linux";
 
-      environment.etc."nix/nix.conf" = {
-        replaceExisting = true;
-        text = ''
-          extra-sandbox-paths = /etc/nix/netrc
-          trusted-users = root juliendauliac
-          !include /etc/nix/conf.d/substituters.conf
-        '';
+      # Laptop CPU inventory. Consumed by traits (nix-throttle uses 50%).
+      systemConstants.cpu.count = 16;
+
+      # Throttle nix-daemon: one derivation at a time, 50% of CPUs by default.
+      # See modules/system-manager/nix-throttle.nix
+      systemConstants.nix.throttle.enable = true;
+
+      nix.settings = {
+        extra-sandbox-paths = [ "/etc/nix/netrc" ];
+        trusted-users = [
+          "root"
+          "juliendauliac"
+        ];
+        experimental-features = [
+          "nix-command"
+          "flakes"
+        ];
+        system-features = [
+          "benchmark"
+          "big-parallel"
+          "kvm"
+          "nixos-test"
+          "uid-range"
+        ];
       };
+      nix.extraOptions = ''
+        !include /etc/nix/conf.d/substituters.conf
+      '';
 
       services.aws-nix-cache = {
         enable = true;
