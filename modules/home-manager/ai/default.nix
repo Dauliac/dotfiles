@@ -7,6 +7,7 @@
       mcp-servers
       ai-packages
       ai-skills
+      beads
     ];
   };
 }

@@ -18,3 +18,12 @@ version = "sha:3b3b89f2011e06d84459aa7bea1552382f13930a"
 # 0 disables retention; use "168h" for 7 days.
 # "7d" is not a valid Go duration.
 # retention_ttl = "0"
+
+[[rigs]]
+name = "cimera"
+prefix = "cimera"
+default_branch = "main"
+[rigs.imports]
+[rigs.imports.gc]
+source = "https://github.com/gastownhall/gascity-packs/tree/main/gascity/roles"
+version = "sha:3b3b89f2011e06d84459aa7bea1552382f13930a"
