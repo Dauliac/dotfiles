@@ -1,7 +1,10 @@
-{ inputs, ... }:
-{
+{ inputs, ... }: {
   flake.modules.systemManager.nix-throttle =
-    { config, lib, ... }:
+    {
+      config,
+      lib,
+      ...
+    }:
     let
       cfg = config.systemConstants.nix.throttle;
     in
@@ -18,14 +21,28 @@
           and applies a memory cap that propagates to every builder via cgroups.
         '';
 
+        maxJobs = lib.mkOption {
+          type = lib.types.ints.positive;
+          default = 1;
+          description = ''
+            Number of derivations Nix may build in parallel
+            (nix.settings.max-jobs). Defaults to 1 for maximum desktop
+            responsiveness; total CPU used is at most `maxJobs * cores`, so
+            keep that product below `systemConstants.cpu.count` to leave
+            headroom for interactive work.
+          '';
+        };
+
         cores = lib.mkOption {
           type = lib.types.ints.positive;
-          default = config.systemConstants.cpu.count / 2;
-          defaultText = lib.literalExpression "systemConstants.cpu.count / 2";
+          default = config.systemConstants.cpu.count / (2 * cfg.maxJobs);
+          defaultText = lib.literalExpression "systemConstants.cpu.count / (2 * maxJobs)";
           description = ''
-            Threads Nix uses per derivation (nix.settings.cores). Defaults to
-            50% of the machine's total logical CPU count, leaving the other
-            half for interactive work.
+            Threads Nix uses per derivation (nix.settings.cores). Default
+            scales inversely with maxJobs so the total build CPU budget
+            stays around 50% of the machine regardless of parallelism
+            (e.g. 16 CPUs → 8 cores × 1 job, or 4 cores × 2 jobs, or
+            2 cores × 4 jobs).
           '';
         };
 
@@ -44,8 +61,8 @@
 
       config = lib.mkIf cfg.enable {
         nix.settings = {
-          cores = cfg.cores;
-          max-jobs = 1;
+          inherit (cfg) cores;
+          max-jobs = cfg.maxJobs;
         };
 
         environment.etc."systemd/system/nix-daemon.service.d/50-throttle.conf".text = ''

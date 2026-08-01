@@ -1,5 +1,4 @@
-{ inputs, ... }:
-{
+{ inputs, ... }: {
   flake.modules.systemManager.host-ml-pf59gcgw =
     {
       lib,
@@ -18,9 +17,13 @@
       # Laptop CPU inventory. Consumed by traits (nix-throttle uses 50%).
       systemConstants.cpu.count = 16;
 
-      # Throttle nix-daemon: one derivation at a time, 50% of CPUs by default.
-      # See modules/system-manager/nix-throttle.nix
-      systemConstants.nix.throttle.enable = true;
+      # Throttle nix-daemon: keep total CPU budget at ~50% (8 of 16 cores)
+      # split across parallel derivations. See modules/system-manager/nix-throttle.nix
+      systemConstants.nix.throttle = {
+        enable = true;
+        maxJobs = 2; # 2 derivations in flight
+        # cores defaults to cpu.count / (2*maxJobs) = 16 / 4 = 4 threads per build
+      };
 
       nix.settings = {
         extra-sandbox-paths = [ "/etc/nix/netrc" ];
