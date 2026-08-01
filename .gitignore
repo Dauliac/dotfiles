@@ -11,3 +11,18 @@ result*
 *.db
 .beads-credential-key
 .beads/proxieddb/
+
+# Gas City
+.gc/
+.beads/*
+!.beads/identity.toml
+hooks/
+.claude/skills/
+.dolt-backup/
+
+# bv (beads viewer) local config and caches
+.bv/
+
+# Break-glass redeploy log — regenerated on demand, never source
+redeploy.log
+redeploy.log.*
