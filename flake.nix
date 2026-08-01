@@ -7,7 +7,6 @@
       url = "github:Dauliac/nlib";
       inputs.nixpkgs-lib.follows = "nixpkgs";
     };
-    nix-auth.url = "github:numtide/nix-auth";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     home-manager = {
       url = "github:nix-community/home-manager/release-25.11";
@@ -116,7 +115,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     xi = {
-      url = "git+ssh://git@github.com/Dauliac/xi.git";
+      # Local checkout so edits under ../xi are picked up without a push/pull cycle.
+      # `path:` sees the dirty tree (unlike git+ssh/git+file which require a commit).
+      # Override at eval time with `--override-input xi git+ssh://git@github.com/Dauliac/xi.git`
+      # (or flip this url back) when building on a host without the local checkout.
+      url = "path:/home/juliendauliac/ghq/github.com/Dauliac/xi";
     };
     aws-nix-cache = {
       url = "github:Dauliac/aws-nix-cache";
@@ -146,18 +149,20 @@
 
       modulesTree = (import-tree.filterNot excludeFilter) ./modules;
     in
-    nlib.lib.mkFlake {
-      inherit inputs;
-      flake-parts = inputs.flake-parts;
-    } {
-      systems = [ "x86_64-linux" ];
+    nlib.lib.mkFlake
+      {
+        inherit inputs;
+        inherit (inputs) flake-parts;
+      }
+      {
+        systems = [ "x86_64-linux" ];
 
-      imports = [
-        inputs.flake-parts.flakeModules.modules
-        inputs.flake-root.flakeModule
-        inputs.home-manager.flakeModules.home-manager
-        inputs.xi.flakeModule
-        modulesTree
-      ];
-    };
+        imports = [
+          inputs.flake-parts.flakeModules.modules
+          inputs.flake-root.flakeModule
+          inputs.home-manager.flakeModules.home-manager
+          inputs.xi.flakeModule
+          modulesTree
+        ];
+      };
 }

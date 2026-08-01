@@ -37,6 +37,13 @@
         ".claude/settings.local.json"
         "_bmad"
         "_bmad-output"
+        # Coding-agent state dirs created per-project
+        ".beads/"
+        ".codegraph/"
+        ".gc/"
+        ".herdr/"
+        ".specify/"
+        ".fence.json"
       ];
       settings = {
         core.editor = "nvim";
@@ -52,6 +59,11 @@
           maxStack = 60;
           oneFixupPerCommit = true;
         };
+        # `git difftool -t hunk` opens the TUI diff viewer built for
+        # reviewing agent-authored changesets. Trust prompt disabled so it
+        # doesn't ask on every invocation.
+        difftool.hunk.cmd = ''hunk diff "$LOCAL" "$REMOTE"'';
+        difftool.prompt = false;
       };
     };
   };
