@@ -12,42 +12,40 @@ let
   vmSshKeyDir = ../dev;
   vmSshPubKey = builtins.readFile (vmSshKeyDir + "/vm-ssh-key.pub");
 
-  vmModule =
-    { lib, ... }:
-    {
-      virtualisation.vmVariant = {
-        virtualisation = {
-          qemu.options = [
-            "-device virtio-vga-gl"
-            "-display gtk,gl=on,grab-on-hover=on"
-          ];
-          forwardPorts = [
-            {
-              from = "host";
-              host.port = vmSshPort;
-              guest.port = 22;
-            }
-          ];
-          memorySize = 4096;
-          cores = 4;
-          graphics = true;
-        };
-
-        services.openssh = {
-          enable = lib.mkForce true;
-          settings = {
-            PermitRootLogin = lib.mkForce "yes";
-            PasswordAuthentication = lib.mkForce false;
-            AllowUsers = lib.mkForce [
-              "gary"
-              "root"
-            ];
-          };
-        };
-
-        users.users.root.openssh.authorizedKeys.keys = lib.mkForce [ vmSshPubKey ];
+  vmModule = { lib, ... }: {
+    virtualisation.vmVariant = {
+      virtualisation = {
+        qemu.options = [
+          "-device virtio-vga-gl"
+          "-display gtk,gl=on,grab-on-hover=on"
+        ];
+        forwardPorts = [
+          {
+            from = "host";
+            host.port = vmSshPort;
+            guest.port = 22;
+          }
+        ];
+        memorySize = 4096;
+        cores = 4;
+        graphics = true;
       };
+
+      services.openssh = {
+        enable = lib.mkForce true;
+        settings = {
+          PermitRootLogin = lib.mkForce "yes";
+          PasswordAuthentication = lib.mkForce false;
+          AllowUsers = lib.mkForce [
+            "gary"
+            "root"
+          ];
+        };
+      };
+
+      users.users.root.openssh.authorizedKeys.keys = lib.mkForce [ vmSshPubKey ];
     };
+  };
 
   mkHost =
     hostname:

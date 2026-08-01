@@ -1,12 +1,9 @@
-{ inputs, ... }:
-{
-  flake.modules.nixos.shell =
-    { config, ... }:
-    {
-      imports = [ inputs.self.modules.generic.shell ];
+{ inputs, ... }: {
+  flake.modules.nixos.shell = { config, ... }: {
+    imports = [ inputs.self.modules.generic.shell ];
 
-      programs.zsh.enable = config.systemConstants.shell.package.pname == "zsh";
+    programs.zsh.enable = config.systemConstants.shell.package.pname == "zsh";
 
-      environment.systemPackages = [ config.systemConstants.shell.package ];
-    };
+    environment.systemPackages = [ config.systemConstants.shell.package ];
+  };
 }

@@ -7,7 +7,11 @@ let
   mkSystemManager =
     hostKey: extraModules:
     inputs.system-manager.lib.makeSystemConfig {
-      modules = [ inputs.nlib.systemManagerModules.default config.flake.modules.systemManager."host-${hostKey}" ] ++ extraModules;
+      modules = [
+        inputs.nlib.systemManagerModules.default
+        config.flake.modules.systemManager."host-${hostKey}"
+      ]
+      ++ extraModules;
     };
 
   sm = config.flake.modules.systemManager;
@@ -26,7 +30,10 @@ let
     inputs.home-manager.nixosModules.home-manager
     sm.shell
     (
-      { config, lib, ... }:
+      {
+        config,
+        ...
+      }:
       {
         nix.enable = true;
         services.userborn.enable = true;
@@ -54,7 +61,11 @@ let
               # config.lib → infinite recursion.  Disable the adapter and
               # replay only the lib-function generation (no nested traversal).
               (
-                { config, lib, ... }:
+                {
+                  config,
+                  lib,
+                  ...
+                }:
                 let
                   defs = config.nix-lib.lib or { };
                   # Flatten nested lib defs → { "a.b" = { fn = …; }; … }
@@ -76,16 +87,13 @@ let
                   flat = flatten "" defs;
                   # Rebuild nested attrset of bare functions
                   fns = builtins.foldl' (
-                    acc: key:
-                    lib.recursiveUpdate acc (lib.setAttrByPath (lib.splitString "." key) flat.${key}.fn)
+                    acc: key: lib.recursiveUpdate acc (lib.setAttrByPath (lib.splitString "." key) flat.${key}.fn)
                   ) { } (builtins.attrNames flat);
                 in
                 {
                   nix-lib.enable = lib.mkForce false;
                   # home-manager's config.lib rejects plain functions; wrap them
-                  lib = builtins.mapAttrs (
-                    _: v: if builtins.isFunction v then { __functor = _self: v; } else v
-                  ) fns;
+                  lib = builtins.mapAttrs (_: v: if builtins.isFunction v then { __functor = _self: v; } else v) fns;
                 }
               )
             ];

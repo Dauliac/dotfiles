@@ -1,5 +1,4 @@
-{ inputs, ... }:
-{
+{ inputs, ... }: {
   flake.modules.nixos.host-spongebob = {
     imports = with inputs.self.modules.nixos; [
       base

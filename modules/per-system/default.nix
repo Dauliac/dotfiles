@@ -1,7 +1,6 @@
 # Per-system flake-parts modules - auto-imported by import-tree
 # No imports needed - other modules are automatically discovered
-{ inputs, ... }:
-{
+{ inputs, ... }: {
   imports = [
     inputs.treefmt-nix.flakeModule
     inputs.git-hooks.flakeModule

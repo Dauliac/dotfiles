@@ -1,5 +1,4 @@
-{ inputs, ... }:
-{
+{ inputs, ... }: {
   flake.modules.nixvim.lang-devops =
     { pkgs, ... }:
     let

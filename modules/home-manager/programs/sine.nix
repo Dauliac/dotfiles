@@ -1,6 +1,9 @@
 {
   flake.modules.homeManager.sine =
-    { pkgs, lib, ... }:
+    {
+      pkgs,
+      ...
+    }:
     let
       sineVersion = "2.3.3";
       bootloaderVersion = "0.1.4";

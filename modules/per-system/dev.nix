@@ -1,5 +1,4 @@
-{ lib, ... }:
-{
+{ lib, ... }: {
   config.perSystem =
     {
       config,
@@ -10,10 +9,15 @@
     {
       xi.enable = true;
       xi.devshell.enable = true;
+      xi.shellHook = {
+        enable = true;
+        nixAlias = true;
+        completion = true;
+        develop = true;
+      };
 
       devShells.default = config.xi.wrapDevShell (
         pkgs.mkShell {
-          shellHook = config.pre-commit.installationScript;
           nativeBuildInputs =
             with pkgs;
             [
@@ -29,7 +33,8 @@
             ]
             ++ (lib.attrValues config.treefmt.build.programs);
 
-          devShellHook = ''
+          shellHook = ''
+            ${config.pre-commit.installationScript}
             export SOPS_AGE_KEY_FILE=~/.config/sops/age/dotfiles.txt
             git config diff.sopsdiffer.textconv "sops decrypt"
             task init
