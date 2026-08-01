@@ -1,5 +1,4 @@
-{ inputs, ... }:
-{
+{ inputs, ... }: {
   flake.modules.homeManager.user-gary =
     {
       lib,
@@ -42,12 +41,12 @@
           pet
           pueue
           starship
-          terminal-multiplexer
           alacritty
           ghostty
           kitty
           wezterm
           tmux
+          herdr
           yazi
           zsh
         ]
@@ -56,13 +55,11 @@
           inputs.self.modules.generic.proprietary-flag
         ];
 
-      programs.nixvim.imports =
-        with inputs.self.modules.nixvim;
-        [
-          base
-          lsp
-          opts
-        ];
+      programs.nixvim.imports = with inputs.self.modules.nixvim; [
+        base
+        lsp
+        opts
+      ];
 
       home.stateVersion = "25.05";
 

@@ -38,10 +38,10 @@ in
         neovim
         neovim-packages
         sine
+        herdr
         pet
         pueue
         starship
-        terminal-multiplexer
         alacritty
         ghostty
         kitty
@@ -51,30 +51,28 @@ in
         zsh
       ];
 
-      programs.nixvim.imports =
-        with inputs.self.modules.nixvim;
-        [
-          base
-          completion
-          dap
-          editing
-          git
-          lang-devops
-          lang-go
-          lang-lua
-          lang-misc
-          lang-nix
-          lang-python
-          lang-rust
-          lang-shell
-          lang-typescript
-          lang-web
-          lsp
-          lsp-plugins
-          navigation
-          opts
-          ui
-        ];
+      programs.nixvim.imports = with inputs.self.modules.nixvim; [
+        base
+        completion
+        dap
+        editing
+        git
+        lang-devops
+        lang-go
+        lang-lua
+        lang-misc
+        lang-nix
+        lang-python
+        lang-rust
+        lang-shell
+        lang-typescript
+        lang-web
+        lsp
+        lsp-plugins
+        navigation
+        opts
+        ui
+      ];
 
       xdg.mime.enable = true;
       sops.secrets = {

@@ -28,19 +28,6 @@ tasks:
   build:
     cmds:
       - nix-fast-build --skip-cached --flake ".#packages"
-  install:home-manager:
-    cmds:
-      - xi home switch .
-  install:nix-os:
-    silent: true
-    desc: Install project
-    cmds:
-      - xi os switch .
-  install:pro:
-    silent: true
-    desc: Install system-manager (includes home-manager)
-    cmds:
-      - xi system switch .
   test:
     silent: true
     cmds:

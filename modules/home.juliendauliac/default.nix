@@ -39,10 +39,10 @@ in
           neovim
           neovim-packages
           sine
+          herdr
           pet
           pueue
           starship
-          terminal-multiplexer
           desktop
           alacritty
           ghostty
@@ -58,30 +58,28 @@ in
           inputs.aws-nix-cache.homeManagerModules.default
         ];
 
-      programs.nixvim.imports =
-        with inputs.self.modules.nixvim;
-        [
-          base
-          completion
-          dap
-          editing
-          git
-          lang-devops
-          lang-go
-          lang-lua
-          lang-misc
-          lang-nix
-          lang-python
-          lang-rust
-          lang-shell
-          lang-typescript
-          lang-web
-          lsp
-          lsp-plugins
-          navigation
-          opts
-          ui
-        ];
+      programs.nixvim.imports = with inputs.self.modules.nixvim; [
+        base
+        completion
+        dap
+        editing
+        git
+        lang-devops
+        lang-go
+        lang-lua
+        lang-misc
+        lang-nix
+        lang-python
+        lang-rust
+        lang-shell
+        lang-typescript
+        lang-web
+        lsp
+        lsp-plugins
+        navigation
+        opts
+        ui
+      ];
 
       systemConstants.nixgl.wrapperType = lib.mkDefault "intel";
 
@@ -108,10 +106,7 @@ in
         "/nix/var/nix/profiles/default/bin"
       ];
 
-      home.packages = [
-        inputs.nix-auth.packages.${pkgs.system}.default
-      ]
-      ++ (
+      home.packages =
         with pkgs;
         [
           awscli2
@@ -150,8 +145,7 @@ in
           chromium
           dbeaver-bin
           gemini-cli-bin
-        ]
-      );
+        ];
 
       home.shellAliases = {
         vault_all = ''
@@ -223,6 +217,11 @@ in
           sopsFile = dauliacSecretsDir + "/gitconfig.enc.ini";
           path = "/home/juliendauliac/.config/git/dauliac.secrets.ini";
           format = "ini";
+        };
+        doltJulienDauliac = {
+          sopsFile = secretsDir + "/dolt.config.enc.json";
+          path = "/home/juliendauliac/.dolt/config_global.json";
+          format = "binary";
         };
         sshIdRsa = {
           sopsFile = secretsDir + "/id_ed25519.enc";
