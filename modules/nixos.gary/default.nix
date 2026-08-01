@@ -1,5 +1,4 @@
-{ inputs, ... }:
-{
+{ inputs, ... }: {
   flake.modules.nixos.host-gary =
     {
       config,
@@ -38,6 +37,10 @@
           gary-adguard
           gary-bluetooth-hub
           gary-home-assistant
+          gary-mosquitto
+          gary-esphome
+          gary-zigbee2mqtt
+          gary-matter-server
           gary-airplay
           gary-airplay-uxplay
           gary-airplay-shairport
@@ -78,8 +81,15 @@
           dauliac_ssh_pub_key = { };
         };
 
-        # nixflix is disabled via featureFlags.nixflix = false (see gary-constants);
-        # VM overrides re-enable here once the upstream input is fixed.
+        # Nixflix is enabled on real gary. The VM variant disables it because the
+        # arr services need /data mount + SOPS secrets that a throwaway VM lacks.
+        systemConstants.gary.featureFlags.nixflix = lib.mkForce false;
+        systemConstants.gary.featureFlags.nixflixVpn = lib.mkForce false;
+        systemConstants.gary.featureFlags.mosquitto = lib.mkForce false;
+        systemConstants.gary.featureFlags.esphome = lib.mkForce false;
+        systemConstants.gary.featureFlags.zigbee2mqtt = lib.mkForce false;
+        systemConstants.gary.featureFlags.matterServer = lib.mkForce false;
+        systemConstants.gary.featureFlags.haArrIntegration = lib.mkForce false;
 
         users.users.dauliac = {
           hashedPasswordFile = lib.mkForce null;

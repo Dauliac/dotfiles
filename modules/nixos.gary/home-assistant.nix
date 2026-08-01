@@ -3,6 +3,7 @@
     {
       config,
       lib,
+      pkgs,
       ...
     }:
     let
@@ -25,6 +26,7 @@
           # Zigbee/Z-Wave (if you have a coordinator)
           "zha" # Zigbee Home Automation
           "zwave_js" # Z-Wave JS
+          "matter" # Matter/Thread commissioning via matter-server
 
           # Music & Media
           "spotify"
@@ -32,6 +34,14 @@
           "dlna_dmr" # DLNA renderers
           "mpd" # Music Player Daemon
           "sonos"
+
+          # Media stack integration (official — no HACS needed)
+          "jellyfin"
+          "sonarr"
+          "radarr"
+          "qbittorrent"
+          "sabnzbd"
+          "transmission"
 
           # Network & Discovery
           "ssdp"
@@ -59,6 +69,26 @@
           "html5"
         ];
 
+        # Lovelace UI modules packaged in nixpkgs — declarative, no HACS.
+        # HACS-only cards (upcoming-media-card-jellyfin, arr-stack-card, etc.)
+        # are packaged separately in Stage C via home-assistant-integrations.nix.
+        customLovelaceModules =
+          with pkgs.home-assistant-custom-lovelace-modules;
+          [
+            mushroom
+            mini-graph-card
+            mini-media-player
+            apexcharts-card
+            button-card
+            card-mod
+            bubble-card
+            auto-entities
+            atomic-calendar-revive
+            multiple-entity-row
+            template-entity-row
+          ]
+          ++ lib.optional gary.featureFlags.zigbee2mqtt zigbee2mqtt-networkmap;
+
         config = {
           homeassistant = {
             name = cfg.homeName;
@@ -76,16 +106,28 @@
           # Enable default integrations
           default_config = { };
 
+          # Connect to the local mosquitto broker (when enabled).
+          # Password comes from SOPS via services.home-assistant.configWritable/secrets.
+          mqtt = lib.mkIf gary.featureFlags.mosquitto {
+            broker = "127.0.0.1";
+            inherit (gary.mosquitto) port;
+            username = "homeassistant";
+            password = "!secret mqtt_password";
+            discovery = true;
+            discovery_prefix = "homeassistant";
+          };
+
           # HTTP configuration
           http = {
             server_port = 8123;
             ip_ban_enabled = true;
             login_attempts_threshold = 5;
-            # Trust nginx reverse proxy
+            # Trust nginx reverse proxy (localhost + gary's LAN IP)
             use_x_forwarded_for = true;
             trusted_proxies = [
               "127.0.0.1"
               "::1"
+              gary.network.lanIP
             ];
           };
 

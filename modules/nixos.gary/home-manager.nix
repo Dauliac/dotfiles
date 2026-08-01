@@ -1,5 +1,4 @@
-{ inputs, ... }:
-{
+{ inputs, ... }: {
   flake.modules.nixos.gary-home-manager = {
     home-manager = {
       useGlobalPkgs = true;
