@@ -33,6 +33,7 @@ in
           git
           go
           history
+          lazyjira
           kubecolor
           lazygit
           xi
@@ -41,9 +42,12 @@ in
           sine
           herdr
           pet
+          try
           pueue
           starship
           desktop
+          niri
+          noctalia
           alacritty
           ghostty
           kitty
@@ -53,8 +57,9 @@ in
           zsh
         ]
         ++ [
-          inputs.self.modules.generic.nixgl-wrapper
+          # nixgl-wrapper is imported transitively via the `niri` module.
           inputs.self.modules.generic.proprietary-flag
+          inputs.self.modules.generic.ssh-keys
           inputs.aws-nix-cache.homeManagerModules.default
         ];
 
@@ -81,7 +86,16 @@ in
         ui
       ];
 
-      systemConstants.nixgl.wrapperType = lib.mkDefault "intel";
+      # ML-PF603JJ8 (successor to ML-PF59GCGW) has an AMD Radeon iGPU and
+      # runs niri via DankLinux's apt package — see systemConstants.nixgl
+      # description. If you ever come back to a pure nix-managed niri
+      # on this user, flip to "mesa" (AMD) or "intel" (older laptop).
+      systemConstants.nixgl.wrapperType = lib.mkDefault "system";
+
+      systemConstants.ssh.keys = {
+        personal.filename = "id_ed25519.perso";
+        corp.filename = "id_ed25519";
+      };
 
       targets.genericLinux.enable = true;
 
@@ -104,11 +118,23 @@ in
         "$NPM_CONFIG_PREFIX/bin"
         "$HOME/go/bin"
         "/nix/var/nix/profiles/default/bin"
+        # Flatpak app launcher shims. Debian's flatpak.deb also drops a
+        # /etc/profile.d/flatpak.sh with the same paths, but home-manager's
+        # session env is written before /etc/profile.d fully sources on
+        # some login paths (TTY1 + zsh login shell in particular), so we
+        # pin them here too.
+        "/var/lib/flatpak/exports/bin"
+        "$HOME/.local/share/flatpak/exports/bin"
       ];
 
       home.packages =
         with pkgs;
         [
+          # flatpak: the CLI in $PATH so `flatpak run …`, `flatpak list`, etc.
+          # work interactively. nix-flatpak's HM systemd service uses its own
+          # absolute store path for the install step, so this is purely for
+          # user-invoked commands.
+          flatpak
           awscli2
           cloudflared
           gh
@@ -140,6 +166,7 @@ in
           yq
           amazon-ecr-credential-helper
           datadog-pup
+          libreoffice
         ]
         ++ lib.optionals proprietaryEnabled [
           chromium
@@ -156,28 +183,58 @@ in
       };
 
       programs.git.settings = {
-        core.sshCommand = "SSH_AUTH_SOCK= ssh -i ~/.ssh/id_ed25519.perso -o IdentitiesOnly=yes";
         include.path = config.sops.secrets.gitDauliac.path;
         "includeIf \"gitdir:**/*manomano*/**\"".path = config.sops.secrets.gitJulienDauliac.path;
+        # pushInsteadOf (not insteadOf) so `git push` uses ssh, but
+        # anonymous clone/fetch stay on https. Otherwise user daemons
+        # that clone from github (e.g. noctalia's plugin catalog) hit
+        # "Host key verification failed" because their systemd unit
+        # has no TTY / ssh-askpass.
+        "url \"ssh://git@github.com/\"".pushInsteadOf = "https://github.com/";
       };
 
-      home.file.".config/git/corp-ssh.inc".text = ''
-        [core]
-          sshCommand = ssh -i ~/.ssh/id_rsa -o IdentitiesOnly=yes
-      '';
-
-      programs.git.includes = [
-        {
-          condition = "gitdir:**/*manomano*/**";
-          path = "~/.config/git/corp-ssh.inc";
-        }
-      ];
+      # SSH-side per-host key selection replaces git's core.sshCommand /
+      # includeIf.gitdir. The gitdir predicate only matches when the git
+      # worktree path contains "manomano", which breaks for tooling that
+      # fetches from a cache mirror outside the repo tree (e.g. `copier
+      # recopy` cloning through ~/.cache/copier/git/*.git). ssh selects
+      # by hostname, so it works regardless of where the .git dir lives.
+      programs.ssh = {
+        enable = true;
+        matchBlocks = {
+          "git.corp.example" = {
+            identityFile = "~/.ssh/${config.systemConstants.ssh.keys.corp.filename}";
+            identitiesOnly = true;
+          };
+          "github.com" = {
+            identityFile = "~/.ssh/${config.systemConstants.ssh.keys.personal.filename}";
+            identitiesOnly = true;
+          };
+        };
+        # Preserve the hand-managed manomano SSH config (jump hosts,
+        # bastion aliases, etc.) that already lives at ~/.ssh/config-mm.
+        # matchBlocks above win because ssh_config uses first-match-wins
+        # and home-manager writes matchBlocks before extraConfig.
+        extraConfig = ''
+          Include ~/.ssh/config-mm
+        '';
+      };
 
       programs.alacritty.package = nixGlWrapper pkgs.alacritty;
       programs.kitty.package = nixGlWrapper pkgs.kitty;
 
       services.flatpak = {
         enable = true;
+        # Declare flathub so the very first activation on a fresh box
+        # doesn't need a manual `flatpak remote-add` first. nix-flatpak's
+        # HM service creates the remote in the user's flatpak profile
+        # (~/.local/share/flatpak) before running the install step.
+        remotes = [
+          {
+            name = "flathub";
+            location = "https://dl.flathub.org/repo/flathub.flatpakrepo";
+          }
+        ];
         packages = lib.optionals proprietaryEnabled [
           {
             appId = "com.slack.Slack";
@@ -195,11 +252,37 @@ in
             appId = "io.anytype.anytype";
             origin = "flathub";
           }
+          {
+            appId = "org.signal.Signal";
+            origin = "flathub";
+          }
         ];
+        # Force native Wayland for all flatpaks. Flathub defaults Vesktop to
+        # XWayland "for compatibility", which routes screencast through XWayland
+        # and breaks on niri. Dropping x11 sockets makes the sandbox negotiate
+        # wayland + xdg-desktop-portal ScreenCast directly.
+        overrides = {
+          global = {
+            Context.sockets = [
+              "wayland"
+              "!x11"
+              "!fallback-x11"
+            ];
+          };
+        };
       };
 
       sops.secrets = {
         claude_api_key = {
+          format = "yaml";
+          sopsFile = ./secrets.enc.yaml;
+        };
+        atlassian_api_token = {
+          # Consumed by modules/home-manager/programs/gojira.nix — the
+          # gojira wrapper pipes this secret into `gojira` on every call.
+          # Rotate at https://id.atlassian.com/manage-profile/security/api-tokens
+          # then `sops modules/home.juliendauliac/secrets.enc.yaml` +
+          # `xi home switch .`.
           format = "yaml";
           sopsFile = ./secrets.enc.yaml;
         };
@@ -225,22 +308,22 @@ in
         };
         sshIdRsa = {
           sopsFile = secretsDir + "/id_ed25519.enc";
-          path = "/home/juliendauliac/.ssh/id_ed25519";
+          path = "${config.home.homeDirectory}/.ssh/${config.systemConstants.ssh.keys.corp.filename}";
           format = "binary";
         };
         sshIdRsaPub = {
           sopsFile = secretsDir + "/id_ed25519.pub.enc";
-          path = "/home/juliendauliac/.ssh/id_ed25519.pub";
+          path = "${config.home.homeDirectory}/.ssh/${config.systemConstants.ssh.keys.corp.publicFilename}";
           format = "binary";
         };
         sshIdPerso = {
           sopsFile = dauliacSecretsDir + "/id_ed25519.enc";
-          path = "/home/juliendauliac/.ssh/id_ed25519.perso";
+          path = "${config.home.homeDirectory}/.ssh/${config.systemConstants.ssh.keys.personal.filename}";
           format = "binary";
         };
         sshIdPersoPub = {
           sopsFile = dauliacSecretsDir + "/id_ed25519.enc.pub";
-          path = "/home/juliendauliac/.ssh/id_ed25519.perso.pub";
+          path = "${config.home.homeDirectory}/.ssh/${config.systemConstants.ssh.keys.personal.publicFilename}";
           format = "binary";
         };
         ovpn_client_ca = {
@@ -282,7 +365,6 @@ in
       '';
 
       programs.hyprpanel.enable = lib.mkForce false;
-      programs.tofi.enable = lib.mkForce false;
       services.hyprpaper.enable = lib.mkForce false;
       wayland.windowManager.hyprland.enable = lib.mkForce false;
     };
