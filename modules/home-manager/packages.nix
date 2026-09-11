@@ -26,6 +26,11 @@
         git-absorb
         git-gamble
         convco
+        # Atlassian CLIs (acli, jira-cli-go, chinmaymk-acli/cacli) were removed
+        # in favor of `twg jira workitem ...` / `twg confluence content ...` which
+        # cover every read/write use case previously scripted here. The `twg`
+        # binary comes from the numtide/llm-agents.nix bundle.
+        slackapi-cli # official Slack platform CLI — binary `slack`, OAuth-session auth via `slack login` (no manual token)
         unzip
         comma
         # postgresql_16
@@ -63,6 +68,7 @@
         bluetuith
         pulsemixer
         stu
+        spectatui # spec-kit review/navigation TUI
       ];
       gui = with pkgs; [
         sniffnet

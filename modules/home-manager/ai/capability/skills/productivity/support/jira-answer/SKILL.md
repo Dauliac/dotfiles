@@ -69,11 +69,10 @@ read their final human-written comments:
 
 ```bash
 # List 5 recent Done tickets in the support project
-jira issue list --plain --no-headers \
-  --project "$(yq -r '.defaults.support.project' \
-    ~/.local/share/jiraai/config.yaml)" \
-  --paginate 5 --order-by updated --reverse \
-  --columns KEY -q 'status = Done'
+twg jira workitem query \
+  --jql 'project = PLAT AND status = Done ORDER BY updated DESC' \
+  --limit 5 -o json \
+  | jq -r '.. | objects | select(.key? and (.key | startswith("PLAT-"))) | .key'
 
 # For each of the top 3, dump the full comment thread — read the
 # LAST human comment (not the "Automation for Jira" 7-day bot ping)
