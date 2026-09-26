@@ -1,0 +1,343 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://dauliac/dotfiles/workflows/machine-definition.schema.json",
+  "title": "Statewright MachineDefinition",
+  "description": "JSON Schema for a statewright MachineDefinition (crates/engine/src/types.rs). Verified against docs/statewright/cheatsheet.md sections 1-6. Intentionally permissive: unknowns on meta ride in meta.extra; _comment is allowed anywhere for authoring notes.",
+  "type": "object",
+  "required": ["id", "initial", "states"],
+  "properties": {
+    "_comment": { "$ref": "#/definitions/CommentField" },
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Machine ID, e.g. 'bug-fix', 'support-ticket'."
+    },
+    "initial": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Name of the starting state. Must be a key of `states`."
+    },
+    "context": {
+      "description": "Free-form context blob (any JSON). Defaults to null upstream."
+    },
+    "states": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "$ref": "#/definitions/StateDef" },
+      "description": "Map of state name -> StateDef."
+    },
+    "guards": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/definitions/GuardDef" }
+    },
+    "meta": { "$ref": "#/definitions/MachineMeta" },
+    "interrupts": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/definitions/InterruptDef" }
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "CommentField": {
+      "description": "Free-form authoring comment. Ignored by statewright.",
+      "type": "string"
+    },
+    "StateDef": {
+      "type": "object",
+      "properties": {
+        "_comment": { "$ref": "#/definitions/CommentField" },
+        "on": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/TransitionDef" },
+          "description": "Event name -> TransitionDef. Event names conventionally UPPER_SNAKE."
+        },
+        "type": {
+          "type": "string",
+          "enum": ["final", "parallel"],
+          "description": "Optional state type. 'final' makes the state terminal."
+        },
+        "allowed_tools": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Tool whitelist. Empty array = block everything."
+        },
+        "disallowed_tools": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Tool blacklist. Takes precedence over allowed_tools."
+        },
+        "instructions": { "type": "string" },
+        "max_iterations": { "type": "integer", "minimum": 0 },
+        "safe_next": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Target state when the model emits an unrecognised event."
+        },
+        "max_edit_lines": { "type": "integer", "minimum": 0 },
+        "allowed_commands": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Prefix/glob allow-list for allowed_commands_tool (default 'Bash'). Semantics UNVERIFIED — left as free strings on purpose."
+        },
+        "allowed_commands_tool": {
+          "type": "string",
+          "description": "Which tool the command allow-list applies to. Default 'Bash'."
+        },
+        "max_files_per_state": { "type": "integer", "minimum": 0 },
+        "context_budget_bytes": { "type": "integer", "minimum": 0 },
+        "blocked_env": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "deny_env": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Alias for blocked_env."
+        },
+        "env_overrides": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "env": {
+          "type": "object",
+          "additionalProperties": { "type": "string" },
+          "description": "Alias for env_overrides."
+        },
+        "model": { "type": "string" },
+        "thinking_level": {
+          "type": "string",
+          "enum": ["high", "medium", "low", "off"]
+        },
+        "direct_execution": { "type": "boolean" },
+        "model_ladder": {
+          "type": "array",
+          "description": "Model escalation ladder for direct_execution states. Inner element shape UNVERIFIED — accepts any JSON value."
+        }
+      },
+      "additionalProperties": false
+    },
+    "TransitionDef": {
+      "description": "TransitionDef is an untagged enum with 5 variants (Simple string, Full object, Guarded array, Fork object, Invoke object).",
+      "oneOf": [
+        {
+          "description": "Simple: bare target state name.",
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "description": "Guarded: ordered array of conditional targets (first-match wins).",
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/GuardedTransition" }
+        },
+        {
+          "description": "Fork: parallel branches with join.",
+          "type": "object",
+          "required": ["fork"],
+          "properties": {
+            "_comment": { "$ref": "#/definitions/CommentField" },
+            "fork": { "$ref": "#/definitions/ForkDef" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "description": "Invoke: delegate to a sub-machine.",
+          "type": "object",
+          "required": ["invoke", "on_complete"],
+          "properties": {
+            "_comment": { "$ref": "#/definitions/CommentField" },
+            "invoke": { "type": "string", "minLength": 1 },
+            "on_complete": { "type": "string", "minLength": 1 },
+            "on_fail": { "type": "string", "minLength": 1 },
+            "input": {}
+          },
+          "additionalProperties": false
+        },
+        {
+          "description": "Full: target + optional guard(s) + optional approval gate.",
+          "type": "object",
+          "required": ["target"],
+          "properties": {
+            "_comment": { "$ref": "#/definitions/CommentField" },
+            "target": { "type": "string", "minLength": 1 },
+            "guard": { "type": "string", "minLength": 1 },
+            "guards": {
+              "type": "array",
+              "items": { "type": "string", "minLength": 1 },
+              "description": "AND semantics inferred but UNVERIFIED (cheatsheet §13)."
+            },
+            "requires_approval": { "type": "boolean" },
+            "approval_message": { "type": "string" }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "GuardedTransition": {
+      "type": "object",
+      "required": ["target"],
+      "properties": {
+        "_comment": { "$ref": "#/definitions/CommentField" },
+        "target": { "type": "string", "minLength": 1 },
+        "guard": { "type": "string", "minLength": 1 },
+        "guards": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      },
+      "additionalProperties": false
+    },
+    "ForkDef": {
+      "type": "object",
+      "required": ["branches", "on_complete"],
+      "properties": {
+        "_comment": { "$ref": "#/definitions/CommentField" },
+        "branches": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": { "$ref": "#/definitions/BranchDef" }
+        },
+        "join": {
+          "type": "string",
+          "enum": ["all", "any"],
+          "description": "JoinStrategy. Defaults to 'all' upstream."
+        },
+        "on_complete": { "type": "string", "minLength": 1 },
+        "on_fail": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "BranchDef": {
+      "type": "object",
+      "required": ["initial", "terminal"],
+      "properties": {
+        "_comment": { "$ref": "#/definitions/CommentField" },
+        "initial": { "type": "string", "minLength": 1 },
+        "terminal": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "GuardDef": {
+      "type": "object",
+      "required": ["field", "op"],
+      "properties": {
+        "_comment": { "$ref": "#/definitions/CommentField" },
+        "field": { "type": "string", "minLength": 1 },
+        "op": {
+          "type": "string",
+          "enum": [
+            "eq",
+            "neq",
+            "gt",
+            "gte",
+            "lt",
+            "lte",
+            "exists",
+            "not_exists",
+            "in",
+            "contains"
+          ]
+        },
+        "value": {
+          "description": "Any JSON value (default null upstream)."
+        }
+      },
+      "additionalProperties": false
+    },
+    "MachineMeta": {
+      "type": "object",
+      "description": "Machine-level metadata. Unknown keys ride under `extra` (statewright flattens them upstream). README-documented behavioural knobs (approval_mode, debug) are UNVERIFIED as typed fields and are permitted through `extra`.",
+      "properties": {
+        "_comment": { "$ref": "#/definitions/CommentField" },
+        "task_type": { "type": "string" },
+        "estimated_steps": { "type": "integer", "minimum": 0 },
+        "danger_level": {
+          "type": "string",
+          "enum": ["safe", "moderate", "dangerous"]
+        },
+        "requires_human_approval": { "type": "boolean" },
+        "capture_output": { "type": "boolean" },
+        "default_model": { "type": "string" },
+        "workspace": { "$ref": "#/definitions/WorkspacePolicy" },
+        "preview": { "$ref": "#/definitions/PreviewPolicy" },
+        "promotion": { "$ref": "#/definitions/PromotionPolicy" },
+        "extra": {
+          "type": "object",
+          "description": "Forward-compat catch-all. Any keys/values allowed.",
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "WorkspacePolicy": {
+      "type": "object",
+      "required": ["version", "mode", "cleanup"],
+      "properties": {
+        "_comment": { "$ref": "#/definitions/CommentField" },
+        "version": { "type": "integer", "minimum": 0 },
+        "mode": {
+          "type": "string",
+          "enum": ["git_worktree"]
+        },
+        "required": { "type": "boolean" },
+        "cleanup": {
+          "type": "string",
+          "enum": ["never", "after_promoted"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "PreviewPolicy": {
+      "type": "object",
+      "required": ["version", "mode", "prepare_state", "deploy_state", "validate_state"],
+      "properties": {
+        "_comment": { "$ref": "#/definitions/CommentField" },
+        "version": { "type": "integer", "minimum": 0 },
+        "mode": {
+          "type": "string",
+          "enum": ["taskfile"]
+        },
+        "required": { "type": "boolean" },
+        "prepare_state": { "type": "string", "minLength": 1 },
+        "deploy_state": { "type": "string", "minLength": 1 },
+        "validate_state": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "PromotionPolicy": {
+      "type": "object",
+      "required": ["version", "mode", "promote_state"],
+      "properties": {
+        "_comment": { "$ref": "#/definitions/CommentField" },
+        "version": { "type": "integer", "minimum": 0 },
+        "mode": {
+          "type": "string",
+          "enum": ["manual", "squash"]
+        },
+        "required": { "type": "boolean" },
+        "promote_state": { "type": "string", "minLength": 1 },
+        "teardown_on_final": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "InterruptDef": {
+      "type": "object",
+      "required": ["trigger", "target"],
+      "properties": {
+        "_comment": { "$ref": "#/definitions/CommentField" },
+        "trigger": { "$ref": "#/definitions/InterruptTrigger" },
+        "target": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "InterruptTrigger": {
+      "type": "object",
+      "required": ["file_pattern"],
+      "properties": {
+        "_comment": { "$ref": "#/definitions/CommentField" },
+        "file_pattern": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,6 +1,8 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+    # Unstable — only cherry-picked for packages missing from release (e.g. acli, see modules/flake/overlays.nix).
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-parts.url = "github:hercules-ci/flake-parts";
     import-tree.url = "github:vic/import-tree";
     nlib = {
@@ -27,6 +29,12 @@
     system-manager = {
       url = "github:numtide/system-manager";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+    ansnix = {
+      url = "github:Dauliac/ansnix";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.system-manager.follows = "system-manager";
+      inputs.home-manager.follows = "home-manager";
     };
     sops-nix = {
       url = "github:Mic92/sops-nix";
@@ -57,10 +65,6 @@
       url = "github:VidocqH/lsp-lens.nvim";
       flake = false;
     };
-    yaml-companion-nvim = {
-      url = "github:someone-stole-my-name/yaml-companion.nvim";
-      flake = false;
-    };
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -69,16 +73,16 @@
       url = "github:cachix/git-hooks.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    commander-nvim = {
-      url = "github:FeiyouG/commander.nvim";
-      flake = false;
-    };
     hyprpanel = {
       url = "github:Jas-SinghFSU/HyprPanel";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     noctalia = {
       url = "github:noctalia-dev/noctalia-shell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    niri-flake = {
+      url = "github:sodiboo/niri-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     comin = {
@@ -115,11 +119,22 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     xi = {
-      # Local checkout so edits under ../xi are picked up without a push/pull cycle.
-      # `path:` sees the dirty tree (unlike git+ssh/git+file which require a commit).
-      # Override at eval time with `--override-input xi git+ssh://git@github.com/Dauliac/xi.git`
-      # (or flip this url back) when building on a host without the local checkout.
-      url = "path:/home/juliendauliac/ghq/github.com/Dauliac/xi";
+      # Default to GitHub so laptops without a local xi checkout (e.g.
+      # ML-PF603JJ8) build out of the box.
+      #
+      # On hosts where you hack on xi, override to the local checkout with:
+      #   --override-input xi git+file:///home/juliendauliac/ghq/github.com/Dauliac/xi?ref=main
+      # git+file: uses the last-committed tree (ignoring the working tree,
+      # which beads/polecat worktrees/cargo churn constantly), so remember
+      # to commit before switching.
+      url = "github:Dauliac/xi/main";
+      # Xi calls the same underlying Dauliac/nlib repo by the alias
+      # `nix-lib`, and the dotfiles calls it `nlib`. Without this follows,
+      # nix imports the module twice under two attribute paths and
+      # `options.nix-lib.lib` gets declared twice → eval error at
+      # `xi home switch` time. Pinning here dedupes the identity so the
+      # option is only declared once across the entire module graph.
+      inputs.nix-lib.follows = "nlib";
     };
     aws-nix-cache = {
       url = "github:Dauliac/aws-nix-cache";
@@ -129,6 +144,22 @@
     # Not following nixpkgs so the numtide binary cache substitutes cleanly.
     llm-agents = {
       url = "github:numtide/llm-agents.nix";
+    };
+    # Anytype Toolbox — `anyr` CLI + client library (stevelr/anytype).
+    # Umbrella Rust workspace: anyr / any-edit / anyback / any-mcp / anytype-api.
+    # Not following nixpkgs — upstream uses nixpkgs-unstable + fenix for the
+    # Rust toolchain pinned in rust-toolchain.toml (edition 2024), and following
+    # would risk breaking their build.
+    anytype-toolbox = {
+      url = "github:stevelr/anytype/anyr-v0.5.3";
+    };
+    # Declarative herdr home-manager module + typed programs.herdr.settings.*
+    # + programs.herdr.plugins.<name>.source option. See openspec change
+    # herdr-plugins-declarative. Pinned to sha instead of a branch — bumps
+    # are reviewable diffs.
+    herdr-nix = {
+      url = "github:kevinpita/herdr-nix/953441303275da8196bad8e07362f8063cb58902";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 

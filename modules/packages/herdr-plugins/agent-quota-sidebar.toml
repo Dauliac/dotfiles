@@ -1,0 +1,490 @@
+# Snapshot of the herdr config.toml sections that
+# `herdr-agent-quota configure --apply` writes at runtime — captured
+# 2026-09-17 against agent-quota v1.5.4. Consumed by
+# modules/home-manager/programs/herdr.nix via builtins.fromTOML.
+#
+# Why: our declarative model makes ~/.config/herdr/config.toml a
+# read-only Nix store symlink (openspec change
+# herdr-plugins-declarative, spec herdr/plugin-registry). Runtime
+# mutation by the plugin fails with "Permission denied", so we
+# pre-declare the additions here and splice them into
+# programs.herdr.settings.* at eval time.
+#
+# Re-capture recipe (when agent-quota bumps or the layout drifts):
+#
+#   # 1) Break the symlink locally so `configure --apply` can write.
+#   unlink ~/.config/herdr/config.toml
+#   cp -L $(readlink -f ~/.config/herdr/config.toml.backup) ~/.config/herdr/config.toml
+#   chmod +w ~/.config/herdr/config.toml
+#
+#   # 2) Snapshot before, run the action, snapshot after.
+#   cp ~/.config/herdr/config.toml .agents/tmp/before.toml
+#   herdr plugin action invoke configure --plugin herdr-agent-quota
+#   cp ~/.config/herdr/config.toml .agents/tmp/after.toml
+#
+#   # 3) Extract plugin-added sections into this file (Python + tomllib +
+#   #    tomli-w — see the extraction one-liner in git log for this file).
+#
+#   # 4) Restore Nix control: `xi -e sudo system switch` reinstates the
+#   #    read-only symlink with the freshly-captured sections merged in.
+
+[[keys.command]]
+key = "prefix+shift+r"
+type = "plugin_action"
+command = "herdr-agent-quota.refresh"
+description = "refresh all agent quotas"
+
+[ui.sidebar.agents]
+row_gap = 1
+rows = [
+    [
+        "state_icon",
+        "machine",
+        "workspace",
+        "tab",
+    ],
+    [
+        { token = "$quota_provider_model", bold = true, dim = false },
+    ],
+    [
+        { token = "$quota_topic", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_cache", bold = false, dim = false },
+        { token = "$quota_cache_state", fg = "#e4b957", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_cache_ttl", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_error", fg = "#e4b957", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_context_normal", fg = "#98b17d", bold = false, dim = false },
+        { token = "$quota_context_warning", fg = "#dec27f", bold = false, dim = false },
+        { token = "$quota_context_danger", fg = "#df919b", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_5h_normal", fg = "#98b17d", bold = false, dim = false },
+        { token = "$quota_5h_warning", fg = "#dec27f", bold = false, dim = false },
+        { token = "$quota_5h_danger", fg = "#df919b", bold = false, dim = false },
+        { token = "$quota_5h_unknown", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_week_inline_normal", fg = "#98b17d", bold = false, dim = false },
+        { token = "$quota_week_inline_warning", fg = "#dec27f", bold = false, dim = false },
+        { token = "$quota_week_inline_danger", fg = "#df919b", bold = false, dim = false },
+        { token = "$quota_week_inline_unknown", bold = false, dim = false },
+        { token = "$quota_week_normal", fg = "#98b17d", bold = false, dim = false },
+        { token = "$quota_week_warning", fg = "#dec27f", bold = false, dim = false },
+        { token = "$quota_week_danger", fg = "#df919b", bold = false, dim = false },
+        { token = "$quota_week_unknown", bold = false, dim = false },
+    ],
+]
+
+[ui.sidebar.agents.rows_by_agent]
+claude = [
+    [
+        "state_icon",
+        "machine",
+        "workspace",
+        "tab",
+    ],
+    [
+        { token = "$quota_provider_model", fg = "#e88461", bold = true, dim = false },
+    ],
+    [
+        { token = "$quota_topic", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_cache", bold = false, dim = false },
+        { token = "$quota_cache_state", fg = "#e4b957", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_cache_ttl", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_error", fg = "#e4b957", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_context_normal", fg = "#98b17d", bold = false, dim = false },
+        { token = "$quota_context_warning", fg = "#dec27f", bold = false, dim = false },
+        { token = "$quota_context_danger", fg = "#df919b", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_5h_normal", fg = "#98b17d", bold = false, dim = false },
+        { token = "$quota_5h_warning", fg = "#dec27f", bold = false, dim = false },
+        { token = "$quota_5h_danger", fg = "#df919b", bold = false, dim = false },
+        { token = "$quota_5h_unknown", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_week_inline_normal", fg = "#98b17d", bold = false, dim = false },
+        { token = "$quota_week_inline_warning", fg = "#dec27f", bold = false, dim = false },
+        { token = "$quota_week_inline_danger", fg = "#df919b", bold = false, dim = false },
+        { token = "$quota_week_inline_unknown", bold = false, dim = false },
+        { token = "$quota_week_normal", fg = "#98b17d", bold = false, dim = false },
+        { token = "$quota_week_warning", fg = "#dec27f", bold = false, dim = false },
+        { token = "$quota_week_danger", fg = "#df919b", bold = false, dim = false },
+        { token = "$quota_week_unknown", bold = false, dim = false },
+    ],
+]
+codex = [
+    [
+        "state_icon",
+        "machine",
+        "workspace",
+        "tab",
+    ],
+    [
+        { token = "$quota_provider_model", fg = "#c4d7f5", bold = true, dim = false },
+    ],
+    [
+        { token = "$quota_topic", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_cache", bold = false, dim = false },
+        { token = "$quota_cache_state", fg = "#e4b957", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_cache_ttl", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_error", fg = "#e4b957", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_context_normal", fg = "#98b17d", bold = false, dim = false },
+        { token = "$quota_context_warning", fg = "#dec27f", bold = false, dim = false },
+        { token = "$quota_context_danger", fg = "#df919b", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_5h_normal", fg = "#98b17d", bold = false, dim = false },
+        { token = "$quota_5h_warning", fg = "#dec27f", bold = false, dim = false },
+        { token = "$quota_5h_danger", fg = "#df919b", bold = false, dim = false },
+        { token = "$quota_5h_unknown", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_week_inline_normal", fg = "#98b17d", bold = false, dim = false },
+        { token = "$quota_week_inline_warning", fg = "#dec27f", bold = false, dim = false },
+        { token = "$quota_week_inline_danger", fg = "#df919b", bold = false, dim = false },
+        { token = "$quota_week_inline_unknown", bold = false, dim = false },
+        { token = "$quota_week_normal", fg = "#98b17d", bold = false, dim = false },
+        { token = "$quota_week_warning", fg = "#dec27f", bold = false, dim = false },
+        { token = "$quota_week_danger", fg = "#df919b", bold = false, dim = false },
+        { token = "$quota_week_unknown", bold = false, dim = false },
+    ],
+]
+grok = [
+    [
+        "state_icon",
+        "machine",
+        "workspace",
+        "tab",
+    ],
+    [
+        { token = "$quota_provider_model", fg = "#d5d5d8", bold = true, dim = false },
+    ],
+    [
+        { token = "$quota_topic", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_cache", bold = false, dim = false },
+        { token = "$quota_cache_state", fg = "#e4b957", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_cache_ttl", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_error", fg = "#e4b957", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_context_normal", fg = "#98b17d", bold = false, dim = false },
+        { token = "$quota_context_warning", fg = "#dec27f", bold = false, dim = false },
+        { token = "$quota_context_danger", fg = "#df919b", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_5h_normal", fg = "#98b17d", bold = false, dim = false },
+        { token = "$quota_5h_warning", fg = "#dec27f", bold = false, dim = false },
+        { token = "$quota_5h_danger", fg = "#df919b", bold = false, dim = false },
+        { token = "$quota_5h_unknown", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_week_inline_normal", fg = "#98b17d", bold = false, dim = false },
+        { token = "$quota_week_inline_warning", fg = "#dec27f", bold = false, dim = false },
+        { token = "$quota_week_inline_danger", fg = "#df919b", bold = false, dim = false },
+        { token = "$quota_week_inline_unknown", bold = false, dim = false },
+        { token = "$quota_week_normal", fg = "#98b17d", bold = false, dim = false },
+        { token = "$quota_week_warning", fg = "#dec27f", bold = false, dim = false },
+        { token = "$quota_week_danger", fg = "#df919b", bold = false, dim = false },
+        { token = "$quota_week_unknown", bold = false, dim = false },
+    ],
+]
+agy = [
+    [
+        "state_icon",
+        "machine",
+        "workspace",
+        "tab",
+    ],
+    [
+        { token = "$quota_provider_model", fg = "#8ab4f8", bold = true, dim = false },
+    ],
+    [
+        { token = "$quota_topic", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_cache", bold = false, dim = false },
+        { token = "$quota_cache_state", fg = "#e4b957", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_cache_ttl", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_error", fg = "#e4b957", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_context_normal", fg = "#98b17d", bold = false, dim = false },
+        { token = "$quota_context_warning", fg = "#dec27f", bold = false, dim = false },
+        { token = "$quota_context_danger", fg = "#df919b", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_5h_normal", fg = "#98b17d", bold = false, dim = false },
+        { token = "$quota_5h_warning", fg = "#dec27f", bold = false, dim = false },
+        { token = "$quota_5h_danger", fg = "#df919b", bold = false, dim = false },
+        { token = "$quota_5h_unknown", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_week_inline_normal", fg = "#98b17d", bold = false, dim = false },
+        { token = "$quota_week_inline_warning", fg = "#dec27f", bold = false, dim = false },
+        { token = "$quota_week_inline_danger", fg = "#df919b", bold = false, dim = false },
+        { token = "$quota_week_inline_unknown", bold = false, dim = false },
+        { token = "$quota_week_normal", fg = "#98b17d", bold = false, dim = false },
+        { token = "$quota_week_warning", fg = "#dec27f", bold = false, dim = false },
+        { token = "$quota_week_danger", fg = "#df919b", bold = false, dim = false },
+        { token = "$quota_week_unknown", bold = false, dim = false },
+    ],
+]
+opencode = [
+    [
+        "state_icon",
+        "machine",
+        "workspace",
+        "tab",
+    ],
+    [
+        { token = "$quota_provider_model", bold = true, dim = false },
+    ],
+    [
+        { token = "$quota_topic", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_cache", bold = false, dim = false },
+        { token = "$quota_cache_state", fg = "#e4b957", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_cache_ttl", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_error", fg = "#e4b957", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_context_normal", fg = "#98b17d", bold = false, dim = false },
+        { token = "$quota_context_warning", fg = "#dec27f", bold = false, dim = false },
+        { token = "$quota_context_danger", fg = "#df919b", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_5h_normal", fg = "#98b17d", bold = false, dim = false },
+        { token = "$quota_5h_warning", fg = "#dec27f", bold = false, dim = false },
+        { token = "$quota_5h_danger", fg = "#df919b", bold = false, dim = false },
+        { token = "$quota_5h_unknown", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_week_inline_normal", fg = "#98b17d", bold = false, dim = false },
+        { token = "$quota_week_inline_warning", fg = "#dec27f", bold = false, dim = false },
+        { token = "$quota_week_inline_danger", fg = "#df919b", bold = false, dim = false },
+        { token = "$quota_week_inline_unknown", bold = false, dim = false },
+        { token = "$quota_week_normal", fg = "#98b17d", bold = false, dim = false },
+        { token = "$quota_week_warning", fg = "#dec27f", bold = false, dim = false },
+        { token = "$quota_week_danger", fg = "#df919b", bold = false, dim = false },
+        { token = "$quota_week_unknown", bold = false, dim = false },
+    ],
+]
+pi = [
+    [
+        "state_icon",
+        "machine",
+        "workspace",
+        "tab",
+    ],
+    [
+        { token = "$quota_provider_model", fg = "#d4a0c8", bold = true, dim = false },
+    ],
+    [
+        { token = "$quota_topic", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_cache", bold = false, dim = false },
+        { token = "$quota_cache_state", fg = "#e4b957", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_cache_ttl", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_error", fg = "#e4b957", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_context_normal", fg = "#98b17d", bold = false, dim = false },
+        { token = "$quota_context_warning", fg = "#dec27f", bold = false, dim = false },
+        { token = "$quota_context_danger", fg = "#df919b", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_5h_normal", fg = "#98b17d", bold = false, dim = false },
+        { token = "$quota_5h_warning", fg = "#dec27f", bold = false, dim = false },
+        { token = "$quota_5h_danger", fg = "#df919b", bold = false, dim = false },
+        { token = "$quota_5h_unknown", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_week_inline_normal", fg = "#98b17d", bold = false, dim = false },
+        { token = "$quota_week_inline_warning", fg = "#dec27f", bold = false, dim = false },
+        { token = "$quota_week_inline_danger", fg = "#df919b", bold = false, dim = false },
+        { token = "$quota_week_inline_unknown", bold = false, dim = false },
+        { token = "$quota_week_normal", fg = "#98b17d", bold = false, dim = false },
+        { token = "$quota_week_warning", fg = "#dec27f", bold = false, dim = false },
+        { token = "$quota_week_danger", fg = "#df919b", bold = false, dim = false },
+        { token = "$quota_week_unknown", bold = false, dim = false },
+    ],
+]
+omp = [
+    [
+        "state_icon",
+        "machine",
+        "workspace",
+        "tab",
+    ],
+    [
+        { token = "$quota_provider_model", fg = "#bba3e8", bold = true, dim = false },
+    ],
+    [
+        { token = "$quota_topic", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_cache", bold = false, dim = false },
+        { token = "$quota_cache_state", fg = "#e4b957", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_cache_ttl", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_error", fg = "#e4b957", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_context_normal", fg = "#98b17d", bold = false, dim = false },
+        { token = "$quota_context_warning", fg = "#dec27f", bold = false, dim = false },
+        { token = "$quota_context_danger", fg = "#df919b", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_5h_normal", fg = "#98b17d", bold = false, dim = false },
+        { token = "$quota_5h_warning", fg = "#dec27f", bold = false, dim = false },
+        { token = "$quota_5h_danger", fg = "#df919b", bold = false, dim = false },
+        { token = "$quota_5h_unknown", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_week_inline_normal", fg = "#98b17d", bold = false, dim = false },
+        { token = "$quota_week_inline_warning", fg = "#dec27f", bold = false, dim = false },
+        { token = "$quota_week_inline_danger", fg = "#df919b", bold = false, dim = false },
+        { token = "$quota_week_inline_unknown", bold = false, dim = false },
+        { token = "$quota_week_normal", fg = "#98b17d", bold = false, dim = false },
+        { token = "$quota_week_warning", fg = "#dec27f", bold = false, dim = false },
+        { token = "$quota_week_danger", fg = "#df919b", bold = false, dim = false },
+        { token = "$quota_week_unknown", bold = false, dim = false },
+    ],
+]
+devin = [
+    [
+        "state_icon",
+        "machine",
+        "workspace",
+        "tab",
+    ],
+    [
+        { token = "$quota_provider_model", fg = "#6c5ce7", bold = true, dim = false },
+    ],
+    [
+        { token = "$quota_topic", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_cache", bold = false, dim = false },
+        { token = "$quota_cache_state", fg = "#e4b957", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_cache_ttl", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_error", fg = "#e4b957", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_context_normal", fg = "#98b17d", bold = false, dim = false },
+        { token = "$quota_context_warning", fg = "#dec27f", bold = false, dim = false },
+        { token = "$quota_context_danger", fg = "#df919b", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_5h_normal", fg = "#98b17d", bold = false, dim = false },
+        { token = "$quota_5h_warning", fg = "#dec27f", bold = false, dim = false },
+        { token = "$quota_5h_danger", fg = "#df919b", bold = false, dim = false },
+        { token = "$quota_5h_unknown", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_week_inline_normal", fg = "#98b17d", bold = false, dim = false },
+        { token = "$quota_week_inline_warning", fg = "#dec27f", bold = false, dim = false },
+        { token = "$quota_week_inline_danger", fg = "#df919b", bold = false, dim = false },
+        { token = "$quota_week_inline_unknown", bold = false, dim = false },
+        { token = "$quota_week_normal", fg = "#98b17d", bold = false, dim = false },
+        { token = "$quota_week_warning", fg = "#dec27f", bold = false, dim = false },
+        { token = "$quota_week_danger", fg = "#df919b", bold = false, dim = false },
+        { token = "$quota_week_unknown", bold = false, dim = false },
+    ],
+]
+muse = [
+    [
+        "state_icon",
+        "machine",
+        "workspace",
+        "tab",
+    ],
+    [
+        { token = "$quota_provider_model", fg = "#0082fb", bold = true, dim = false },
+    ],
+    [
+        { token = "$quota_topic", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_cache", bold = false, dim = false },
+        { token = "$quota_cache_state", fg = "#e4b957", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_cache_ttl", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_error", fg = "#e4b957", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_context_normal", fg = "#98b17d", bold = false, dim = false },
+        { token = "$quota_context_warning", fg = "#dec27f", bold = false, dim = false },
+        { token = "$quota_context_danger", fg = "#df919b", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_5h_normal", fg = "#98b17d", bold = false, dim = false },
+        { token = "$quota_5h_warning", fg = "#dec27f", bold = false, dim = false },
+        { token = "$quota_5h_danger", fg = "#df919b", bold = false, dim = false },
+        { token = "$quota_5h_unknown", bold = false, dim = false },
+    ],
+    [
+        { token = "$quota_week_inline_normal", fg = "#98b17d", bold = false, dim = false },
+        { token = "$quota_week_inline_warning", fg = "#dec27f", bold = false, dim = false },
+        { token = "$quota_week_inline_danger", fg = "#df919b", bold = false, dim = false },
+        { token = "$quota_week_inline_unknown", bold = false, dim = false },
+        { token = "$quota_week_normal", fg = "#98b17d", bold = false, dim = false },
+        { token = "$quota_week_warning", fg = "#dec27f", bold = false, dim = false },
+        { token = "$quota_week_danger", fg = "#df919b", bold = false, dim = false },
+        { token = "$quota_week_unknown", bold = false, dim = false },
+    ],
+]

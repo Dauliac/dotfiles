@@ -24,6 +24,7 @@ let
     sm."cleanup-flatpak"
     sm."cleanup-tmp"
     sm."cleanup-journal"
+    sm."login-shells"
   ];
 
   homeManagerModules = [
@@ -112,5 +113,6 @@ in
 {
   flake.systemConfigs = {
     "ML-PF59GCGW" = mkSystemManager "ml-pf59gcgw" (cleanupModules ++ homeManagerModules);
+    "ML-PF603JJ8" = mkSystemManager "ml-pf603jj8" (cleanupModules ++ homeManagerModules);
   };
 }
