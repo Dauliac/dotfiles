@@ -14,9 +14,9 @@ result*
 
 # Gas City
 .gc/
-.beads/*
 !.beads/identity.toml
 hooks/
+!modules/home-manager/ai/coordination/pack/hooks/
 .claude/skills/
 .dolt-backup/
 
@@ -26,3 +26,15 @@ hooks/
 # Break-glass redeploy log — regenerated on demand, never source
 redeploy.log
 redeploy.log.*
+password.txt
+# br doctor per-run artifacts
+.doctor/
+
+# Agent scratch / research working memory (never commit)
+.agents/
+
+# Per-user Claude Code settings; shared allowlist lives in .claude/settings.json
+.claude/settings.local.json
+
+# Sops timestamped backup files
+*.bak-*
