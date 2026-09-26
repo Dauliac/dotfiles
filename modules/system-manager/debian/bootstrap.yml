@@ -1,0 +1,109 @@
+---
+# bootstrap.yml — declaratively provision the Debian side of a
+# system-manager host that imports flake.modules.systemManager.debian.
+#
+# Scope: only the things nix + system-manager can't do on non-NixOS.
+#   - apt package installs (dpkg is opaque to nix)
+#   - PAM edits to /etc/pam.d/common-* (owned by libpam0g dpkg triggers)
+#   - default systemd target (could be nix, but cheaper here)
+#   - DankLinux OBS apt repo (paired with the niri install for cohesion)
+#
+# Everything else — flatpak binary + apps + flathub remote, xdg-desktop-portal,
+# xkb keyboard layout, niri KDL config, noctalia palette, tty1 autostart hook,
+# systemd unit overrides — is nix (home-manager / system-manager).
+#
+# Executed via `ansible-playbook --connection=local` from a systemd oneshot
+# defined in ./default.nix. The ansible toolchain comes from pkgs.ansible-core
+# in /nix/store, never apt-installed on the target.
+#
+# Idempotent — every task no-ops when state matches. Safe to re-run.
+
+- hosts: localhost
+  connection: local
+  become: yes
+  gather_facts: yes
+  vars:
+    apt_keyring_dir: /etc/apt/keyrings
+    dank_release_url: "https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/Debian_13"
+
+  tasks:
+    # ── systemd ───────────────────────────────────────────────────────────────
+    - name: "systemd | default target = multi-user (boot to TTY, no DM)"
+      ansible.builtin.file:
+        src: /lib/systemd/system/multi-user.target
+        dest: /etc/systemd/system/default.target
+        state: link
+
+    # ── network-manager ───────────────────────────────────────────────────────
+    - name: "network-manager | safety net — ensure present"
+      ansible.builtin.apt:
+        name:
+          - network-manager
+        state: present
+
+    # ── danklinux-repo (prereq for niri + xwayland-satellite installs) ────────
+    - name: "danklinux-repo | ensure keyring dir exists"
+      ansible.builtin.file:
+        path: "{{ apt_keyring_dir }}"
+        state: directory
+        mode: '0755'
+
+    - name: "danklinux-repo | fetch OBS Release.key"
+      ansible.builtin.get_url:
+        url: "{{ dank_release_url }}/Release.key"
+        dest: "{{ apt_keyring_dir }}/danklinux.asc"
+        mode: '0644'
+        force: no
+
+    - name: "danklinux-repo | add /etc/apt/sources.list.d/danklinux.list"
+      ansible.builtin.apt_repository:
+        repo: "deb [signed-by={{ apt_keyring_dir }}/danklinux.asc] {{ dank_release_url }}/ /"
+        filename: danklinux
+        state: present
+        update_cache: yes
+
+    # ── niri (compositor from DankLinux OBS, uses Debian's mesa/amdgpu) ───────
+    - name: "niri | install compositor + xwayland-satellite"
+      ansible.builtin.apt:
+        name:
+          - niri
+          - xwayland-satellite
+        state: present
+
+    # ── pam-keyring (unlock ~/.local/share/keyrings on TTY login) ─────────────
+    - name: "pam-keyring | install libpam-gnome-keyring"
+      ansible.builtin.apt:
+        name:
+          - libpam-gnome-keyring
+        state: present
+
+    # Debian's common-auth uses jump codes ([success=1 default=ignore] on
+    # pam_unix -> pam_permit -> return) that skip anything appended after
+    # the pam-auth-update block, so a naive lineinfile never runs at auth
+    # time and the keyring stays locked. pam-auth-update composes the file
+    # from /usr/share/pam-configs/* with correct jump semantics — that's
+    # the Debian-blessed way and libpam-gnome-keyring ships the profile.
+    - name: "pam-keyring | strip legacy lineinfile appends (if present from older bootstrap)"
+      ansible.builtin.lineinfile:
+        path: "{{ item.path }}"
+        line: "{{ item.line }}"
+        state: absent
+      loop:
+        - { path: /etc/pam.d/common-auth,    line: "auth      optional     pam_gnome_keyring.so" }
+        - { path: /etc/pam.d/common-session, line: "session   optional     pam_gnome_keyring.so auto_start" }
+
+    - name: "pam-keyring | enable gnome-keyring profile via pam-auth-update"
+      ansible.builtin.command:
+        cmd: pam-auth-update --package --enable gnome-keyring
+      register: pam_auth_update_result
+      changed_when: "'Nothing to do' not in (pam_auth_update_result.stdout | default(''))"
+
+    # ── docker (juliendauliac in docker group — belt-and-suspenders alongside
+    #    users.groups.docker = {}; declared in the nix host module. The group
+    #    itself is created by system-manager on activation; this ansible task
+    #    only ensures the user is a member. Idempotent — no-op if already.)
+    - name: "docker | add juliendauliac to docker group"
+      ansible.builtin.user:
+        name: juliendauliac
+        groups: docker
+        append: yes

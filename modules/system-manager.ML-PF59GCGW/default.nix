@@ -26,7 +26,11 @@
       };
 
       nix.settings = {
-        extra-sandbox-paths = [ "/etc/nix/netrc" ];
+        # /etc/nix/netrc is intentionally NOT in extra-sandbox-paths: aws-nix-cache
+        # authenticates via AWS_SHARED_CREDENTIALS_FILE (see 50-aws-nix-cache.conf
+        # nix-daemon drop-in), so no builder needs netrc inside the sandbox.
+        # Re-add and provide the file declaratively (sops-nix / environment.etc)
+        # if a fetcher in a builder ever needs it.
         trusted-users = [
           "root"
           "juliendauliac"
