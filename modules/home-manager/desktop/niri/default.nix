@@ -1,98 +1,91 @@
+{ inputs, ... }:
 {
+  # niri is configured via `sodiboo/niri-flake`'s home-manager module:
+  # `programs.niri.{enable,package,settings,...}` and auto-configured
+  # gnome-keyring + xdg-desktop-portal user services.
+  #
+  # Runtime selection is driven by `systemConstants.nixgl.wrapperType`:
+  #
+  #   - "none"                        NixOS host; niri from nixpkgs; no wrap
+  #   - "intel"|"nvidia"|"mesa"|"auto" non-NixOS; niri from nixpkgs;
+  #                                   ExecStart wraps in nixGL* so GL works
+  #   - "system"                      non-NixOS with a distro-managed niri
+  #                                   (e.g. DankLinux/Debian apt install);
+  #                                   ExecStart runs /usr/bin/niri --session
+  #                                   directly so the distro's mesa is used.
+  #
+  # niri-flake still generates config.kdl and the systemd user unit in
+  # every case; we only rewrite ExecStart. `programs.niri.package` is
+  # deliberately left as `pkgs.niri` so niri-flake can introspect
+  # cargoBuildFeatures for portal-extras wiring.
   flake.modules.homeManager.niri =
-    { pkgs, ... }:
+    {
+      pkgs,
+      config,
+      lib,
+      ...
+    }:
     let
-      configDir = ./.;
-      nixGL = pkgs.nixgl.nixGLIntel;
+      wrapperType = config.systemConstants.nixgl.wrapperType;
+      nixGL =
+        if wrapperType == "intel" then pkgs.nixgl.nixGLIntel
+        else if wrapperType == "nvidia" then pkgs.nixgl.nixGLNvidia
+        else if wrapperType == "mesa" then pkgs.nixgl.nixGLMesa
+        else if wrapperType == "auto" then pkgs.nixgl.auto.nixGLDefault
+        else null;
+      nixGLBin =
+        if wrapperType == "intel" then "nixGLIntel"
+        else if wrapperType == "nvidia" then "nixGLNvidia"
+        else if wrapperType == "mesa" then "nixGLMesa"
+        else if wrapperType == "auto" then "nixGL"
+        else null;
 
-      niriWithGL = pkgs.writeShellScriptBin "niri" ''
-        exec ${nixGL}/bin/nixGLIntel ${pkgs.niri}/bin/niri "$@"
-      '';
-
-      niriSession = pkgs.writeShellScriptBin "niri-session" ''
-        if [ -f "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
-          . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
-        fi
-
-        export PATH="$HOME/.nix-profile/bin:$PATH"
-
-        export XDG_SESSION_TYPE=wayland
-        export XDG_SESSION_DESKTOP=niri
-        export XDG_CURRENT_DESKTOP=niri
-        export XDG_RUNTIME_DIR="''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
-
-        export WAYLAND_DISPLAY="''${WAYLAND_DISPLAY:-wayland-1}"
-
-        export NIXOS_OZONE_WL=1
-
-        export XCURSOR_THEME="''${XCURSOR_THEME:-default}"
-        export XCURSOR_SIZE="''${XCURSOR_SIZE:-24}"
-
-        export DBUS_SESSION_BUS_ADDRESS="unix:path=$XDG_RUNTIME_DIR/bus"
-
-        if ! ${pkgs.systemd}/bin/systemctl --user is-active --quiet dbus.socket; then
-          ${pkgs.systemd}/bin/systemctl --user start dbus.socket
-        fi
-
-        ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd \
-          PATH DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE \
-          XDG_SESSION_DESKTOP XDG_RUNTIME_DIR DBUS_SESSION_BUS_ADDRESS \
-          NIXOS_OZONE_WL XCURSOR_THEME XCURSOR_SIZE
-
-        ${pkgs.systemd}/bin/systemctl --user import-environment \
-          PATH DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE \
-          XDG_SESSION_DESKTOP XDG_RUNTIME_DIR DBUS_SESSION_BUS_ADDRESS \
-          NIXOS_OZONE_WL XCURSOR_THEME XCURSOR_SIZE
-
-        ${pkgs.systemd}/bin/systemctl --user start graphical-session.target
-
-        exec ${nixGL}/bin/nixGLIntel ${pkgs.niri}/bin/niri
-      '';
+      execStart =
+        if wrapperType == "system" then
+          "/usr/bin/niri --session"
+        else if nixGL != null then
+          "${nixGL}/bin/${nixGLBin} ${pkgs.niri}/bin/niri --session"
+        else
+          null;
     in
     {
-      xdg.configFile."niri/config.kdl".source = configDir + "/config.kdl";
-      xdg.configFile."swaylock/config".source = configDir + "/mocha.conf";
+      imports = [
+        inputs.niri-flake.homeModules.niri
+        inputs.self.modules.generic.nixgl-wrapper
+      ];
 
-      xdg.configFile."xdg-desktop-portal/portals.conf".text = ''
-        [preferred]
-        default=gtk
-        org.freedesktop.impl.portal.Screenshot=gtk
-        org.freedesktop.impl.portal.ScreenCast=gtk
-        org.freedesktop.impl.portal.Settings=gtk
-        org.freedesktop.impl.portal.Background=gtk
-        org.freedesktop.impl.portal.Inhibit=gtk
-        org.freedesktop.impl.portal.FileChooser=gtk
-        org.freedesktop.impl.portal.AppChooser=gtk
-        org.freedesktop.impl.portal.Notification=gtk
-        org.freedesktop.impl.portal.Wallpaper=gtk
-        org.freedesktop.impl.portal.Secret=gnome-keyring
+      programs.niri = {
+        enable = true;
+        package = pkgs.niri;
+      };
+
+      # Default terminal for launcher-invoked TUI apps (yazi from noctalia's
+      # launcher, `.desktop` entries with Terminal=true, etc.). Two mechanisms
+      # covered:
+      #   - XDG_TERMINAL_EMULATOR: env var read by many launchers + GLib
+      #   - ~/.config/xdg-terminals.list: freedesktop draft spec used by
+      #     systemd's xdg-terminal-exec (first entry wins)
+      home.sessionVariables.XDG_TERMINAL_EMULATOR = "kitty";
+      xdg.configFile."xdg-terminals.list".text = ''
+        kitty.desktop
+        ghostty.desktop
+        alacritty.desktop
+        wezterm.desktop
       '';
 
-      home.packages = with pkgs; [
-        niriWithGL
-        niriSession
-
-        swaylock-effects
-        swayidle
-        wlogout
-        waypaper
-
-        xdg-desktop-portal
-        xdg-desktop-portal-gtk
-
-        wl-clipboard
-        cliphist
-
-        grim
-        slurp
-
-        playerctl
-        brightnessctl
-        pamixer
-
-        swaybg
-
-        xwayland-satellite
-      ];
+      systemd.user.services.niri = lib.mkIf (execStart != null) {
+        Service.ExecStart = lib.mkForce execStart;
+        # Debian's /usr/lib/systemd/user/niri.service only `BindsTo` /
+        # `Before` graphical-session.target — it doesn't actually start
+        # it, so `WantedBy=graphical-session.target` services (noctalia,
+        # xwayland-satellite, polkit-gnome, wallpaper) never fire.
+        #
+        # `graphical-session.target` sets `RefuseManualStart=yes`, so a
+        # `systemctl start` won't work — the only way in is a dependency
+        # pull. Adding `Wants=` here makes systemd schedule the target
+        # to activate as a dependency of niri.service starting, which
+        # bypasses the manual-start refusal.
+        Unit.Wants = [ "graphical-session.target" ];
+      };
     };
 }
