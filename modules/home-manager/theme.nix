@@ -65,6 +65,11 @@ in
       # gtk removed from catppuccin/nix (upstream archived)
       k9s.enable = false;
       kitty.enable = false;
+      # kvantum auto-enables via `catppuccin.enable` and asserts
+      # `qt.style.name == "kvantum"`. niri/session.nix pins the Qt style
+      # to "adwaita-dark" (GTK integration under the niri/GNOME-portal
+      # session), so kvantum must stay off.
+      kvantum.enable = false;
       lazygit.enable = false;
       starship.enable = false;
       tmux.enable = false;

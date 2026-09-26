@@ -72,6 +72,7 @@
       ];
       gui = with pkgs; [
         sniffnet
+        sweethome3d.application # Sweet Home 3D  -  interior design
         # TODO: add override if we are in nixOs profile Signal client
         # TODO: fix unfree packages
         # rustdesk # Remote desktop

@@ -5,7 +5,7 @@
 
     programs.xi = {
       enable = true;
-      wrapNix = true;
+      nix.wrapAlias = true;
       shellHook = {
         enable = true;
         nixAlias = true;

@@ -18,10 +18,18 @@
       tree = "${pkgs.eza}/bin/eza -T";
       history = "${pkgs.mcfly}/bin/mcfly dump | ${pkgs.jq}/bin/jq";
       # Coding-agent tooling — short aliases for common invocations
-      # (beads-viewer ships the `bv` binary directly, no alias needed)
       ccd = "${pkgs.ccusage}/bin/ccusage claude daily";
       ccm = "${pkgs.ccusage}/bin/ccusage claude monthly";
       ccb = "${pkgs.ccusage}/bin/ccusage claude blocks";
+      # `bv` (beads-viewer) is the graph-aware TUI for the shared Dolt-backed
+      # beads DB. Replaces the earlier `mg` (mardi-gras) alias — see openspec
+      # change beads-go-migration-and-dolt-caps.
+      bv = "${pkgs.beads-viewer}/bin/bv";
+      # `mg` (mardi-gras) restored alongside `bv` per openspec change
+      # beads-mg-tui-integration. mg reads .beads/issues.jsonl (the passive
+      # export of the Dolt-backed beads DB), so we flush it first via
+      # `bd sync --flush-only` — otherwise mg shows stale issue state.
+      mg = "${pkgs.beads}/bin/bd sync --flush-only && ${pkgs.mardi-gras}/bin/mg";
       # Opt-in multiplexer: `tm` attaches/creates the "main" tmux session.
       # (Auto-attach on shell start was removed 2026-08-01 so herdr and
       # other agent multiplexers can run in a plain shell.)

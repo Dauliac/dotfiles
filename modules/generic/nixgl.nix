@@ -14,12 +14,18 @@ _: {
             "nvidia"
             "mesa"
             "none"
+            "system"
           ];
           default = "none";
           description = ''
             Which nixGL wrapper to use for GPU acceleration on non-NixOS systems.
             "none" on NixOS systems where it's not needed.
             "auto" for runtime detection (slower startup).
+            "system" when the graphical stack (niri, GL drivers) is installed
+              by the host distro (e.g. DankLinux/Debian apt niri) — nix
+              stops wrapping GPU-touching binaries and instead points the
+              niri systemd unit at /usr/bin/niri directly. GL "just works"
+              via the distro's mesa userspace.
             Otherwise a specific driver for better performance.
           '';
         };

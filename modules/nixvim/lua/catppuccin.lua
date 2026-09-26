@@ -1,16 +1,18 @@
-require("catppuccin").setup({
-	transparent_background = true,
-})
-
-vim.cmd.colorscheme("catppuccin-mocha")
-
-vim.cmd("highlight normal guibg=none ctermbg=none")
-vim.cmd("highlight nontext guibg=none ctermbg=none")
-vim.cmd("highlight signcolumn guibg=none ctermbg=none")
-vim.cmd("highlight vertsplit guibg=none ctermbg=none")
-vim.cmd("highlight statusline guibg=none ctermbg=none")
-vim.cmd("highlight statuslinenc guibg=none ctermbg=none")
-vim.cmd("highlight foldcolumn guibg=none ctermbg=none")
-vim.cmd("highlight colorcolumn guibg=none ctermbg=none")
-vim.cmd("highlight cursorline guibg=none ctermbg=none")
-vim.cmd("highlight cursorcolumn guibg=none ctermbg=none")
+-- catppuccin colorscheme + transparent_background are configured declaratively
+-- in ui.nix (colorschemes.catppuccin.settings). These highlight overrides force
+-- extra UI groups to be transparent so the terminal background shows through.
+local groups = {
+	"Normal",
+	"NonText",
+	"SignColumn",
+	"VertSplit",
+	"StatusLine",
+	"StatusLineNC",
+	"FoldColumn",
+	"ColorColumn",
+	"CursorLine",
+	"CursorColumn",
+}
+for _, g in ipairs(groups) do
+	vim.cmd("highlight " .. g .. " guibg=none ctermbg=none")
+end

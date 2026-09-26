@@ -1,6 +1,8 @@
+{ inputs, ... }:
 {
   flake.modules.homeManager.sine =
     {
+      config,
       pkgs,
       ...
     }:
@@ -23,73 +25,106 @@
         hash = "sha256-VcwU69FBoy10bP6T/IrZhW6w1VPMNyfT5AhhfnPUrE0=";
       };
 
-      sineInstallScript = pkgs.writeShellScript "sine-install" ''
-        set -euo pipefail
-
-        FLATPAK_APP="app.zen_browser.zen"
-
-        # Resolve flatpak Zen browser program directory
-        BROWSER_PATH="$(${pkgs.flatpak}/bin/flatpak info --show-location "$FLATPAK_APP" 2>/dev/null)/files/zen"
-        if [ ! -d "$BROWSER_PATH" ]; then
-          echo "sine-install: Zen browser flatpak not found, skipping"
-          exit 0
-        fi
-
-        # Resolve default profile from profiles.ini
-        ZEN_DIR="$HOME/.var/app/$FLATPAK_APP/.zen"
-        PROFILES_INI="$ZEN_DIR/profiles.ini"
-        if [ ! -f "$PROFILES_INI" ]; then
-          echo "sine-install: No profiles.ini found at $PROFILES_INI, skipping"
-          exit 0
-        fi
-
-        # Parse the default profile path (Install section's Default= value)
-        PROFILE_REL="$(${pkgs.gawk}/bin/awk -F= '/^\[Install/ {in_install=1; next} /^\[/ {in_install=0} in_install && /^Default=/ {print $2; exit}' "$PROFILES_INI")"
-        if [ -z "$PROFILE_REL" ]; then
-          # Fallback: first profile with Default=1
-          PROFILE_REL="$(${pkgs.gawk}/bin/awk -F= '/^\[Profile/ {in_profile=1; path=""} /^\[/ && !/^\[Profile/ {in_profile=0} in_profile && /^Path=/ {path=$2} in_profile && /^Default=1/ {print path; exit}' "$PROFILES_INI")"
-        fi
-
-        if [ -z "$PROFILE_REL" ]; then
-          echo "sine-install: Could not determine default profile, skipping"
-          exit 0
-        fi
-
-        CHROME_DIR="$ZEN_DIR/$PROFILE_REL/chrome"
-        mkdir -p "$CHROME_DIR"
-
-        echo "sine-install: Installing Sine v${sineVersion} (bootloader v${bootloaderVersion})"
-        echo "  Browser: $BROWSER_PATH"
-        echo "  Profile: $ZEN_DIR/$PROFILE_REL"
-
-        # Clean old Sine files
-        rm -rf "$CHROME_DIR/JS" "$CHROME_DIR/utils"
-
-        # Install bootloader profile files (utils/ with chrome.manifest etc.)
-        ${pkgs.unzip}/bin/unzip -oq "${profileZip}" -d "$CHROME_DIR"
-
-        # Install Sine engine (JS/, locales/, engine.json)
-        ${pkgs.unzip}/bin/unzip -oq "${engineZip}" -d "$CHROME_DIR"
-
-        # Install bootloader program files (config.js, defaults/pref/)
-        ${pkgs.unzip}/bin/unzip -oq "${programZip}" -d "$BROWSER_PATH"
-
-        echo "sine-install: Done. Restart Zen browser to activate Sine."
-      '';
+      flatpakApp = "app.zen_browser.zen";
+      zenDir = "${config.home.homeDirectory}/.var/app/${flatpakApp}/.zen";
+      # Flatpak `active` symlink flips on every app update; files written under
+      # it survive only until Zen upgrades. Move to `~/.local/share/flatpak/…`
+      # (user-scope flatpak) if this matters.
+      programDir = "/var/lib/flatpak/app/${flatpakApp}/current/active/files/zen";
     in
     {
-      systemd.user.services.sine-install = {
-        Unit = {
-          Description = "Install Sine mod manager into Zen browser (flatpak)";
-        };
-        Service = {
-          Type = "oneshot";
-          ExecStart = "${sineInstallScript}";
-          RemainAfterExit = true;
-        };
-        Install = {
-          WantedBy = [ "default.target" ];
-        };
+      imports = [ inputs.ansnix.homeManagerModules.default ];
+
+      ansnix.enable = true;
+
+      # Inline ansnix role — declared purely in Nix, no on-disk role dir.
+      # Freeform attrs (zenDir, profileArchives, programArchives) become
+      # ansible vars scoped to this role via composePlaybook.
+      ansnix.roles.zen-userchrome = {
+        priority = 200;
+
+        inherit zenDir;
+        profileArchives = [
+          { src = profileZip; creates = "utils/chrome.manifest"; }
+          { src = engineZip; creates = "engine.json"; }
+        ];
+        programArchives = [
+          {
+            src = programZip;
+            dest = programDir;
+            creates = "${programDir}/config.js";
+          }
+        ];
+
+        tasks = [
+          {
+            name = "zen-userchrome | stat profiles.ini";
+            "ansible.builtin.stat" = {
+              path = "{{ zenDir }}/profiles.ini";
+            };
+            register = "profilesIni";
+          }
+          {
+            name = "zen-userchrome | skip when Zen profile is absent";
+            "ansible.builtin.meta" = "end_play";
+            when = "not profilesIni.stat.exists";
+          }
+          {
+            name = "zen-userchrome | slurp profiles.ini";
+            "ansible.builtin.slurp" = {
+              src = "{{ zenDir }}/profiles.ini";
+            };
+            register = "profilesIniRaw";
+          }
+          {
+            name = "zen-userchrome | resolve default profile path";
+            "ansible.builtin.set_fact" = {
+              # Jinja regex — `''..''` avoids Nix string escapes for `\[` etc.
+              profileRel = ''{{ (profilesIniRaw.content | b64decode) | regex_search('\[Install[^\]]*\][\s\S]*?Default=([^\r\n]+)', '\1') }}'';
+            };
+          }
+          {
+            name = "zen-userchrome | fail if no default profile";
+            "ansible.builtin.fail" = {
+              msg = "Could not resolve default profile in {{ zenDir }}/profiles.ini";
+            };
+            when = "profileRel is none or (profileRel | length) == 0";
+          }
+          {
+            name = "zen-userchrome | ensure profile chrome/ dir";
+            "ansible.builtin.file" = {
+              path = "{{ zenDir }}/{{ profileRel }}/chrome";
+              state = "directory";
+              mode = "0755";
+            };
+          }
+          {
+            name = "zen-userchrome | extract profile archives";
+            "ansible.builtin.unarchive" = {
+              src = "{{ item.src }}";
+              dest = "{{ zenDir }}/{{ profileRel }}/chrome";
+              remote_src = false;
+              creates = "{{ zenDir }}/{{ profileRel }}/chrome/{{ item.creates }}";
+            };
+            loop = "{{ profileArchives }}";
+            loop_control = {
+              label = "{{ item.src | basename }}";
+            };
+          }
+          {
+            name = "zen-userchrome | extract program archives";
+            "ansible.builtin.unarchive" = {
+              src = "{{ item.src }}";
+              dest = "{{ item.dest }}";
+              remote_src = false;
+              creates = "{{ item.creates }}";
+            };
+            loop = "{{ programArchives }}";
+            loop_control = {
+              label = "{{ item.src | basename }}";
+            };
+          }
+        ];
       };
     };
 }

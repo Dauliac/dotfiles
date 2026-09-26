@@ -1,17 +1,6 @@
 {
-  flake.modules.homeManager.widgets = { lib, ... }: {
+  flake.modules.homeManager.widgets = { ... }: {
     programs = {
-      tofi = {
-        enable = true;
-        settings = {
-          height = "20%";
-          width = "35%";
-          border-width = 4;
-          corner-radius = 4;
-          # font and colors managed by stylix
-          font-size = lib.mkForce "16";
-        };
-      };
       hyprpanel = {
         enable = true;
         settings = {

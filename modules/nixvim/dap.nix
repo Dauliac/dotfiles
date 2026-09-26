@@ -12,6 +12,13 @@
         dap-virtual-text.enable = true;
         neotest.enable = true;
       };
+      keymaps = [
+        { mode = "n"; key = "<F5>"; action.__raw = "function() require('dap').continue() end"; options.desc = "DAP: continue"; }
+        { mode = "n"; key = "<F10>"; action.__raw = "function() require('dap').step_over() end"; options.desc = "DAP: step over"; }
+        { mode = "n"; key = "<F11>"; action.__raw = "function() require('dap').step_into() end"; options.desc = "DAP: step into"; }
+        { mode = "n"; key = "<F12>"; action.__raw = "function() require('dap').step_out() end"; options.desc = "DAP: step out"; }
+        { mode = "n"; key = "<leader>b"; action.__raw = "function() require('dap').toggle_breakpoint() end"; options.desc = "DAP: toggle breakpoint"; }
+      ];
       extraPlugins = [
         pkgs.vimPlugins.lazydev-nvim
       ];

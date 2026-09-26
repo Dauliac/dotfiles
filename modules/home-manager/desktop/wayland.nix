@@ -2,7 +2,6 @@
   flake.modules.homeManager.wayland =
     {
       pkgs,
-      config,
       ...
     }:
     let
@@ -79,7 +78,6 @@
             "$mod SHIFT, E, exec, pkill Hyprland"
             "$mod, Q, killactive,"
             "$mod ,B,exec,$BROWSER"
-            "$mod, r, exec, ${config.programs.tofi.package}/bin/tofi-drun | xargs hyprctl dispatch exec --"
             "$mod, f, fullscreen,"
             "$mod, G, togglegroup,"
             "$mod SHIFT, N, changegroupactive, f"
@@ -120,9 +118,6 @@
             "$mod SHIFT ALT, bracketright, movecurrentworkspacetomonitor, r"
           ]
           ++ workspaces;
-          bindr = [
-            "$mod, r, exec, ${config.programs.rofi.package}/bin/tofi-drun | xargs hyprctl dispatch exec --"
-          ];
           bindl = [
             ", XF86AudioPlay, exec, playerctl play-pause"
             ", XF86AudioPrev, exec, playerctl previous"

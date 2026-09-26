@@ -16,6 +16,12 @@
         inputs.nixflix.nixosModules.default
         inputs.nur.modules.nixos.default
         inputs.sops-nix.nixosModules.sops
+        # Bridge for the shared `system.autoUpgrade.backend` switch — adds
+        # only the `backend` option and force-disables nixos-upgrade.{service,timer}
+        # when `backend = "ansnix"`. Inert by default (backend defaults to
+        # "native"). Mirrors the option surface exposed by the system-manager
+        # side (modules/system-manager/auto-upgrade.nix).
+        inputs.self.modules.nixos.auto-upgrade
       ];
 
       networking.networkmanager.enable = true;
@@ -66,8 +72,17 @@
       };
       networking.firewall.enable = true;
       services.logrotate.checkConfig = false;
+      # System-wide gvfs (network mounts, MTP, trash-in-file-manager).
+      # HM installs pkgs.gvfs per-user as a fallback for non-NixOS hosts;
+      # on NixOS this is the canonical registration path.
+      services.gvfs.enable = true;
+
       services.flatpak = {
         enable = true;
+        # Run `flatpak update --noninteractive --assumeyes` at the end of
+        # every `nixos-rebuild switch`. mkDefault so per-host configs can
+        # opt out (e.g. laptops on spotty wifi).
+        update.onActivation = lib.mkDefault true;
         packages = [
           {
             appId = "app.zen_browser.zen";
@@ -89,6 +104,25 @@
               XCURSOR_PATH = "/run/host/user-share/icons:/run/host/share/icons";
             };
           };
+        };
+      };
+
+      # Weekly background update as belt-and-suspenders: catches hosts
+      # (e.g. servers) that go weeks without a rebuild.
+      systemd.services.flatpak-update = {
+        description = "Update flatpak apps (weekly)";
+        serviceConfig = {
+          Type = "oneshot";
+          ExecStart = "${pkgs.flatpak}/bin/flatpak update --noninteractive --assumeyes";
+        };
+      };
+      systemd.timers.flatpak-update = {
+        description = "Weekly flatpak update timer";
+        wantedBy = [ "timers.target" ];
+        timerConfig = {
+          OnCalendar = "weekly";
+          Persistent = true;
+          RandomizedDelaySec = "1h";
         };
       };
       system.stateVersion = "25.05";

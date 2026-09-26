@@ -21,20 +21,23 @@
         enable = true;
         autoEnableSources = true;
         settings = {
+          snippet.expand = ''
+            function(args) require('luasnip').lsp_expand(args.body) end
+          '';
           sources = [
             { name = "nvim_lsp"; }
+            { name = "luasnip"; }
             { name = "path"; }
             { name = "buffer"; }
             { name = "treesitter"; }
-            { name = "spell"; }
-            { name = "git"; }
-            { name = "emoji"; }
-            { name = "dap"; }
-            { name = "look"; }
-            { name = "luasnip"; }
-            { name = "yanky"; }
             { name = "nvim_lua"; }
+            { name = "git"; }
+            { name = "dap"; }
+            { name = "yanky"; }
             { name = "conventionalcommits"; }
+            { name = "spell"; }
+            { name = "emoji"; }
+            { name = "look"; }
           ];
           mapping = {
             "<Tab>" = ''

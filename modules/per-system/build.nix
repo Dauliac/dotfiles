@@ -35,6 +35,12 @@ in
             cp -r ${builtins.head cfg.flake.systemConfigs.ML-PF59GCGW.config.build.toplevel.all} $out
           '';
         };
+        systemML-PF603JJ8 = pkgs.stdenv.mkDerivation {
+          name = "home-manager-system";
+          buildCommand = ''
+            cp -r ${builtins.head cfg.flake.systemConfigs.ML-PF603JJ8.config.build.toplevel.all} $out
+          '';
+        };
         default = config.packages.nixos;
       };
     };

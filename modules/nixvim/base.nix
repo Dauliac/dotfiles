@@ -6,10 +6,12 @@
     globals.mapleader = ",";
     clipboard = {
       register = "unnamedplus";
-      providers.wl-copy.enable = true;
+      providers = {
+        wl-copy.enable = true;
+        xsel.enable = true;
+      };
     };
     plugins = {
-      distant.enable = true;
       treesitter = {
         enable = true;
         settings = {
@@ -33,8 +35,5 @@
         ];
       };
     };
-    extraPlugins = [
-      pkgs.vimPlugins.plenary-nvim
-    ];
   };
 }

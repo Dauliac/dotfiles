@@ -13,7 +13,6 @@
       secure = true;
       termguicolors = true;
       hlsearch = false;
-      hidden = true;
       guicursor = "";
       scrolloff = 8;
       sidescrolloff = 8;

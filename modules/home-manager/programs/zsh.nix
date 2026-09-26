@@ -22,6 +22,17 @@
           export OPENAI_KEY=$(cat $SECRET_OPENAI_PATH)
           export OPENAI_API_KEY=$(cat $SECRET_OPENAI_PATH)
         fi
+        # Visual marker for shells launched inside an AI-owned herdr split.
+        # The env vars are injected by herdr-run / herdr-tui at `pane split
+        # --env` time, so this only fires in agent-spawned panes.
+        if [[ -n "''${HERDR_AI_SPLIT:-}" ]]; then
+          _herdr_ai_marker() {
+            local role="''${HERDR_AI_ROLE:-ai}"
+            local parent="''${HERDR_AI_PARENT_PANE:-?}"
+            print -P "%F{red}%B[🤖 AI · $role ← $parent]%b%f"
+          }
+          precmd_functions=(_herdr_ai_marker $precmd_functions)
+        fi
         if command -v mise &> /dev/null; then
           eval "$(mise activate zsh)"
         fi

@@ -30,6 +30,7 @@
       typos
       xsel
       mermaid-cli
+      imagemagick
     ];
   };
 }

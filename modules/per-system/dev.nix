@@ -21,6 +21,10 @@
           nativeBuildInputs =
             with pkgs;
             [
+              # zsh is here because xi develop enter execvp's `zsh` after
+              # sourcing the devshell env; the outer ~/.nix-profile/bin/zsh
+              # isn't reachable once PATH is replaced by the devshell.
+              zsh
               lefthook
               sops
               age
@@ -38,7 +42,6 @@
             export SOPS_AGE_KEY_FILE=~/.config/sops/age/dotfiles.txt
             git config diff.sopsdiffer.textconv "sops decrypt"
             task init
-            task
           '';
         }
       );

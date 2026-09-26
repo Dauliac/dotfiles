@@ -12,5 +12,12 @@
         develop = true;
       };
     };
+
+    # Route xi's privilege elevation through pkexec instead of sudo. pkexec
+    # authorizations trigger the polkit-gnome agent (see niri/session.nix),
+    # so `xi system switch .` and friends pop up a graphical prompt instead
+    # of a TTY `[sudo] password:` line. Override per-invocation with
+    # `xi -e sudo …` on headless / SSH sessions without a polkit agent.
+    home.sessionVariables.XI_ELEVATION_STRATEGY = "pkexec";
   };
 }

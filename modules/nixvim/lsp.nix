@@ -1,6 +1,5 @@
 {
   flake.modules.nixvim.lsp = {
-    lsp.inlayHints.enable = true;
     plugins.lsp = {
       enable = true;
       inlayHints = true;
