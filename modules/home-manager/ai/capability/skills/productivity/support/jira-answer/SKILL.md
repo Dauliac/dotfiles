@@ -168,7 +168,7 @@ I can't reproduce with what's in the ticket. Could you share:
 
 The "Need more info" shape ALSO transitions the ticket status to
 **Waiting for customer** after the comment posts (see method
-step 10b) — the status itself signals that the ball is in the
+step 11b) — the status itself signals that the ball is in the
 reporter's court, so the "Ticket stays open until then" trailer
 that used to close this shape is now redundant and gets cut.
 
@@ -177,12 +177,26 @@ line, 1 fact-anchored middle line, 1 action / invite-verify last line.
 
 ## Method
 
-1. **Calibrate** — read the last 3 PLAT close-outs (see Calibration
+1. **Snapshot for freshness — MANDATORY, before anything else.**
+   Capture the ticket's drift-relevant fields (status + last non-me
+   comment + assignee) so we can detect a teammate comment or status
+   flip landing while we draft. Motivating incident: PLAT-4095
+   2026-09 — Vincent's comment invalidated the draft
+   mid-flight and the agent posted the stale reply anyway. See
+   `jiraai-freshness-check`.
+
+   ```bash
+   : "${JIRA_ME_ACCOUNT_ID:=$(twg jira user me -o json | jq -r '.accountId')}"
+   export JIRA_ME_ACCOUNT_ID
+   freshness_snapshot "$ticket" "$ticket_dir"
+   ```
+
+2. **Calibrate** — read the last 3 PLAT close-outs (see Calibration
    block above). Cache into `$ticket_dir/voice.md`. Skip if the file
    already exists and is < 24h old.
-2. Read `proof.md` and `fix.md`. Pull the outcome, the fix reference,
+3. Read `proof.md` and `fix.md`. Pull the outcome, the fix reference,
    and any action for the reporter.
-3. Look up the reporter's accountId once for the `@mention`:
+4. Look up the reporter's accountId once for the `@mention`:
 
    ```bash
    REPORTER_EMAIL=$(jiraai-review "$ticket" | awk -F': *' \
@@ -191,11 +205,11 @@ line, 1 fact-anchored middle line, 1 action / invite-verify last line.
      "$ROOT/user/search?query=$REPORTER_EMAIL" | jq -r '.[0].accountId')
    ```
 
-4. Pick a shape (Fixed / In flight / Won't fix / Need info).
-5. Draft the Reply — 1 to 3 sentences, PLAT voice (calibration
+5. Pick a shape (Fixed / In flight / Won't fix / Need info).
+6. Draft the Reply — 1 to 3 sentences, PLAT voice (calibration
    applies). Trim ruthlessly. If a line does not help the reporter
    act or verify, cut it.
-6. Self-check:
+7. Self-check:
    - Line 1 is `Hello @<Reporter>,` (or the team convention observed
      in `voice.md`).
    - Total ≤ 3 sentences of body.
@@ -205,7 +219,7 @@ line, 1 fact-anchored middle line, 1 action / invite-verify last line.
    - No apology preamble (sorry for the delay, unfortunately).
    - Numbers where you had adjectives ("v2.14.3, 14:20 UTC" not
      "recently").
-7. **Dust review — MANDATORY, before user handoff.** The warm
+8. **Dust review — MANDATORY, before user handoff.** The warm
    conversation has heard the whole story; use it as a second pair
    of eyes on both accuracy and tone. Use the `dust_ask` helper
    defined in `jira-ticket`.
@@ -230,8 +244,8 @@ say 'good to post'."
 
    Fold Dust's edits into `answer.md` before showing it to the
    operator. Log the exchange (already automatic via `dust_ask`).
-8. Write `answer.md`. **Do not post.**
-9. Hand off to the user:
+9. Write `answer.md`. **Do not post.**
+10. Hand off to the user:
 
    ```text
    Draft ready at $ticket_dir/answer.md.
@@ -239,7 +253,7 @@ say 'good to post'."
    Post it? (waiting for your OK.)
    ```
 
-10. On user OK, **post via `twg jira workitem comment create`** — it handles auth
+11. On user OK, **post via `twg jira workitem comment create`** — it handles auth
    (sops-managed API token) and the correct Jira endpoint. `--body-format markdown`
    lets you pass a raw markdown string (twg converts to ADF); never hand-roll a
    `curl` here.
@@ -248,6 +262,23 @@ say 'good to post'."
    # From $ticket_dir, after user typed "post it":
    REPLY=$(awk '/^## Reply/,/^## Context/' answer.md \
      | sed '1d;$d')                          # extract Reply body
+
+   # Freshness gate — snapshot was taken at method step 1.
+   # See jiraai-freshness-check. Refuse to post on any drift.
+   verdict=$(freshness_diff "$ticket" "$ticket_dir") || case "$verdict" in
+     NEW_COMMENTS|BOTH)
+       echo "REFUSING to post: new non-me comment landed. See stderr above." >&2
+       echo "Re-run jiraai-review, re-draft answer.md, freshness_snapshot, retry." >&2
+       exit 10 ;;
+     STATUS_CHANGE)
+       echo "REFUSING to post: ticket status moved while drafting." >&2
+       echo "Re-evaluate whether the reply still applies." >&2
+       exit 11 ;;
+     ASSIGNEE_CHANGE)
+       echo "WARN: assignee changed. Proceeding for ownership-neutral reply." >&2
+       echo "For Done/Waiting-for-customer transitions, refuse instead." >&2 ;;
+   esac
+
    twg jira workitem comment create --issue-id "$ticket" \
      --body "$REPLY" --body-format markdown
    ```
@@ -290,7 +321,7 @@ Ticket state now: <open / done / waiting-for-customer>. \
 Transitioned via twg jira workitem update --status: <yes/no>."
    ```
 
-10b. **If the answer shape is "Need more info" — transition the
+11b. **If the answer shape is "Need more info" — transition the
     ticket to `Waiting for customer` right after the comment posts.**
     The status change is the machine-readable signal that the ball
     is in the reporter's court; support dashboards, SLA timers, and
@@ -333,7 +364,7 @@ Transitioned via twg jira workitem update --status: <yes/no>."
 (transition id $WFC_TID) after posting Need-more-info reply."
     ```
 
-    **Reverse on reporter reply.** The async-wait arm (step 11)
+    **Reverse on reporter reply.** The async-wait arm (step 12)
     wakes when a new non-me comment lands; that wake-prompt MUST
     re-transition the ticket OUT of `Waiting for customer` back to
     the working state (`In Progress`, transition id `31` for
@@ -342,7 +373,7 @@ Transitioned via twg jira workitem update --status: <yes/no>."
     `Waiting for customer` is the same failure mode as the initial
     skip: the queue reader is misled.
 
-11. **If the answer shape is "Need more info" — arm async-wait for
+12. **If the answer shape is "Need more info" — arm async-wait for
     the reporter reply.** Reporter response time on PLAT is
     hours-to-days; do NOT leave the operator to check manually.
     Delegate to **async-wait** with a bounded re-arm loop:
@@ -399,6 +430,13 @@ operator with a summary and stop."
   `jiraai` cookbook for the raw IDs).
 - **jiraai** (cookbook): ADF format + auth details the posting
   step relies on.
+- **jiraai-freshness-check**: mandatory pre-post gate. Method
+  step 1 snapshots the ticket; the code block in step 11 diffs
+  and refuses to post on `NEW_COMMENTS` / `STATUS_CHANGE`. Extend
+  the same gate around the Done transition (step 11) and the
+  `Waiting for customer` transition (step 11b)  -  a status flip
+  to Won't Do / Duplicate between draft and Done is exactly the
+  drift this catches.
 - **async-wait**: for "Need more info" replies — bounded ScheduleWakeup
   loop (1800s per arm, 24h total cap) via `watch:jira=<KEY>`. On
   wake, re-checks comments; PushNotification only when actionable

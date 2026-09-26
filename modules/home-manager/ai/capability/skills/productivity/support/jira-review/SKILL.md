@@ -97,6 +97,13 @@ workitem comment create` and hand-rolls curl) so the ticket's Development
 panel + notifications tag them:
 
 ```bash
+# Freshness gate — snapshot before drafting the ADF, diff before POST.
+# A teammate ping-storming the ticket while we prep this @mention would
+# make the mention misleading. See jiraai-freshness-check.
+: "${JIRA_ME_ACCOUNT_ID:=$(twg jira user me -o json | jq -r '.accountId')}"
+export JIRA_ME_ACCOUNT_ID
+freshness_snapshot "$TICKET" "$ticket_dir"
+
 # Resolve reviewer accountId once (see jiraai cookbook for the ADF shape)
 REV_ID=$(curl -sS -u "$AUTH" \
   "$ROOT/user/search?query=reviewer-a@corp.example" \
@@ -117,6 +124,12 @@ BODY=$(jq -n --arg acct "$REV_ID" --arg url "$MR_URL" --arg iid "$IID" '{
   }
 }')
 
+# Freshness gate before the POST.
+verdict=$(freshness_diff "$TICKET" "$ticket_dir") || {
+  echo "REFUSING @mention on $TICKET: verdict=$verdict" >&2
+  echo "Drift detected — re-read via jiraai-review, re-snapshot, retry." >&2
+  exit 10
+}
 curl -sS -u "$AUTH" -X POST "$ROOT/issue/$TICKET/comment" \
   -H 'Content-Type: application/json' -d "$BODY"
 ```
@@ -188,6 +201,10 @@ approval") — record the rationale.
 - **glab-mr-assign** — verified username adds.
 - **glab-mr-ready** — the pre-req probe (pipeline / conflicts).
 - **twg-jira** — `twg jira workitem comment create` for the everyday internal comment; hand-rolled ADF `curl` for the `mention`-mark case above.
+- **jiraai-freshness-check** — mandatory pre-post gate around
+  the @mention comment. A teammate flip to Won't Do / Duplicate
+  or a fresh non-me comment between drafting the ADF and the POST
+  turns the @mention into misleading noise.
 - **mm-skills-gitlab-mr** — `respond-to-review.md`,
   `fix-review-comments.md` reference files own the tactics.
 - **jira-merge** — the next phase after approvals green.

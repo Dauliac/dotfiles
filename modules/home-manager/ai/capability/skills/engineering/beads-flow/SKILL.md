@@ -87,6 +87,26 @@ while :; do
   # 3. Dispatch by phase label — the routing table (below) maps
   #    phase:<name> → skill to invoke.
   phase=$(printf '%s' "$labels" | tr , '\n' | grep '^phase:' | head -1 | cut -d: -f2)
+
+  # 3b. Tier fallback — beads produced by `beads-plan plan` from an
+  #     OpenSpec change carry `tier:{fast,standard,advanced}` +
+  #     `complexity:{low,medium,high}` in metadata but NO `phase:`
+  #     label. When phase is empty, fall back to the tier→skill map:
+  #       tier:fast     → codebase-design (small edit, scaffolding)
+  #       tier:standard → tdd             (feature/integration, test-first)
+  #       tier:advanced → codebase-design + tdd (architecture — plan then TDD)
+  #     If both phase and tier are missing, treat as `phase:implement`.
+  if [ -z "$phase" ]; then
+    tier=$(bd show "$next" --json | jq -r '.metadata.tier // empty')
+    case "$tier" in
+      fast)     phase="impl-fast" ;;
+      standard) phase="impl-standard" ;;
+      advanced) phase="impl-advanced" ;;
+      *)        phase="implement" ;;
+    esac
+    echo "  (no phase: label; dispatching via tier=$tier → $phase)"
+  fi
+
   echo "Working: $next [$phase] $title"
 
   # 4. Claim, work, close
@@ -125,6 +145,19 @@ done
 | `phase:answer`         | `jira-answer` | Draft; requires user OK before posting |
 | `phase:close`          | `jira-answer` posting step | Posts + transitions Done |
 | `phase:watch-related-mr` | `ci-watch` foreground + `async-wait` background — the MR URL is written into the bead as `watch:mr=<iid>` so wake-back reconstructs via async-wait recipe 4b | Filed by `beads-decompose` from `related-mrs.txt` (produced by `jiraai-review --deep`). Always `blocking:human` — operator opts in per MR |
+
+### Tier fallback dispatch (OpenSpec-sourced beads)
+
+Beads produced by `beads-plan plan <change-dir>` carry `tier` + `complexity` metadata but not `phase:` labels. When step 3b assigns a synthetic phase from tier, use this map:
+
+| Synthetic phase | Skill to invoke | Notes |
+| --- | --- | --- |
+| `impl-fast`     | `mattpocock-skills:codebase-design` (light) — direct edit | Config, boilerplate, scaffolding — no test scaffold needed |
+| `impl-standard` | `mattpocock-skills:tdd` | Multi-file / integration — write the failing test first |
+| `impl-advanced` | `mattpocock-skills:codebase-design` → `mattpocock-skills:tdd` | Design the seam, then TDD the pieces |
+| `implement`     | `mattpocock-skills:tdd` | Default when both `phase:` and `tier` missing |
+
+After close, if the bead is the last in its `change:<slug>` scope, suggest `mattpocock-skills:code-review` against the change's base commit before `openspec-archive-change`.
 
 ## Human-gate contract
 
@@ -194,3 +227,4 @@ When a dispatched skill returns non-zero:
   exists for it (`herdr tab list --json | jq --arg lbl "bd-$id"
   '.result.tabs[] | select(.label==$lbl)'`) and focus it instead of
   spawning a duplicate.
+- **mg-watch** — live side-panel view of task state while you drive the DAG. Fires alongside `bd ready` / `bd claim` / `beads workflow`.

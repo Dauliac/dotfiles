@@ -30,7 +30,7 @@ Both sides need to know so BOTH surface the link. **Jira side** puts the MR in t
 
 ```bash
 KEY="GT-2500"
-MR_URL="https://git.corp.example/<group>/<repo>/-/merge_requests/123"
+MR_URL="https://$GITLAB_HOST/<group>/<repo>/-/merge_requests/123"
 
 twg jira workitem link pr --id "$KEY" --target "$MR_URL"
 # → Idempotent via a generated globalId; re-running updates rather than duplicates.

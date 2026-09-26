@@ -5,6 +5,15 @@ description: Orchestrator for resolving a Jira support ticket end-to-end — set
 
 # jira-ticket — support ticket resolution orchestrator
 
+**Statewright toggle** — If the operator's request contains
+`--via-statewright` (or `--statewright`), STOP and delegate to the
+declarative workflow: invoke `/sw:ticket <ticket-id>`. Do NOT run
+the hardcoded pipeline below. If `--legacy` is present, run this
+skill as documented. See the sibling skill
+`jira-ticket-statewright-toggle` for the full routing table
+(including the post-cutover default flip via
+`~/.claude/workflows/.statewright-default`).
+
 **IMPORTANT — humans on the other side.** The reporter is a real
 teammate reading in Jira. They see **only** the final answer, not
 the investigation. Keep the investigation invisible; the ticket-visible

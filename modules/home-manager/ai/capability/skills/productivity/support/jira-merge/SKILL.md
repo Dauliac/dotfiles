@@ -151,11 +151,38 @@ glab release create "$next" --repo "$REPO" \
 
 ## Step 5 — Notify the Jira ticket
 
-Post an internal status ping via `twg jira workitem comment create --issue-id "$KEY" --body "..." --body-format markdown`:
+Post an internal status ping via `twg jira workitem comment create --issue-id "$KEY" --body "..." --body-format markdown`.
+Ping body:
 
 ```text
 Merged !$IID (commit <short-sha>). Release: $next (or "auto-release
 via CI"). Deploy pipeline: <URL>. Will verify per env.
+```
+
+**Freshness gate — MANDATORY.** A `STATUS_CHANGE` verdict here
+(e.g. the ticket got flipped to Won't Do or Duplicate while we
+were merging) is a reason to abort even the ping. See
+`jiraai-freshness-check`.
+
+```bash
+: "${JIRA_ME_ACCOUNT_ID:=$(twg jira user me -o json | jq -r '.accountId')}"
+export JIRA_ME_ACCOUNT_ID
+freshness_snapshot "$KEY" "$ticket_dir"    # at start of merge phase
+# ... run the merge ...
+verdict=$(freshness_diff "$KEY" "$ticket_dir") || {
+  case "$verdict" in
+    STATUS_CHANGE|BOTH)
+      echo "REFUSING post-merge ping: ticket status flipped to a resolved state" >&2
+      echo "while we merged. Hand off to operator via bd note + PushNotification." >&2
+      exit 11 ;;
+    NEW_COMMENTS)
+      echo "WARN: new non-me comment landed on $KEY during merge." >&2
+      echo "Re-read via jiraai-review before deciding to post; operator OK required." >&2
+      exit 10 ;;
+  esac
+}
+twg jira workitem comment create --issue-id "$KEY" \
+  --body "$PING" --body-format markdown
 ```
 
 Do NOT transition the Jira ticket to Done yet — deploy + verify are
@@ -180,6 +207,10 @@ still ahead. `jira-answer` handles Done after `verify-prod` closes.
 
 - **glab-mr-ready** — mandatory pre-merge gate.
 - **twg-jira** — `twg jira workitem comment create` for the post-merge status ping on the Jira ticket.
+- **jiraai-freshness-check** — mandatory pre-merge snapshot +
+  pre-post diff on the Jira ticket. Refuses the post-merge ping
+  (and, on `STATUS_CHANGE`, escalates) when the ticket flipped
+  to Won't Do / Duplicate / Done during the merge window.
 - **jira-deploy** — the next phase; consumes the merge commit sha.
 - **jira-answer** — the phase that transitions Done, MUCH later.
 - **beads-flow** — dispatches this skill on `phase:merge` and

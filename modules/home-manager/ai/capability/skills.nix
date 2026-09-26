@@ -76,12 +76,27 @@ let
     # jira-* family (jira-ticket → jira-explore → jira-fix → jira-answer).
     "jiraai"
     "jiraai-commit-check"
+    # jiraai-freshness-check  -  atomic pre-post safety gate. Snapshot
+    # the ticket at draft time; diff at post time; refuse to write
+    # (comment / transition / update) when a new non-me comment
+    # landed or the status moved. Motivating incident: PLAT-4095
+    # 2026-09 (a teammate's comment invalidated the draft mid-flight
+    # and the agent posted the stale reply anyway). Called by
+    # jira-answer, jira-fix, jira-review, jira-merge, jiraai-group.
+    # jira-ticket-statewright-toggle — routing addendum. When an operator
+    # invocation of the jira-ticket pipeline carries --via-statewright (or
+    # after cutover: any bare invocation without --legacy), delegate to
+    # `/sw:ticket <TICKET-ID>` and skip the hardcoded pipeline. Introduced
+    # by the statewright-workflow-layer OpenSpec change; complements the
+    # 3-line pointer in jira-ticket/SKILL.md.
+    "jira-ticket-statewright-toggle"
     "jiraai-group"
     "jiraai-link"
     "jiraai-mr"
     "jiraai-review"
     "k8s-watch"
     "kubectl"
+    "mg-watch"
     "mise-deps"
     "mise-quality-gates"
     "mise-tasks"
@@ -94,6 +109,24 @@ let
     "repo-tasks"
     "s3-watch"
     "scratch-scripts"
+    # slack — Slack's official platform CLI wrapped in atomic sub-skills
+    # scoped to the "read + send messages via the Web API" use case
+    # (chat.*, conversations.*, users.*, search.*, reactions.*, files.*).
+    # Excludes the Slack-app development surface (app / platform / manifest
+    # / trigger / datastore / sandbox commands) — that's out of scope for
+    # this configuration.
+    "slack"              # parent/index — the map + `slack api` primer
+    "slack-api"          # generic `slack api <method>` escape hatch
+    "slack-auth"         # login / logout / list / revoke
+    "slack-edit-message" # chat.update / chat.delete
+    "slack-list-channels" # conversations.list (name → C…)
+    "slack-list-users"   # users.list / users.lookupByEmail (name/email → U…)
+    "slack-read-channel" # conversations.history
+    "slack-react"        # reactions.add / reactions.remove / reactions.get
+    "slack-search"       # search.messages
+    "slack-send-message" # chat.postMessage / chat.postEphemeral / scheduleMessage
+    "slack-thread"       # chat.postMessage + thread_ts, conversations.replies
+    "slack-upload-file"  # files.getUploadURLExternal 3-step flow
     "try"
     "tui-context"
   ];
@@ -104,7 +137,6 @@ let
     # any prose posted under the user's name (commits, MRs, tickets,
     # comments) so the output does not read as LLM-generated.
     "no-em-dash"
-    "rodin"
     "ste100"
   ];
 
@@ -123,37 +155,39 @@ let
     "jira-ticket"       # orchestrator
   ];
 
+  anytypeToolbox = [
+    # anytype-toolbox ships upstream-maintained skills for the `anyr`
+    # CLI and connection setup. `any-mcp` deliberately excluded — MCP
+    # is out of scope for this configuration.
+    "anyr"
+    "anytype-setup"
+  ];
+
 in
 {
+  # Skills are wired declaratively via home-manager's native
+  # `programs.claude-code.skills` option (attrsOf (lines | path)).
+  # Directory-typed values recursively install every file under the
+  # skill dir (SKILL.md + references/ + assets/ + helper scripts) into
+  # `~/.claude/skills/<name>/`, so no custom recursive-walk helper is
+  # needed. Upstream skills (anytype-toolbox) are pulled straight from
+  # the flake input's source tree — no vendoring.
   flake.modules.homeManager.ai-capability-skills =
-    { lib, ... }:
+    { lib, inputs, ... }:
     let
-      # Install every file under a skill dir (SKILL.md + references/ +
-      # assets/ + helper scripts) so bundled resources ship alongside
-      # the entry-point SKILL.md.
-      mkSkillFiles =
-        parentDir: name:
-        let
-          skillDir = "${parentDir}/${name}";
-          prefix = "${toString skillDir}/";
-          # listFilesRecursive returns store paths; strip the store-path
-          # context so the resulting string is safe to use as an attr name.
-          subPath =
-            path: builtins.unsafeDiscardStringContext (lib.removePrefix prefix (toString path));
-        in
-        map (path: {
-          name = ".claude/skills/${name}/${subPath path}";
-          value.source = path;
-        }) (lib.filesystem.listFilesRecursive skillDir);
-
-      mkSkill = category: name: mkSkillFiles "${skillsDir}/${category}" name;
-      mkSupportSkill = name: mkSkillFiles "${skillsDir}/productivity/support" name;
+      inDir = parent: name: lib.nameValuePair name (parent + "/${name}");
+      inCategory = category: inDir (skillsDir + "/${category}");
+      inSupport = inDir (skillsDir + "/productivity/support");
+      fromAnytypeToolbox =
+        name:
+        lib.nameValuePair name "${inputs.anytype-toolbox}/skills/skills/${name}";
     in
     {
-      home.file = lib.listToAttrs (
-        lib.concatMap (mkSkill "engineering") engineering
-        ++ lib.concatMap (mkSkill "productivity") productivity
-        ++ lib.concatMap mkSupportSkill support
+      programs.claude-code.skills = lib.listToAttrs (
+        map (inCategory "engineering") engineering
+        ++ map (inCategory "productivity") productivity
+        ++ map inSupport support
+        ++ map fromAnytypeToolbox anytypeToolbox
       );
     };
 }

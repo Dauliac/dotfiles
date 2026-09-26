@@ -173,7 +173,7 @@ Any known gotcha with <chosen approach>?"
    reference; call `glab-mr-ready` in practice.
 
    ```bash
-   export GITLAB_HOST=<self-hosted-host>   # e.g. git.corp.example
+   export GITLAB_HOST=<self-hosted-host>   # e.g. $GITLAB_HOST
    MR_REPO="<group>/<subgroup>/<project>"  # exact glab --repo form
    MR_IID=<returned IID from glab mr create>
 
@@ -251,6 +251,23 @@ Any known gotcha with <chosen approach>?"
      the MR opens (e.g. "MR !123 in review, ETA staging tomorrow").
      This is the *internal* comment; the reporter-facing close-out
      is `jira-answer` in the next phase.
+   - **Freshness gate  -  MANDATORY before the ping.** A teammate
+     comment or status flip between drafting the ping and posting
+     it turns the ping into misleading noise. Use
+     `jiraai-freshness-check`:
+
+     ```bash
+     : "${JIRA_ME_ACCOUNT_ID:=$(twg jira user me -o json | jq -r '.accountId')}"
+     export JIRA_ME_ACCOUNT_ID
+     freshness_snapshot "$ticket" "$ticket_dir"   # once, before drafting
+     # ... draft the ping body ...
+     verdict=$(freshness_diff "$ticket" "$ticket_dir") || {
+       echo "REFUSING internal ping on $ticket: verdict=$verdict" >&2
+       exit 10
+     }
+     twg jira workitem comment create --issue-id "$ticket" \
+       --body "$PING" --body-format markdown
+     ```
 9. **Update the bead**:
 
    ```bash
@@ -303,6 +320,11 @@ Verification checklist status: <X/Y green>."
   dev tracking Task.
 - **jiraai-link** — wire the MR into the support ticket's
   Development panel (remoteLink + reciprocal `glab mr note`).
+- **jiraai-freshness-check** — mandatory pre-post gate around the
+  internal status ping (step 8) and around any `twg jira workitem
+  update --status ...` transition on the support ticket. If a
+  teammate comment or status flip landed while the ping was being
+  drafted, refuse to post; re-read via `jiraai-review`; re-draft.
 - **twg-jira** — `twg jira workitem update --status ...` for support-ticket
   status transitions; `twg jira workitem comment create` for internal status
   pings (distinct from the ASD-STE100 reporter reply that `jira-answer`

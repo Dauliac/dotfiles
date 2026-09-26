@@ -59,7 +59,7 @@ MR URLs on a Jira ticket can live in ANY of: `remoteLinks`, JSM `Relevant Link` 
 ```bash
 find_mr_urls() {
   local key=$1
-  local pat='https?://(git\.corp\.example|gitlab\.com)/[^ ")\]<>]+'
+  local pat='https?://(git\.corp\.tech|gitlab\.com)/[^ ")\]<>]+'
   twg jira workitem get "$key" --full -o json \
     | jq -r '.. | strings' \
     | grep -oE "$pat" \
@@ -84,6 +84,27 @@ curl -sS -u "$AUTH" "$ROOT/<endpoint>"
 
 Note: `~/.local/share/jiraai/config.yaml` (the old defaults yaml) is **not required** — `twg` reads its own site/cloud-id from `~/.config/twg/`. If a skill still references `${SITE}` / `${USER_EMAIL}` / `${TEAM_UUID}` placeholders, treat them as documentation for the break-glass path only.
 
+## Posting safety — freshness gate BEFORE every write
+
+Jira is multi-writer. Between the moment an agent starts drafting a
+comment / transition / field update and the moment it posts, a
+teammate can invalidate the whole draft. Real incident: Vincent's
+comment on PLAT-4095 (2026-09) flipped the ticket status — the naive
+`twg jira workitem comment create` posted a stale reply anyway.
+
+Every skill that writes to Jira MUST route through
+`jiraai-freshness-check`:
+
+- `freshness_snapshot KEY DIR` before drafting.
+- `freshness_diff KEY DIR` immediately before the write.
+- Refuse to post on `NEW_COMMENTS` / `STATUS_CHANGE` / `BOTH`.
+- Downgrade `ASSIGNEE_CHANGE` to a warn for ownership-neutral writes.
+
+This is a hard rule, not a suggestion. `jira-answer`, `jira-fix`,
+`jira-review`, `jira-merge`, and `jiraai-group` already wire the
+gate. New callers of `twg jira workitem comment create` /
+`... update --status` / `... update --field` inherit the same rule.
+
 ## Composes with
 
 - **`twg-jira`**: primary — every workitem read/write. This skill only supplies the edges.
@@ -92,3 +113,6 @@ Note: `~/.local/share/jiraai/config.yaml` (the old defaults yaml) is **not requi
 - **`jiraai-link`**: cross-side (Jira remoteLink + `glab mr note`) — twg owns the Jira half.
 - **`jiraai-review`**: brief-me-on-ticket + related-work walk on top of `twg workitem get --full`.
 - **`jiraai-group`**: bulk operations with preview + confirm on top of `twg workitem bulk-transition`.
+- **`jiraai-freshness-check`**: mandatory pre-post gate on every
+  Jira write (see `Posting safety` above). Snapshot at draft
+  time; diff at post time; refuse on drift.
