@@ -1,0 +1,55 @@
+## Why
+
+The dotfiles today ship the Rust reimplementation of beads (`beads-rust`, binary `br`, backed by frankensqlite) aliased as `pkgs.beads` with a `br → bd` symlink shim. Three things fall out of this choice that we want to fix together, because they share the same root cause (which beads implementation ships) and touch the same nix modules:
+
+1. **No working TUI for beads on this machine**: `bv` (beads-viewer) reads the Go beads Dolt schema; the Rust fork stores in SQLite. Schema mismatch = broken viewer.
+2. **Dolt CPU on this machine is high** even though `pkgs.beads` is the Rust build: a Dolt process is running with defaults that starve the CPU on a low-QPS single-user workload (idle stats collector, GC tuned for GB-scale heaps, `read_timeout=8h` leaking connection slots).
+3. **Hook clobbering skirmishes**: beads' `bd init` installs into `.git/hooks/*` and collides with `lefthook.yaml`; `.beads/hooks/*` in this repo have already been overwritten by lefthook shims (see `git status`). We need a durable settlement — one hook owner per repo, beads sync automated elsewhere.
+
+Switching to the Go beads implementation is the pivot that unlocks all three: `bv` works out of the box, Dolt is the intended backend so tuning is meaningful, and Go beads exposes `bd init --skip-hooks` for a first-class opt-out of the hook clobber.
+
+## What Changes
+
+- **BREAKING** Swap `pkgs.beads` from `llmAgentsPkgs.beads-rust` (Rust `br` via frankensqlite, symlinked to `bd`) to `llmAgentsPkgs.beads` (Go `bd` via Dolt, gastownhall/beads v1.2.2+). The `${pkgs.beads}/bin/bd` path stays valid; the `${pkgs.beads}/bin/br` path disappears.
+- **BREAKING** On-disk `.beads/` layout changes: Rust wrote `beads.db` (SQLite) + `beads.base.jsonl` + `.br_history/` + `.br-*.lock`; Go writes `embeddeddolt/` + `issues.jsonl` + `config.yaml`. Manual per-repo migration required (documented in tasks.md).
+- Add a long-lived, resource-capped `dolt-beads` systemd user service (via home-manager `systemd.user.services`) with cgroup limits (`CPUQuota=50%`, `MemoryHigh=1G`, `MemoryMax=1.5G`, `MemorySwapMax=0`, `Nice=10`, `IOSchedulingClass=best-effort`) and Go runtime env (`GOGC=400`, `GOMEMLIMIT=768MiB`).
+- Ship a managed `~/.config/dolt-beads/config.yaml` with tuning that attacks the known CPU-burn issues (dolt#10849 idle GC, dolt#11526 connection slot leak, dolt#10944 auto-GC gating): `dolt_stats_*: OFF/PAUSED`, `event_scheduler: OFF`, `wait_timeout: 30`, `max_connections: 8`, `read_timeout_millis: 30000`, `auto_gc: enable=true archive_level=1`.
+- Package `beads-viewer` (Go `bv`, Dicklesworthstone/beads_viewer) as the TUI for the shared Dolt-backed beads DB. **`mardi-gras` is not shipped** in this change; `bv` alone.
+- Enforce `bd init --skip-hooks` for all repos by writing `.beads/config.yaml` with `hooks.enabled: false` (or equivalent) via a home-manager activation script; keep `lefthook` as the sole `.git/hooks/*` owner.
+- Update `modules/home-manager/ai/workspace/rules.nix` invocation of `bd agents --add --dry-run` if the Go CLI differs from the Rust one (verify + adapt).
+- Remove the `mg` alias from `modules/home-manager/aliases.nix` (mardi-gras is dropped). Optionally add a `bv` alias.
+
+## Capabilities
+
+### New Capabilities
+- `ai-runtime/beads`: The beads issue tracker as an AI-agent memory graph on this system — which implementation is shipped, where its Dolt backend lives, how the sql-server is lifecycle-managed and resource-capped, how the tracker coexists with the repo's existing lefthook-owned git hooks, and which viewer (`bv`) is available. Owns the shared-Dolt-server contract that multiple concurrent agents on this machine rely on for cross-agent state visibility.
+
+### Modified Capabilities
+<!-- None. openspec/specs/ is currently empty; this change introduces the first capability. -->
+
+## Impact
+
+**Affected nix modules**:
+- `modules/packages/default.nix` — swap `beads` derivation, add `beads-viewer` inherit, drop the `br → bd` symlinkJoin shim, drop the `mardi-gras` inherit.
+- `modules/home-manager/ai/packages.nix` — add `beads-viewer` to the AI package list; remove `mardi-gras`.
+- `modules/home-manager/ai/workspace/rules.nix` — verify/adapt `bd agents --add --dry-run` invocation for Go CLI.
+- `modules/home-manager/aliases.nix` — remove the `mg` alias; optionally add `bv` alias.
+- New file `modules/home-manager/services/dolt-beads.nix` — systemd user service + `xdg.configFile."dolt-beads/config.yaml"`.
+- New file `modules/home-manager/ai/beads-config.nix` — writes `.beads/config.yaml` template + activation script guard against `bd init` re-arming hooks.
+
+**Affected on-disk state (manual, one-shot per repo)**:
+- `.beads/beads.db`, `.beads/beads.base.jsonl`, `.beads/.br_*.lock`, `.beads/.br_history/`, `.beads/.br_recovery/` — moved aside as `.beads.rust-backup/`; JSONL re-imported into fresh `.beads/embeddeddolt/`.
+- `.beads/hooks/*` files (currently lefthook shims after prior clobber) — removed; `.git/hooks/*` regenerated by `lefthook install`.
+
+**Not affected**:
+- `lefthook.yaml` — no beads-related commands added. Lefthook stays sole `.git/hooks/*` owner.
+- Existing Claude Code hooks (scratch-index `SessionStart` in `modules/home-manager/ai/scratch.nix`) — untouched; no beads Claude-hook added in this change (cross-machine sync opt-in is deferred to a follow-up change).
+- All other `pkgs.beads` callsites (`workspace/rules.nix`, agents' skill files) — keep working via the stable `${pkgs.beads}/bin/bd` path.
+- `gascity` (`gc`) and the `.gc/` runtime state — explicitly out of scope for this change. `gascity` is not packaged in the flake; if `.gc/` state is stale it can be cleaned up separately.
+
+**External dependencies**:
+- Requires `llm-agents.nix` flake input at a revision that includes `packages/beads/package.nix` (gastownhall/beads Go, confirmed present in current pinned revision `n8mwajxj7...`).
+- Requires Dolt ≥ 2.0.3 for the fix to auto-GC gating bug #10944; current pin is 2.3.2 ✅.
+
+**Data migration risk**:
+- Rust SQLite → Go Dolt is not automatic. Users must export from Rust `br` (JSONL) and import into Go `bd` before the swap lands, or accept a fresh beads DB with no prior history. Migration is one bead of its own with a manual verification gate before the destructive move.

@@ -1,0 +1,11 @@
+{
+  "root": "do-7dd",
+  "pin": { "auto_title": "do-eo4", "agent_quota": "do-9u1", "version_check": "do-zb8" },
+  "wire_module": { "flake_input": "do-cra", "rewrite_herdr_nix": "do-wjj", "grep_conflicts": "do-1en", "deploy": "do-6qx", "verify": "do-t46" },
+  "auto_title": { "helper": "do-slz", "derivation": "do-jdi", "build_check": "do-yie", "wire": "do-fnl", "deploy": "do-lgf", "verify": "do-zet", "commit": "do-d8k" },
+  "agent_quota": { "derivation": "do-n35", "build_check": "do-lng", "wire": "do-sl2", "deploy": "do-xrj", "commit": "do-vxd" },
+  "removal_test": { "remove": "do-h8y", "readd": "do-haw" },
+  "rollout": { "dauliac": "do-4w8", "gary": "do-j07", "spongebob": "do-e7r" },
+  "docs": { "skill_md": "do-6dv", "skills_nix": "do-4z1", "claude_md": "do-aqv" },
+  "archive": { "validate": "do-53c", "archive": "do-b9e" }
+}
