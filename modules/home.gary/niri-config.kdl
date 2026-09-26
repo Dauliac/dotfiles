@@ -104,7 +104,10 @@ window-rule {
 }
 
 // Startup apps
-spawn-sh-at-startup "sleep 2 && systemctl --user stop xdg-desktop-portal xdg-desktop-portal-gtk 2>/dev/null; dbus-update-activation-environment --systemd WAYLAND_DISPLAY DISPLAY XDG_CURRENT_DESKTOP && systemctl --user start xdg-desktop-portal-gtk && systemctl --user start xdg-desktop-portal"
+// Restart -gnome alongside -gtk so ScreenCast (served by xdg-desktop-portal-gnome
+// on niri) sees a live compositor D-Bus interface — fixes Vesktop / Chromium
+// screenshare picking up an empty source list.
+spawn-sh-at-startup "sleep 2 && systemctl --user stop xdg-desktop-portal xdg-desktop-portal-gtk xdg-desktop-portal-gnome 2>/dev/null; dbus-update-activation-environment --systemd WAYLAND_DISPLAY DISPLAY XDG_CURRENT_DESKTOP && systemctl --user start xdg-desktop-portal-gtk xdg-desktop-portal-gnome xdg-desktop-portal"
 
 spawn-at-startup "xwayland-satellite"
 spawn-at-startup "kdeconnect-indicator"

@@ -7,6 +7,7 @@ in
     {
       pkgs,
       config,
+      lib,
       ...
     }:
     {
@@ -40,6 +41,7 @@ in
         sine
         herdr
         pet
+        try
         pueue
         starship
         alacritty
@@ -139,5 +141,13 @@ in
         ]
         ++ music
         ++ videoGames;
+
+      # Force-disable Hyprland-era modules imported above (wallpaper,
+      # wayland, widgets). They enable hyprland/hyprpaper/hyprpanel
+      # which would run alongside niri+noctalia — a real bug, not just
+      # cruft. Mirrors home.juliendauliac/default.nix.
+      programs.hyprpanel.enable = lib.mkForce false;
+      services.hyprpaper.enable = lib.mkForce false;
+      wayland.windowManager.hyprland.enable = lib.mkForce false;
     };
 }

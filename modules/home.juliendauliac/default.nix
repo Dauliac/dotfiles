@@ -19,6 +19,7 @@ in
       imports =
         with inputs.self.modules.homeManager;
         [
+          user-juliendauliac-corp
           base
           aliases
           packages
@@ -45,9 +46,12 @@ in
           try
           pueue
           starship
+          dolt-beads
+          beads-config
           desktop
           niri
           noctalia
+          netbird-tray
           alacritty
           ghostty
           kitty
@@ -106,7 +110,6 @@ in
 
       home.sessionVariables = {
         NPM_CONFIG_PREFIX = "$XDG_DATA_HOME/npm-packages";
-        AWS_DEFAULT_PROFILE = "corp-support";
       };
 
       # Use home.sessionPath (home-manager's official mechanism) instead of
@@ -174,17 +177,25 @@ in
           gemini-cli-bin
         ];
 
-      home.shellAliases = {
-        vault_all = ''
-          for ENV in int stg prd support ist; do
-            export VAULT_ADDR=https://vault-eu-west-3.$ENV.corp.example
-            export VAULT_''${ENV}_TOKEN=$(vault login -token-only -path=sso -method=oidc role=sre | grep hvs)
-          done'';
-      };
+      # `vault_all` and `AWS_DEFAULT_PROFILE` are corp-sensitive — the
+      # actual endpoint template + profile name live in `corp.nix`
+      # under sops.templates and are sourced from zsh at shell init.
+      programs.zsh.initExtra = ''
+        [ -r "${config.sops.templates."corp/vault-alias.sh".path}" ] \
+          && source "${config.sops.templates."corp/vault-alias.sh".path}"
+      '';
+
+      # Two [include] entries: dauliac static ini + corp `includeIf` ini
+      # (the glob string is corp-sensitive so it lives in a sops template
+      # — see corp.nix / "corp/gitconfig-includes.ini"). Uses `.includes`
+      # (a list) because `programs.git.settings.include.path` is a single
+      # attribute and would collide.
+      programs.git.includes = [
+        { path = config.sops.secrets.gitDauliac.path; }
+        { path = config.sops.templates."corp/gitconfig-includes.ini".path; }
+      ];
 
       programs.git.settings = {
-        include.path = config.sops.secrets.gitDauliac.path;
-        "includeIf \"gitdir:**/*manomano*/**\"".path = config.sops.secrets.gitJulienDauliac.path;
         # pushInsteadOf (not insteadOf) so `git push` uses ssh, but
         # anonymous clone/fetch stay on https. Otherwise user daemons
         # that clone from github (e.g. noctalia's plugin catalog) hit
@@ -195,29 +206,27 @@ in
 
       # SSH-side per-host key selection replaces git's core.sshCommand /
       # includeIf.gitdir. The gitdir predicate only matches when the git
-      # worktree path contains "manomano", which breaks for tooling that
-      # fetches from a cache mirror outside the repo tree (e.g. `copier
-      # recopy` cloning through ~/.cache/copier/git/*.git). ssh selects
-      # by hostname, so it works regardless of where the .git dir lives.
+      # worktree path contains the corp glob, which breaks for tooling
+      # that fetches from a cache mirror outside the repo tree (e.g.
+      # `copier recopy` cloning through ~/.cache/copier/git/*.git). ssh
+      # selects by hostname, so it works regardless of where .git lives.
       programs.ssh = {
         enable = true;
+        enableDefaultConfig = false;
         matchBlocks = {
-          "git.corp.example" = {
-            identityFile = "~/.ssh/${config.systemConstants.ssh.keys.corp.filename}";
-            identitiesOnly = true;
-          };
           "github.com" = {
             identityFile = "~/.ssh/${config.systemConstants.ssh.keys.personal.filename}";
             identitiesOnly = true;
           };
+          # Corp GitLab matchBlock + hand-managed bastion Include live in
+          # a sops-rendered ssh_config fragment; see corp.nix / template
+          # "corp/ssh-config".
+          "*" = {
+            extraOptions = {
+              Include = config.sops.templates."corp/ssh-config".path;
+            };
+          };
         };
-        # Preserve the hand-managed manomano SSH config (jump hosts,
-        # bastion aliases, etc.) that already lives at ~/.ssh/config-mm.
-        # matchBlocks above win because ssh_config uses first-match-wins
-        # and home-manager writes matchBlocks before extraConfig.
-        extraConfig = ''
-          Include ~/.ssh/config-mm
-        '';
       };
 
       programs.alacritty.package = nixGlWrapper pkgs.alacritty;
@@ -351,7 +360,9 @@ in
       services.aws-nix-cache = {
         enable = true;
         package = inputs.aws-nix-cache.packages.${pkgs.system}.default;
-        awsProfile = "corp-support";
+        awsProfile = "corp";  # corp AWS profile alias; the real name is
+        # sourced from sops (see AWS_DEFAULT_PROFILE in corp/vault-alias.sh).
+        # aws-nix-cache also honours AWS_PROFILE from the environment.
       };
 
       nix.gc = {
