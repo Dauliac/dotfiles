@@ -1,5 +1,5 @@
 {
-  flake.modules.homeManager.claude-md = _: {
+  flake.modules.homeManager.ai-workspace-instructions = _: {
     # Nix-owns ~/.claude/CLAUDE.md (user-level Claude Code global instructions —
     # applies to every session in every project).
     #
@@ -24,20 +24,24 @@
 
         ## Coding-agent pipeline
 
-        Terminal-only stack. **Design → beads → execution → review.** Design produces immutable artifacts (spec-kit); beads owns live execution state; agents execute bead-by-bead; hunk reviews the diff.
+        Terminal-only stack. **Design → beads → execution → review.** Design produces immutable artifacts (OpenSpec — delta specs merged into `openspec/specs/`); beads owns live execution state; agents execute bead-by-bead; hunk reviews the diff.
 
-        - **Design** (non-trivial features only — skip for single-file changes, known-cause bug fixes, spikes):
-          `/speckit.constitution <principles>` → `memory/constitution.md` (once per repo)
-          `/speckit.specify <feature>` → `spec/<slug>.md` (WHAT)
-          `/speckit.plan <tech + architecture>` → `plan/<slug>.md` (HOW)
-          **DO NOT run `/speckit.tasks`** — decompose the plan into beads instead. Beads is a strictly better task tracker (graph, state, priority, `bd ready`).
+        - **Design** (non-trivial only — skip for single-file changes, known-cause bug fixes, spikes; **use it** for multi-file refactors even when they aren't user-facing features):
+          `openspec new <change-id>` → creates `openspec/changes/<change-id>/{proposal,design,tasks}.md` + `specs/` (deltas)
+          `/opsx:propose` → agent fills the artifacts
+          On archive: `openspec archive <change-id>` merges deltas into `openspec/specs/` (living source of truth)
+          **DO NOT run `/opsx:apply`** — beads owns execution. Stop at `propose`, decompose to beads instead.
 
         - **Execution** (all task tracking, always):
-          `bd create --title="…" --description="…" --type=task --priority=<0-4>` (0=critical, 2=medium, 4=backlog)
+          `beads-plan plan openspec/changes/<slug>` — auto-decomposes tasks.md into a tiered bead DAG
+          Or manual: `bd create --title="…" --description="…" --type=task --priority=<0-4>` (0=critical, 2=medium, 4=backlog)
+          When a bead comes from an OpenSpec change, put the artifact path in the description (e.g. `openspec: openspec/changes/<slug>/design.md`) so the trail survives.
           `bd link <blocked> <blocker>` — dependency edges
           `bd ready` → `bd update <id> --claim` → implement → `bd close <id>`
           `bd note <id> "…"` for reasoning; `bd remember "insight"` for cross-session knowledge.
           **Never** use TodoWrite / TaskCreate / MEMORY.md / markdown checklists for tasks.
+
+        - **Plan drift** (implementation contradicts the plan): stop, update `plan/<slug>.md` in the same commit that fixes the code, and add a `bd note` on the affected bead pointing at the change. Do not silently diverge — subsequent beads will decompose against a lie.
 
         - **Semantic search**: prefer `codegraph_explore` MCP or `codegraph explore "<question>"` over grep/find. Fall back to grep only when `.codegraph/` is absent.
 
@@ -45,9 +49,7 @@
 
         - **Sandboxing** (automatic): Bash calls are wrapped by `fence` via `PreToolUse:Bash` hook. If a call is denied, revise or ask the user — do NOT try to bypass.
 
-        - **Cost + viz** (suggest, don't launch): `ccusage claude daily|monthly|blocks`, `bv` for the beads graph, `herdr agent list` for pane state.
-
-        - **Multi-agent orchestration**: when the user drives via `gc` (gascity), work is routed via `gc sling <target> <bead|text>`. `gc bd` wraps beads correctly for rig context. Otherwise stay agent-native with `bd` directly.
+        - **Cost + viz** (suggest, don't launch): `ccusage claude daily|monthly|blocks`, `mg` for the beads graph, `herdr agent list` for pane state.
 
         - **Excluded on purpose**: `agentsview` (web UI), `crit` (browser UI) — terminal-only stack. Do not suggest them.
       '';

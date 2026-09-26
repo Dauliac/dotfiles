@@ -1,5 +1,5 @@
 {
-  flake.modules.homeManager.starship-claude =
+  flake.modules.homeManager.ai-session-indicator =
     { pkgs, ... }:
     let
       starship-claude-script = pkgs.writeShellApplication {
@@ -11,11 +11,11 @@
           procps
           gawk
         ];
-        text = builtins.readFile ./starship-claude.sh;
+        text = builtins.readFile ./indicator.sh;
       };
 
       starshipClaudeToml = pkgs.writeText "starship-claude.toml" (
-        builtins.readFile ./starship-claude.toml
+        builtins.readFile ./indicator.toml
       );
     in
     {
