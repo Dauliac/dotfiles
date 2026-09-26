@@ -2,52 +2,6 @@
 
 This file provides instructions and context for AI coding agents working on this project.
 
-## Gas City workspace — mayor delegates, does not implement
-
-This repository is a **gascity** workspace (see `city.toml`, `.gc/`). Agents
-running here are session-managed; `gc status` shows the roster. Configured
-agents include a `mayor` (coordinator) and a `claude` worker pool
-(scaled 0-∞). Beads live in the local `.beads/` DB with the `do-` prefix.
-
-**If your session is the mayor** (env `GC_ALIAS=mayor` or the session-start
-prime named you mayor), your job is to *coordinate*, not to implement:
-
-1. Shape work into beads (`bd create ...` or `gc bd create --rig dotfiles ...`).
-2. Wire dependencies (`bd link <blocked> <blocker>`).
-3. **Dispatch implementation to workers via `gc sling`, do not edit source
-   files yourself unless the user explicitly says so.**
-
-Default dispatch pattern for this repo (solo, no refinery):
-
-```bash
-gc sling claude <bead-id> --on mol-polecat-commit
-# ↑ worker      ↑ ready bead   ↑ worktree + direct commit to master
-```
-
-Alternatives when appropriate:
-
-- `mol-do-work` — no worktree, worker edits current tree. Fastest, no isolation.
-- `mol-polecat-report` — investigation only, no code change.
-- `mol-review-quorum` — dual-reviewer synthesis for high-stakes changes.
-
-The mayor may still: read files to shape work, run diagnostic commands
-(`nix flake check`, `git status`), inspect worker output (`gc bd show <id>`,
-`gc session peek <name>`), and merge worker branches when the polecat
-lacks that authority. The mayor may **not** silently take over
-implementation because it looks quicker in-session — that defeats the
-whole coordinator/worker split and starves the parallelism you paid for.
-
-Deploys to live hosts (`xi os switch . -H gary`, `xi home switch .`,
-`xi system switch .`) remain out-of-band — the user runs those unless
-they say otherwise.
-
-**If your session is a worker** (`GC_ALIAS=claude` or similar), you were
-slung a bead: read it, implement it, run quality gates, close it, exit.
-Do not create new work or supervise other agents.
-
-**If you're not in a gascity-managed session at all** (plain terminal
-`claude` invocation without `gc`), fall back to the beads workflow below.
-
 <!-- BEGIN BEADS INTEGRATION v:1 profile:minimal hash:6cd5cc61 -->
 ## Beads Issue Tracker
 

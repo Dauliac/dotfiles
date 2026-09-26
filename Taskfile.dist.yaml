@@ -3,18 +3,12 @@ set: [errexit, pipefail, nounset]
 shopt: [globstar]
 dotenv: [".env.local", ".env"]
 tasks:
-  default:
-    run: "once"
-    silent: true
-    desc: List available tasks
-    cmds:
-      - task --list
   init:
     run: "once"
     silent: true
     desc: Setup project
     cmds:
-      - lefthook install
+      - lefthook install --force
     sources:
       - ./lefthook.yaml
       - ./flake.nix
