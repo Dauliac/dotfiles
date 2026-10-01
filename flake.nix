@@ -161,6 +161,15 @@
       url = "github:kevinpita/herdr-nix/953441303275da8196bad8e07362f8063cb58902";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # Community-maintained Dendritic Nix distribution (import-trees + layers).
+    # Import specific trees on demand from any flake-parts module, e.g.
+    #   imports = [ inputs.dendrix.<repo>.<aspect> ];   # aspect import-tree
+    #   imports = [ inputs.dendrix.<layer> ];           # community layer
+    # See https://dendrix.denful.dev/ for the catalogue.
+    dendrix = {
+      url = "github:denful/dendrix";
+      inputs.import-tree.follows = "import-tree";
+    };
   };
 
   outputs =
