@@ -13,14 +13,13 @@
       auto_update = true;
       enabled = [
         # Bar widgets
-        "noctalia/bongocat"           # cat animating with keystrokes (bar widget "cat")
-        "lowcache/claude-companion"   # Claude Code attention pulse (bar widget "pulse")
+        "noctalia/bongocat" # cat animating with keystrokes (bar widget "cat")
 
         # QoL launcher extensions
-        "noctalia/translator"         # /tr <text> — Google Translate
-        "noctalia/kaomoji"            # /kao — kaomoji picker
-        "cleboost/ssh-launcher"       # /ssh <host> from ~/.ssh/config
-        "weinguyen/shell-command"     # /sh <cmd> — result in default terminal
+        "noctalia/translator" # /tr <text> — Google Translate
+        "noctalia/kaomoji" # /kao — kaomoji picker
+        "cleboost/ssh-launcher" # /ssh <host> from ~/.ssh/config
+        "weinguyen/shell-command" # /sh <cmd> — result in default terminal
       ];
     };
   };

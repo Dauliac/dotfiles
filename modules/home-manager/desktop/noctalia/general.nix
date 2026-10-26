@@ -7,6 +7,11 @@
     programs.noctalia.settings.shell = {
       telemetry_enabled = false;
       settings_show_advanced = false;
+      # Suppress the first-run setup wizard panel. Upstream also gates on a
+      # `.setup-complete` marker file in $XDG_STATE_HOME/noctalia/, but this
+      # flag short-circuits shouldRunSetupWizard() regardless of marker state
+      # (see src/config/config_service.cpp:679).
+      setup_wizard_enabled = false;
     };
   };
 }
