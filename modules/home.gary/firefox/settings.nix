@@ -1,5 +1,34 @@
 {
-  flake.modules.homeManager.user-gary = { config, ... }: {
+  flake.modules.homeManager.user-gary = { config, ... }:
+    let
+      inherit (config.systemConstants) gary;
+      useTLS = gary.featureFlags.acme;
+      domain = if useTLS then gary.domain.public else gary.domain.local;
+      protocol = if useTLS then "https" else "http";
+
+      svc = name: {
+        url = "${protocol}://${gary.services.${name}.subdomain}.${domain}";
+        label = gary.services.${name}.description;
+      };
+
+      # New Tab pinned shortcuts: *arr stack + Home Assistant + media.
+      # Firefox stores pinned tiles as a JSON array in a string pref.
+      pinnedTiles = [
+        (svc "hass")
+        (svc "adguard")
+        (svc "jellyfin")
+        (svc "jellyseerr")
+        (svc "sonarr")
+        (svc "radarr")
+        (svc "prowlarr")
+        (svc "bazarr")
+        (svc "lidarr")
+        (svc "esphome")
+        { url = "https://www.mycanal.fr/"; label = "MyCanal"; }
+        { url = "https://www.netflix.com/"; label = "Netflix"; }
+      ];
+    in
+    {
     programs.firefox.profiles.default = {
       isDefault = true;
       settings = {
@@ -14,6 +43,10 @@
         # same single-source abstraction.
         "layout.css.devPixelsPerPx" = toString config.systemConstants.display.firefoxDevPixelsPerPx;
         "browser.toolbars.bookmarks.visibility" = "always";
+        # Window density: Touch (0=normal, 1=compact, 2=touch). Gary runs on
+        # a TV at living-room distance so the larger touch targets fit the
+        # viewing geometry.
+        "browser.uidensity" = 2;
 
         # Vertical tabs via the Firefox 136+ "sidebar revamp" sidebar. The
         # auto-hide you noticed comes from the new sidebar collapsing by
@@ -21,10 +54,12 @@
         # sidebar so it is vertical when expanded and auto-hidden when not.
         "sidebar.revamp" = true;
         "sidebar.verticalTabs" = true;
-        # Keep the sidebar visible by default (tabs always on screen); flip
-        # to "hide-sidebar" to let it auto-collapse to an edge button.
-        "sidebar.visibility" = "always-show";
+        # Use the smooth animated hover-expand mode (the "Expand sidebar on
+        # hover" radio in Settings > General > Browser Layout), not the
+        # non-animated "Hide sidebar" / toolbar-hide mode.
+        "sidebar.visibility" = "expand-on-hover";
         "sidebar.expandOnHover" = true;
+        "sidebar.animation.enabled" = true;
         # Hide the AI chatbot entry in the sidebar / tools menu.
         "browser.ml.chat.enabled" = false;
         "browser.ml.chat.hideLocalhost" = true;
@@ -32,6 +67,13 @@
         # Hide the "Tabs from other devices" (synced tabs) sidebar entry.
         "services.sync.engine.tabs" = false;
         "browser.tabs.firefox-view" = false;
+
+        # Pinned shortcuts on the New Tab page (built from gary.services so
+        # the *arr stack / Home Assistant URLs follow ACME + domain flips).
+        # feeds.topsites and the sponsored-tile toggles are locked at the
+        # policy layer (see policies.nix).
+        "browser.newtabpage.pinned" = builtins.toJSON pinnedTiles;
+        "browser.newtabpage.activity-stream.topSitesRows" = 2;
       };
     };
   };

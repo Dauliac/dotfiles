@@ -62,8 +62,42 @@
           Value = false;
           Status = "locked";
         };
+        # Keep top-sites visible: the pinned shortcuts we set in
+        # settings.nix (browser.newtabpage.pinned) render through the
+        # topsites feed, so the feed itself must be on.
         "browser.newtabpage.activity-stream.feeds.topsites" = {
+          Value = true;
+          Status = "locked";
+        };
+
+        # Password manager: never offer to save, never actually store.
+        # OfferToSaveLogins above kills the prompt; this locks the
+        # about:preferences#privacy toggle too so it can't be re-enabled.
+        "signon.rememberSignons" = {
           Value = false;
+          Status = "locked";
+        };
+        "signon.autofillForms" = {
+          Value = false;
+          Status = "locked";
+        };
+        # Payment methods / credit cards: belt+braces on top of
+        # AutofillCreditCardEnabled.
+        "extensions.formautofill.creditCards.enabled" = {
+          Value = false;
+          Status = "locked";
+        };
+        "extensions.formautofill.creditCards.available" = {
+          Value = false;
+          Status = "locked";
+        };
+        # Addresses: belt+braces on top of AutofillAddressEnabled.
+        "extensions.formautofill.addresses.enabled" = {
+          Value = false;
+          Status = "locked";
+        };
+        "extensions.formautofill.addresses.available" = {
+          Value = "off";
           Status = "locked";
         };
       };
