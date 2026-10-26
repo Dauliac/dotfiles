@@ -8,20 +8,28 @@ let
   customPackagesOverlay = import ../packages { inherit inputs; };
 
   # Compatibility overlay: combines individual mcp-server-* packages
-  # into a single mcp-servers package expected by mcps.nix
-  mcpServersCompatOverlay = final: _prev: {
-    mcp-servers = final.symlinkJoin {
-      name = "mcp-servers";
-      paths = [
-        final.mcp-server-fetch
-        final.mcp-server-filesystem
-        final.mcp-server-git
-        # mcp-server-time removed: requires mcp>=1.23.0 but nixpkgs only has 1.15.0
-        final.mcp-server-sequential-thinking
-        final.mcp-server-memory
-      ];
+  # into a single mcp-servers package expected by mcps.nix.
+  # Sourced from nixpkgs-unstable because the 2026.8.31 server bump requires
+  # python3Packages.mcp >= 1.29.0, which only unstable ships (25.11 has 1.26.0).
+  mcpServersCompatOverlay = final: _prev:
+    let
+      unstablePkgs = import inputs.nixpkgs-unstable {
+        inherit (final.stdenv.hostPlatform) system;
+        config.allowUnfree = true;
+      };
+    in
+    {
+      mcp-servers = final.symlinkJoin {
+        name = "mcp-servers";
+        paths = [
+          unstablePkgs.mcp-server-fetch
+          unstablePkgs.mcp-server-filesystem
+          unstablePkgs.mcp-server-git
+          unstablePkgs.mcp-server-sequential-thinking
+          unstablePkgs.mcp-server-memory
+        ];
+      };
     };
-  };
 in
 {
   options.dotfiles.overlays = lib.mkOption {
@@ -44,6 +52,7 @@ in
       allowUnfree = true;
       permittedInsecurePackages = [
         "qtwebengine-5.15.19"
+        "pnpm-9.15.9"
       ];
     };
     description = "Nixpkgs config settings";

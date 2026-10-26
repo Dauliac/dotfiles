@@ -52,7 +52,11 @@ let
     inputs.nixpkgs.lib.nixosSystem {
       specialArgs = { inherit inputs; };
       modules = [
-        inputs.nlib.nixosModules.default
+        # Note: inputs.nlib.nixosModules.default is pulled in transitively by
+        # xi.nixosModules.default (via modules/nixos/xi.nix). Importing it
+        # directly here duplicates the nix-lib adapter in the vmVariant child
+        # eval, which fails to dedupe and raises
+        # "option `virtualisation.vmVariant.nix-lib.lib' is already declared".
         config.flake.modules.nixos."host-${hostname}"
         vmModule
         {
