@@ -10,6 +10,8 @@
       ai-workspace-settings
       ai-workspace-skill-compliance
       ai-workspace-no-em-dash
+      ai-workspace-jira-mr-coherence
+      ai-workspace-lazygit-worktrees
     ];
   };
 }

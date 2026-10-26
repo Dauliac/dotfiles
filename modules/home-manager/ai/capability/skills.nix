@@ -96,6 +96,12 @@ let
     "jiraai-review"
     "k8s-watch"
     "kubectl"
+    # lazygit-worktrees  -  one `lazygit` side-panel per active git worktree
+    # (main checkout + any nested `.claude/` or `try worktree` branch-off).
+    # Fired automatically by SessionStart / WorktreeCreate / CwdChanged
+    # hooks (see workspace/lazygit-worktrees.nix); the skill itself holds
+    # the manual spawn recipe + dedup rule.
+    "lazygit-worktrees"
     "mg-watch"
     "mise-deps"
     "mise-quality-gates"

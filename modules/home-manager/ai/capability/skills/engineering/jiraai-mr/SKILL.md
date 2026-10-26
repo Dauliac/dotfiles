@@ -69,8 +69,13 @@ Composes primitives (`twg jira workitem create` + `jiraai-link`) to run the full
 - Title (short, imperative): _____
 - Type (Task/Story/Bug):     [Task]
 - Parent Feature key (opt):  _____   # if this fits under an existing Feature
+- Team UUID (REQUIRED):      _____   # customfield_10600; discover via
+                                     # twg jira workitem field create-metadata
+                                     # --space <PROJ> --type <TYPE>
 - Assignee:                  [me]
 ```
+
+**Team is non-negotiable** for every non-Sub-task create. The `jira-mr-coherence` gate hook denies `twg jira workitem create` outright when `--field "Team=..."` is missing (unless `--type Sub-task`). If you do not know the Team UUID, stop and ask the operator before issuing any create command  -  do NOT ship a Task without it and plan to patch it afterwards.
 
 ### 2. Preview → wait for OK
 
@@ -79,12 +84,14 @@ About to create:
   Type:     Task
   Parent:   XX-2461 "General Enablers"
   Summary:  "Add retry policy to Kafka consumer"
-  Team:     [Team] X
+  Team:     <UUID>              # REQUIRED; hook denies create without it
   Capability: Delivery management
   Labels:   ${INITIATIVE_LABEL}
 
 Confirm? [y/N]
 ```
+
+If the Team row shows a placeholder (`?`, `TBD`, `<UUID>` literal) instead of a real UUID, DO NOT proceed. Loop back to step 1.
 
 ### 3. Create the ticket (see `twg-jira` for the `twg jira workitem create` form; curl fallback below)
 

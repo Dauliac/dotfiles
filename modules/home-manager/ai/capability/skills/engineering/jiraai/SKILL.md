@@ -12,7 +12,7 @@ description: Residue cookbook for Jira Cloud operations against ${SITE} that the
 | Old skill / recipe | Now |
 | --- | --- |
 | `jiraai-comment` | `twg jira workitem comment create --issue-id KEY --body '...' --body-format markdown` |
-| `jiraai-create` | `twg jira workitem create --space GT --type Task --summary '...' --parent PARENT-KEY --labels a,b --field 'Platform Capability=Delivery management' --assignee me -y` |
+| `jiraai-create` | `twg jira workitem create --space GT --type Task --summary '...' --parent PARENT-KEY --labels a,b --field 'Team=<UUID>' --field 'Platform Capability=Delivery management' --assignee me -y` (Team is REQUIRED on non-Sub-task  -  see "Team is REQUIRED" below) |
 | `jiraai-edit` (fields, labels, assignee, status) | `twg jira workitem update --id KEY --summary '...' --assignee me --add-labels a,b --remove-labels c --status 'In Progress' --field 'Team=<UUID>' --field 'Platform Capability=Observability'` |
 | `jiraai-list` (JQL) | `twg jira workitem query --jql "project = GT AND assignee = currentUser() AND resolution = Unresolved" --limit 50` |
 | Field-ID / allowed-values discovery | `twg jira workitem field create-metadata --space GT --type Task` (returns `--field "Name=value"` syntax directly) |
@@ -43,6 +43,33 @@ Re-discover with `twg jira workitem field create-metadata --space <PROJECT> --ty
 **Trap**: setting `--parent` on a level-0 type pointing to another level-0 issue → HTTP 400 `Please select valid parent issue.` Use `--type Sub-task` if you need to nest.
 
 **Trap**: `Sub-task` inherits `Team` (`customfield_10600`) from its parent. `twg update --id <SUBTASK> --field "Team=..."` will be rejected. Set team on the parent Story/Task/Bug. `twg update --id <SUBTASK> --assignee me` **works fine** — the assignee split-endpoint trap that motivated raw curl no longer exists at the twg layer (verified 2026-09-10 on GT-2605).
+
+## Team is REQUIRED on every non-Sub-task create
+
+`Team` (`customfield_10600`) is the routing anchor for team boards, workload reports, and OKR rollups. A ticket created without it does not appear on any team's board and is effectively lost. This is a hard rule, not a convention.
+
+**Enforcement (hook, not skill)**: the `jira-mr-coherence` hook (`gate` mode) emits `permissionDecision: deny` on any `twg jira workitem create` that lacks `--field "Team=<UUID>"`, unless the type is `Sub-task`. The agent sees the denial reason, must retry with Team set. If a create slips past (break-glass curl, kill-switch, pre-rollout session), the `record` + `drift` modes track it as `pending_team_sets` and `Stop` refuses to end the turn until an `update --field "Team=..."` lands.
+
+**Correct recipe** (every GT/PLAT create):
+
+```bash
+# 1. Discover the Team UUID for your project+type (one-shot per project):
+twg jira workitem field create-metadata --space GT --type Task \
+  | jq -r '.fields.customfield_10600.allowedValues[]'
+
+# 2. Create with Team set:
+twg jira workitem create \
+  --space GT --type Task \
+  --summary "..." \
+  --parent GT-2461 \
+  --field "Team=<UUID>" \
+  --field "Platform Capability=Delivery management" \
+  --assignee me -y
+```
+
+**Sub-task exemption**: `--type Sub-task` is the ONLY case where omitting Team is correct. The field is read-only on Sub-task and inherits from the parent Story/Task/Bug (see the Trap above).
+
+**Kill-switch** (emergency only, documented in the hook): `XI_DISABLE_JIRA_MR_COHERENCE_HOOK=1 claude`. Prefer re-running with the Team flag over disabling the hook.
 
 ## PLAT Platform Capability — allowed values (verified 2026-09)
 
