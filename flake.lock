@@ -27,6 +27,22 @@
         "type": "github"
       }
     },
+    "anytype-noctalia": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793053933,
+        "narHash": "sha256-xCXh9ubXDGno9c0v9vUnPVCr7Wb1SjjCtHWgS878wQ4=",
+        "owner": "Dauliac",
+        "repo": "anytype-noctalia",
+        "rev": "de6deb7c7b47e022a53eeab571c4b344ab16ece1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Dauliac",
+        "repo": "anytype-noctalia",
+        "type": "github"
+      }
+    },
     "anytype-toolbox": {
       "inputs": {
         "fenix": "fenix",
@@ -2705,6 +2721,7 @@
     "root": {
       "inputs": {
         "ansnix": "ansnix",
+        "anytype-noctalia": "anytype-noctalia",
         "anytype-toolbox": "anytype-toolbox",
         "aws-nix-cache": "aws-nix-cache",
         "betterfox-nix": "betterfox-nix",

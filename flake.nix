@@ -153,6 +153,16 @@
     anytype-toolbox = {
       url = "github:stevelr/anytype/anyr-v0.5.3";
     };
+    # Noctalia Shell plugin for the Anytype local HTTP API: watch
+    # collections, quick-add, inert Kanban slot for phase 2. Pure QML,
+    # so this input is a plain git tree (flake = false). Wired by
+    # modules/home-manager/desktop/noctalia/anytype.nix: symlinks
+    # ${anytype-noctalia}/plugin into ~/.config/noctalia/plugins/
+    # anytype-noctalia and renders config.toml from a sops secret.
+    anytype-noctalia = {
+      url = "github:Dauliac/anytype-noctalia";
+      flake = false;
+    };
     # Declarative herdr home-manager module + typed programs.herdr.settings.*
     # + programs.herdr.plugins.<name>.source option. See openspec change
     # herdr-plugins-declarative. Pinned to sha instead of a branch — bumps
