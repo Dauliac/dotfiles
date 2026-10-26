@@ -25,6 +25,13 @@
         # to "hide-sidebar" to let it auto-collapse to an edge button.
         "sidebar.visibility" = "always-show";
         "sidebar.expandOnHover" = true;
+        # Hide the AI chatbot entry in the sidebar / tools menu.
+        "browser.ml.chat.enabled" = false;
+        "browser.ml.chat.hideLocalhost" = true;
+        "sidebar.main.tools" = "history,bookmarks";
+        # Hide the "Tabs from other devices" (synced tabs) sidebar entry.
+        "services.sync.engine.tabs" = false;
+        "browser.tabs.firefox-view" = false;
       };
     };
   };
