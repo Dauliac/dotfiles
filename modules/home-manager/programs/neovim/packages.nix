@@ -12,8 +12,8 @@
       markdown-oxide
       nixfmt-rfc-style
       nixpkgs-fmt
-      nodePackages.prettier
-      nodePackages.typescript
+      prettier
+      typescript
       pyright
       python311Packages.pynvim
       ripgrep

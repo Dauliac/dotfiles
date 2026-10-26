@@ -152,6 +152,33 @@
               # modules/home-manager/desktop/netbird-tray.nix.
               "netbird"
               "netbird-ui"
+              # Noctalia bongocat plugin reads /dev/input/event* through
+              # evtest (modules/home-manager/desktop/noctalia/bar.nix).
+              # HM also installs pkgs.evtest in the user profile for
+              # NixOS hosts, but on Debian we prefer the distro package
+              #  -  the apt binary works regardless of nix PATH state and
+              # matches the libpam-against-Debian rationale that drove
+              # noctalia itself onto apt. The user-in-group role below
+              # adds juliendauliac to the `input` group so evtest can
+              # actually open the evdev nodes.
+              "evtest"
+            ];
+          };
+
+          user-in-group = {
+            # Append-only, idempotent group membership. See
+            # roles/user-in-group/meta/nix-options.nix in github:Dauliac/ansnix.
+            # juliendauliac in `input` → read /dev/input/event* so
+            # noctalia's bongocat plugin can watch keystrokes via evtest.
+            # Takes effect at next login (NSS reloads supplementary groups
+            # on PAM session start); `newgrp input` works in a pinch.
+            priority = 105;
+            after = [ "apt-packages" ];
+            memberships = [
+              {
+                user = "juliendauliac";
+                groups = [ "input" ];
+              }
             ];
           };
 

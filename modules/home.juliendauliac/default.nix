@@ -162,7 +162,7 @@ in
           vsh
           skopeo
           lazydocker
-          pnpm_10
+          pnpm_11
           pre-commit
           ruby
           just
@@ -191,8 +191,8 @@ in
       # (a list) because `programs.git.settings.include.path` is a single
       # attribute and would collide.
       programs.git.includes = [
-        { path = config.sops.secrets.gitDauliac.path; }
-        { path = config.sops.templates."corp/gitconfig-includes.ini".path; }
+        { inherit (config.sops.secrets.gitDauliac) path; }
+        { inherit (config.sops.templates."corp/gitconfig-includes.ini") path; }
       ];
 
       programs.git.settings = {
@@ -360,7 +360,7 @@ in
       services.aws-nix-cache = {
         enable = true;
         package = inputs.aws-nix-cache.packages.${pkgs.system}.default;
-        awsProfile = "corp";  # corp AWS profile alias; the real name is
+        awsProfile = "corp"; # corp AWS profile alias; the real name is
         # sourced from sops (see AWS_DEFAULT_PROFILE in corp/vault-alias.sh).
         # aws-nix-cache also honours AWS_PROFILE from the environment.
       };
@@ -378,5 +378,40 @@ in
       programs.hyprpanel.enable = lib.mkForce false;
       services.hyprpaper.enable = lib.mkForce false;
       wayland.windowManager.hyprland.enable = lib.mkForce false;
+
+      # Work-laptop-only: Noctalia Git Companion bar widget (community plugin
+      # `tphilippot/git_companion`) scoped to the corp GitLab via `glab`, which
+      # is already in `home.packages` above and authenticated through the
+      # existing corp OAuth flow. The shared noctalia module (plugins.nix /
+      # bar.nix) stays glab-free so personal hosts (dauliac, gary) don't fetch
+      # anything they can't authenticate.
+      #
+      # `hy4ri/herdr` is kept manomano-local for now because the work laptop
+      # is where coding-agent sessions actually run; personal hosts can opt in
+      # later by moving the block into the shared plugins/bar modules. The
+      # `herdr` binary dependency is already on PATH via the llm-agents input.
+      programs.noctalia.settings = {
+        plugins.enabled = lib.mkAfter [
+          "tphilippot/git_companion"
+          "hy4ri/herdr"
+        ];
+        widget.git_companion = {
+          type = "tphilippot/git_companion:widget";
+          platform = "gitlab";
+          bar_display_mode = "both";
+          show_reviews = true;
+          count_reviews_with_prs = true;
+        };
+        widget.herdr = {
+          type = "hy4ri/herdr:bar";
+          display_mode = "icon_and_count";
+          hide_count_when_zero = true;
+          hide_agentless_panes = true;
+        };
+        bar.main.end = lib.mkAfter [
+          "git_companion"
+          "herdr"
+        ];
+      };
     };
 }

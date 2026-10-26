@@ -118,7 +118,15 @@
         # entries. See openspec change herdr-plugins-declarative.
         plugins = {
           auto-title.source = pkgs.herdrPlugins.auto-title;
-          agent-quota.source = pkgs.herdrPlugins.agent-quota;
+          # agent-quota temporarily disabled: upstream repo
+          # github.com/levi-qiao/herdr-agent-quota was deleted/renamed and
+          # the pinned rev bd91c7ae returns 404 at the archive URL. Previous
+          # local source NAR was GC'd and is not on cache.nixos.org. Re-enable
+          # once a mirror / replacement fork at the same commit is identified
+          # (candidates seen: kwanwooi25/herdr-plugin-agent-quota,
+          # senna-lang/herdr-agent-usage) and modules/packages/herdr-plugins/
+          # agent-quota.nix is repointed with a fresh hash + cargoHash.
+          # agent-quota.source = pkgs.herdrPlugins.agent-quota;
         };
       };
 

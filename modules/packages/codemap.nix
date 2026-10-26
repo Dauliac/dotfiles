@@ -7,7 +7,6 @@
   autoPatchelfHook,
   makeWrapper,
   ast-grep,
-  tree-sitter,
 }:
 let
   version = "2.8.3";
@@ -53,32 +52,17 @@ let
     pname = "codemap-mcp";
     inherit version src;
 
-    vendorHash = "sha256-49QXBUzjF2FN57N7XSLHtYYJR0b5PkXWDWuXOINwNII=";
+    vendorHash = "sha256-c8sCU3j9A53Qvuz0QcHIPOUyX80CzCUROpzjD6neODU=";
+
+    # go-tree-sitter ships its C runtime under include/ and src/ which
+    # `go mod vendor` prunes. proxyVendor keeps the full module zip so the
+    # cgo includes resolve.
+    proxyVendor = true;
 
     subPackages = [ "mcp" ];
 
     nativeBuildInputs = [ makeWrapper ];
-    buildInputs = [
-      ast-grep
-      tree-sitter
-    ];
-
-    # Use system tree-sitter library
-    CGO_CFLAGS = "-I${tree-sitter}/include";
-    CGO_LDFLAGS = "-L${tree-sitter}/lib -ltree-sitter";
-
-    # Patch vendor to create stub for go-tree-sitter C includes
-    preBuild = ''
-      # Make vendor writable
-      chmod -R u+w vendor || true
-
-      # The go-tree-sitter package expects C source files that aren't in the Go module
-      # Create stubs that use system tree-sitter headers
-      if [ -d vendor/github.com/tree-sitter/go-tree-sitter ]; then
-        # Create empty lib.c if needed (the package will link against system tree-sitter)
-        touch vendor/github.com/tree-sitter/go-tree-sitter/lib.c 2>/dev/null || true
-      fi
-    '';
+    buildInputs = [ ast-grep ];
 
     postInstall = ''
       mv $out/bin/mcp $out/bin/codemap-mcp
