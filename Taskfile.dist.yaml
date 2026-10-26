@@ -20,12 +20,65 @@ tasks:
         bootctl status
         sudo sbctl create-keys
   build:
+    desc: Build every flake package with nix-fast-build (skipping cached derivations)
     cmds:
       - nix-fast-build --skip-cached --flake ".#packages"
+
   test:
+    desc: Launch the interactive NixOS test driver (Python REPL) against the minimal `dev` canary
     silent: true
     cmds:
       - |
         nix build \
           '.#dev.driverInteractive' \
         && ./result/bin/nixos-test-driver
+
+  test:run:
+    desc: Run the `dev` NixOS test non-interactively (CI-style, exits 0 on green)
+    cmds:
+      - nix build '.#dev'
+
+  # ─── NixOS distribution dev sandbox ───
+  # Each host (gary, spongebob) ships a `virtualisation.vmVariant` with GTK + virtio-vga-gl,
+  # SSH forwarded to localhost:2222, and the pubkey from modules/dev/vm-ssh-key.pub injected.
+  # See modules/flake/nixos-configurations.nix.
+
+  vm:
+    desc: Launch the gary NixOS VM graphically (alias for vm:gary)
+    cmds:
+      - task: vm:gary
+
+  vm:gary:
+    desc: Launch gary NixOS VM graphically (GTK, GL, SSH on :2222)
+    cmds:
+      - nix run .#gary -- {{.CLI_ARGS}}
+
+  vm:spongebob:
+    desc: Launch spongebob NixOS VM graphically (GTK, GL, SSH on :2222)
+    cmds:
+      - nix run .#spongebob -- {{.CLI_ARGS}}
+
+  vm:build:gary:
+    desc: Pre-build the gary VM runner derivation (no launch)
+    cmds:
+      - nix build '.#nixosConfigurations.gary.config.system.build.vm'
+
+  vm:build:spongebob:
+    desc: Pre-build the spongebob VM runner derivation (no launch)
+    cmds:
+      - nix build '.#nixosConfigurations.spongebob.config.system.build.vm'
+
+  vm:ssh:gary:
+    desc: SSH into the running gary VM (localhost:2222) using the dev key
+    cmds:
+      - nix run .#ssh-gary -- {{.CLI_ARGS}}
+
+  vm:ssh:spongebob:
+    desc: SSH into the running spongebob VM (localhost:2222) using the dev key
+    cmds:
+      - nix run .#ssh-spongebob -- {{.CLI_ARGS}}
+
+  vm:clean:
+    desc: Remove local VM disk images (*.qcow2) so the next launch boots fresh
+    cmds:
+      - rm -f ./*.qcow2
