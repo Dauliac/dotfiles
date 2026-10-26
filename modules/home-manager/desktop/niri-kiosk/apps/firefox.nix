@@ -13,7 +13,10 @@
         workspaceIndex = 1;
         appId = "(?i)^firefox$";
         command = "${pkgs.firefox}/bin/firefox";
-        fullscreen = true;
+        # Pin to the firefox workspace but let niri own the geometry
+        # (tiled column, not forced fullscreen). The kiosk enforcer still
+        # bounces it back here if the window ever lands elsewhere.
+        fullscreen = false;
         enforce = true;
       };
     };
