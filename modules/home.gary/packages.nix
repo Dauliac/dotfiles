@@ -18,7 +18,9 @@
           prismlauncher
         ]
         ++ lib.optionals proprietaryEnabled [
-          stremio
+          # nixpkgs 26.05 removed `stremio` (qt5 webengine CVE); the linux-shell
+          # package is the suggested replacement.
+          stremio-linux-shell
           ryubing
           shadps4
         ];

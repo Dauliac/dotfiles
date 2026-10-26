@@ -24,6 +24,7 @@
           wayland
           widgets
           niri
+          niri-kiosk
           noctalia
           ai
           bacon
@@ -53,7 +54,12 @@
         ++ [
           inputs.self.modules.generic.gary-constants
           inputs.self.modules.generic.proprietary-flag
+          inputs.self.modules.generic.display
         ];
+
+      # Session env vars that make GTK/Qt apps follow the host's declared
+      # display scale (set per host under `systemConstants.display.scale`).
+      home.sessionVariables = config.systemConstants.display.toolkitEnv;
 
       programs.nixvim.imports = with inputs.self.modules.nixvim; [
         base

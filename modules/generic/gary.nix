@@ -26,7 +26,6 @@ _: {
       acme = {
         email = "admin@j4rd1.cloud";
         dnsProvider = "cloudflare";
-        credentialsSecret = "acme-dns-credentials";
         useStaging = false;
       };
 
@@ -125,6 +124,7 @@ _: {
         acme = true;
         adguard = true;
         bluetoothHub = true;
+        cloudflared = true;
         homeAssistant = true;
         airplay = true;
         airplayScreenMirroring = true;
@@ -164,6 +164,10 @@ _: {
           subdomain = "jellyfin";
           description = "Jellyfin Media Server";
           extraNginxConfig = "proxy_buffering off;";
+          # Public via Cloudflare Tunnel only. No nginx vhost, no local TLS,
+          # no AdGuard DNS rewrite - LAN clients also hit the public hostname
+          # which resolves to the tunnel.
+          onlyCloudflared = true;
         };
         jellyseerr = {
           enable = true;
@@ -171,6 +175,7 @@ _: {
           subdomain = "jellyseerr";
           description = "Jellyseerr Requests";
           extraNginxConfig = "";
+          onlyCloudflared = true;
         };
         sonarr = {
           enable = true;
