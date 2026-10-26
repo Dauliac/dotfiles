@@ -72,7 +72,9 @@
         bluez
         bluez-tools
         bluetuith
-        helvum
+        # nixpkgs 26.05 removed `helvum` (unmaintained + CVE in dep); crosspipe
+        # is the suggested successor.
+        crosspipe
         pwvucontrol
       ];
 

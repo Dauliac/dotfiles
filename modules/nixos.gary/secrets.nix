@@ -72,5 +72,33 @@
         group = "hass";
         mode = "0400";
       };
+
+      # Cloudflare API token (bare value in secrets.yaml). Consumed only via
+      # the cloudflare-acme.env template below - lego wants CF_DNS_API_TOKEN=
+      # as an environment file, not a raw string.
+      sops.secrets.gary_cloudflare_token = lib.mkIf gary.featureFlags.acme { };
+
+      # Dashboard-managed Cloudflare Tunnel connect token (bare value).
+      # Consumed only via the cloudflared-tunnel.env template below.
+      sops.secrets.gary_cloudflared_tunnel_token = lib.mkIf gary.featureFlags.cloudflared { };
+
+      # Rendered env files - sops-nix writes KEY=VALUE lines that systemd's
+      # EnvironmentFile= can source. Raw tokens stay unprefixed in secrets.yaml
+      # so they remain reusable from other tooling.
+      sops.templates."cloudflare-acme.env" = lib.mkIf gary.featureFlags.acme {
+        owner = "acme";
+        group = "acme";
+        mode = "0400";
+        content = ''
+          CF_DNS_API_TOKEN=${config.sops.placeholder.gary_cloudflare_token}
+        '';
+      };
+
+      sops.templates."cloudflared-tunnel.env" = lib.mkIf gary.featureFlags.cloudflared {
+        mode = "0400";
+        content = ''
+          TUNNEL_TOKEN=${config.sops.placeholder.gary_cloudflared_tunnel_token}
+        '';
+      };
     };
 }
