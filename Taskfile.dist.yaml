@@ -19,6 +19,22 @@ tasks:
       - |
         bootctl status
         sudo sbctl create-keys
+  fmt:
+    desc: Format every tracked file via the flake's treefmt-nix formatter
+    silent: true
+    cmds:
+      - nix fmt
+
+  lint:
+    desc: Verify formatting is clean (CI-style, fails if anything would be reformatted)
+    cmds:
+      - nix fmt -- --fail-on-change
+
+  check:
+    desc: Run `nix flake check` with trace on failure to validate every flake output
+    cmds:
+      - nix flake check --show-trace
+
   build:
     desc: Build every flake package with nix-fast-build (skipping cached derivations)
     cmds:
