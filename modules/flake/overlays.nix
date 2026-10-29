@@ -11,7 +11,8 @@ let
   # into a single mcp-servers package expected by mcps.nix.
   # Sourced from nixpkgs-unstable because the 2026.8.31 server bump requires
   # python3Packages.mcp >= 1.29.0, which only unstable ships (25.11 has 1.26.0).
-  mcpServersCompatOverlay = final: _prev:
+  mcpServersCompatOverlay =
+    final: _prev:
     let
       unstablePkgs = import inputs.nixpkgs-unstable {
         inherit (final.stdenv.hostPlatform) system;

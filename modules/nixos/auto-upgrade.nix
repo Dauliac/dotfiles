@@ -14,13 +14,20 @@
   # Default `backend = "native"` leaves nixpkgs's implementation intact,
   # so importing this module is a no-op unless you flip the switch.
   flake.modules.nixos.auto-upgrade =
-    { config, lib, ... }:
+    {
+      config,
+      lib,
+      ...
+    }:
     let
       cfg = config.system.autoUpgrade;
     in
     {
       options.system.autoUpgrade.backend = lib.mkOption {
-        type = lib.types.enum [ "ansnix" "native" ];
+        type = lib.types.enum [
+          "ansnix"
+          "native"
+        ];
         default = "native";
         description = ''
           Which implementation applies the upgrades on this host.

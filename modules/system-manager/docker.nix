@@ -1,5 +1,4 @@
-{ ... }:
-{
+_: {
   # Docker daemon module for system-manager (non-NixOS) hosts. Ports the shape
   # of NixOS's `virtualisation.docker` (nixos/modules/virtualisation/docker.nix)
   # onto system-manager's option surface — socket activation + userborn-managed

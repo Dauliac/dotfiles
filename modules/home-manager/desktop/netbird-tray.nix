@@ -20,23 +20,21 @@
   # the Debian netbird package's own systemd unit, wanted by
   # multi-user.target — it's up long before the user session, so the
   # tray unit doesn't need an explicit ordering dependency on it.
-  flake.modules.homeManager.netbird-tray =
-    { config, ... }:
-    {
-      systemd.user.services.netbird-ui = {
-        Unit = {
-          Description = "NetBird tray (apt-installed binary)";
-          Documentation = "https://docs.netbird.io/";
-          PartOf = [ config.wayland.systemd.target ];
-          After = [ config.wayland.systemd.target ];
-        };
-        Service = {
-          Type = "simple";
-          ExecStart = "/usr/bin/netbird-ui";
-          Restart = "on-failure";
-          RestartSec = 5;
-        };
-        Install.WantedBy = [ config.wayland.systemd.target ];
+  flake.modules.homeManager.netbird-tray = { config, ... }: {
+    systemd.user.services.netbird-ui = {
+      Unit = {
+        Description = "NetBird tray (apt-installed binary)";
+        Documentation = "https://docs.netbird.io/";
+        PartOf = [ config.wayland.systemd.target ];
+        After = [ config.wayland.systemd.target ];
       };
+      Service = {
+        Type = "simple";
+        ExecStart = "/usr/bin/netbird-ui";
+        Restart = "on-failure";
+        RestartSec = 5;
+      };
+      Install.WantedBy = [ config.wayland.systemd.target ];
     };
+  };
 }

@@ -1,5 +1,4 @@
-{ inputs, ... }:
-{
+{ inputs, ... }: {
   # Capability bounded context — the agent's reach: which runtimes it can
   # invoke, which MCP servers it can call, which skills it can wield, which
   # scratch space it can persist to, and the permission ACL that lets

@@ -1,5 +1,4 @@
-{ inputs, ... }:
-{
+{ inputs, ... }: {
   flake.modules.homeManager.herdr =
     {
       lib,
@@ -17,7 +16,7 @@
       # agent-quota v1.5.4. Re-capture on plugin bumps if the sidebar
       # layout or brand colors drift; see the `agent-quota-sidebar.toml`
       # header comment for the re-capture recipe.
-      agentQuotaSidebar = builtins.fromTOML (
+      agentQuotaSidebar = fromTOML (
         builtins.readFile ../../packages/herdr-plugins/agent-quota-sidebar.toml
       );
     in
@@ -73,7 +72,8 @@
                 command = "herdr-agent-quota.open-settings";
                 description = "Open agent-quota settings pane";
               }
-            ] ++ agentQuotaSidebar.keys.command;
+            ]
+            ++ agentQuotaSidebar.keys.command;
           };
 
           ui = {

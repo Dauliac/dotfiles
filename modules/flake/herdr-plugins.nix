@@ -9,12 +9,10 @@
 # in modules/home-manager/programs/herdr.nix. See openspec change
 # herdr-plugins-declarative.
 {
-  perSystem =
-    { pkgs, ... }:
-    {
-      packages = {
-        herdr-plugin-auto-title = pkgs.herdrPlugins.auto-title;
-        herdr-plugin-agent-quota = pkgs.herdrPlugins.agent-quota;
-      };
+  perSystem = { pkgs, ... }: {
+    packages = {
+      herdr-plugin-auto-title = pkgs.herdrPlugins.auto-title;
+      herdr-plugin-agent-quota = pkgs.herdrPlugins.agent-quota;
     };
+  };
 }

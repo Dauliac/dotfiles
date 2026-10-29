@@ -1,5 +1,4 @@
-{ ... }:
-{
+_: {
   # Backfill /etc/pam.d/polkit-1 on Debian hosts. Some Debian installs ship
   # polkitd without the polkit-1 PAM stanza (or it gets stripped by a
   # partial upgrade); without that file `polkit-agent-helper-1` cannot
@@ -11,7 +10,7 @@
   # Content mirrors the stanza the polkitd package normally installs on
   # Debian: delegate every phase to the common-* aggregators so pam-line
   # roles composed elsewhere (gnome-keyring, etc.) apply here too.
-  flake.modules.systemManager.polkit = { ... }: {
+  flake.modules.systemManager.polkit = _: {
     ansnix.roles.polkit-pam = {
       priority = 55;
       tasks = [

@@ -1,6 +1,10 @@
 {
   flake.modules.homeManager.try =
-    { pkgs, lib, ... }:
+    {
+      pkgs,
+      lib,
+      ...
+    }:
     let
       try-cli = pkgs.stdenv.mkDerivation {
         pname = "try-cli";

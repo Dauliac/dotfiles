@@ -193,7 +193,7 @@
       excludeFilter =
         path:
         let
-          pathStr = builtins.toString path;
+          pathStr = toString path;
         in
         builtins.match ".*/packages/.*" pathStr != null;
 

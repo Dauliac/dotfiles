@@ -34,7 +34,7 @@ fi
 # Compact one-line preview of the command for the BEGIN marker line —
 # collapse newlines, squeeze spaces, truncate over 200 chars.
 CMD_PREVIEW=$(printf '%s' "$CMD" | tr '\n' ' ' | tr -s ' ' | sed 's/[[:space:]]*$//')
-if (( ${#CMD_PREVIEW} > 200 )); then
+if ((${#CMD_PREVIEW} > 200)); then
   CMD_PREVIEW="${CMD_PREVIEW:0:197}…"
 fi
 
@@ -47,7 +47,12 @@ if [[ -t 1 ]]; then
   dim=$'\e[2m'
   reset=$'\e[0m'
 else
-  bold=''; green=''; cyan=''; red=''; dim=''; reset=''
+  bold=''
+  green=''
+  cyan=''
+  red=''
+  dim=''
+  reset=''
 fi
 
 # BEGIN marker — the ▶ + "ia-run [marker]" prefix is line-anchored so
@@ -60,7 +65,7 @@ rc=0
 sh -c "$CMD" || rc=$?
 elapsed=$((SECONDS - start))
 
-if (( rc == 0 )); then
+if ((rc == 0)); then
   color="$green"
 else
   color="$red"

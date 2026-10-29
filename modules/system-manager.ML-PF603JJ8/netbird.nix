@@ -1,5 +1,4 @@
-{ inputs, ... }:
-{
+{ inputs, ... }: {
   # NetBird client daemon on the Debian side.
   #
   # Rationale: system-manager only re-exports 8 upstream nixpkgs modules
@@ -60,48 +59,46 @@
   # definitions from different modules — every host that wants extra
   # apt repos/packages must colocate them in that single list. This
   # module therefore only owns the sops wiring + systemd drop-in.
-  flake.modules.systemManager.host-ml-pf603jj8-netbird =
-    { config, ... }:
-    {
-      imports = [ inputs.sops-nix.nixosModules.sops ];
+  flake.modules.systemManager.host-ml-pf603jj8-netbird = { config, ... }: {
+    imports = [ inputs.sops-nix.nixosModules.sops ];
 
-      sops = {
-        # age keyFile + defaultSopsFile are already set by the sibling
-        # openvpn-corp module in this host; sops-nix merges these attrs
-        # across module instances, so re-declaring them here would just be
-        # duplication. The template + secret below inherit both.
-        secrets.corp_netbird_url = { };
+    sops = {
+      # age keyFile + defaultSopsFile are already set by the sibling
+      # openvpn-corp module in this host; sops-nix merges these attrs
+      # across module instances, so re-declaring them here would just be
+      # duplication. The template + secret below inherit both.
+      secrets.corp_netbird_url = { };
 
-        templates."netbird.env" = {
-          # /run/secrets/rendered/<name> by default; systemd needs a
-          # concrete path to point EnvironmentFile at.
-          path = "/run/secrets/rendered/netbird.env";
-          mode = "0400";
-          owner = "root";
-          # Two lines so both env vars land. NetBird's daemon uses AdminURL
-          # for its dashboard link in the tray; we point it at the same URL
-          # since the corp instance colocates both.
-          content = ''
-            NB_MANAGEMENT_URL=${config.sops.placeholder.corp_netbird_url}
-            NB_ADMIN_URL=${config.sops.placeholder.corp_netbird_url}
-          '';
-        };
+      templates."netbird.env" = {
+        # /run/secrets/rendered/<name> by default; systemd needs a
+        # concrete path to point EnvironmentFile at.
+        path = "/run/secrets/rendered/netbird.env";
+        mode = "0400";
+        owner = "root";
+        # Two lines so both env vars land. NetBird's daemon uses AdminURL
+        # for its dashboard link in the tray; we point it at the same URL
+        # since the corp instance colocates both.
+        content = ''
+          NB_MANAGEMENT_URL=${config.sops.placeholder.corp_netbird_url}
+          NB_ADMIN_URL=${config.sops.placeholder.corp_netbird_url}
+        '';
       };
-
-      # Systemd drop-in on netbird.service — loads the sops-rendered env
-      # file AND makes netbird wait for sops-nix to finish rendering it.
-      # Without the After=/Wants= guards, boot races between sops-nix.service
-      # (which writes /run/secrets/rendered/netbird.env) and netbird.service
-      # (which reads it) can leave the daemon starting with an empty
-      # EnvironmentFile and crash-looping. Mirror the openvpn-corp module's
-      # nm-reload-after-sops pattern.
-      environment.etc."systemd/system/netbird.service.d/50-management-url.conf".text = ''
-        [Unit]
-        After=sops-nix.service
-        Wants=sops-nix.service
-
-        [Service]
-        EnvironmentFile=/run/secrets/rendered/netbird.env
-      '';
     };
+
+    # Systemd drop-in on netbird.service — loads the sops-rendered env
+    # file AND makes netbird wait for sops-nix to finish rendering it.
+    # Without the After=/Wants= guards, boot races between sops-nix.service
+    # (which writes /run/secrets/rendered/netbird.env) and netbird.service
+    # (which reads it) can leave the daemon starting with an empty
+    # EnvironmentFile and crash-looping. Mirror the openvpn-corp module's
+    # nm-reload-after-sops pattern.
+    environment.etc."systemd/system/netbird.service.d/50-management-url.conf".text = ''
+      [Unit]
+      After=sops-nix.service
+      Wants=sops-nix.service
+
+      [Service]
+      EnvironmentFile=/run/secrets/rendered/netbird.env
+    '';
+  };
 }

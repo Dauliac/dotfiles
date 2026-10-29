@@ -1,5 +1,4 @@
-{ inputs, ... }:
-{
+{ inputs, ... }: {
   # `system.autoUpgrade` on system-manager — mirrors the nixpkgs option
   # surface (nixos/modules/tasks/auto-upgrade.nix) so the same declaration
   # translates to Debian's unattended-upgrades via ansnix.
@@ -52,7 +51,10 @@
         enable = lib.mkEnableOption "automatic security upgrades";
 
         backend = lib.mkOption {
-          type = lib.types.enum [ "ansnix" "native" ];
+          type = lib.types.enum [
+            "ansnix"
+            "native"
+          ];
           default = "ansnix";
           description = ''
             Which implementation applies the upgrades.

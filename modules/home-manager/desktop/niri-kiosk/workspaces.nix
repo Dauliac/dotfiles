@@ -8,7 +8,11 @@
   # in settings.nix with keys "01".."09") coexist as long as their
   # indices do not collide with kiosk ones.
   flake.modules.homeManager.niri-kiosk =
-    { config, lib, ... }:
+    {
+      config,
+      lib,
+      ...
+    }:
     let
       pad = n: if n < 10 then "0${toString n}" else toString n;
 
@@ -20,9 +24,11 @@
       # one (e.g. index 1 to swap workspace "1" for the firefox kiosk).
       kioskWorkspaces = lib.mapAttrs' (
         _name: app:
-        lib.nameValuePair (pad app.workspaceIndex) (lib.mkForce {
-          name = app.workspaceName;
-        })
+        lib.nameValuePair (pad app.workspaceIndex) (
+          lib.mkForce {
+            name = app.workspaceName;
+          }
+        )
       ) kioskApps;
     in
     {

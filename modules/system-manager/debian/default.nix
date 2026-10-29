@@ -1,5 +1,4 @@
-{ ... }:
-{
+_: {
   # Debian-side declarative bootstrap. Hosts that inherit this module get an
   # `debian-bootstrap.service` systemd oneshot that runs the sibling
   # `bootstrap.yml` playbook via ansible-core (from /nix/store) on first boot
@@ -27,7 +26,7 @@
       # collection bundle). The playbook uses only ansible.builtin.* modules
       # (apt, apt_repository, get_url, file, lineinfile) so the base bundle
       # is enough — no community.general dependency at this scope.
-      ansible = pkgs.ansible;
+      inherit (pkgs) ansible;
 
       playbook = ./bootstrap.yml;
 

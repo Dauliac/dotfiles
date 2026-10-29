@@ -1,5 +1,4 @@
-{ inputs, ... }:
-{
+{ inputs, ... }: {
   flake.modules.homeManager.sine =
     {
       config,
@@ -45,8 +44,14 @@
 
         inherit zenDir;
         profileArchives = [
-          { src = profileZip; creates = "utils/chrome.manifest"; }
-          { src = engineZip; creates = "engine.json"; }
+          {
+            src = profileZip;
+            creates = "utils/chrome.manifest";
+          }
+          {
+            src = engineZip;
+            creates = "engine.json";
+          }
         ];
         programArchives = [
           {

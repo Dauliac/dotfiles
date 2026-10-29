@@ -1,6 +1,10 @@
 _: {
   flake.modules.generic.display =
-    { lib, config, ... }:
+    {
+      lib,
+      config,
+      ...
+    }:
     {
       options.systemConstants.display = {
         scale = lib.mkOption {

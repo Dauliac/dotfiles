@@ -1,5 +1,4 @@
-{ ... }:
-{
+_: {
   # Register the system-manager-provided zsh as a valid login shell.
   #
   # `users.users.<name>.shell = config.systemConstants.shell.package;`
@@ -16,7 +15,7 @@
   # Priority 45 keeps this ahead of apt-packages (100) / pam-line (110) so
   # that if any later role invokes a sudo/su under this shell it still works.
   # Idempotent via lineinfile.
-  flake.modules.systemManager.login-shells = { ... }: {
+  flake.modules.systemManager.login-shells = _: {
     ansnix.roles.login-shells = {
       priority = 45;
       tasks = [

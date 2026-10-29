@@ -5,9 +5,7 @@
   # readability at viewing distance). Everything else - overview zoom,
   # shadow, screenshot path, geometry corner radius - comes from the
   # shared leaf and does not need re-declaring.
-  flake.modules.homeManager.user-gary =
-    { lib, ... }:
-    {
-      programs.niri.settings.layout.gaps = lib.mkForce 10;
-    };
+  flake.modules.homeManager.user-gary = { lib, ... }: {
+    programs.niri.settings.layout.gaps = lib.mkForce 10;
+  };
 }

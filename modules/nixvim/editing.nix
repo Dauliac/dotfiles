@@ -17,10 +17,30 @@
         glow.enable = true;
       };
       keymaps = [
-        { mode = "n"; key = "<leader>u"; action = "<Cmd>UndotreeToggle<CR>"; options.desc = "Toggle Undotree"; }
-        { mode = "n"; key = "<leader>z"; action = "<Cmd>Goyo<CR>"; options.desc = "Toggle Goyo zen mode"; }
-        { mode = "n"; key = "<leader>se"; action = "<Cmd>SopsEncrypt<CR>"; options.desc = "Sops: encrypt file"; }
-        { mode = "n"; key = "<leader>sd"; action = "<Cmd>SopsDecrypt<CR>"; options.desc = "Sops: decrypt file"; }
+        {
+          mode = "n";
+          key = "<leader>u";
+          action = "<Cmd>UndotreeToggle<CR>";
+          options.desc = "Toggle Undotree";
+        }
+        {
+          mode = "n";
+          key = "<leader>z";
+          action = "<Cmd>Goyo<CR>";
+          options.desc = "Toggle Goyo zen mode";
+        }
+        {
+          mode = "n";
+          key = "<leader>se";
+          action = "<Cmd>SopsEncrypt<CR>";
+          options.desc = "Sops: encrypt file";
+        }
+        {
+          mode = "n";
+          key = "<leader>sd";
+          action = "<Cmd>SopsDecrypt<CR>";
+          options.desc = "Sops: decrypt file";
+        }
       ];
       extraPlugins = with pkgs.vimPlugins; [
         nvim-sops

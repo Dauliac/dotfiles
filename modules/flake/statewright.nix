@@ -9,15 +9,13 @@
 # packaging half of OpenSpec change `statewright-workflow-layer`
 # (beads `do-2oz` gateway, `do-cco` source-built binaries).
 {
-  perSystem =
-    { pkgs, ... }:
-    {
-      packages = {
-        inherit (pkgs)
-          statewright-gateway
-          sw-agent
-          statewright-tui
-          ;
-      };
+  perSystem = { pkgs, ... }: {
+    packages = {
+      inherit (pkgs)
+        statewright-gateway
+        sw-agent
+        statewright-tui
+        ;
     };
+  };
 }

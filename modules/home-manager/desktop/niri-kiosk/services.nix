@@ -6,7 +6,11 @@
   # `spawn-at-startup`. That gives us Restart=always semantics and
   # journal logs, matching startup.nix's policy.
   flake.modules.homeManager.niri-kiosk =
-    { config, lib, ... }:
+    {
+      config,
+      lib,
+      ...
+    }:
     let
       kioskApps = config.myNiri.kiosk.apps;
 
@@ -27,8 +31,7 @@
       };
 
       kioskServices = lib.mapAttrs' (
-        name: app:
-        lib.nameValuePair "niri-kiosk-${name}" (serviceFor name app)
+        name: app: lib.nameValuePair "niri-kiosk-${name}" (serviceFor name app)
       ) kioskApps;
     in
     {

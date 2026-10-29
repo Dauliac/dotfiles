@@ -208,7 +208,10 @@
       };
     in
     {
-      home.packages = [ ia-run herdr-run ];
+      home.packages = [
+        ia-run
+        herdr-run
+      ];
 
       # Pre-allow both binaries so Claude doesn't re-prompt for every
       # invocation. `ia-run` will also be run by the pane's shell after

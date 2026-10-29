@@ -6,7 +6,11 @@
   # connector name so the config survives cable/port swaps — `DP-2` /
   # `eDP-1` are just transient connector slots.
   flake.modules.homeManager.niri =
-    { config, lib, ... }:
+    {
+      config,
+      lib,
+      ...
+    }:
     lib.mkIf (config.myNiri.deskSetup == "stackedExt") {
       programs.niri.settings.outputs = {
         # AOC 27B3HA2 — serial-tagged, unique per panel.

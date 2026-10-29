@@ -9,7 +9,10 @@
 # Each per-plugin derivation is self-contained (its own toolchain,
 # hashes, install layout) and shares only a small snippet that
 # fail-closes on manifest-id drift — see spec `herdr/plugin-build`.
-{ callPackage, rustPlatform }:
+{
+  callPackage,
+  rustPlatform,
+}:
 let
   # Sanity check spliced into every plugin's `postInstall`: refuses to
   # produce a store path if the checked-in herdr-plugin.toml's `id`

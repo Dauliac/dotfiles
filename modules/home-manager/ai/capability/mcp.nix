@@ -1,5 +1,5 @@
 {
-  flake.modules.homeManager.ai-capability-mcp = { ... }: {
+  flake.modules.homeManager.ai-capability-mcp = _: {
     programs.claude-code = {
       mcps = {
         git.enable = true;

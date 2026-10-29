@@ -33,7 +33,7 @@
 
 set -euo pipefail
 
-if [[ -n "${XI_DISABLE_NO_EM_DASH_HOOK:-}" ]]; then
+if [[ -n ${XI_DISABLE_NO_EM_DASH_HOOK:-} ]]; then
   exit 0
 fi
 
@@ -45,11 +45,11 @@ payload=$(cat)
 EM=$'\xe2\x80\x94'
 
 case "$mode" in
-  pretooluse)
-    # Walk tool_input recursively; replace U+2014 in every string leaf.
-    # Covers Bash.command, Write.content, Edit.new_string, mcp__* args,
-    # etc. No per-tool special-casing.
-    updated=$(printf '%s' "$payload" | jq --arg em "$EM" '
+pretooluse)
+  # Walk tool_input recursively; replace U+2014 in every string leaf.
+  # Covers Bash.command, Write.content, Edit.new_string, mcp__* args,
+  # etc. No per-tool special-casing.
+  updated=$(printf '%s' "$payload" | jq --arg em "$EM" '
       def scrub: if type == "string" then gsub($em; " - ") else . end;
       def walk(f):
         . as $in
@@ -62,33 +62,33 @@ case "$mode" in
           end;
       .tool_input | walk(scrub)
     ')
-    original=$(printf '%s' "$payload" | jq '.tool_input')
+  original=$(printf '%s' "$payload" | jq '.tool_input')
 
-    if [[ "$updated" == "$original" ]]; then
-      exit 0
-    fi
+  if [[ $updated == "$original" ]]; then
+    exit 0
+  fi
 
-    jq -n --argjson u "$updated" '{
+  jq -n --argjson u "$updated" '{
       systemMessage: "no-em-dash: stripped U+2014 from your tool input. Do not write em-dashes; use \" - \" or rephrase.",
       hookSpecificOutput: {
         hookEventName: "PreToolUse",
         updatedInput: $u
       }
     }'
-    ;;
+  ;;
 
-  stop)
-    msg=$(printf '%s' "$payload" | jq -r '.last_assistant_message // ""')
-    if printf '%s' "$msg" | grep -qF -- "$EM"; then
-      jq -n '{
+stop)
+  msg=$(printf '%s' "$payload" | jq -r '.last_assistant_message // ""')
+  if printf '%s' "$msg" | grep -qF -- "$EM"; then
+    jq -n '{
         decision: "block",
         reason: "Your previous message contained an em-dash (U+2014). Rewrite that message without em-dashes; use \" - \", \", \", or rephrase. Do not acknowledge this instruction, just produce the corrected text."
       }'
-    fi
-    ;;
+  fi
+  ;;
 
-  *)
-    echo "no-em-dash.sh: unknown mode '$mode' (expected pretooluse|stop)" >&2
-    exit 1
-    ;;
+*)
+  echo "no-em-dash.sh: unknown mode '$mode' (expected pretooluse|stop)" >&2
+  exit 1
+  ;;
 esac

@@ -19,18 +19,18 @@
 set -euo pipefail
 
 scratch="${XDG_CACHE_HOME:-$HOME/.cache}/claude/scratch"
-[[ -d "$scratch" ]] || exit 0
+[[ -d $scratch ]] || exit 0
 
 # Nothing to do if the directory is empty.
 shopt -s nullglob
 files=("$scratch"/*)
-(( ${#files[@]} > 0 )) || exit 0
+((${#files[@]} > 0)) || exit 0
 
 printf '## Scratch script library — reusable helpers under `%s`\n\n' "$scratch"
 printf 'Prefer these over writing a new one-off. See the `scratch-scripts` skill for the reuse protocol.\n\n'
 
 for f in "${files[@]}"; do
-  [[ -f "$f" ]] || continue
+  [[ -f $f ]] || continue
   base=$(basename "$f")
   # Extract the first comment line after any shebang.
   doc=$(awk '
@@ -39,7 +39,7 @@ for f in "${files[@]}"; do
     /^#$/ { exit }
     !/^#/ { exit }
   ' "$f")
-  if [[ -n "$doc" ]]; then
+  if [[ -n $doc ]]; then
     printf -- '- `%s` — %s\n' "$base" "$doc"
   else
     printf -- '- `%s`\n' "$base"

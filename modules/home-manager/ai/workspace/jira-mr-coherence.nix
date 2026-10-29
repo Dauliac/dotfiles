@@ -37,62 +37,60 @@
   #
   # See also modules/home-manager/ai/workspace/settings.nix for the
   # deep-merge activation that consumes the fragment.
-  flake.modules.homeManager.ai-workspace-jira-mr-coherence =
-    { config, ... }:
-    {
-      home.file.".claude/hooks/jira-mr-coherence.sh" = {
-        source = ./jira-mr-coherence/hook.sh;
-        executable = true;
-      };
-
-      home.file.".claude/settings.d/35-jira-mr-coherence.json".text = builtins.toJSON {
-        hooks.UserPromptSubmit = [
-          {
-            matcher = "*";
-            hooks = [
-              {
-                type = "command";
-                command = "bash ${config.home.homeDirectory}/.claude/hooks/jira-mr-coherence.sh anchor";
-                timeout = 3;
-              }
-            ];
-          }
-        ];
-        hooks.PreToolUse = [
-          {
-            matcher = "Bash";
-            hooks = [
-              {
-                type = "command";
-                command = "bash ${config.home.homeDirectory}/.claude/hooks/jira-mr-coherence.sh gate";
-                timeout = 5;
-              }
-            ];
-          }
-        ];
-        hooks.PostToolUse = [
-          {
-            matcher = "Bash";
-            hooks = [
-              {
-                type = "command";
-                command = "bash ${config.home.homeDirectory}/.claude/hooks/jira-mr-coherence.sh record";
-                timeout = 5;
-              }
-            ];
-          }
-        ];
-        hooks.Stop = [
-          {
-            hooks = [
-              {
-                type = "command";
-                command = "bash ${config.home.homeDirectory}/.claude/hooks/jira-mr-coherence.sh drift";
-                timeout = 5;
-              }
-            ];
-          }
-        ];
-      };
+  flake.modules.homeManager.ai-workspace-jira-mr-coherence = { config, ... }: {
+    home.file.".claude/hooks/jira-mr-coherence.sh" = {
+      source = ./jira-mr-coherence/hook.sh;
+      executable = true;
     };
+
+    home.file.".claude/settings.d/35-jira-mr-coherence.json".text = builtins.toJSON {
+      hooks.UserPromptSubmit = [
+        {
+          matcher = "*";
+          hooks = [
+            {
+              type = "command";
+              command = "bash ${config.home.homeDirectory}/.claude/hooks/jira-mr-coherence.sh anchor";
+              timeout = 3;
+            }
+          ];
+        }
+      ];
+      hooks.PreToolUse = [
+        {
+          matcher = "Bash";
+          hooks = [
+            {
+              type = "command";
+              command = "bash ${config.home.homeDirectory}/.claude/hooks/jira-mr-coherence.sh gate";
+              timeout = 5;
+            }
+          ];
+        }
+      ];
+      hooks.PostToolUse = [
+        {
+          matcher = "Bash";
+          hooks = [
+            {
+              type = "command";
+              command = "bash ${config.home.homeDirectory}/.claude/hooks/jira-mr-coherence.sh record";
+              timeout = 5;
+            }
+          ];
+        }
+      ];
+      hooks.Stop = [
+        {
+          hooks = [
+            {
+              type = "command";
+              command = "bash ${config.home.homeDirectory}/.claude/hooks/jira-mr-coherence.sh drift";
+              timeout = 5;
+            }
+          ];
+        }
+      ];
+    };
+  };
 }

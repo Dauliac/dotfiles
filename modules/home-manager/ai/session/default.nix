@@ -1,5 +1,4 @@
-{ inputs, ... }:
-{
+{ inputs, ... }: {
   # Session bounded context — the terminal surface where the agent's work
   # becomes visible: the split-pane runner, the herdr TUI wrapper, and the
   # starship indicator that shows a live claude session at the prompt.

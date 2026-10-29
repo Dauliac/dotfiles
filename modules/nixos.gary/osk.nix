@@ -8,9 +8,7 @@
   # `systemd.user.services.*` unit comes up before niri publishes the wayland
   # socket and never gets WAYLAND_DISPLAY / DBUS_SESSION_BUS_ADDRESS, so
   # squeekboard binds to nothing and the auto-popup is silently inert.
-  flake.modules.nixos.gary-osk =
-    { pkgs, ... }:
-    {
-      environment.systemPackages = [ pkgs.squeekboard ];
-    };
+  flake.modules.nixos.gary-osk = { pkgs, ... }: {
+    environment.systemPackages = [ pkgs.squeekboard ];
+  };
 }

@@ -24,8 +24,8 @@
       show_app_name = true;
       show_actions = true;
       collapse_on_dismiss = true;
-      max_visible = 5;                # 0 = unlimited (default) — cap keeps it sane
-      history_retention_hours = 48;   # 0 = disabled (default) — 48h is one workweek edge
+      max_visible = 5; # 0 = unlimited (default) — cap keeps it sane
+      history_retention_hours = 48; # 0 = disabled (default) — 48h is one workweek edge
 
       # Per-app filters — cheap examples; extend as noise appears.
       # Each entry follows NotificationFilterConfig schema.

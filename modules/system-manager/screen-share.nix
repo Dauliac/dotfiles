@@ -1,5 +1,4 @@
-{ ... }:
-{
+_: {
   # Screen-share backend for niri on Debian.
   #
   # niri implements org.gnome.Mutter.ScreenCast, so xdg-desktop-portal routes
@@ -16,7 +15,7 @@
   #
   # Debian-only. NixOS hosts get the ScreenCast backend via
   # xdg.portal.extraPortals (see modules/nixos-*.gary etc.).
-  flake.modules.systemManager.screen-share = { ... }: {
+  flake.modules.systemManager.screen-share = _: {
     ansnix.roles.screen-share-portal = {
       # Sequenced right after apt-packages (priority 100) so the base apt
       # cache is already updated by the time this role runs.

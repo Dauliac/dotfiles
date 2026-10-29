@@ -27,15 +27,14 @@ rustPlatform.buildRustPackage {
 
   # reqwest 0.12 default-tls -> openssl; keyring 2.0 -> libsecret via
   # secret-service (needs dbus at link time).
-  buildInputs =
-    [
-      openssl
-      libsecret
-      dbus
-    ]
-    ++ lib.optionals stdenv.hostPlatform.isDarwin [
-      darwin.apple_sdk.frameworks.Security
-    ];
+  buildInputs = [
+    openssl
+    libsecret
+    dbus
+  ]
+  ++ lib.optionals stdenv.hostPlatform.isDarwin [
+    darwin.apple_sdk.frameworks.Security
+  ];
 
   # Tests hit the network / real keyring; skip in the sandbox.
   doCheck = false;

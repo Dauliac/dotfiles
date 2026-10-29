@@ -35,7 +35,6 @@
     {
       pkgs,
       config,
-      lib,
       ...
     }:
     let
@@ -206,16 +205,14 @@
       };
 
       # Gateway config file — see decision block above.
-      home.file.".config/statewright/gateway-config.json".text =
-        builtins.toJSON gatewayConfig;
+      home.file.".config/statewright/gateway-config.json".text = builtins.toJSON gatewayConfig;
 
       # Workflow JSONs shipped to `~/.claude/workflows/` for IDE tooling
       # (schema-backed editing) and for skills / docs that reference the
       # canonical workflow file. `source =` (not `text =`) so the file is
       # a store-path symlink — hash-stable, no rebuild on unrelated changes
       # to the module.
-      home.file.".claude/workflows/support-ticket.json".source =
-        "${workflowsDir}/support-ticket.json";
+      home.file.".claude/workflows/support-ticket.json".source = "${workflowsDir}/support-ticket.json";
       home.file.".claude/workflows/support-ticket.schema.json".source =
         "${workflowsDir}/support-ticket.schema.json";
 

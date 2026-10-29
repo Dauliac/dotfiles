@@ -1,5 +1,4 @@
-{ inputs, ... }:
-{
+{ inputs, ... }: {
   # niri is configured via `sodiboo/niri-flake`'s home-manager module:
   # `programs.niri.{enable,package,settings,...}` and auto-configured
   # gnome-keyring + xdg-desktop-portal user services.
@@ -28,17 +27,27 @@
     let
       wrapperType = config.systemConstants.nixgl.wrapperType;
       nixGL =
-        if wrapperType == "intel" then pkgs.nixgl.nixGLIntel
-        else if wrapperType == "nvidia" then pkgs.nixgl.nixGLNvidia
-        else if wrapperType == "mesa" then pkgs.nixgl.nixGLMesa
-        else if wrapperType == "auto" then pkgs.nixgl.auto.nixGLDefault
-        else null;
+        if wrapperType == "intel" then
+          pkgs.nixgl.nixGLIntel
+        else if wrapperType == "nvidia" then
+          pkgs.nixgl.nixGLNvidia
+        else if wrapperType == "mesa" then
+          pkgs.nixgl.nixGLMesa
+        else if wrapperType == "auto" then
+          pkgs.nixgl.auto.nixGLDefault
+        else
+          null;
       nixGLBin =
-        if wrapperType == "intel" then "nixGLIntel"
-        else if wrapperType == "nvidia" then "nixGLNvidia"
-        else if wrapperType == "mesa" then "nixGLMesa"
-        else if wrapperType == "auto" then "nixGL"
-        else null;
+        if wrapperType == "intel" then
+          "nixGLIntel"
+        else if wrapperType == "nvidia" then
+          "nixGLNvidia"
+        else if wrapperType == "mesa" then
+          "nixGLMesa"
+        else if wrapperType == "auto" then
+          "nixGL"
+        else
+          null;
 
       execStart =
         if wrapperType == "system" then

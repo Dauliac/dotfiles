@@ -1,5 +1,4 @@
-{ inputs, ... }:
-{
+{ inputs, ... }: {
   # Corp OpenVPN profile, rendered from sops-encrypted secrets at activation.
   #
   # Certificate material (ca / cert / key) is deployed from per-file
@@ -18,7 +17,11 @@
   # `sops set secrets.yaml '["corp_routes"]' "\"$(cat routes.txt)\""`.
   # `corp_routes` must be pre-rendered as `route1=<cidr>\nroute2=<cidr>…`.
   flake.modules.systemManager.host-ml-pf603jj8-openvpn-corp =
-    { config, pkgs, lib, ... }:
+    {
+      config,
+      pkgs,
+      ...
+    }:
     {
       imports = [ inputs.sops-nix.nixosModules.sops ];
 
@@ -106,7 +109,10 @@
       systemd.services.nm-reload-after-sops = {
         description = "Reload NetworkManager so the sops-rendered corp keyfile is picked up";
         wantedBy = [ "multi-user.target" ];
-        after = [ "sops-nix.service" "NetworkManager.service" ];
+        after = [
+          "sops-nix.service"
+          "NetworkManager.service"
+        ];
         wants = [ "sops-nix.service" ];
         serviceConfig = {
           Type = "oneshot";

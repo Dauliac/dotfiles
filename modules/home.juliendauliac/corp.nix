@@ -1,5 +1,4 @@
-{ ... }:
-{
+_: {
   # Corp identifiers — vault endpoint template, AD email, AWS profile name,
   # Jira URL, self-hosted GitLab hostname, `includeIf` gitdir glob, and
   # extra ssh_config Include path — live in `secrets.yaml` and are
@@ -10,7 +9,11 @@
   # `config.sops.templates."corp/<name>".path` so no corp-specific string
   # ever lands in the world-readable Nix store.
   flake.modules.homeManager.user-juliendauliac-corp =
-    { config, lib, ... }:
+    {
+      config,
+      lib,
+      ...
+    }:
     let
       corpKeys = [
         "corp_email"

@@ -17,8 +17,21 @@
         lualine = {
           enable = true;
           settings.sections = {
-            lualine_b = [ "branch" "diff" { __unkeyed-1 = "diagnostics"; sources = [ "nvim_lsp" ]; } ];
-            lualine_c = [ { __unkeyed-1 = "filename"; path = 1; } "navic" ];
+            lualine_b = [
+              "branch"
+              "diff"
+              {
+                __unkeyed-1 = "diagnostics";
+                sources = [ "nvim_lsp" ];
+              }
+            ];
+            lualine_c = [
+              {
+                __unkeyed-1 = "filename";
+                path = 1;
+              }
+              "navic"
+            ];
           };
         };
         indent-blankline.enable = true;
@@ -33,11 +46,26 @@
         which-key = {
           enable = true;
           settings.spec = [
-            { __unkeyed-1 = "<leader>f"; group = "find (fzf)"; }
-            { __unkeyed-1 = "<leader>h"; group = "git hunks"; }
-            { __unkeyed-1 = "<leader>s"; group = "search / sops"; }
-            { __unkeyed-1 = "<leader>x"; group = "trouble"; }
-            { __unkeyed-1 = "<leader>w"; group = "workspace"; }
+            {
+              __unkeyed-1 = "<leader>f";
+              group = "find (fzf)";
+            }
+            {
+              __unkeyed-1 = "<leader>h";
+              group = "git hunks";
+            }
+            {
+              __unkeyed-1 = "<leader>s";
+              group = "search / sops";
+            }
+            {
+              __unkeyed-1 = "<leader>x";
+              group = "trouble";
+            }
+            {
+              __unkeyed-1 = "<leader>w";
+              group = "workspace";
+            }
           ];
         };
         nui.enable = true;

@@ -14,9 +14,7 @@
         text = builtins.readFile ./indicator.sh;
       };
 
-      starshipClaudeToml = pkgs.writeText "starship-claude.toml" (
-        builtins.readFile ./indicator.toml
-      );
+      starshipClaudeToml = pkgs.writeText "starship-claude.toml" (builtins.readFile ./indicator.toml);
     in
     {
       home.packages = [ starship-claude-script ];

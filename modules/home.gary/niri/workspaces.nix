@@ -12,13 +12,11 @@
   # those in place rather than fight the merge; gary ends up with nine
   # workspaces where only the first four have meaningful names, which is
   # harmless. Firefox lands on "01" regardless.
-  flake.modules.homeManager.user-gary =
-    { lib, ... }:
-    {
-      programs.niri.settings.workspaces = {
-        "02" = lib.mkForce { name = "media"; };
-        "03" = lib.mkForce { name = "browser"; };
-        "04" = lib.mkForce { name = "apps"; };
-      };
+  flake.modules.homeManager.user-gary = { lib, ... }: {
+    programs.niri.settings.workspaces = {
+      "02" = lib.mkForce { name = "media"; };
+      "03" = lib.mkForce { name = "browser"; };
+      "04" = lib.mkForce { name = "apps"; };
     };
+  };
 }

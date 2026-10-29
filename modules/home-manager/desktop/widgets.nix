@@ -1,5 +1,5 @@
 {
-  flake.modules.homeManager.widgets = { ... }: {
+  flake.modules.homeManager.widgets = _: {
     programs = {
       hyprpanel = {
         enable = true;

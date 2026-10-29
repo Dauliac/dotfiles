@@ -32,41 +32,39 @@
   #
   # See also modules/home-manager/ai/workspace/settings.nix for the
   # deep-merge activation that consumes the fragment.
-  flake.modules.homeManager.ai-workspace-no-em-dash =
-    { config, ... }:
-    {
-      home.file.".claude/hooks/no-em-dash.sh" = {
-        source = ./no-em-dash/hook.sh;
-        executable = true;
-      };
-
-      # Order 40- lands after skill-compliance (30-) and before skill-only
-      # perms (50+). Runs alongside every other configured hook on those
-      # events; the harness fans out to all of them.
-      home.file.".claude/settings.d/40-no-em-dash.json".text = builtins.toJSON {
-        hooks.PreToolUse = [
-          {
-            matcher = "Bash|Write|Edit|NotebookEdit|mcp__.*";
-            hooks = [
-              {
-                type = "command";
-                command = "bash ${config.home.homeDirectory}/.claude/hooks/no-em-dash.sh pretooluse";
-                timeout = 5;
-              }
-            ];
-          }
-        ];
-        hooks.Stop = [
-          {
-            hooks = [
-              {
-                type = "command";
-                command = "bash ${config.home.homeDirectory}/.claude/hooks/no-em-dash.sh stop";
-                timeout = 5;
-              }
-            ];
-          }
-        ];
-      };
+  flake.modules.homeManager.ai-workspace-no-em-dash = { config, ... }: {
+    home.file.".claude/hooks/no-em-dash.sh" = {
+      source = ./no-em-dash/hook.sh;
+      executable = true;
     };
+
+    # Order 40- lands after skill-compliance (30-) and before skill-only
+    # perms (50+). Runs alongside every other configured hook on those
+    # events; the harness fans out to all of them.
+    home.file.".claude/settings.d/40-no-em-dash.json".text = builtins.toJSON {
+      hooks.PreToolUse = [
+        {
+          matcher = "Bash|Write|Edit|NotebookEdit|mcp__.*";
+          hooks = [
+            {
+              type = "command";
+              command = "bash ${config.home.homeDirectory}/.claude/hooks/no-em-dash.sh pretooluse";
+              timeout = 5;
+            }
+          ];
+        }
+      ];
+      hooks.Stop = [
+        {
+          hooks = [
+            {
+              type = "command";
+              command = "bash ${config.home.homeDirectory}/.claude/hooks/no-em-dash.sh stop";
+              timeout = 5;
+            }
+          ];
+        }
+      ];
+    };
+  };
 }

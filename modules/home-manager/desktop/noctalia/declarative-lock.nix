@@ -8,10 +8,8 @@
   # state file to an empty store file makes noctalia's writeOverridesToFile
   # calls fail — no runtime tweak ever persists, and the next reload sees
   # only the Nix-declared config.toml.
-  flake.modules.homeManager.noctalia =
-    { pkgs, ... }:
-    {
-      home.file.".local/state/noctalia/settings.toml".source =
-        pkgs.writeText "noctalia-settings-empty.toml" "";
-    };
+  flake.modules.homeManager.noctalia = { pkgs, ... }: {
+    home.file.".local/state/noctalia/settings.toml".source =
+      pkgs.writeText "noctalia-settings-empty.toml" "";
+  };
 }

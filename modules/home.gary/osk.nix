@@ -10,22 +10,20 @@
   #   - GTK3/4 and Qt5/6 toolkits trigger it on text-field focus.
   #   - Electron needs --enable-wayland-ime.
   #   - XWayland apps won't trigger (protocol limitation, not fixable here).
-  flake.modules.homeManager.user-gary =
-    { pkgs, ... }:
-    {
-      systemd.user.services.squeekboard = {
-        Unit = {
-          Description = "On-screen keyboard (auto-popup via text-input-v3)";
-          PartOf = [ "graphical-session.target" ];
-          After = [ "graphical-session.target" ];
-        };
-        Service = {
-          Type = "simple";
-          ExecStart = "${pkgs.squeekboard}/bin/squeekboard";
-          Restart = "on-failure";
-          RestartSec = 2;
-        };
-        Install.WantedBy = [ "graphical-session.target" ];
+  flake.modules.homeManager.user-gary = { pkgs, ... }: {
+    systemd.user.services.squeekboard = {
+      Unit = {
+        Description = "On-screen keyboard (auto-popup via text-input-v3)";
+        PartOf = [ "graphical-session.target" ];
+        After = [ "graphical-session.target" ];
       };
+      Service = {
+        Type = "simple";
+        ExecStart = "${pkgs.squeekboard}/bin/squeekboard";
+        Restart = "on-failure";
+        RestartSec = 2;
+      };
+      Install.WantedBy = [ "graphical-session.target" ];
     };
+  };
 }

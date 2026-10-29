@@ -34,9 +34,7 @@
       # Table consumed by the daemon:
       #   { "workspaceName": "app-id regex", ... }
       kioskTableJson = builtins.toJSON (
-        lib.mapAttrs' (
-          _name: app: lib.nameValuePair app.workspaceName app.appId
-        ) enforcedApps
+        lib.mapAttrs' (_name: app: lib.nameValuePair app.workspaceName app.appId) enforcedApps
       );
 
       enforcerScript = pkgs.writeShellApplication {

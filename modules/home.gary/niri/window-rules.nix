@@ -11,16 +11,16 @@
   flake.modules.homeManager.user-gary = {
     programs.niri.settings.window-rules = [
       {
-        matches = [ { app-id = ''^chromium$''; } ];
+        matches = [ { app-id = "^chromium$"; } ];
         open-maximized = true;
         open-on-workspace = "browser";
       }
       {
-        matches = [ { app-id = ''^steam$''; } ];
+        matches = [ { app-id = "^steam$"; } ];
         open-on-workspace = "apps";
       }
       {
-        matches = [ { app-id = ''^Spotify$''; } ];
+        matches = [ { app-id = "^Spotify$"; } ];
         open-on-workspace = "media";
       }
     ];

@@ -18,7 +18,7 @@
 # user's prompt is processed.
 set -euo pipefail
 
-if [[ -n "${XI_DISABLE_SKILL_COMPLIANCE_HOOK:-}" ]]; then
+if [[ -n ${XI_DISABLE_SKILL_COMPLIANCE_HOOK:-} ]]; then
   exit 0
 fi
 

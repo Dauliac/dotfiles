@@ -37,16 +37,20 @@
     {
       programs.noctalia = {
         enable = true;
-      } // (
-        if isSystemManaged then {
-          package = null;
-          systemd.enable = false;
-          validateConfig = false;
-        } else {
-          package = pkgs.noctalia;
-          systemd.enable = true;
-          validateConfig = true;
-        }
+      }
+      // (
+        if isSystemManaged then
+          {
+            package = null;
+            systemd.enable = false;
+            validateConfig = false;
+          }
+        else
+          {
+            package = pkgs.noctalia;
+            systemd.enable = true;
+            validateConfig = true;
+          }
       );
 
       # Bongocat plugin reads /dev/input/event* through `evtest` (see

@@ -14,7 +14,11 @@
   # trigger the lock indirectly via `loginctl lock-session` from swayidle
   # + the Super+Shift+L bind. That keeps this module lockscreen-agnostic.
   flake.modules.homeManager.niri =
-    { pkgs, config, ... }:
+    {
+      pkgs,
+      config,
+      ...
+    }:
     let
       # When niri is distro-managed ("system"), pin the autostart to the
       # Debian-installed /usr/bin/niri-session so we run the same binary
@@ -157,7 +161,11 @@
       # `ssh` component publishes the SSH_AUTH_SOCK the ASKPASS wiring uses.
       services.gnome-keyring = {
         enable = true;
-        components = [ "pkcs11" "secrets" "ssh" ];
+        components = [
+          "pkcs11"
+          "secrets"
+          "ssh"
+        ];
       };
 
       # ── sudo / ssh askpass ───────────────────────────────────────────────
@@ -254,10 +262,10 @@
         seahorse
 
         # ── Default-app handlers (registered by mimeApps above) ──────────
-        imv           # image viewer
-        mpv           # audio + video player
-        zathura       # PDF reader
-        file-roller   # archive manager
+        imv # image viewer
+        mpv # audio + video player
+        zathura # PDF reader
+        file-roller # archive manager
         # yazi + neovim already installed via their own modules.
 
         # ── gvfs — network mounts (smb, sftp, nfs), MTP, trash, ── ───────
@@ -268,11 +276,11 @@
         gvfs
 
         # ── QoL: screenshot annotator + color picker + recorder + pickers ─
-        satty              # bound to Shift+Print in binds.nix
-        hyprpicker         # bound to Mod+Shift+C
-        wf-recorder        # user launches manually: `wf-recorder -g "$(slurp)"`
-        wl-clip-persist    # keeps clipboard alive when the source app quits
-                           # (systemd user service below)
+        satty # bound to Shift+Print in binds.nix
+        hyprpicker # bound to Mod+Shift+C
+        wf-recorder # user launches manually: `wf-recorder -g "$(slurp)"`
+        wl-clip-persist # keeps clipboard alive when the source app quits
+        # (systemd user service below)
 
         # ── QoL: tray applets for network + bluetooth ─────────────────────
         # noctalia's tray widget shows their icons if these daemons run.

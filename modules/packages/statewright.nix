@@ -1,7 +1,6 @@
 {
   lib,
   stdenv,
-  fetchurl,
   fetchFromGitHub,
   fetchzip,
   autoPatchelfHook,

@@ -25,11 +25,10 @@
     in
     {
       # Ensure the data directory exists before the service tries to bind.
-      home.activation.doltBeadsDataDir =
-        lib.hm.dag.entryBefore [ "reloadSystemd" ] ''
-          $DRY_RUN_CMD mkdir -p ${lib.escapeShellArg dataDir}
-          $DRY_RUN_CMD chmod 0700 ${lib.escapeShellArg dataDir}
-        '';
+      home.activation.doltBeadsDataDir = lib.hm.dag.entryBefore [ "reloadSystemd" ] ''
+        $DRY_RUN_CMD mkdir -p ${lib.escapeShellArg dataDir}
+        $DRY_RUN_CMD chmod 0700 ${lib.escapeShellArg dataDir}
+      '';
 
       # Managed sql-server config. Every knob traced back to an issue or
       # a first-party doc in design.md D2 / specs/ai-runtime/beads/spec.md.

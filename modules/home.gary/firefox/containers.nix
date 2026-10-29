@@ -1,12 +1,15 @@
 {
   flake.modules.homeManager.user-gary =
-    { config, lib, ... }:
+    {
+      config,
+      lib,
+      ...
+    }:
     let
       inherit (lib) mkOption types;
 
       containerSubmodule = types.submodule (
-        { name, ... }:
-        {
+        { name, ... }: {
           options = {
             name = mkOption {
               type = types.str;
@@ -54,7 +57,9 @@
       indexed = lib.listToAttrs (
         lib.imap1 (i: n: {
           name = n;
-          value = specs.${n} // { id = i; };
+          value = specs.${n} // {
+            id = i;
+          };
         }) (lib.attrNames specs)
       );
     in

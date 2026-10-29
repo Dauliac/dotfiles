@@ -18,30 +18,28 @@
   #
   # See also modules/home-manager/ai/workspace/settings.nix for the
   # deep-merge activation that consumes the fragment.
-  flake.modules.homeManager.ai-workspace-skill-compliance =
-    { config, ... }:
-    {
-      home.file.".claude/hooks/skill-compliance.sh" = {
-        source = ./skill-compliance/hook.sh;
-        executable = true;
-      };
-
-      # Order 30- lands after nix-shipped tool perms (20-29) and before
-      # skill-only perms (50+). Runs alongside — not replacing — the
-      # enterprise UserPromptSubmit hook and the codegraph hook.
-      home.file.".claude/settings.d/30-skill-compliance.json".text = builtins.toJSON {
-        hooks.UserPromptSubmit = [
-          {
-            matcher = "*";
-            hooks = [
-              {
-                type = "command";
-                command = "bash ${config.home.homeDirectory}/.claude/hooks/skill-compliance.sh";
-                timeout = 3;
-              }
-            ];
-          }
-        ];
-      };
+  flake.modules.homeManager.ai-workspace-skill-compliance = { config, ... }: {
+    home.file.".claude/hooks/skill-compliance.sh" = {
+      source = ./skill-compliance/hook.sh;
+      executable = true;
     };
+
+    # Order 30- lands after nix-shipped tool perms (20-29) and before
+    # skill-only perms (50+). Runs alongside — not replacing — the
+    # enterprise UserPromptSubmit hook and the codegraph hook.
+    home.file.".claude/settings.d/30-skill-compliance.json".text = builtins.toJSON {
+      hooks.UserPromptSubmit = [
+        {
+          matcher = "*";
+          hooks = [
+            {
+              type = "command";
+              command = "bash ${config.home.homeDirectory}/.claude/hooks/skill-compliance.sh";
+              timeout = 3;
+            }
+          ];
+        }
+      ];
+    };
+  };
 }

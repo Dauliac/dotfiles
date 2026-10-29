@@ -65,24 +65,23 @@
       # Home-manager activation sweep — runs once per `xi home switch`.
       # Kept cheap: only walks ~/ghq/**/.beads (project sandbox typical),
       # and only invokes `bd hooks uninstall` when status shows shims present.
-      home.activation.beadsHookGuardSweep =
-        lib.hm.dag.entryAfter [ "reloadSystemd" ] ''
-          # NB: exit 0 always — we do not want a stray beads state to block
-          # the whole home-manager switch. Individual failures are logged
-          # to stderr.
-          if [ -d ${lib.escapeShellArg ghqRoot} ]; then
-            find ${lib.escapeShellArg ghqRoot} -maxdepth 5 -type d -name .beads 2>/dev/null | while IFS= read -r beadsDir; do
-              repo=''${beadsDir%/.beads}
-              [ -d "$repo/.git" ] || continue
-              # Only call bd if there's actually a bead DB to look at.
-              [ -f "$beadsDir/beads.db" ] || [ -d "$beadsDir/embeddeddolt" ] || continue
-              ( cd "$repo" && ${beadsBin} hooks status 2>/dev/null | grep -qiE 'installed|active|present' && {
-                  echo "beadsHookGuardSweep: uninstalling shims in $repo" >&2
-                  ${beadsBin} hooks uninstall 2>/dev/null || true
-                } ) || true
-            done
-          fi
-        '';
+      home.activation.beadsHookGuardSweep = lib.hm.dag.entryAfter [ "reloadSystemd" ] ''
+        # NB: exit 0 always — we do not want a stray beads state to block
+        # the whole home-manager switch. Individual failures are logged
+        # to stderr.
+        if [ -d ${lib.escapeShellArg ghqRoot} ]; then
+          find ${lib.escapeShellArg ghqRoot} -maxdepth 5 -type d -name .beads 2>/dev/null | while IFS= read -r beadsDir; do
+            repo=''${beadsDir%/.beads}
+            [ -d "$repo/.git" ] || continue
+            # Only call bd if there's actually a bead DB to look at.
+            [ -f "$beadsDir/beads.db" ] || [ -d "$beadsDir/embeddeddolt" ] || continue
+            ( cd "$repo" && ${beadsBin} hooks status 2>/dev/null | grep -qiE 'installed|active|present' && {
+                echo "beadsHookGuardSweep: uninstalling shims in $repo" >&2
+                ${beadsBin} hooks uninstall 2>/dev/null || true
+              } ) || true
+          done
+        fi
+      '';
 
       # Claude Code SessionStart hook — per-repo enforcement at session
       # start. Complements the activation sweep: covers cases where a
@@ -90,20 +89,19 @@
       # ~/.claude/settings.json by claude-settings-merge (see
       # modules/home-manager/ai/claude-settings.nix); coexists with the
       # scratch-index hook (10-scratch.json) and any others.
-      home.file.".claude/settings.d/20-beads-hook-guard.json".text =
-        builtins.toJSON {
-          hooks.SessionStart = [
-            {
-              matcher = "*";
-              hooks = [
-                {
-                  type = "command";
-                  command = "${config.home.homeDirectory}/.local/bin/beads-hook-guard \"$CLAUDE_PROJECT_DIR\"";
-                  timeout = 5;
-                }
-              ];
-            }
-          ];
-        };
+      home.file.".claude/settings.d/20-beads-hook-guard.json".text = builtins.toJSON {
+        hooks.SessionStart = [
+          {
+            matcher = "*";
+            hooks = [
+              {
+                type = "command";
+                command = "${config.home.homeDirectory}/.local/bin/beads-hook-guard \"$CLAUDE_PROJECT_DIR\"";
+                timeout = 5;
+              }
+            ];
+          }
+        ];
+      };
     };
 }
