@@ -18,8 +18,7 @@
     { lib, ... }:
     let
       appSubmodule = lib.types.submodule (
-        { name, ... }:
-        {
+        { name, ... }: {
           options = {
             workspaceName = lib.mkOption {
               type = lib.types.str;
@@ -64,6 +63,19 @@
               description = ''
                 Open the window fullscreen (niri window-rule
                 `open-fullscreen`). TV-app default is on.
+              '';
+            };
+
+            maximized = lib.mkOption {
+              type = lib.types.bool;
+              default = false;
+              description = ''
+                Open the window maximized (niri window-rule
+                `open-maximized`). Fills the monitor minus niri's
+                reserved layer-shell areas (noctalia bar), matching
+                the `Mod+F` / `maximize-column` keybind. Prefer this
+                over `fullscreen` for kiosk apps that should coexist
+                with the status bar.
               '';
             };
 

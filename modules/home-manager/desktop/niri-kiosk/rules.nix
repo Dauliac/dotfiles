@@ -7,7 +7,11 @@
   # since nix merges list-valued options via concatenation when the
   # same key is set across modules.
   flake.modules.homeManager.niri-kiosk =
-    { config, lib, ... }:
+    {
+      config,
+      lib,
+      ...
+    }:
     let
       kioskApps = config.myNiri.kiosk.apps;
 
@@ -15,6 +19,7 @@
         matches = [ { app-id = app.appId; } ];
         open-on-workspace = app.workspaceName;
         open-fullscreen = app.fullscreen;
+        open-maximized = app.maximized;
       };
 
       kioskRules = lib.mapAttrsToList ruleFor kioskApps;
