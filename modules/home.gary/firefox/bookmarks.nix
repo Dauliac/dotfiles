@@ -2,20 +2,29 @@
   flake.modules.homeManager.user-gary =
     {
       config,
+      osConfig ? null,
       lib,
       ...
     }:
     let
-      inherit (config.systemConstants) gary;
+      # Prefer the NixOS-side view (osConfig) so VM-mode overrides to the
+      # catalog, domain, and acme feature flag land in bookmarks without
+      # having to duplicate the override into HM scope.  Standalone HM
+      # installs (no osConfig) fall back to the HM scope's own view.
+      gary = if osConfig != null then osConfig.systemConstants.gary else config.systemConstants.gary;
       useTLS = gary.featureFlags.acme;
       domain = if useTLS then gary.domain.public else gary.domain.local;
       protocol = if useTLS then "https" else "http";
 
-      enabledServices = lib.filterAttrs (_: svc: svc.enable) gary.services;
+      # Only services with firefox.bookmark = true become bookmarks.
+      # The firefox sub-attr is set in modules/nixos.gary/services/<name>.nix.
+      bookmarkedServices = lib.filterAttrs (
+        _: svc: svc.enable && (svc.firefox or { bookmark = false; }).bookmark
+      ) gary.services;
       serviceBookmarks = lib.mapAttrsToList (_: svc: {
         name = svc.description;
         url = "${protocol}://${svc.subdomain}.${domain}";
-      }) enabledServices;
+      }) bookmarkedServices;
 
       streamingBookmarks = [
         {

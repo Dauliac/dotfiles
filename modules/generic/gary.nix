@@ -142,103 +142,16 @@ _: {
         zigbee2mqtt = false; # opt-in: needs USB Zigbee coordinator
         matterServer = false; # opt-in: Matter/Thread commissioning
         haArrIntegration = true; # HACS-packaged sensors + Media dashboard (Stage C)
+        vmArrStack = false; # VM-only: standalone arr services for topology smoke tests (see modules/nixos.gary/vm/arr.nix)
       };
 
-      # Services exposed through the reverse proxy.
-      services = {
-        hass = {
-          enable = true;
-          port = 8123;
-          subdomain = "hass";
-          description = "Home Assistant";
-          extraNginxConfig = ''
-            proxy_set_header Upgrade $http_upgrade;
-            proxy_set_header Connection "upgrade";
-          '';
-        };
-        adguard = {
-          enable = true;
-          port = 3000;
-          subdomain = "adguard";
-          description = "AdGuard Home DNS";
-          extraNginxConfig = "";
-        };
-        jellyfin = {
-          enable = true;
-          port = 8096;
-          subdomain = "jellyfin";
-          description = "Jellyfin Media Server";
-          extraNginxConfig = "proxy_buffering off;";
-          # Public via Cloudflare Tunnel only. No nginx vhost, no local TLS,
-          # no AdGuard DNS rewrite - LAN clients also hit the public hostname
-          # which resolves to the tunnel.
-          onlyCloudflared = true;
-        };
-        jellyseerr = {
-          enable = true;
-          port = 5055;
-          subdomain = "jellyseerr";
-          description = "Jellyseerr Requests";
-          extraNginxConfig = "";
-          onlyCloudflared = true;
-        };
-        sonarr = {
-          enable = true;
-          port = 8989;
-          subdomain = "sonarr";
-          description = "Sonarr TV Shows";
-          extraNginxConfig = "";
-        };
-        radarr = {
-          enable = true;
-          port = 7878;
-          subdomain = "radarr";
-          description = "Radarr Movies";
-          extraNginxConfig = "";
-        };
-        lidarr = {
-          enable = true;
-          port = 8686;
-          subdomain = "lidarr";
-          description = "Lidarr Music";
-          extraNginxConfig = "";
-        };
-        prowlarr = {
-          enable = true;
-          port = 9696;
-          subdomain = "prowlarr";
-          description = "Prowlarr Indexers";
-          extraNginxConfig = "";
-        };
-        bazarr = {
-          enable = true;
-          port = 6767;
-          subdomain = "bazarr";
-          description = "Bazarr Subtitles";
-          extraNginxConfig = "";
-        };
-        qbittorrent = {
-          enable = true;
-          port = 8112;
-          subdomain = "qbittorrent";
-          description = "qBittorrent";
-          extraNginxConfig = "";
-        };
-        zigbee2mqtt = {
-          enable = true;
-          port = 8082; # z2m frontend (host port; avoids clash with jellyseerr 5055 range)
-          subdomain = "zigbee2mqtt";
-          description = "Zigbee2MQTT";
-          extraNginxConfig = "";
-        };
-        esphome = {
-          enable = true;
-          port = 6052;
-          subdomain = "esphome";
-          description = "ESPHome Dashboard";
-          extraNginxConfig = "";
-        };
-      };
+      # The service catalog itself lives in modules/nixos.gary/services/<name>.nix.
+      # Each per-service aspect contributes its entry (port, subdomain,
+      # description, extraNginxConfig, firefox bookmark metadata) AND wires
+      # the backend (nixflix.<module>, services.<name>, etc.) in one place.
+      # Default to the empty attrset so consumers (acme, reverse-proxy,
+      # bookmarks, cloudflared, home-assistant) can iterate safely.
+      services = { };
 
       # MQTT broker settings (mosquitto is TCP, not HTTP — sits outside the
       # reverse-proxy attrset above but referenced by home-assistant + esphome).
