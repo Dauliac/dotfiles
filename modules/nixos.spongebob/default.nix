@@ -9,6 +9,7 @@
       gaming
       hardening
       locales
+      niri
       xi
       secrets
       sound
