@@ -17,11 +17,6 @@
       inherit (config.systemConstants) gary;
       domain = gary.domain.public;
       enabledServices = filterAttrs (_: svc: svc.enable) gary.services;
-      # Services with onlyCloudflared = true are reached exclusively via the
-      # Cloudflare Tunnel. No local nginx vhost, no ACME-fronted TLS, no
-      # AdGuard rewrite - the public hostname resolves to the tunnel edge
-      # for every client, LAN included.
-      lanServedServices = filterAttrs (_: svc: !(svc.onlyCloudflared or false)) enabledServices;
 
       mkVirtualHost = _: svc: {
         "${svc.subdomain}.${domain}" = {
@@ -41,8 +36,8 @@
         };
       };
 
-      serviceVirtualHosts = foldl' (acc: name: acc // mkVirtualHost name lanServedServices.${name}) { } (
-        attrNames lanServedServices
+      serviceVirtualHosts = foldl' (acc: name: acc // mkVirtualHost name enabledServices.${name}) { } (
+        attrNames enabledServices
       );
 
       landingPageVirtualHost = {
@@ -89,7 +84,7 @@
       dnsRewrites = mapAttrsToList (_: svc: {
         domain = "${svc.subdomain}.${domain}";
         answer = gary.network.lanIP;
-      }) lanServedServices;
+      }) enabledServices;
     in
     lib.mkIf gary.featureFlags.acme {
       security.acme = {
@@ -116,15 +111,15 @@
         inherit virtualHosts;
       };
 
-      # Only create per-service rewrites for LAN-served services. The apex
-      # domain is still LAN-rewritten (landing page lives on nginx), but no
-      # wildcard - that would hijack cloudflared-only hostnames and resolve
-      # them to gary's LAN IP where no vhost serves them.
       services.adguardhome.settings.filtering.rewrites = mkIf gary.featureFlags.adguard (
         dnsRewrites
         ++ [
           {
             inherit domain;
+            answer = gary.network.lanIP;
+          }
+          {
+            domain = "*.${domain}";
             answer = gary.network.lanIP;
           }
         ]
