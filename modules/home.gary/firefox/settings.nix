@@ -1,5 +1,6 @@
 {
-  flake.modules.homeManager.user-gary = { config, ... }:
+  flake.modules.homeManager.user-gary =
+    { config, ... }:
     let
       inherit (config.systemConstants) gary;
       useTLS = gary.featureFlags.acme;
@@ -24,57 +25,72 @@
         (svc "bazarr")
         (svc "lidarr")
         (svc "esphome")
-        { url = "https://www.mycanal.fr/"; label = "MyCanal"; }
-        { url = "https://www.netflix.com/"; label = "Netflix"; }
+        {
+          url = "https://www.mycanal.fr/";
+          label = "MyCanal";
+        }
+        {
+          url = "https://www.netflix.com/";
+          label = "Netflix";
+        }
       ];
     in
     {
-    programs.firefox.profiles.default = {
-      isDefault = true;
-      settings = {
-        "extensions.webextPermissionPrompts" = false;
-        "extensions.postDownloadThirdPartyPrompt" = false;
-        "extensions.autoDisableScopes" = 0;
+      programs.firefox.profiles.default = {
+        isDefault = true;
+        settings = {
+          "extensions.webextPermissionPrompts" = false;
+          "extensions.postDownloadThirdPartyPrompt" = false;
+          "extensions.autoDisableScopes" = 0;
 
-        "browser.aboutwelcome.enabled" = false;
-        "browser.startup.homepage_override.mstone" = "ignore";
-        # Driven by the host's declared display scale (systemConstants.display)
-        # so gary (TV) and the VM (laptop) pick different values from the
-        # same single-source abstraction.
-        "layout.css.devPixelsPerPx" = toString config.systemConstants.display.firefoxDevPixelsPerPx;
-        "browser.toolbars.bookmarks.visibility" = "always";
-        # Window density: Touch (0=normal, 1=compact, 2=touch). Gary runs on
-        # a TV at living-room distance so the larger touch targets fit the
-        # viewing geometry.
-        "browser.uidensity" = 2;
+          "browser.aboutwelcome.enabled" = false;
+          "browser.startup.homepage_override.mstone" = "ignore";
 
-        # Vertical tabs via the Firefox 136+ "sidebar revamp" sidebar. The
-        # auto-hide you noticed comes from the new sidebar collapsing by
-        # default; flipping verticalTabs on moves the tab strip into that
-        # sidebar so it is vertical when expanded and auto-hidden when not.
-        "sidebar.revamp" = true;
-        "sidebar.verticalTabs" = true;
-        # Use the smooth animated hover-expand mode (the "Expand sidebar on
-        # hover" radio in Settings > General > Browser Layout), not the
-        # non-animated "Hide sidebar" / toolbar-hide mode.
-        "sidebar.visibility" = "expand-on-hover";
-        "sidebar.expandOnHover" = true;
-        "sidebar.animation.enabled" = true;
-        # Hide the AI chatbot entry in the sidebar / tools menu.
-        "browser.ml.chat.enabled" = false;
-        "browser.ml.chat.hideLocalhost" = true;
-        "sidebar.main.tools" = "history,bookmarks";
-        # Hide the "Tabs from other devices" (synced tabs) sidebar entry.
-        "services.sync.engine.tabs" = false;
-        "browser.tabs.firefox-view" = false;
+          # Wayland text-input-v3 so squeekboard (sm.puri.OSK0) sees focus
+          # events and pops the on-screen keyboard automatically. Firefox
+          # ships this pref default-false in nixpkgs builds; without it the
+          # OSK daemon stays running but hidden because it never receives a
+          # focus signal from the browser. Verified on gary VM 2026-10-26:
+          # busctl SetVisible flipped Visible=true manually, so the pipe is
+          # fine; the missing piece is Firefox emitting the protocol.
+          "widget.wayland.text-input.enabled" = true;
+          # Driven by the host's declared display scale (systemConstants.display)
+          # so gary (TV) and the VM (laptop) pick different values from the
+          # same single-source abstraction.
+          "layout.css.devPixelsPerPx" = toString config.systemConstants.display.firefoxDevPixelsPerPx;
+          "browser.toolbars.bookmarks.visibility" = "always";
+          # Window density: Touch (0=normal, 1=compact, 2=touch). Gary runs on
+          # a TV at living-room distance so the larger touch targets fit the
+          # viewing geometry.
+          "browser.uidensity" = 2;
 
-        # Pinned shortcuts on the New Tab page (built from gary.services so
-        # the *arr stack / Home Assistant URLs follow ACME + domain flips).
-        # feeds.topsites and the sponsored-tile toggles are locked at the
-        # policy layer (see policies.nix).
-        "browser.newtabpage.pinned" = builtins.toJSON pinnedTiles;
-        "browser.newtabpage.activity-stream.topSitesRows" = 2;
+          # Vertical tabs via the Firefox 136+ "sidebar revamp" sidebar. The
+          # auto-hide you noticed comes from the new sidebar collapsing by
+          # default; flipping verticalTabs on moves the tab strip into that
+          # sidebar so it is vertical when expanded and auto-hidden when not.
+          "sidebar.revamp" = true;
+          "sidebar.verticalTabs" = true;
+          # Use the smooth animated hover-expand mode (the "Expand sidebar on
+          # hover" radio in Settings > General > Browser Layout), not the
+          # non-animated "Hide sidebar" / toolbar-hide mode.
+          "sidebar.visibility" = "expand-on-hover";
+          "sidebar.expandOnHover" = true;
+          "sidebar.animation.enabled" = true;
+          # Hide the AI chatbot entry in the sidebar / tools menu.
+          "browser.ml.chat.enabled" = false;
+          "browser.ml.chat.hideLocalhost" = true;
+          "sidebar.main.tools" = "history,bookmarks";
+          # Hide the "Tabs from other devices" (synced tabs) sidebar entry.
+          "services.sync.engine.tabs" = false;
+          "browser.tabs.firefox-view" = false;
+
+          # Pinned shortcuts on the New Tab page (built from gary.services so
+          # the *arr stack / Home Assistant URLs follow ACME + domain flips).
+          # feeds.topsites and the sponsored-tile toggles are locked at the
+          # policy layer (see policies.nix).
+          "browser.newtabpage.pinned" = builtins.toJSON pinnedTiles;
+          "browser.newtabpage.activity-stream.topSitesRows" = 2;
+        };
       };
     };
-  };
 }
