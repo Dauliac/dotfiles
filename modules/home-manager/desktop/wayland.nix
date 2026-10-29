@@ -42,7 +42,7 @@
                 height = 1080;
                 verticalPosition = 0;
                 horizontalPosition = 0;
-                positionConfig = builtins.toString horizontalPosition + "x" + builtins.toString verticalPosition;
+                positionConfig = toString horizontalPosition + "x" + toString verticalPosition;
                 config = "desc:${description},preferred,${topLarge.positionConfig},1";
               };
               leftVertical = rec {
@@ -52,9 +52,7 @@
                 verticalPosition = 0;
                 horizontalPosition = topLarge.width;
                 positionConfig =
-                  builtins.toString leftVertical.horizontalPosition
-                  + "x"
-                  + builtins.toString leftVertical.verticalPosition;
+                  toString leftVertical.horizontalPosition + "x" + toString leftVertical.verticalPosition;
                 config = "desc:${description},preferred,${leftVertical.positionConfig},1,transform,1";
               };
             in
