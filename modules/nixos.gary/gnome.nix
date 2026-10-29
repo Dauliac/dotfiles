@@ -8,7 +8,8 @@
       };
     };
 
-    programs.niri.enable = true;
+    # programs.niri.enable is owned by modules/nixos/niri.nix (shared
+    # aspect, imported from host-gary).
     programs.kdeconnect.enable = true;
   };
 }
