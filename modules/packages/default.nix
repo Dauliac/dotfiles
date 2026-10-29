@@ -30,7 +30,7 @@ in
   # auth via `slack login`, no manual token in sops. Installed as `slack` binary.
   # Requires Go 1.26+ so callPackage is fed unstable's buildGoModule.
   slackapi-cli = final.callPackage ./slackapi-cli.nix {
-    buildGoModule = unstablePkgs.buildGoModule;
+    inherit (unstablePkgs) buildGoModule;
   };
   # Rust TUI for Jira — keyring-backed credentials (see programs/lazyjira.nix
   # for the sops-nix → secret-service seeding).
@@ -50,7 +50,7 @@ in
   # agent-quota needs Rust 1.95+; feed unstable's rustPlatform per the
   # slackapi-cli precedent above.
   herdrPlugins = final.callPackage ./herdr-plugins {
-    rustPlatform = unstablePkgs.rustPlatform;
+    inherit (unstablePkgs) rustPlatform;
   };
   # Coding-agent tooling from numtide/llm-agents.nix (daily-updated, uses cache.numtide.com)
   # Terminal-only: no web/GUI review tools (agentsview, crit excluded — both browser UIs).
@@ -70,7 +70,7 @@ in
     ccusage # cost + token analytics (CLI report)
     hunk # TUI diff viewer for agent changesets
     fence # container-free command sandbox (CLI wrapper)
-    mardi-gras # TUI for beads issue tracker reading .beads/issues.jsonl (CLI: mg) — coexists with beads-viewer per openspec change beads-mg-tui-integration
+    mardi-gras # TUI for the beads issue tracker (CLI: mg); queries the bd CLI live, with .beads/issues.jsonl as the bd-unavailable fallback. Coexists with beads-viewer per openspec change beads-mg-tui-integration
     openspec # delta-based SDD framework (CLI: openspec) — brownfield-first, JSON-first agent contract
     rtk # https://github.com/rtk-ai/rtk — agent runtime toolkit
     ;

@@ -19,7 +19,7 @@
       ccusage # cost + token analytics across Claude/Codex/Gemini CLIs
       hunk # TUI diff viewer built for agent-authored changesets
       beads-viewer # graph-aware TUI for the shared Dolt-backed beads DB (`bv`)
-      mardi-gras # terminal UI for the beads issue tracker (CLI: mg) — reads .beads/issues.jsonl; coexists with beads-viewer per openspec change beads-mg-tui-integration
+      mardi-gras # terminal UI for the beads issue tracker (CLI: mg); queries the bd CLI live, falls back to .beads/issues.jsonl only when bd is off PATH. Coexists with beads-viewer per openspec change beads-mg-tui-integration
       fence # container-free command sandbox (bubblewrap/seatbelt-based)
       openspec # delta-based SDD framework — brownfield-first, `openspec new/archive`
       beads-plan # OpenSpec → beads bridge (decomposes tasks.md into a bead DAG)

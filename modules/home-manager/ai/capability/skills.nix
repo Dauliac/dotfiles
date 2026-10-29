@@ -102,6 +102,11 @@ let
     # hooks (see workspace/lazygit-worktrees.nix); the skill itself holds
     # the manual spawn recipe + dedup rule.
     "lazygit-worktrees"
+    # mg-watch  -  one `mg` (mardi-gras) beads side-panel per repo whose
+    # DAG is being driven. Fired automatically by a PostToolUse/Bash hook
+    # on any `bd` command plus SessionStart, both gated on an in-progress
+    # bead (see workspace/mg-watch.nix); the skill itself holds the manual
+    # spawn recipe + dedup rule.
     "mg-watch"
     "mise-deps"
     "mise-quality-gates"
@@ -121,18 +126,18 @@ let
     # Excludes the Slack-app development surface (app / platform / manifest
     # / trigger / datastore / sandbox commands) — that's out of scope for
     # this configuration.
-    "slack"              # parent/index — the map + `slack api` primer
-    "slack-api"          # generic `slack api <method>` escape hatch
-    "slack-auth"         # login / logout / list / revoke
+    "slack" # parent/index — the map + `slack api` primer
+    "slack-api" # generic `slack api <method>` escape hatch
+    "slack-auth" # login / logout / list / revoke
     "slack-edit-message" # chat.update / chat.delete
     "slack-list-channels" # conversations.list (name → C…)
-    "slack-list-users"   # users.list / users.lookupByEmail (name/email → U…)
+    "slack-list-users" # users.list / users.lookupByEmail (name/email → U…)
     "slack-read-channel" # conversations.history
-    "slack-react"        # reactions.add / reactions.remove / reactions.get
-    "slack-search"       # search.messages
+    "slack-react" # reactions.add / reactions.remove / reactions.get
+    "slack-search" # search.messages
     "slack-send-message" # chat.postMessage / chat.postEphemeral / scheduleMessage
-    "slack-thread"       # chat.postMessage + thread_ts, conversations.replies
-    "slack-upload-file"  # files.getUploadURLExternal 3-step flow
+    "slack-thread" # chat.postMessage + thread_ts, conversations.replies
+    "slack-upload-file" # files.getUploadURLExternal 3-step flow
     "try"
     "tui-context"
   ];
@@ -150,15 +155,15 @@ let
   # The DAG is: jira-pick → jira-ticket (orchestrator; builds bead DAG
   # via beads-decompose + drives via beads-flow) → per-phase skills.
   support = [
-    "jira-answer"       # phase:answer, phase:close
-    "jira-deploy"       # phase:deploy env:{dev,staging,prod}
-    "jira-explore"      # phase:explore
-    "jira-fix"          # phase:fix-design, phase:implement
-    "jira-merge"        # phase:merge, phase:tag (conditional)
-    "jira-monitor"      # phase:verify env:{dev,staging,prod}
-    "jira-pick"         # upstream: claim + On hold + Platform Capability
-    "jira-review"       # phase:review (assign + @mention + loop)
-    "jira-ticket"       # orchestrator
+    "jira-answer" # phase:answer, phase:close
+    "jira-deploy" # phase:deploy env:{dev,staging,prod}
+    "jira-explore" # phase:explore
+    "jira-fix" # phase:fix-design, phase:implement
+    "jira-merge" # phase:merge, phase:tag (conditional)
+    "jira-monitor" # phase:verify env:{dev,staging,prod}
+    "jira-pick" # upstream: claim + On hold + Platform Capability
+    "jira-review" # phase:review (assign + @mention + loop)
+    "jira-ticket" # orchestrator
   ];
 
   anytypeToolbox = [
@@ -168,7 +173,6 @@ let
     "anyr"
     "anytype-setup"
   ];
-
 in
 {
   # Skills are wired declaratively via home-manager's native
@@ -179,14 +183,16 @@ in
   # needed. Upstream skills (anytype-toolbox) are pulled straight from
   # the flake input's source tree — no vendoring.
   flake.modules.homeManager.ai-capability-skills =
-    { lib, inputs, ... }:
+    {
+      lib,
+      inputs,
+      ...
+    }:
     let
       inDir = parent: name: lib.nameValuePair name (parent + "/${name}");
       inCategory = category: inDir (skillsDir + "/${category}");
       inSupport = inDir (skillsDir + "/productivity/support");
-      fromAnytypeToolbox =
-        name:
-        lib.nameValuePair name "${inputs.anytype-toolbox}/skills/skills/${name}";
+      fromAnytypeToolbox = name: lib.nameValuePair name "${inputs.anytype-toolbox}/skills/skills/${name}";
     in
     {
       programs.claude-code.skills = lib.listToAttrs (

@@ -1,5 +1,4 @@
-{ inputs, ... }:
-{
+{ inputs, ... }: {
   # Workspace bounded context — the agent's beliefs about *this* project and
   # user: instructions, rules, settings. Aggregates every leaf that shapes
   # what the agent knows before it acts.
@@ -12,6 +11,7 @@
       ai-workspace-no-em-dash
       ai-workspace-jira-mr-coherence
       ai-workspace-lazygit-worktrees
+      ai-workspace-mg-watch
     ];
   };
 }
