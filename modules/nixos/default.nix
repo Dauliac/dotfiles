@@ -129,7 +129,6 @@
       };
       system.stateVersion = "25.05";
       virtualisation = {
-        waydroid.enable = true;
         podman = {
           enable = true;
           defaultNetwork.settings.dns_enabled = true;
