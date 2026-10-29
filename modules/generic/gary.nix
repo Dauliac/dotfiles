@@ -14,8 +14,11 @@ _: {
       };
 
       domain = {
-        public = "j4rd1.cloud";
-        local = "gary.local";
+        # One domain for both LAN and internet: AdGuard owns LAN resolution
+        # via `*.raylovers.club -> gary.network.lanIP` rewrites in acme.nix.
+        # Public clients hit public DNS -> cloudflared tunnel edge.
+        public = "raylovers.club";
+        local = "raylovers.club";
       };
 
       media = {
@@ -24,9 +27,11 @@ _: {
       };
 
       acme = {
-        email = "admin@j4rd1.cloud";
+        email = "admin@raylovers.club";
         dnsProvider = "cloudflare";
-        useStaging = false;
+        # Use LE staging while iterating - unlimited rate, untrusted-cert
+        # warning in browser.  Flip to false once the pipeline is proven.
+        useStaging = true;
       };
 
       homeAssistant = {
