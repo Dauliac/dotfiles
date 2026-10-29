@@ -21,9 +21,9 @@ events (see `modules/home-manager/ai/workspace/lazygit-worktrees.nix`):
 - `CwdChanged`  -  the agent moved into a different worktree (e.g. a
   nested `.claude/` isolation worktree) → spawn one for the new path.
 
-Each spawn deduplicates against `herdr pane list` by matching
-`foreground_cwd == <toplevel>` and label prefix `lazygit-`, so re-firing
-the same event is a no-op.
+Each spawn deduplicates by the herdr pane **`label`** (`lazygit-<repo>`)
+within the current workspace, so re-firing the same event is a no-op.
+`label` is only returned by `herdr pane get`, never by `herdr pane list`.
 
 Runtime kill-switch (per session): `XI_DISABLE_LAZYGIT_WORKTREES_HOOK=1`.
 
@@ -39,35 +39,65 @@ toplevel=$(git -C "$PWD" rev-parse --show-toplevel 2>/dev/null) || {
 
 label="lazygit-$(basename "$toplevel")"
 
-# Dedup: pane already open for this toplevel?
-if herdr pane list 2>/dev/null \
-   | jq -r --arg t "$toplevel" '.result.panes[]?
-       | select(.foreground_cwd == $t and (.terminal_title_stripped // "" | startswith("lazygit")))
-       | .pane_id' \
-   | grep -q .; then
-  echo "lazygit already open for $toplevel"
-  exit 0
-fi
+self=$(herdr pane current | jq -r '.result.pane.pane_id')
+ws=$(herdr pane current | jq -r '.result.pane.workspace_id')
 
-herdr-tui launch \
+# Dedup: a pane already carrying this label?
+for p in $(herdr pane list --workspace "$ws" \
+           | jq -r '.result.panes[] | select(has("agent")|not) | .pane_id'); do
+  if [ "$(herdr pane get "$p" | jq -r '.result.pane.label // empty')" = "$label" ]; then
+    echo "lazygit already open for $toplevel ($p)"
+    exit 0
+  fi
+done
+
+setsid --fork herdr-tui launch \
   --label "$label" \
-  --ratio 0.35 \
-  --auto-close-on-idle 1800 \
-  -- bash -c "cd '$toplevel' && exec lazygit"
+  --ratio 0.78 \
+  --auto-close-on-idle 604800 \
+  --auto-close-when "! herdr pane get '$self' >/dev/null 2>&1" \
+  -- lazygit -p "$toplevel"
 ```
 
 Notes:
 
 - **Label**: `lazygit-<repo-basename>`. The prefix `lazygit-` is what
   the dedup check greps for.
-- **Dedup key**: `foreground_cwd == <toplevel>`. `cwd` alone drifts
-  with the shell; `foreground_cwd` tracks the TUI's active dir.
-- **Ratio 0.35**: lazygit renders well in a narrow side-panel; keeps
-  the agent's pane dominant.
-- **30-min idle close**: long enough to walk away, short enough that
-  abandoned panes clean up. Do NOT use `--auto-close-when` (no "done"
-  predicate for a persistent viewer) or `--keep` (leaks panes across
-  long sessions).
+- **Dedup key**: the pane `label`, fetched with `herdr pane get`.
+  Never match on `terminal_title` / `terminal_title_stripped`:
+  `herdr-tui launch` always runs the command through an
+  `exec sh -c "$(printf '%s' <base64> | base64 -d)"` wrapper, so the
+  title is that wrapper and a `startswith("lazygit")` test silently
+  never fires  -  which leaks one new split per event.
+- **`setsid --fork`**: the hook's process group is torn down when the
+  hook returns. A plain `&` + `disown` stays in that group and gets
+  killed mid-launch, leaving a blank half-created pane behind.
+- **Ratio 0.78 gives the viewer 22%**: `--ratio` is the share kept by
+  the pane being split, so the NEW side-panel gets `1 - ratio`. This
+  reads backwards and the previous value proved it: `0.35` was
+  commented as "keeps the agent's pane dominant" while actually
+  handing the viewer 65% of the row. Verified empirically  -  a split
+  at `0.78` of an 80-column parent produced an 18-column new pane
+  (`herdr pane resize --pane <id> --direction right --amount 0`
+  prints the live layout with every split ratio, which is how to
+  re-check this).
+  Ratios compound through nesting: the share is of the PARENT split,
+  not of the display, so a viewer inside two nested splits ends up
+  narrower than 22% of the screen. Measured on a 186-column tab,
+  0.78 yields a 41-column viewer. lazygit falls back to a narrow
+  layout (`ScreenMode`) at small widths; the breakpoint is not
+  documented and is not recoverable from the binary, so if the
+  panel looks cramped widen it with `herdr pane resize` and read
+  the ratio off the layout dump instead of guessing a threshold.
+  To narrow a pane that is already open:
+  `herdr pane resize --pane <id> --direction right --amount F`.
+- **Lifetime tied to the agent pane, not idle**: herdr-tui counts
+  "engagement" as pane-focused OR scrolled-up, and a viewer the human
+  only glances at is neither  -  an idle close would reap it
+  mid-session. Pin idle effectively-never and let
+  `--auto-close-when` close it when the owning Claude pane disappears.
+  Do NOT use `--keep`: it skips the watcher entirely, so the pane
+  outlives the session.
 
 ## When NOT to reach for this
 

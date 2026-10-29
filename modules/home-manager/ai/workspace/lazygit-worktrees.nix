@@ -2,8 +2,12 @@
   # lazygit-worktrees: auto-spawn a herdr `lazygit` side-panel per git
   # worktree the agent enters  -  one for the main checkout at SessionStart,
   # one more each time `WorktreeCreate` or `CwdChanged` surfaces a fresh
-  # worktree path. Dedup is by `foreground_cwd` + `lazygit-` title prefix,
-  # so re-firing is a no-op.
+  # worktree path. Dedup is by the herdr pane `label` (`lazygit-<repo>`)
+  # scoped to the current workspace, so re-firing is a no-op.
+  #
+  # Timeout is 10s, not 5s: `label` is absent from `herdr pane list`, so the
+  # dedup scan costs one `herdr pane get` per non-agent pane. Do not lower it
+  # without re-checking hook.sh  -  a killed hook leaves a half-created pane.
   #
   # Motivation: when the agent spawns a nested worktree (via `try
   # worktree`, `herdr worktree create`, or an agent-isolation
@@ -29,51 +33,49 @@
   # Companion skill: capability/skills/engineering/lazygit-worktrees/.
   # See also modules/home-manager/ai/workspace/settings.nix for the
   # deep-merge activation that consumes the fragment.
-  flake.modules.homeManager.ai-workspace-lazygit-worktrees =
-    { config, ... }:
-    {
-      home.file.".claude/hooks/lazygit-worktrees.sh" = {
-        source = ./lazygit-worktrees/hook.sh;
-        executable = true;
-      };
-
-      home.file.".claude/settings.d/37-lazygit-worktrees.json".text = builtins.toJSON {
-        hooks.SessionStart = [
-          {
-            matcher = "*";
-            hooks = [
-              {
-                type = "command";
-                command = "bash ${config.home.homeDirectory}/.claude/hooks/lazygit-worktrees.sh session-start";
-                timeout = 5;
-              }
-            ];
-          }
-        ];
-        hooks.WorktreeCreate = [
-          {
-            matcher = "*";
-            hooks = [
-              {
-                type = "command";
-                command = "bash ${config.home.homeDirectory}/.claude/hooks/lazygit-worktrees.sh worktree-create";
-                timeout = 5;
-              }
-            ];
-          }
-        ];
-        hooks.CwdChanged = [
-          {
-            matcher = "*";
-            hooks = [
-              {
-                type = "command";
-                command = "bash ${config.home.homeDirectory}/.claude/hooks/lazygit-worktrees.sh cwd-changed";
-                timeout = 5;
-              }
-            ];
-          }
-        ];
-      };
+  flake.modules.homeManager.ai-workspace-lazygit-worktrees = { config, ... }: {
+    home.file.".claude/hooks/lazygit-worktrees.sh" = {
+      source = ./lazygit-worktrees/hook.sh;
+      executable = true;
     };
+
+    home.file.".claude/settings.d/37-lazygit-worktrees.json".text = builtins.toJSON {
+      hooks.SessionStart = [
+        {
+          matcher = "*";
+          hooks = [
+            {
+              type = "command";
+              command = "bash ${config.home.homeDirectory}/.claude/hooks/lazygit-worktrees.sh session-start";
+              timeout = 10;
+            }
+          ];
+        }
+      ];
+      hooks.WorktreeCreate = [
+        {
+          matcher = "*";
+          hooks = [
+            {
+              type = "command";
+              command = "bash ${config.home.homeDirectory}/.claude/hooks/lazygit-worktrees.sh worktree-create";
+              timeout = 10;
+            }
+          ];
+        }
+      ];
+      hooks.CwdChanged = [
+        {
+          matcher = "*";
+          hooks = [
+            {
+              type = "command";
+              command = "bash ${config.home.homeDirectory}/.claude/hooks/lazygit-worktrees.sh cwd-changed";
+              timeout = 10;
+            }
+          ];
+        }
+      ];
+    };
+  };
 }

@@ -18,6 +18,10 @@ herdr pane split [<pane_id>|--pane ID|--current] \
     --direction right|down \
     [--ratio FLOAT] [--cwd PATH] [--env KEY=VALUE] \
     [--right-click herdr|pane] [--focus|--no-focus]
+# NB --ratio is the share KEPT BY THE PANE BEING SPLIT; the new pane
+# gets 1 - ratio. For a narrow side-panel pass a HIGH ratio (0.78
+# leaves the new pane 22%). Ratios are of the parent split, so they
+# compound through nesting.
 
 # Rename / clear label
 herdr pane rename <pane_id> <label>
@@ -34,7 +38,8 @@ herdr pane move <pane_id> --new-workspace [--label TEXT] [--tab-label TEXT]
 
 # Swap / resize / zoom / close
 herdr pane swap  <pane_id_a> <pane_id_b>
-herdr pane resize <pane_id> --ratio FLOAT      # 0.0–1.0 of parent split
+herdr pane resize --direction left|right|up|down [--amount FLOAT] \
+    [--pane ID|--current]                      # moves the BOUNDARY, not the pane
 herdr pane zoom  [<pane_id>|--current] [--on|--off|--toggle]
 herdr pane close [<pane_id>|--current]
 ```
