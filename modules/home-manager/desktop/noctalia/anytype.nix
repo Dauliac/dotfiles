@@ -30,7 +30,6 @@
   flake.modules.homeManager.noctalia =
     {
       config,
-      pkgs,
       lib,
       inputs,
       ...
@@ -39,38 +38,50 @@
       pluginSrc = "${inputs.anytype-noctalia}/plugin";
       pluginsRoot = "${config.xdg.configHome}/noctalia/plugins";
       configRoot = "${config.xdg.configHome}/anytype-noctalia";
+      # Opt-in because the token has to live in secrets.yaml.  Hosts
+      # that have not added `anytype_api_key:` to secrets.yaml must
+      # leave this flag off, otherwise sops-nix fails activation.
+      anytypeEnabled = config.myNoctalia.anytype.enable or false;
     in
     {
-      # Materialise the plugin directory under Noctalia's plugin root.
-      # Symlink (not copy) so a `git pull` on the plugin repo updates
-      # the live plugin without touching home-manager state. Noctalia's
-      # hot-reload picks it up automatically in debug mode.
-      home.file."${pluginsRoot}/anytype-noctalia" = {
-        source = pluginSrc;
-        recursive = false;
+      options.myNoctalia.anytype.enable = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = "Wire the anytype-noctalia plugin, including the sops-managed api_key.  Requires `anytype_api_key` present in secrets.yaml.";
       };
 
-      # Render ~/.config/anytype-noctalia/config.toml from the sops
-      # secret. Mode 0600 enforced by sops-nix. The TOML schema is
-      # pinned by plugin/ConfigFile.qml's parseToml (flat key=value
-      # pairs, string values quoted).
-      sops.templates."anytype-noctalia/config.toml" = {
-        path = "${configRoot}/config.toml";
-        mode = "0600";
-        content = ''
-          mode = "localhost"
-          base_url = "http://127.0.0.1:31009"
-          api_key = "${config.sops.placeholder.anytype_api_key}"
-        '';
-      };
+      config = lib.mkIf anytypeEnabled {
+        # Materialise the plugin directory under Noctalia's plugin root.
+        # Symlink (not copy) so a `git pull` on the plugin repo updates
+        # the live plugin without touching home-manager state. Noctalia's
+        # hot-reload picks it up automatically in debug mode.
+        home.file."${pluginsRoot}/anytype-noctalia" = {
+          source = pluginSrc;
+          recursive = false;
+        };
 
-      # Declare the secret. The sopsFile defaults to secrets.nix's
-      # defaultSopsFile (secrets.yaml). Point the materialised secret
-      # file somewhere the user owns so sops-nix can `chown` cleanly;
-      # the template above is what the plugin actually reads.
-      sops.secrets.anytype_api_key = {
-        path = "${configRoot}/.secrets/api_key";
-        mode = "0600";
+        # Render ~/.config/anytype-noctalia/config.toml from the sops
+        # secret. Mode 0600 enforced by sops-nix. The TOML schema is
+        # pinned by plugin/ConfigFile.qml's parseToml (flat key=value
+        # pairs, string values quoted).
+        sops.templates."anytype-noctalia/config.toml" = {
+          path = "${configRoot}/config.toml";
+          mode = "0600";
+          content = ''
+            mode = "localhost"
+            base_url = "http://127.0.0.1:31009"
+            api_key = "${config.sops.placeholder.anytype_api_key}"
+          '';
+        };
+
+        # Declare the secret. The sopsFile defaults to secrets.nix's
+        # defaultSopsFile (secrets.yaml). Point the materialised secret
+        # file somewhere the user owns so sops-nix can `chown` cleanly;
+        # the template above is what the plugin actually reads.
+        sops.secrets.anytype_api_key = {
+          path = "${configRoot}/.secrets/api_key";
+          mode = "0600";
+        };
       };
     };
 }
