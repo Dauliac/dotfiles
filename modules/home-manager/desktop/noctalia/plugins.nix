@@ -10,7 +10,11 @@
   #     shell fallback `cliphist list | cliphist decode | wl-copy`.
   flake.modules.homeManager.noctalia = {
     programs.noctalia.settings.plugins = {
-      auto_update = true;
+      # Upstream deprecated the boolean form in favour of a scope string;
+      # "all" preserves the previous `true` behaviour (auto-update every
+      # enabled plugin). Other accepted values: "official" (only
+      # noctalia-dev/official-plugins) or "none".
+      auto_update = "all";
       enabled = [
         # Bar widgets
         "noctalia/bongocat" # cat animating with keystrokes (bar widget "cat")
