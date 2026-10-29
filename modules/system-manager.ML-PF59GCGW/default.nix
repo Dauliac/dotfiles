@@ -53,7 +53,11 @@
 
       services.aws-nix-cache = {
         enable = true;
-        uid = 1001;
+        # Must be the real Debian account uid (`id -u juliendauliac`), not a
+        # NixOS-style 1001: the module derives the credentials socket path as
+        # /run/user/${uid}/aws-nix-cache/credentials, which silently points at
+        # a runtime dir that never exists when the uid is wrong.
+        uid = 1011;
         profile = "nix-cache";
         region = "eu-west-3";
       };
