@@ -386,31 +386,186 @@ in
       # bar.nix) stays glab-free so personal hosts (dauliac, gary) don't fetch
       # anything they can't authenticate.
       #
+      # Settings scope is the thing that is easy to get wrong here, and
+      # it fails silently: git_companion's tunables are plugin-level, so
+      # they go in `plugin_settings."tphilippot/git_companion"`, NOT
+      # `widget.git_companion`. Long note at that attrset below.
+      #
+      # glab's own config (host, token) is deliberately NOT managed here
+      # - another tool owns ~/.config/glab-cli/config.yml. We only READ
+      # it, via the ExecStart wrapper below, to learn which instance to
+      # talk to. See that wrapper for why the plugin needs the hint.
+      #
       # `hy4ri/herdr` is kept manomano-local for now because the work laptop
       # is where coding-agent sessions actually run; personal hosts can opt in
       # later by moving the block into the shared plugins/bar modules. The
       # `herdr` binary dependency is already on PATH via the llm-agents input.
+      # Wire the self-hosted anytype-noctalia Noctalia plugin on this
+      # host.  Guarded by the opt-in option declared in
+      # modules/home-manager/desktop/noctalia/anytype.nix because the
+      # module declares `sops.secrets.anytype_api_key`, which fails
+      # activation on hosts that have not yet added the key to
+      # secrets.yaml.  Enabled here: this host owns the key.
+      myNoctalia.anytype.enable = true;
+
+      # ICS calendar (sops key `calendar_url` in root secrets.yaml) is
+      # work-laptop-only  -  the URL points at the corp calendar, so
+      # personal hosts have nothing to display and would fail activation
+      # with a missing sops key. See modules/home-manager/desktop/noctalia/calendar.nix.
+      myNoctalia.calendar.enable = true;
+
+      # Teach the noctalia service which GitLab instance `glab` should
+      # talk to, by asking glab itself.
+      #
+      # Why this is needed: git_companion's service shells out to
+      # `glab mr list` from the service's cwd, which has no git remote.
+      # glab resolves its instance as GITLAB_HOST -> the global `host`
+      # config key -> the cwd's git remote -> gitlab.com. The `hosts:`
+      # map in ~/.config/glab-cli/config.yml is only a credential store
+      # keyed BY hostname; glab never promotes a lone entry there into a
+      # default. So with no `host:` key and no remote to infer from,
+      # every call went to gitlab.com and 401'd.
+      #
+      # Rather than duplicate the hostname here (it is corp-internal, and
+      # another tool owns that config file), derive it at service start
+      # from glab's own authenticated-host list. Single source of truth,
+      # read-only, and nothing corp-specific lands in the Nix store.
+      #
+      # Two traps worth spelling out, both hit on the way here:
+      #
+      #   - Use mise's glab, NOT `pkgs.glab`. mise owns glab on this box
+      #     and ships 1.124.0, while nixpkgs is back on 1.99.0, which has
+      #     no `--all` / `--output json` on `auth status` at all ("Unknown
+      #     flag: --output"). Prepending the shims dir also means the
+      #     plugin's own `glab mr list` calls resolve to the same modern
+      #     binary instead of whatever a bare service PATH turns up. The
+      #     shim path is version-stable; the real install path is not.
+      #   - `--output json` is required, not cosmetic. The human-readable
+      #     `glab auth status` prints its host list to STDERR, so command
+      #     substitution captures an empty string and the export silently
+      #     no-ops. The JSON form goes to stdout.
+      #
+      # If glab is ever downgraded below the JSON flags, `host` comes back
+      # empty and we leave GITLAB_HOST unset rather than exporting junk -
+      # the widget then shows an error glyph instead of lying.
+      #
+      # head -1 picks the first successfully-authenticated host; if this
+      # box ever logs into two instances, pin GITLAB_HOST explicitly.
+      systemd.user.services.noctalia.Service.ExecStart = lib.mkForce (
+        toString (
+          pkgs.writeShellScript "noctalia-glab-host" ''
+            export PATH="$HOME/.local/share/mise/shims:$PATH"
+            host=$(glab auth status --all --output json \
+              --jq '.hosts[] | select(.state=="success") | .host' 2>/dev/null | head -1)
+            if [ -n "$host" ]; then
+              export GITLAB_HOST="$host"
+            fi
+            exec /usr/bin/noctalia
+          ''
+        )
+      );
+
       programs.noctalia.settings = {
         plugins.enabled = lib.mkAfter [
           "tphilippot/git_companion"
           "hy4ri/herdr"
         ];
+        # Widget-instance table. ONLY `type` belongs here: it binds the
+        # `git_companion` name used in `bar.main.end` to the plugin's
+        # widget entrypoint. Every tunable lives in `plugin_settings`
+        # below - see the scope note there before adding a key here.
         widget.git_companion = {
           type = "tphilippot/git_companion:widget";
-          platform = "gitlab";
-          bar_display_mode = "both";
-          show_reviews = true;
-          count_reviews_with_prs = true;
         };
+        # herdr declares display_mode / hide_count_when_zero /
+        # hide_agentless_panes as `[[widget.setting]]`, so unlike
+        # git_companion they genuinely belong in the widget table.
+        # (Its one plugin-level `[[setting]]`, show_other_machines, would
+        # go under plugin_settings - we leave it at its default.)
         widget.herdr = {
           type = "hy4ri/herdr:bar";
           display_mode = "icon_and_count";
           hide_count_when_zero = true;
           hide_agentless_panes = true;
         };
-        bar.main.end = lib.mkAfter [
+
+        # Plugin-level settings table, keyed by the FULL plugin id
+        # (author prefix included - `noctalia config validate` rejects a
+        # bare "git_companion" with "no loaded plugin with this id").
+        #
+        # Why these are not under `widget.git_companion`: a plugin.toml
+        # declares settings at two scopes, and noctalia routes them to
+        # two different config tables.
+        #
+        #   [[setting]]          -> plugin_settings."<author>/<id>"
+        #   [[widget.setting]]   -> widget.<instance>
+        #
+        # git_companion declares ALL of its settings as top-level
+        # `[[setting]]` and has ZERO `[[widget.setting]]`, so everything
+        # it reads via `noctalia.getConfig(...)` must live here. Keys put
+        # in the widget table are silently ignored and the plugin falls
+        # back to its plugin.toml defaults - which means `platform`
+        # reverts to "github" and the bar shows a GitHub glyph with no
+        # data. bongocat is the opposite case (all `[[widget.setting]]`),
+        # which is why its block looks different; check the plugin.toml
+        # scope before adding settings for any new plugin, and run
+        # `noctalia config validate` - it flags every misplaced key as
+        # "unknown setting".
+        plugin_settings."tphilippot/git_companion" = {
+          platform = "gitlab";
+          # GitLab scope. `service.luau` hard-fails with
+          # "gitlab_scope_missing" when both `group` and `repo` are empty,
+          # because the unscoped `glab mr list` needs a git-repo cwd and
+          # the service runs from an arbitrary one. So some scope is
+          # mandatory; `group` is a single string, not a list.
+          #
+          # Caveat: authored/assigned MRs actually span ~8 top-level
+          # groups (platform-engineering is larger than pulse), and the
+          # instance has 199 roots with no common ancestor, so no single
+          # value covers everything. Watching all of GitLab would need a
+          # patched plugin driving `glab api merge_requests?scope=...`
+          # instead of `glab mr list --group`.
+          group = "pulse";
+          refresh_interval = 60;
+          bar_display_mode = "both";
+          show_prs = true;
+          show_issues = true;
+          show_reviews = true;
+          count_reviews_with_prs = true;
+          # GitLab-only notifications. Each fires when a MR *I authored*
+          # transitions INTO the matching detailed_merge_status; the first
+          # fetch after service start only records state, so nothing
+          # replays at login. Routes through the shared notification daemon
+          # (modules/home-manager/desktop/noctalia/notification.nix:
+          # `enable_daemon = true`). Full table in the git_companion
+          # README.md "Notifications" section.
+          notify_mr_mergeable = true;
+          notify_mr_pipeline_failed = true;
+          notify_mr_conflict = true;
+          notify_mr_changes_requested = true;
+        };
+        # Override the shared end list (modules/home-manager/desktop/noctalia/bar.nix)
+        # with lib.mkForce because we want git_companion + herdr slotted BETWEEN
+        # media and tray, not appended at the tail - lib.mkAfter only appends.
+        #
+        # github_prs must be repeated here: the shared list carries it, but
+        # mkForce replaces that list wholesale rather than merging into it,
+        # so anything omitted here silently disappears from this host's bar.
+        # The two companions sit side by side - github_prs (GitHub, via gh)
+        # then git_companion (corp GitLab, via glab).
+        bar.main.end = lib.mkForce [
+          "media"
+          "github_prs"
           "git_companion"
           "herdr"
+          "tray"
+          "clipboard"
+          "network"
+          "bluetooth"
+          "volume"
+          "brightness"
+          "battery"
+          "session"
         ];
       };
     };
