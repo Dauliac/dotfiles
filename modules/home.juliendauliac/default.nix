@@ -103,6 +103,32 @@ in
 
       targets.genericLinux.enable = true;
 
+      # xi sources: 3-way reconciliation (working dir / sources dir /
+      # remote) for this checkout. `remote` is the real GitHub remote -
+      # the same one `xi system switch` already uses for the real
+      # system-manager deployment - so `sources dir` tracks an
+      # independent, shared source of truth. `workingDir` is this local
+      # checkout, so `xi home sources status|diff|sync` can run the
+      # ahead/behind/diverged matrix (crates/xi-core/src/sources/conflict.rs)
+      # between what's on GitHub, what xi last fetched, and what you're
+      # actually editing. Pointing `remote` at the local path instead
+      # (tempting, avoids the push round-trip) would collapse that: if
+      # `remote` and `workingDir` are the same directory, sources dir
+      # just mirrors your own commits back at you and the matrix can
+      # never catch a genuinely independent push. `gitops.enable` is
+      # deliberately left off: this host's home-manager is already
+      # driven by system-manager (modules/flake/system-configurations.nix),
+      # and a second, user-scope auto-activator here would race it - the
+      # exact failure mode xi-sources-race exists to avoid. Toggle it on
+      # only if you stop routing home-manager through system-manager on
+      # this host.
+      programs.xi.sources = {
+        enable = true;
+        remote = "git@github.com:Dauliac/dotfiles.git";
+        branch = "master";
+        workingDir = "/home/juliendauliac/ghq/github.com/Dauliac/dotfiles";
+      };
+
       xdg.systemDirs.data = [
         "/var/lib/flatpak/exports/share"
         "${config.home.homeDirectory}/.local/share/flatpak/exports/share"
