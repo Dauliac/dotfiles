@@ -3489,18 +3489,18 @@
         "treefmt-nix": "treefmt-nix_6"
       },
       "locked": {
-        "lastModified": 1785858545,
-        "narHash": "sha256-+7hWLQ1b0fQIvaPamMOl1v6nb2FHKYWg7M2neO1rjPQ=",
-        "owner": "Dauliac",
-        "repo": "xi",
-        "rev": "64f0dc3b2214c7bfb3de01c423e1434af1b54148",
-        "type": "github"
+        "lastModified": 1793836412,
+        "narHash": "sha256-mZOq4Q6+DESaDGwO07Ee0sXiD2fMuFPuXDmiYDSQSHQ=",
+        "ref": "refs/heads/feat/xi-sources-switch-entrypoint",
+        "rev": "d8e9d42a5cf7df1a75f42cbb360a416c079fca08",
+        "revCount": 1435,
+        "type": "git",
+        "url": "file:///home/juliendauliac/ghq/github.com/Dauliac/xi"
       },
       "original": {
-        "owner": "Dauliac",
-        "ref": "main",
-        "repo": "xi",
-        "type": "github"
+        "rev": "d8e9d42a5cf7df1a75f42cbb360a416c079fca08",
+        "type": "git",
+        "url": "file:///home/juliendauliac/ghq/github.com/Dauliac/xi"
       }
     },
     "xwayland-satellite-stable": {

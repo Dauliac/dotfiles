@@ -119,15 +119,23 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     xi = {
-      # Default to GitHub so laptops without a local xi checkout (e.g.
-      # ML-PF603JJ8) build out of the box.
+      # Pointed at the local checkout, pinned to a specific commit
+      # rather than left bare: the xi repo has other work in progress
+      # on disk at any given moment (other agent sessions, concurrent
+      # branches), so nix's git+file fetcher treats the *whole repo*
+      # as dirty and refuses to write a lock entry for a bare path or
+      # `?ref=<branch>` reference - it is unlockable, not just
+      # unreproducible. An explicit `?rev=` names an immutable, already
+      # -committed object, so it locks fine regardless of what else in
+      # the tree is currently uncommitted.
       #
-      # On hosts where you hack on xi, override to the local checkout with:
-      #   --override-input xi git+file:///home/juliendauliac/ghq/github.com/Dauliac/xi?ref=main
-      # git+file: uses the last-committed tree (ignoring the working tree,
-      # which beads/polecat worktrees/cargo churn constantly), so remember
-      # to commit before switching.
-      url = "github:Dauliac/xi/main";
+      # Bump the rev by hand (`git -C .../xi rev-parse HEAD`) to pick
+      # up newer xi commits; `nix flake update xi` alone will not move
+      # it while the repo has anything else uncommitted.
+      #
+      # Revert to `github:Dauliac/xi/main` on a host that does not have
+      # this checkout.
+      url = "git+file:///home/juliendauliac/ghq/github.com/Dauliac/xi?rev=d8e9d42a5cf7df1a75f42cbb360a416c079fca08";
       # Xi calls the same underlying Dauliac/nlib repo by the alias
       # `nix-lib`, and the dotfiles calls it `nlib`. Without this follows,
       # nix imports the module twice under two attribute paths and

@@ -110,6 +110,39 @@ let
       };
     })
   ];
+
+  # NOT wiring `inputs.xi.nixosModules.default` into system-manager
+  # scope here: it hits two real incompatibilities with
+  # system-manager's reduced NixOS option surface.
+  #
+  # 1. modules/nixos/shell-hook.nix assigns
+  #    `environment.interactiveShellInit` /
+  #    `programs.fish.interactiveShellInit`, neither of which
+  #    system-manager declares - a module-merge error even with
+  #    `shellHook.enable` at its default `false`, since `lib.mkIf`
+  #    only gates the *value*, not whether the *option path* has to
+  #    exist. Worked around locally with a two-line option stub, that
+  #    part alone is fine.
+  # 2. `nixosModules.default` also imports `inputs.nix-lib.nixosModules.default`
+  #    (xi's own copy of the nix-lib framework's NixOS head), which
+  #    then double-declares `nix-lib.scanNestedSystems` against
+  #    `inputs.nlib.systemManagerModules.default` (already imported
+  #    unconditionally for every host by `mkSystemManager` above) -
+  #    same underlying flake (`nix-lib.follows = "nlib"`), two
+  #    different "class" heads, same option path. No `lib.mkForce`
+  #    equivalent exists for a *declaration* clash, only for values,
+  #    so there is no clean per-host workaround for this one.
+  #
+  # Hand-picking xi's individual nixos/*.nix files instead of the
+  # aggregate just trades these for a different cascade
+  # (modules/nixos/package.nix alone needs settings.nix's shared
+  # types too). Real fix belongs in xi itself (nixosModules.default
+  # should not unconditionally pull in a nix-lib head the consumer may
+  # already have), filed as xi-nixos-module-system-manager-clash - see
+  # that bead before trying this again. `programs.xi.sources` at
+  # system scope stays on the CLI/state-dir rungs for now, which is
+  # already what `xi system switch` adopted and `xi system status`
+  # reads.
 in
 {
   flake.systemConfigs = {
