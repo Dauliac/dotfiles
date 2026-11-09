@@ -90,8 +90,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=v0.6.0";
-    nur = {
-      url = "github:nix-community/NUR";
+    # rycee's firefox-addons, via the sourcehut mirror: the canonical
+    # gitlab.com host 429s nix's unauthenticated tarball fetches.
+    firefox-addons = {
+      url = "sourcehut:~rycee/nur-expressions?dir=pkgs/firefox-addons";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     devour-flake = {
@@ -135,7 +137,7 @@
       #
       # Revert to `github:Dauliac/xi/main` on a host that does not have
       # this checkout.
-      url = "git+file:///home/juliendauliac/ghq/github.com/Dauliac/xi?rev=d8e9d42a5cf7df1a75f42cbb360a416c079fca08";
+      url = "git+file:///home/juliendauliac/ghq/github.com/Dauliac/xi?rev=e4ee378c40c922e43f1736db91805a07021a4ace";
       # Xi calls the same underlying Dauliac/nlib repo by the alias
       # `nix-lib`, and the dotfiles calls it `nlib`. Without this follows,
       # nix imports the module twice under two attribute paths and

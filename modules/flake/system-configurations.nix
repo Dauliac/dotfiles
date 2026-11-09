@@ -111,42 +111,48 @@ let
     })
   ];
 
-  # NOT wiring `inputs.xi.nixosModules.default` into system-manager
-  # scope here: it hits two real incompatibilities with
-  # system-manager's reduced NixOS option surface.
+  # `inputs.xi.nixosModules.default` can't be imported here: see
+  # xi-9m39 (fixed upstream by shipping the narrower
+  # `nixosModules.sources` below, rather than making `.default` itself
+  # tolerant of a consumer's own nix-lib head). `.sources` is the same
+  # import list as `.default` minus `inputs.nix-lib.nixosModules.default`
+  # (already provided by `inputs.nlib.systemManagerModules.default`
+  # above, via `nix-lib.follows = "nlib"`) and minus
+  # `shell-hook.nix`/`completion.nix` (the two files that assign option
+  # paths system-manager's reduced NixOS surface doesn't declare).
   #
-  # 1. modules/nixos/shell-hook.nix assigns
-  #    `environment.interactiveShellInit` /
-  #    `programs.fish.interactiveShellInit`, neither of which
-  #    system-manager declares - a module-merge error even with
-  #    `shellHook.enable` at its default `false`, since `lib.mkIf`
-  #    only gates the *value*, not whether the *option path* has to
-  #    exist. Worked around locally with a two-line option stub, that
-  #    part alone is fine.
-  # 2. `nixosModules.default` also imports `inputs.nix-lib.nixosModules.default`
-  #    (xi's own copy of the nix-lib framework's NixOS head), which
-  #    then double-declares `nix-lib.scanNestedSystems` against
-  #    `inputs.nlib.systemManagerModules.default` (already imported
-  #    unconditionally for every host by `mkSystemManager` above) -
-  #    same underlying flake (`nix-lib.follows = "nlib"`), two
-  #    different "class" heads, same option path. No `lib.mkForce`
-  #    equivalent exists for a *declaration* clash, only for values,
-  #    so there is no clean per-host workaround for this one.
-  #
-  # Hand-picking xi's individual nixos/*.nix files instead of the
-  # aggregate just trades these for a different cascade
-  # (modules/nixos/package.nix alone needs settings.nix's shared
-  # types too). Real fix belongs in xi itself (nixosModules.default
-  # should not unconditionally pull in a nix-lib head the consumer may
-  # already have), filed as xi-nixos-module-system-manager-clash - see
-  # that bead before trying this again. `programs.xi.sources` at
-  # system scope stays on the CLI/state-dir rungs for now, which is
-  # already what `xi system switch` adopted and `xi system status`
-  # reads.
+  # `remote`/`branch` match what `xi system switch` already adopted on
+  # ML-PF603JJ8 (`xi system status` reports this exact remote) - this
+  # just gives that state a declarative Nix-module source of truth
+  # instead of living only in `.xi.toml`. `workingDir` is deliberately
+  # NOT set: `programs.xi.sources.workingDir` is user-scope only
+  # (modules/nixos/sources.nix asserts this), unlike the
+  # `user-juliendauliac` home-manager config in
+  # modules/home.juliendauliac/default.nix, which does use it.
+  # `gitops.enable` is on here (unlike that same user-scope config,
+  # which deliberately leaves it off to avoid racing this host's
+  # system-manager-driven activation) since this scope - not the
+  # embedded home-manager - is the one actually owning activation.
+  xiSourcesModules = [
+    inputs.xi.nixosModules.sources
+    {
+      programs.xi = {
+        enable = true;
+        sources = {
+          enable = true;
+          remote = "ssh://github.com/Dauliac/dotfiles";
+          branch = "master";
+          gitops.enable = true;
+        };
+      };
+    }
+  ];
 in
 {
   flake.systemConfigs = {
     "ML-PF59GCGW" = mkSystemManager "ml-pf59gcgw" (cleanupModules ++ homeManagerModules);
-    "ML-PF603JJ8" = mkSystemManager "ml-pf603jj8" (cleanupModules ++ homeManagerModules);
+    "ML-PF603JJ8" = mkSystemManager "ml-pf603jj8" (
+      cleanupModules ++ homeManagerModules ++ xiSourcesModules
+    );
   };
 }
