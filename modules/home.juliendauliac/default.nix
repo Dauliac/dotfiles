@@ -33,6 +33,7 @@ in
           eza
           git
           go
+          hk
           history
           lazyjira
           kubecolor
@@ -103,30 +104,43 @@ in
 
       targets.genericLinux.enable = true;
 
-      # xi sources: 3-way reconciliation (working dir / sources dir /
-      # remote) for this checkout. `remote` is the real GitHub remote -
-      # the same one `xi system switch` already uses for the real
-      # system-manager deployment - so `sources dir` tracks an
-      # independent, shared source of truth. `workingDir` is this local
-      # checkout, so `xi home sources status|diff|sync` can run the
-      # ahead/behind/diverged matrix (crates/xi-core/src/sources/conflict.rs)
-      # between what's on GitHub, what xi last fetched, and what you're
-      # actually editing. Pointing `remote` at the local path instead
-      # (tempting, avoids the push round-trip) would collapse that: if
-      # `remote` and `workingDir` are the same directory, sources dir
-      # just mirrors your own commits back at you and the matrix can
-      # never catch a genuinely independent push. `gitops.enable` is
-      # deliberately left off: this host's home-manager is already
-      # driven by system-manager (modules/flake/system-configurations.nix),
-      # and a second, user-scope auto-activator here would race it - the
-      # exact failure mode xi-sources-race exists to avoid. Toggle it on
-      # only if you stop routing home-manager through system-manager on
-      # this host.
-      programs.xi.sources = {
-        enable = true;
-        remote = "git@github.com:Dauliac/dotfiles.git";
-        branch = "master";
-        workingDir = "/home/juliendauliac/ghq/github.com/Dauliac/dotfiles";
+      # xi binary cache (xi-binary-cache): pushes every build this user
+      # runs interactively - `xi deploy`, plain `xi build`, whichever
+      # scope the args target - to our R2-compatible bucket. This covers
+      # only the interactive case: `programs.xi.settings` is baked into
+      # a `--scope`-specific *package* at build time
+      # (`programs.xi.wrapper.enable`, see modules/shared/lib/wrapper.nix),
+      # not read from one shared runtime path, so this user-scope block
+      # has no effect on which binary the gitops daemon's own re-exec of
+      # `xi deploy --local` resolves to (systemd's PATH for that service
+      # is the system profile, not this user's `~/.nix-profile/bin`) -
+      # see xiSourcesModules in system-configurations.nix for that one's
+      # own copy of this same cache target.
+      #
+      # `push-url-file` rather than a plain `push_url` string: the url
+      # itself is sops-encrypted (it would otherwise embed our R2 account
+      # id in a world-readable /nix/store path), so it has to be read at
+      # push time from a file, exactly like the two credentials below -
+      # see xi's `CacheTarget::push_url_file` doc comment.
+      sops.secrets.nix_binary_cache_url = { };
+      sops.secrets.nix_binary_cache_access_key_id = { };
+      sops.secrets.nix_binary_cache_secret_access_key = { };
+
+      # `wrapper.enable` is what actually bakes `settings` below into a
+      # running `xi` (via `XI_CONFIG` in a wrapper script) - off by
+      # default, and left off here until now, so this whole block was
+      # dead: no ~/.config/xi/config.toml, no wrapped binary, nothing
+      # read these three sops secrets at all.
+      programs.xi.wrapper.enable = true;
+      programs.xi.settings.cache.dauliac-r2 = {
+        push-url-file = config.sops.secrets.nix_binary_cache_url.path;
+        credentials = {
+          access-key-id-file =
+            config.sops.secrets.nix_binary_cache_access_key_id.path;
+          secret-access-key-file =
+            config.sops.secrets.nix_binary_cache_secret_access_key.path;
+        };
+        default = true;
       };
 
       xdg.systemDirs.data = [

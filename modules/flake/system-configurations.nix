@@ -135,17 +135,50 @@ let
   # embedded home-manager - is the one actually owning activation.
   xiSourcesModules = [
     inputs.xi.nixosModules.sources
-    {
-      programs.xi = {
-        enable = true;
-        sources = {
+    (
+      { config, ... }:
+      {
+        # Same three secrets modules/home.juliendauliac/default.nix reads
+        # for the user-scope cache target, decrypted here too so the
+        # *system*-scope xi (root activation, the gitops daemon) gets its
+        # own cache config - `programs.xi.settings` is baked per-scope at
+        # build time (`wrapper.enable`), not shared across scopes, so the
+        # home-manager block alone never covered this one. `age.keyFile`/
+        # `defaultSopsFile` are not re-declared: this host's
+        # `host-ml-pf603jj8-openvpn-corp` module already sets them
+        # (`/home/juliendauliac/.config/sops/age/dotfiles.txt` +
+        # `../../secrets.yaml`), and sops-nix merges those attrs across
+        # every module instance in the same evaluation.
+        sops.secrets.nix_binary_cache_url = { };
+        sops.secrets.nix_binary_cache_access_key_id = { };
+        sops.secrets.nix_binary_cache_secret_access_key = { };
+
+        programs.xi = {
           enable = true;
-          remote = "ssh://github.com/Dauliac/dotfiles";
-          branch = "master";
-          gitops.enable = true;
+          # Off by default; with it off `programs.xi.settings` (the cache
+          # target below) is parsed but never baked into the running
+          # binary - confirmed dead on this host before this change (no
+          # /etc/xi config.toml, no XI_CONFIG wrapper).
+          wrapper.enable = true;
+          sources = {
+            enable = true;
+            remote = "ssh://github.com/Dauliac/dotfiles";
+            branch = "master";
+            gitops.enable = true;
+          };
+          settings.cache.dauliac-r2 = {
+            push-url-file = config.sops.secrets.nix_binary_cache_url.path;
+            credentials = {
+              access-key-id-file =
+                config.sops.secrets.nix_binary_cache_access_key_id.path;
+              secret-access-key-file =
+                config.sops.secrets.nix_binary_cache_secret_access_key.path;
+            };
+            default = true;
+          };
         };
-      };
-    }
+      }
+    )
   ];
 in
 {
